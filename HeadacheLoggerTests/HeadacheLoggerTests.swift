@@ -7,6 +7,20 @@ final class HeadacheLoggerTests: XCTestCase {
         HeadacheAppGroup.userDefaults.set(true, forKey: HeadacheStorageKey.hasCompletedOnboarding.rawValue)
     }
 
+    func testCelsiusToFahrenheitConversion() {
+        XCTAssertEqual(HeadacheTemperatureFormatting.celsiusToFahrenheit(0), 32, accuracy: 0.001)
+        XCTAssertEqual(HeadacheTemperatureFormatting.celsiusToFahrenheit(100), 212, accuracy: 0.001)
+        XCTAssertEqual(HeadacheTemperatureFormatting.celsiusToFahrenheit(20), 68, accuracy: 0.001)
+        XCTAssertEqual(HeadacheTemperatureFormatting.celsiusToFahrenheit(19.5), 67.1, accuracy: 0.001)
+    }
+
+    func testTemperatureDisplayDefaultsToFahrenheit() {
+        let s = HeadacheTemperatureFormatting.displayInteger(celsius: 22, useCelsius: false)
+        XCTAssertEqual(s, "72°F")
+        let c = HeadacheTemperatureFormatting.displayInteger(celsius: 22, useCelsius: true)
+        XCTAssertEqual(c, "22°C")
+    }
+
     func testOpenMeteoParsesCommonHourStrings() {
         let tz = TimeZone(identifier: "America/Los_Angeles")!
         let a = OpenMeteoTimeParsing.hourDate(from: "2026-04-12T14:00", timeZone: tz)
@@ -154,6 +168,9 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(csv.contains("# Headache Logger"))
         XCTAssertTrue(csv.contains("# row_count: 1"))
         XCTAssertTrue(csv.contains("event_id,timestamp,timezone"))
+        XCTAssertTrue(csv.contains("temperature_f"))
+        XCTAssertTrue(csv.contains("feels_like_f"))
+        XCTAssertTrue(csv.contains("\"67.1\""))
         XCTAssertTrue(csv.contains(",user_notes"))
         XCTAssertTrue(csv.contains("last_main_sleep_wake_utc"))
         XCTAssertTrue(csv.contains("barometric_pressure_delta_hpa_6h"))

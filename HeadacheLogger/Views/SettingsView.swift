@@ -5,6 +5,7 @@ import UIKit
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @AppStorage("appearance") private var appearanceRaw = AppAppearance.system.rawValue
+    @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
 
     var body: some View {
@@ -16,6 +17,13 @@ struct SettingsView: View {
                     }
                 }
                 .pickerStyle(.inline)
+            }
+
+            Section("Temperature") {
+                Toggle("Show Celsius", isOn: $useCelsius)
+                Text("Off (default): Fahrenheit (°F). On: Celsius (°C). Exported CSV always includes both °C and °F columns.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
 
             Section("How Logging Works") {

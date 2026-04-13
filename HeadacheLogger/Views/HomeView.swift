@@ -4,6 +4,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
+    @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
 
     private var latestEvent: HeadacheEvent? { events.first }
@@ -67,7 +68,7 @@ struct HomeView: View {
                 }
 
                 if let latestEvent {
-                    LatestEventCard(event: latestEvent)
+                    LatestEventCard(event: latestEvent, useCelsius: useCelsius)
                 }
 
                 if !recentEvents.isEmpty {
@@ -112,6 +113,7 @@ struct HomeView: View {
 
 private struct LatestEventCard: View {
     let event: HeadacheEvent
+    var useCelsius: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -167,11 +169,11 @@ private struct LatestEventCard: View {
     }
 
     private var weatherHeadline: String? {
-        guard let weatherSummary = event.weatherSummary else { return nil }
-        if let temperature = event.temperatureC {
-            return "\(weatherSummary), \(Int(temperature.rounded()))C"
-        }
-        return weatherSummary
+        HeadacheTemperatureFormatting.weatherSummaryWithTemperature(
+            summary: event.weatherSummary,
+            celsius: event.temperatureC,
+            useCelsius: useCelsius
+        )
     }
 
     private var statusColor: Color {

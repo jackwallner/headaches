@@ -3,6 +3,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
+    @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @State private var exportURL: URL?
     @State private var showExportError = false
     @State private var noteTargetID: UUID?
@@ -19,14 +20,14 @@ struct HistoryView: View {
                 .listRowBackground(Color.clear)
             } else {
                 Section {
-                    SummaryGrid(events: events)
+                    SummaryGrid(events: events, useCelsius: useCelsius)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
 
                 Section("Entries") {
                     ForEach(events, id: \.id) { event in
-                        DetailedEventRow(event: event) {
+                        DetailedEventRow(event: event, useCelsius: useCelsius) {
                             noteTargetID = event.id
                         }
                             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
@@ -109,6 +110,7 @@ struct HistoryView: View {
 
 private struct SummaryGrid: View {
     let events: [HeadacheEvent]
+    var useCelsius: Bool
 
     var body: some View {
         VStack(spacing: 12) {
@@ -135,8 +137,12 @@ private struct SummaryGrid: View {
     private var averageTemperatureText: String {
         let temps = events.compactMap(\.temperatureC)
         guard !temps.isEmpty else { return "—" }
-        let avg = temps.reduce(0, +) / Double(temps.count)
-        return "\(Int(avg.rounded()))C"
+        let avgC = temps.reduce(0, +) / Double(temps.count)
+        if useCelsius {
+            return "\(Int(avgC.rounded()))°C"
+        }
+        let avgF = HeadacheTemperatureFormatting.celsiusToFahrenheit(avgC)
+        return "\(Int(avgF.rounded()))°F"
     }
 
     private func groupedMax(from values: [String]) -> String? {
@@ -172,6 +178,7 @@ private struct SummaryCard: View {
 
 private struct DetailedEventRow: View {
     let event: HeadacheEvent
+    var useCelsius: Bool
     var onEditNotes: () -> Void
 
     var body: some View {
@@ -234,11 +241,11 @@ private struct DetailedEventRow: View {
     }
 
     private var weatherLine: String? {
-        guard let weatherSummary = event.weatherSummary else { return nil }
-        if let temperature = event.temperatureC {
-            return "\(weatherSummary), \(Int(temperature.rounded()))C"
-        }
-        return weatherSummary
+        HeadacheTemperatureFormatting.weatherSummaryWithTemperature(
+            summary: event.weatherSummary,
+            celsius: event.temperatureC,
+            useCelsius: useCelsius
+        )
     }
 
     private var statusColor: Color {

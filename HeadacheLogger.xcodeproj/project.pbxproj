@@ -16,7 +16,10 @@
 		241DD8715CD0129FEB0E4693 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BE807C4B06F925D4E872E /* AppAppearance.swift */; };
 		3D42B6E3B8CE8428D6E4E2C1 /* SleepIntervalMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */; };
 		49AE2469750959923DB47B54 /* HeadacheLoggerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
 		5AC9907AC49938F12C167AA6 /* HeadacheModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */; };
+		60B9158044768AE58696968A /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
+		66BB8D1DB18704F145A7F89A /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
 		6CFD72F3A80156A2FB145833 /* PhoneWatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */; };
 		7D78EBD5BA76358D7D4F22AD /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */; };
 		8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9374226F8FD525B4B20127E /* OnboardingView.swift */; };
@@ -132,6 +135,7 @@
 		C9DCB474A89830CF74A79945 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
 		E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheModelStore.swift; sourceTree = "<group>"; };
+		E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheTemperatureFormatting.swift; sourceTree = "<group>"; };
 		F790B5264C2F84568B71E41B /* HeadacheLogger.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HeadacheLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -184,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */,
+				E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */,
 			);
 			path = SharedHeadache;
 			sourceTree = "<group>";
@@ -426,6 +431,7 @@
 				F44B344B700D41CFC10C376D /* HeadacheEvent.swift in Sources */,
 				A38A9D330B36A9B77C41C052 /* HeadacheLoggerWidget.swift in Sources */,
 				153E0F1E152BF88BEAF57604 /* HeadacheModelStore.swift in Sources */,
+				551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */,
 				B55B7EFA7DE8405ACED3DAD6 /* LogHeadacheIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -436,6 +442,7 @@
 			files = (
 				D2154AC55D1BE4F18F71BA40 /* HeadacheAppGroup.swift in Sources */,
 				FC374774D642F632FF0C187D /* HeadacheLoggerWatchApp.swift in Sources */,
+				66BB8D1DB18704F145A7F89A /* HeadacheTemperatureFormatting.swift in Sources */,
 				E623D1C2F71F3796060EE253 /* WatchConnectivityController.swift in Sources */,
 				7D78EBD5BA76358D7D4F22AD /* WatchRootView.swift in Sources */,
 			);
@@ -454,6 +461,7 @@
 				E538D8F43DB4C45FE484D2B5 /* HeadacheEvent.swift in Sources */,
 				9D9AA6EE42868909A48B6A0C /* HeadacheLoggerApp.swift in Sources */,
 				5AC9907AC49938F12C167AA6 /* HeadacheModelStore.swift in Sources */,
+				60B9158044768AE58696968A /* HeadacheTemperatureFormatting.swift in Sources */,
 				9BFB6F53C055BF3E8BCD2572 /* HealthKitService.swift in Sources */,
 				AEB435D0B9D90A9DE04104C1 /* HistoryView.swift in Sources */,
 				D9447241D9F98FDCBFED788D /* HomeView.swift in Sources */,

@@ -16,6 +16,8 @@ enum HeadacheStorageKey: String {
     case hasCompletedOnboarding = "hasCompletedHeadacheOnboarding"
     case declinedHealthRead = "headacheDeclinedHealthRead"
     case declinedLocation = "headacheDeclinedLocation"
+    /// When false (default), UI shows **Fahrenheit**. When true, UI shows Celsius. SwiftData still stores °C.
+    case useCelsiusTemperature = "headacheUseCelsiusTemperature"
 }
 
 enum HeadacheOnboardingStore {
