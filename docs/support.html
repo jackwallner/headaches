@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Headache Logger Support</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fff9fa;
+      --card: #ffffff;
+      --text: #1f1f24;
+      --muted: #535a67;
+      --accent: #ef3f63;
+      --border: #f0d7dd;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111217;
+        --card: #1b1d24;
+        --text: #f3f4f6;
+        --muted: #c1c6d0;
+        --accent: #ff5a7d;
+        --border: #2d313d;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+
+    article {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    h1, h2 {
+      color: var(--text);
+    }
+
+    p, li {
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article>
+      <h1>Headache Logger Support</h1>
+      <p>
+        Headache Logger is a one-tap iPhone and Apple Watch app for logging headaches with
+        surrounding health and weather context.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        For help, feature requests, or bug reports, email
+        <a href="mailto:jackwallner@gmail.com">jackwallner@gmail.com</a>.
+      </p>
+
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li>If Apple Health context is missing, confirm Health permissions are enabled for Headache Logger in the Health app and iOS Settings.</li>
+        <li>If weather or air quality context is missing, confirm Location access is enabled and that the device has network access when you log the headache.</li>
+        <li>If the Apple Watch app says the log is queued, open the iPhone app and make sure the watch is paired and the companion app is installed.</li>
+        <li>If export fails, try again and verify there is available device storage and a share destination selected.</li>
+      </ul>
+
+      <h2>Privacy</h2>
+      <p>
+        Read the app privacy policy here:
+        <a href="./privacy-policy.html">Privacy Policy</a>.
+      </p>
+
+      <h2>Important Note</h2>
+      <p>
+        Headache Logger is a tracking tool only. It does not provide medical advice,
+        diagnosis, or emergency care.
+      </p>
+    </article>
+  </main>
+</body>
+</html>
