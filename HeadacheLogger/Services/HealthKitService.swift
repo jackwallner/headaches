@@ -108,11 +108,57 @@ actor HealthKitService {
         }
 
         do {
-            try await requestAuthorizationIfNeeded()
+            try await synchronizeReadAuthorizationForCapture()
 
-            let dayStart = Calendar.current.startOfDay(for: date)
+            let snapshot = try await loadSnapshotWithRetry(at: date)
 
-            async let steps = cumulativeSum(
+            let status: CaptureSourceStatus = snapshot.hasMeaningfulValue ? .captured : .unavailable
+            let message: String? = status == .captured ? nil : "No Health context was available for this event."
+            return HealthCaptureResult(status: status, message: message, snapshot: snapshot)
+        } catch {
+            return HealthCaptureResult(
+                status: .failed,
+                message: error.localizedDescription,
+                snapshot: nil
+            )
+        }
+    }
+
+    /// Aligns with Vitals: `authorizationStatus(for:)` does not reflect read access. Use request-status, re-prompt
+    /// when `.shouldRequest`, and always query after `.unnecessary` (reads may still populate late).
+    private func synchronizeReadAuthorizationForCapture() async throws {
+        if HeadacheOnboardingStore.declinedHealthRead { return }
+        let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
+            store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, error in
+                if let error {
+                    print("HealthKitService.getRequestStatusForAuthorization error: \(String(describing: error))")
+                }
+                continuation.resume(returning: status)
+            }
+        }
+        switch status {
+        case .shouldRequest:
+            try await store.requestAuthorization(toShare: [], read: readTypes)
+            hasRequestedAuthorization = true
+        case .unnecessary, .unknown:
+            hasRequestedAuthorization = true
+        @unknown default:
+            hasRequestedAuthorization = true
+        }
+    }
+
+    /// Short delay + second pull catches Watch / iCloud Health lag (same idea as Vitals `fetchTodayStatsWithRetry`).
+    private func loadSnapshotWithRetry(at date: Date) async throws -> HealthSnapshot {
+        let first = try await loadSnapshotOnce(at: date)
+        if first.hasMeaningfulValue { return first }
+        try await Task.sleep(for: .milliseconds(1500))
+        return try await loadSnapshotOnce(at: date)
+    }
+
+    private func loadSnapshotOnce(at date: Date) async throws -> HealthSnapshot {
+        let dayStart = Calendar.current.startOfDay(for: date)
+
+        async let steps = cumulativeSum(
                 identifier: .stepCount,
                 unit: .count(),
                 start: dayStart,
@@ -249,16 +295,7 @@ actor HealthKitService {
                 barometricPressureDeltaHpa6h: resolvedBaroDelta
             )
 
-            let status: CaptureSourceStatus = snapshot.hasMeaningfulValue ? .captured : .unavailable
-            let message: String? = status == .captured ? nil : "No Health context was available for this event."
-            return HealthCaptureResult(status: status, message: message, snapshot: snapshot)
-        } catch {
-            return HealthCaptureResult(
-                status: .failed,
-                message: error.localizedDescription,
-                snapshot: nil
-            )
-        }
+            return snapshot
     }
 
     /// Call from onboarding so the first “Headache” tap does not show the Health permission sheet mid-capture.
@@ -277,15 +314,6 @@ actor HealthKitService {
         hasRequestedAuthorization = true
     }
 
-    private func requestAuthorizationIfNeeded() async throws {
-        if HeadacheOnboardingStore.declinedHealthRead {
-            return
-        }
-        guard !hasRequestedAuthorization else { return }
-        try await store.requestAuthorization(toShare: [], read: readTypes)
-        hasRequestedAuthorization = true
-    }
-
     private func cumulativeSum(
         identifier: HKQuantityTypeIdentifier,
         unit: HKUnit,
@@ -293,7 +321,7 @@ actor HealthKitService {
         end: Date
     ) async throws -> Double {
         let store = self.store
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
         return try await withCheckedThrowingContinuation { continuation in
             let query = HKStatisticsQuery(
                 quantityType: HKObjectType.quantityType(forIdentifier: identifier)!,
@@ -335,7 +363,7 @@ actor HealthKitService {
         let store = self.store
         let calendar = Calendar.current
         let start = calendar.date(byAdding: .day, value: -lookbackDays, to: date) ?? date.addingTimeInterval(-86400 * Double(lookbackDays))
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
             let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
@@ -394,7 +422,7 @@ actor HealthKitService {
     ) async throws -> Double? {
         let store = self.store
         let start = Calendar.current.date(byAdding: .hour, value: -hoursBack, to: date) ?? date.addingTimeInterval(-3600 * Double(hoursBack))
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
             let query = HKSampleQuery(
@@ -441,7 +469,7 @@ actor HealthKitService {
         guard let quantityType = HKObjectType.quantityType(forIdentifier: Self.barometricPressureIdentifier) else { return nil }
         let store = self.store
         let start = Calendar.current.date(byAdding: .hour, value: -hoursBack, to: date) ?? date.addingTimeInterval(-3600 * Double(hoursBack))
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: [])
         let hpa = HKUnit(from: "hPa")
 
         return await withCheckedContinuation { continuation in
@@ -473,7 +501,7 @@ actor HealthKitService {
         guard let mindfulType = HKObjectType.categoryType(forIdentifier: .mindfulSession) else { return nil }
         let store = self.store
         let start = Calendar.current.startOfDay(for: date)
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: [])
 
         return await withCheckedContinuation { continuation in
             let query = HKSampleQuery(
@@ -509,7 +537,7 @@ actor HealthKitService {
             second: 0,
             of: calendar.date(byAdding: .day, value: -1, to: date) ?? date.addingTimeInterval(-86400)
         ) ?? date.addingTimeInterval(-86400)
-        let predicate = HKQuery.predicateForSamples(withStart: previousNoon, end: end, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: previousNoon, end: end, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
             let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
@@ -553,7 +581,7 @@ actor HealthKitService {
     private func workoutSummary(relativeTo date: Date) async throws -> (count: Int?, minutes: Double?) {
         let store = self.store
         let start = Calendar.current.date(byAdding: .hour, value: -24, to: date) ?? date.addingTimeInterval(-86400)
-        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: date, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
             let query = HKSampleQuery(
