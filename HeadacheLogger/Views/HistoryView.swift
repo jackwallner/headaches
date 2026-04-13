@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct HistoryView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @State private var exportURL: URL?
@@ -33,6 +34,7 @@ struct HistoryView: View {
                             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                             .listRowBackground(Color.clear)
                     }
+                    .onDelete(perform: deleteEvents)
                 }
             }
         }
@@ -98,6 +100,13 @@ struct HistoryView: View {
         } catch {
             showExportError = true
         }
+    }
+
+    private func deleteEvents(at offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(events[index])
+        }
+        try? modelContext.save()
     }
 
     private func removeTemporaryExport() {
