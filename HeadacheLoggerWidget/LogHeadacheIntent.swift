@@ -26,6 +26,9 @@ struct LogHeadacheIntent: AppIntent {
             throw error
         }
 
+        HeadacheAppGroup.userDefaults.set(Date().timeIntervalSince1970,
+                                          forKey: HeadacheStorageKey.widgetLastLoggedAt.rawValue)
+
         return .result(dialog: IntentDialog("Headache logged."))
     }
 

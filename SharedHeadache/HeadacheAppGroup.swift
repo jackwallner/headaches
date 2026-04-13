@@ -18,6 +18,8 @@ enum HeadacheStorageKey: String {
     case declinedLocation = "headacheDeclinedLocation"
     /// When false (default), UI shows **Fahrenheit**. When true, UI shows Celsius. SwiftData still stores °C.
     case useCelsiusTemperature = "headacheUseCelsiusTemperature"
+    /// Timestamp of the most recent widget quick-log, for brief confirmation UI.
+    case widgetLastLoggedAt = "headacheWidgetLastLoggedAt"
 }
 
 enum HeadacheOnboardingStore {
