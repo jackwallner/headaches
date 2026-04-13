@@ -1,10 +1,13 @@
 import Foundation
 import WatchConnectivity
+import WatchKit
 
 /// Sends log requests to the paired iPhone (which runs capture with Health + location there).
 @MainActor
 final class WatchConnectivityController: NSObject, ObservableObject {
     @Published var statusMessage: String?
+    @Published var showConfirmation = false
+    private var clearTask: Task<Void, Never>?
 
     func activate() {
         guard WCSession.isSupported() else {
@@ -25,7 +28,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         if session.isReachable {
             session.sendMessage(payload, replyHandler: { _ in
                 Task { @MainActor [weak self] in
-                    self?.statusMessage = "Sent — check your iPhone."
+                    self?.confirmLogged()
                 }
             }, errorHandler: { error in
                 Task { @MainActor [weak self] in
@@ -35,10 +38,23 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         } else {
             do {
                 try session.updateApplicationContext(payload)
-                statusMessage = "Queued — open Headache Logger on iPhone."
+                confirmLogged()
             } catch {
                 statusMessage = error.localizedDescription
             }
+        }
+    }
+
+    private func confirmLogged() {
+        WKInterfaceDevice.current().play(.success)
+        statusMessage = "Logged."
+        showConfirmation = true
+        clearTask?.cancel()
+        clearTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled else { return }
+            self?.statusMessage = nil
+            self?.showConfirmation = false
         }
     }
 }
