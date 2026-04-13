@@ -18,12 +18,14 @@ struct WatchRootView: View {
             Button {
                 session.requestLogFromPhone()
             } label: {
-                Label("Log headache", systemImage: "brain.head.profile")
+                Label(session.showConfirmation ? "Logged" : "Log headache",
+                      systemImage: session.showConfirmation ? "checkmark.circle.fill" : "brain.head.profile")
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.95, green: 0.25, blue: 0.43))
+            .tint(session.showConfirmation ? .green : Color(red: 0.95, green: 0.25, blue: 0.43))
+            .animation(.easeInOut(duration: 0.25), value: session.showConfirmation)
 
-            if let message = session.statusMessage {
+            if let message = session.statusMessage, !session.showConfirmation {
                 Text(message)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
