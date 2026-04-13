@@ -9,7 +9,7 @@ struct RootTabView: View {
                 HomeView()
             }
             .tabItem {
-                Label("Headache Logger", systemImage: "figure.head.profile")
+                Label("Headache Logger", systemImage: "brain.head.profile")
             }
 
             NavigationStack {

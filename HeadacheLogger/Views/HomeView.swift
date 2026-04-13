@@ -32,7 +32,7 @@ struct HomeView: View {
                         captureCoordinator.captureHeadache(in: modelContext)
                     } label: {
                         VStack(spacing: 12) {
-                            Image(systemName: "figure.head.profile")
+                            Image(systemName: "brain.head.profile")
                                 .font(.system(size: 36, weight: .bold))
                             Text("Headache")
                                 .font(.title2.bold())
@@ -53,6 +53,8 @@ struct HomeView: View {
                         )
                     }
                     .buttonStyle(.plain)
+                    .disabled(captureCoordinator.isCapturing)
+                    .accessibilityLabel("Log headache")
                     .accessibilityIdentifier("logHeadacheButton")
 
                     if captureCoordinator.lastCapturedEventID != nil {

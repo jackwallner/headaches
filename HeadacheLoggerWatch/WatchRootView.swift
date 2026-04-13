@@ -18,7 +18,7 @@ struct WatchRootView: View {
             Button {
                 session.requestLogFromPhone()
             } label: {
-                Label("Log headache", systemImage: "figure.head.profile")
+                Label("Log headache", systemImage: "brain.head.profile")
             }
             .buttonStyle(.borderedProminent)
             .tint(Color(red: 0.95, green: 0.25, blue: 0.43))

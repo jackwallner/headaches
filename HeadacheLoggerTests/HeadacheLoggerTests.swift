@@ -7,6 +7,15 @@ final class HeadacheLoggerTests: XCTestCase {
         HeadacheAppGroup.userDefaults.set(true, forKey: HeadacheStorageKey.hasCompletedOnboarding.rawValue)
     }
 
+    func testOpenMeteoParsesCommonHourStrings() {
+        let tz = TimeZone(identifier: "America/Los_Angeles")!
+        let a = OpenMeteoTimeParsing.hourDate(from: "2026-04-12T14:00", timeZone: tz)
+        let b = OpenMeteoTimeParsing.hourDate(from: "2026-04-12T14:00:00", timeZone: tz)
+        XCTAssertNotNil(a)
+        XCTAssertNotNil(b)
+        XCTAssertEqual(a, b)
+    }
+
     func testPartOfDayMapping() {
         let calendar = Calendar(identifier: .gregorian)
 

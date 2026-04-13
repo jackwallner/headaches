@@ -12,6 +12,7 @@
 		15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */; };
 		153E0F1E152BF88BEAF57604 /* HeadacheModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */; };
 		15FAF490AD8702BC97EE2792 /* HeadacheLoggerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 929113AA327F62936E27766E /* HeadacheLoggerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1EE3B2967FF4A10BB0B96280 /* OpenMeteoTimeParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */; };
 		241DD8715CD0129FEB0E4693 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BE807C4B06F925D4E872E /* AppAppearance.swift */; };
 		3D42B6E3B8CE8428D6E4E2C1 /* SleepIntervalMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */; };
 		49AE2469750959923DB47B54 /* HeadacheLoggerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -26,9 +27,11 @@
 		A2D71CF1BFC7D3DAD716F624 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B769DAEFB80D24E6E5B23726 /* SettingsView.swift */; };
 		A38A9D330B36A9B77C41C052 /* HeadacheLoggerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD143915C7D5D51FD3601AFC /* HeadacheLoggerWidget.swift */; };
 		A985C9AFC8D191117B378E26 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C78392E24C65D489A0719 /* ShareSheet.swift */; };
+		AA708D626E22A4B77BD12FC3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */; };
 		AEB435D0B9D90A9DE04104C1 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9FDF0333E813841B3E325A /* HistoryView.swift */; };
 		B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */; };
 		B55B7EFA7DE8405ACED3DAD6 /* LogHeadacheIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBBC940CB36BBBEA154BD /* LogHeadacheIntent.swift */; };
+		C1EF4877154C8980F69F4DCA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */; };
 		CFFCF9BE047EBC7351802E30 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
 		D2154AC55D1BE4F18F71BA40 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
 		D2A25F0E0B62B270B3DB00B6 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
@@ -93,11 +96,13 @@
 /* Begin PBXFileReference section */
 		028643EDD9B08EDA8DF0B000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheEvent.swift; sourceTree = "<group>"; };
+		0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		254CAEEDC5A2E194D94ED45D /* HeadacheLoggerTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HeadacheLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSession.swift; sourceTree = "<group>"; };
 		334426D57EADD647A3B13738 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		474EEC906E5A1C9BD78C4E76 /* HeadacheLoggerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLoggerWidget.entitlements; sourceTree = "<group>"; };
 		48CE1BF4F327855139BB6EA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheAppGroup.swift; sourceTree = "<group>"; };
 		5F86B975265B817C3153C40E /* HeadacheLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLogger.entitlements; sourceTree = "<group>"; };
 		5FBB32A1879C8B3C1A1FBAAA /* HeadacheLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerApp.swift; sourceTree = "<group>"; };
@@ -120,6 +125,7 @@
 		AE39D707E377269384673F20 /* WatchConnectivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityController.swift; sourceTree = "<group>"; };
 		B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerTests.swift; sourceTree = "<group>"; };
 		B769DAEFB80D24E6E5B23726 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMeteoTimeParsing.swift; sourceTree = "<group>"; };
 		BD143915C7D5D51FD3601AFC /* HeadacheLoggerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerWidget.swift; sourceTree = "<group>"; };
 		C88D1313C9785E44B4C49729 /* HeadacheLoggerWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLoggerWatch.entitlements; sourceTree = "<group>"; };
 		C9374226F8FD525B4B20127E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -189,6 +195,7 @@
 				BD143915C7D5D51FD3601AFC /* HeadacheLoggerWidget.swift */,
 				C9DCB474A89830CF74A79945 /* Info.plist */,
 				63ACBBC940CB36BBBEA154BD /* LogHeadacheIntent.swift */,
+				0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */,
 			);
 			path = HeadacheLoggerWidget;
 			sourceTree = "<group>";
@@ -198,6 +205,7 @@
 			children = (
 				637BE807C4B06F925D4E872E /* AppAppearance.swift */,
 				91367B1F7BDF8F54249C011B /* AppEnvironment.swift */,
+				B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */,
 				87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */,
 			);
 			path = Utilities;
@@ -231,6 +239,7 @@
 				5F86B975265B817C3153C40E /* HeadacheLogger.entitlements */,
 				5FBB32A1879C8B3C1A1FBAAA /* HeadacheLoggerApp.swift */,
 				028643EDD9B08EDA8DF0B000 /* Info.plist */,
+				509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */,
 				B20C1C2600A498C4125C8A82 /* Models */,
 				CA616C9CE434DC98180B3A59 /* Services */,
 				A660758C5C4FB2254EB12DEB /* Utilities */,
@@ -260,6 +269,7 @@
 			buildConfigurationList = 957C0A770E8050566A2F4311 /* Build configuration list for PBXNativeTarget "HeadacheLoggerWidget" */;
 			buildPhases = (
 				1A5B6FB3DA1186D6FB6B0A22 /* Sources */,
+				8E08C87EE13D398506C7C7FB /* Resources */,
 			);
 			buildRules = (
 			);
@@ -393,6 +403,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFBE92F8E24C185CF581D00D /* Assets.xcassets in Resources */,
+				C1EF4877154C8980F69F4DCA /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E08C87EE13D398506C7C7FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA708D626E22A4B77BD12FC3 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +458,7 @@
 				AEB435D0B9D90A9DE04104C1 /* HistoryView.swift in Sources */,
 				D9447241D9F98FDCBFED788D /* HomeView.swift in Sources */,
 				8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */,
+				1EE3B2967FF4A10BB0B96280 /* OpenMeteoTimeParsing.swift in Sources */,
 				6CFD72F3A80156A2FB145833 /* PhoneWatchSession.swift in Sources */,
 				15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */,
 				A2D71CF1BFC7D3DAD716F624 /* SettingsView.swift in Sources */,
@@ -561,7 +581,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -676,7 +696,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_NS_ASSERTIONS = NO;

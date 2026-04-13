@@ -6,12 +6,15 @@ final class CaptureCoordinator: ObservableObject {
     @Published var bannerMessage: String?
     @Published var isCapturing = false
     @Published var lastCapturedEventID: UUID?
+    /// Prevents overlapping widget-enrichment passes (e.g. `onAppear` + scene `active` firing together).
+    private var isEnrichingWidgetLogs = false
 
     /// Widget quick-logs store the tap time on `HeadacheEvent.timestamp`. When the app opens, we enrich each
     /// pending row using **that** instant for HealthKit and weather — never “now” — and process oldest first.
     func enrichPendingWidgetQuickLogsIfNeeded(in context: ModelContext) {
         guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else { return }
         guard !isCapturing else { return }
+        guard !isEnrichingWidgetLogs else { return }
 
         let pending: [HeadacheEvent] = (try? context.fetch(FetchDescriptor<HeadacheEvent>(
             sortBy: [SortDescriptor(\HeadacheEvent.timestamp, order: .forward)]
@@ -22,7 +25,9 @@ final class CaptureCoordinator: ObservableObject {
 
         guard !pending.isEmpty else { return }
 
+        isEnrichingWidgetLogs = true
         Task { @MainActor in
+            defer { isEnrichingWidgetLogs = false }
             var updated = 0
             for event in pending {
                 let t = event.timestamp

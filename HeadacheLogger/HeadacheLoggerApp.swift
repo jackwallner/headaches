@@ -34,7 +34,9 @@ private struct HeadacheLoggerRootContent: View {
             PhoneWatchSession.shared.onWatchRequestedCapture = { [captureCoordinator] in
                 captureCoordinator.captureHeadache(in: modelContext, fromWatch: true)
             }
-            PhoneWatchSession.shared.start()
+            if !AppEnvironment.isUITesting {
+                PhoneWatchSession.shared.start()
+            }
             #endif
             runWidgetEnrichmentIfReady()
         }

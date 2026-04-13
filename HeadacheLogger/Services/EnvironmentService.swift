@@ -326,7 +326,8 @@ private enum OpenMeteoClient {
             let apparentTemperature: [Double?]
             let relativeHumidity2m: [Double?]
             let precipitation: [Double?]
-            let weatherCode: [Int?]
+            /// Open-Meteo may encode codes as integers or floats in JSON arrays.
+            let weatherCode: [Double?]
             let cloudCover: [Double?]
             let surfacePressure: [Double?]
             let windSpeed10m: [Double?]
@@ -382,41 +383,38 @@ private enum OpenMeteoClient {
         guard !h.time.isEmpty else { return nil }
 
         guard let tz = TimeZone(identifier: decoded.timezone) else { return nil }
-        let tParser = DateFormatter()
-        tParser.locale = Locale(identifier: "en_US_POSIX")
-        tParser.timeZone = tz
-        tParser.dateFormat = "yyyy-MM-dd'T'HH:mm"
 
-        var bestIdx = 0
+        var bestIdx: Int?
         var bestDelta = TimeInterval.greatestFiniteMagnitude
         for (i, s) in h.time.enumerated() {
-            guard let t = tParser.date(from: s) else { continue }
+            guard let t = OpenMeteoTimeParsing.hourDate(from: s, timeZone: tz) else { continue }
             let d = abs(t.timeIntervalSince(eventDate))
             if d < bestDelta {
                 bestDelta = d
                 bestIdx = i
             }
         }
+        guard let idx = bestIdx else { return nil }
 
         func at<T>(_ arr: [T?], _ i: Int) -> T? {
             guard i >= 0, i < arr.count else { return nil }
             return arr[i]
         }
 
-        let wc = at(h.weatherCode, bestIdx).flatMap { $0 }
+        let wc: Int? = at(h.weatherCode, idx).flatMap { $0 }.map { Int(round($0)) }
         return CurrentWeather(
             conditionSummary: wc.map { wmoWeatherSummary(code: $0) },
             weatherCode: wc,
-            temperatureC: at(h.temperature2m, bestIdx).flatMap { $0 },
-            apparentTemperatureC: at(h.apparentTemperature, bestIdx).flatMap { $0 },
-            relativeHumidityPercent: at(h.relativeHumidity2m, bestIdx).flatMap { $0 },
-            surfacePressureHpa: at(h.surfacePressure, bestIdx).flatMap { $0 },
+            temperatureC: at(h.temperature2m, idx).flatMap { $0 },
+            apparentTemperatureC: at(h.apparentTemperature, idx).flatMap { $0 },
+            relativeHumidityPercent: at(h.relativeHumidity2m, idx).flatMap { $0 },
+            surfacePressureHpa: at(h.surfacePressure, idx).flatMap { $0 },
             pressureTrend: .unavailable,
-            precipitationMm: at(h.precipitation, bestIdx).flatMap { $0 },
-            windSpeedKph: at(h.windSpeed10m, bestIdx).flatMap { $0 },
-            windDirectionDegrees: at(h.windDirection10m, bestIdx).flatMap { $0 },
-            cloudCoverPercent: at(h.cloudCover, bestIdx).flatMap { $0 },
-            uvIndex: at(h.uvIndex, bestIdx).flatMap { $0 }
+            precipitationMm: at(h.precipitation, idx).flatMap { $0 },
+            windSpeedKph: at(h.windSpeed10m, idx).flatMap { $0 },
+            windDirectionDegrees: at(h.windDirection10m, idx).flatMap { $0 },
+            cloudCoverPercent: at(h.cloudCover, idx).flatMap { $0 },
+            uvIndex: at(h.uvIndex, idx).flatMap { $0 }
         )
     }
 
