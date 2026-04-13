@@ -1,39 +1,62 @@
 # Headache Logger
 
-Headache Logger is a standalone iPhone and Apple Watch app for one-tap headache logging.
-It captures as much surrounding context as possible automatically, including time-of-day,
-Apple Health context, and location-based weather/environmental signals, then lets the user
-export a CSV to share with a doctor.
+**One-tap headache tracking for iPhone & Apple Watch.**
 
-**This repository** is the source of truth for the app (`jackwallner/headaches` on GitHub).
+Log a headache in one tap. The app automatically captures 60+ data points from Apple Health, local weather, air quality, and pollen levels. Export a doctor-friendly CSV whenever you're ready.
 
-## Highlights
+**Free. No ads. No accounts. No cloud. Open source.**
 
-- One-tap headache logging on iPhone, Apple Watch, Home Screen widget, and Shortcuts (App Intents)
-- Automatic HealthKit context such as steps, energy, sleep, heart metrics, and workouts
-- Automatic weather, air quality, UV, and pollen-style context using Open-Meteo
-- Local-first storage with manual CSV export
-- No accounts, no ads, no analytics, no cloud sync
+[Website](https://jackwallner.github.io/headaches/) | [Privacy Policy](https://jackwallner.github.io/headaches/privacy-policy.html) | [Support](https://jackwallner.github.io/headaches/support.html)
+
+<!-- App Store badge goes here once live -->
+<!-- [![Download on the App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](APP_STORE_LINK) -->
+
+## Features
+
+- **One tap** - Log a headache instantly. No forms, no questions, no typing.
+- **Apple Health context** - Steps, sleep, HRV, resting heart rate, SpO2, VO2max, workouts, audio exposure, mindful minutes, and more.
+- **Weather & environment** - Temperature, barometric pressure + trend, humidity, wind, UV index, precipitation, cloud cover.
+- **Air quality** - US AQI, EU AQI, PM2.5, PM10, ozone, NO2, SO2, CO.
+- **Pollen** - Alder, birch, grass, mugwort, olive, ragweed.
+- **Time patterns** - Weekday, hour, part of day, timezone.
+- **Apple Watch** - One-tap logging from your wrist. Entries queue and sync automatically.
+- **Home screen widget** - Log without opening the app via WidgetKit + App Intents.
+- **Siri Shortcuts** - Automate logging with the "Log Headache" intent.
+- **CSV export** - 60+ columns. Share via email, AirDrop, or any share destination.
+- **Doctor-friendly** - Designed for clinical sharing with both metric and imperial units.
+
+## Privacy
+
+Headache Logger stores everything on your device. No accounts, no analytics, no ads, no cloud sync.
+
+Location is used once per tap to fetch local weather from [Open-Meteo](https://open-meteo.com/). Raw coordinates are never stored. Your data leaves your device only when you explicitly export it.
+
+[Full privacy policy](https://jackwallner.github.io/headaches/privacy-policy.html)
 
 ## Tech Stack
 
-- SwiftUI
-- SwiftData
-- HealthKit
-- CoreLocation
-- WatchConnectivity
-- WidgetKit / App Intents
-- XcodeGen
+| Framework | Purpose |
+|-----------|---------|
+| SwiftUI | UI |
+| SwiftData | Local persistence |
+| HealthKit | Apple Health integration (read-only) |
+| CoreLocation | Location for weather lookup |
+| Open-Meteo API | Weather, air quality, pollen |
+| WidgetKit + App Intents | Home screen widget |
+| WatchConnectivity | Apple Watch sync |
+| XcodeGen | Project generation |
 
 ## Repo Layout
 
-- `HeadacheLogger/` — iPhone app
-- `HeadacheLoggerWatch/` — Apple Watch companion
-- `HeadacheLoggerWidget/` — Home Screen “Log headache” widget
-- `HeadacheLoggerTests/` — unit tests
-- `SharedHeadache/` — app group helpers and shared keys
-- `docs/` — GitHub Pages (privacy, support, metadata notes)
-- `scripts/` — helper scripts (e.g. TestFlight upload)
+```
+HeadacheLogger/          iPhone app
+HeadacheLoggerWatch/     Apple Watch companion
+HeadacheLoggerWidget/    Home screen widget extension
+HeadacheLoggerTests/     Unit tests
+SharedHeadache/          App group helpers and shared keys
+docs/                    GitHub Pages (landing page, privacy, support)
+scripts/                 Helper scripts (e.g. TestFlight upload)
+```
 
 ## Build
 
@@ -48,10 +71,10 @@ xcodebuild -project HeadacheLogger.xcodeproj -scheme HeadacheLogger -destination
 xcodebuild -project HeadacheLogger.xcodeproj -scheme HeadacheLogger -destination 'platform=iOS Simulator,name=iPhone 17' test
 ```
 
-## GitHub Pages
+## License
 
-Static site files live under `docs/` (enable Pages from `/docs` on this repo). Example URLs:
+See [LICENSE](LICENSE) for details.
 
-- `https://jackwallner.github.io/headaches/`
-- `https://jackwallner.github.io/headaches/privacy-policy.html`
-- `https://jackwallner.github.io/headaches/support.html`
+## Author
+
+Jack Wallner — [jackwallner@gmail.com](mailto:jackwallner@gmail.com)
