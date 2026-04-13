@@ -8,6 +8,9 @@ struct SettingsView: View {
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
 
+    private let privacyPolicyURL = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html")
+    private let supportURL = URL(string: "https://jackwallner.github.io/headaches/support.html")
+
     var body: some View {
         List {
             Section("Appearance") {
@@ -56,6 +59,17 @@ struct SettingsView: View {
 
             Section("Sharing") {
                 Text("The History tab can export all logged events as a CSV so you can email it, AirDrop it, or share it directly with your doctor.")
+            }
+
+            Section("Privacy and Support") {
+                Button("Privacy Policy") {
+                    guard let privacyPolicyURL else { return }
+                    openURL(privacyPolicyURL)
+                }
+                Button("Support") {
+                    guard let supportURL else { return }
+                    openURL(supportURL)
+                }
             }
         }
         .navigationTitle("About")
