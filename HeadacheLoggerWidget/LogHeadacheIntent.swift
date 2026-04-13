@@ -3,7 +3,7 @@ import SwiftData
 import WidgetKit
 
 /// One-tap log from the Home Screen widget. Runs in the widget extension: no HealthKit or location here;
-/// the event is stored immediately and shows as **partial** until the user opens the app (future: could enrich then).
+/// the event is stored at tap time; the main app enriches Health + weather using **that** timestamp when it opens.
 struct LogHeadacheIntent: AppIntent {
     static let title: LocalizedStringResource = "Log headache"
     static let description: IntentDescription = "Records a headache in Headache Logger."
@@ -38,14 +38,14 @@ struct LogHeadacheIntent: AppIntent {
         event.apply(
             HealthCaptureResult(
                 status: .unavailable,
-                message: "Open the app to capture Health context.",
+                message: HeadacheWidgetQuickLog.healthMessagePending,
                 snapshot: nil
             )
         )
         event.apply(
             EnvironmentCaptureResult(
                 status: .unavailable,
-                message: "Open the app to capture weather.",
+                message: HeadacheWidgetQuickLog.environmentMessagePending,
                 snapshot: nil
             )
         )

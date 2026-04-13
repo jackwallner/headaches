@@ -17,6 +17,7 @@ struct HeadacheLoggerApp: App {
 /// Hosts onboarding vs main UI and always wires Watch → phone capture so the watch can log before iPhone onboarding finishes.
 private struct HeadacheLoggerRootContent: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
 
@@ -35,6 +36,17 @@ private struct HeadacheLoggerRootContent: View {
             }
             PhoneWatchSession.shared.start()
             #endif
+            runWidgetEnrichmentIfReady()
         }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                runWidgetEnrichmentIfReady()
+            }
+        }
+    }
+
+    private func runWidgetEnrichmentIfReady() {
+        guard AppEnvironment.bypassOnboarding || hasCompletedOnboarding else { return }
+        captureCoordinator.enrichPendingWidgetQuickLogsIfNeeded(in: modelContext)
     }
 }

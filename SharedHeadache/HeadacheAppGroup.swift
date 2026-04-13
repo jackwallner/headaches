@@ -41,3 +41,9 @@ enum HeadacheOnboardingStore {
         declinedLocation = false
     }
 }
+
+/// Markers left on events created by the widget before Health/weather are captured in the main app.
+enum HeadacheWidgetQuickLog {
+    public static let healthMessagePending = "Open the app to capture Health context."
+    public static let environmentMessagePending = "Open the app to capture weather."
+}

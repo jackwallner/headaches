@@ -7,6 +7,43 @@ final class CaptureCoordinator: ObservableObject {
     @Published var isCapturing = false
     @Published var lastCapturedEventID: UUID?
 
+    /// Widget quick-logs store the tap time on `HeadacheEvent.timestamp`. When the app opens, we enrich each
+    /// pending row using **that** instant for HealthKit and weather — never “now” — and process oldest first.
+    func enrichPendingWidgetQuickLogsIfNeeded(in context: ModelContext) {
+        guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else { return }
+        guard !isCapturing else { return }
+
+        let pending: [HeadacheEvent] = (try? context.fetch(FetchDescriptor<HeadacheEvent>(
+            sortBy: [SortDescriptor(\HeadacheEvent.timestamp, order: .forward)]
+        )))?.filter { event in
+            event.healthStatusMessage == HeadacheWidgetQuickLog.healthMessagePending
+                && event.environmentStatusMessage == HeadacheWidgetQuickLog.environmentMessagePending
+        } ?? []
+
+        guard !pending.isEmpty else { return }
+
+        Task { @MainActor in
+            var updated = 0
+            for event in pending {
+                let t = event.timestamp
+                let health = await HealthKitService.shared.captureSnapshot(at: t)
+                let environment = await EnvironmentService.shared.captureSnapshot(at: t)
+                event.apply(health)
+                event.apply(environment)
+                event.finalizeCapture()
+                do {
+                    try context.save()
+                    updated += 1
+                } catch {
+                    consoleError("enrichPendingWidgetQuickLogs: save failed", error: error, trace: ["id": "\(event.id)"])
+                }
+            }
+            if updated > 0 {
+                bannerMessage = updated == 1 ? "Updated context for a widget log." : "Updated context for \(updated) widget logs."
+            }
+        }
+    }
+
     /// - Parameter fromWatch: Watch requests bypass the iPhone onboarding gate so logging works from the watch immediately.
     func captureHeadache(in context: ModelContext, fromWatch: Bool = false) {
         if !fromWatch {

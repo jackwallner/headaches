@@ -61,7 +61,6 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
     }
 
     func captureSnapshot(at date: Date) async -> EnvironmentCaptureResult {
-        _ = date
         if HeadacheOnboardingStore.declinedLocation {
             return EnvironmentCaptureResult(
                 status: .unavailable,
@@ -101,9 +100,10 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             let placemarks = try await reverseGeocode(location)
             let placemark = placemarks.first
 
-            let openMeteo = try await OpenMeteoClient.fetchCurrent(
+            let openMeteo = try await OpenMeteoClient.fetchWeatherNearestTo(
                 latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
+                longitude: location.coordinate.longitude,
+                eventDate: date
             )
 
             let snapshot = makeSnapshot(placemark: placemark, openMeteo: openMeteo)
@@ -283,6 +283,140 @@ private enum OpenMeteoClient {
             windDirectionDegrees: c.windDirection10m,
             cloudCoverPercent: c.cloudCover,
             uvIndex: c.uvIndex
+        )
+    }
+
+    /// Weather at **event time** (hour slot nearest to `eventDate` on that calendar day), not “now”.
+    /// Uses forecast API first, then archive for older days — then falls back to current conditions.
+    static func fetchWeatherNearestTo(latitude: Double, longitude: Double, eventDate: Date) async throws -> CurrentWeather {
+        let cal = Calendar.current
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = cal.timeZone
+        df.dateFormat = "yyyy-MM-dd"
+        let day = df.string(from: eventDate)
+
+        if let w = await fetchHourlySlot(
+            baseURL: "https://api.open-meteo.com/v1/forecast",
+            latitude: latitude,
+            longitude: longitude,
+            day: day,
+            eventDate: eventDate
+        ) {
+            return w
+        }
+        if let w = await fetchHourlySlot(
+            baseURL: "https://archive-api.open-meteo.com/v1/archive",
+            latitude: latitude,
+            longitude: longitude,
+            day: day,
+            eventDate: eventDate
+        ) {
+            return w
+        }
+        return try await fetchCurrent(latitude: latitude, longitude: longitude)
+    }
+
+    private struct HourlyPayload: Decodable {
+        let timezone: String
+        let hourly: Hourly
+        struct Hourly: Decodable {
+            let time: [String]
+            let temperature2m: [Double?]
+            let apparentTemperature: [Double?]
+            let relativeHumidity2m: [Double?]
+            let precipitation: [Double?]
+            let weatherCode: [Int?]
+            let cloudCover: [Double?]
+            let surfacePressure: [Double?]
+            let windSpeed10m: [Double?]
+            let windDirection10m: [Double?]
+            let uvIndex: [Double?]
+
+            enum CodingKeys: String, CodingKey {
+                case time
+                case temperature2m = "temperature_2m"
+                case apparentTemperature = "apparent_temperature"
+                case relativeHumidity2m = "relative_humidity_2m"
+                case precipitation
+                case weatherCode = "weather_code"
+                case cloudCover = "cloud_cover"
+                case surfacePressure = "surface_pressure"
+                case windSpeed10m = "wind_speed_10m"
+                case windDirection10m = "wind_direction_10m"
+                case uvIndex = "uv_index"
+            }
+        }
+    }
+
+    private static func fetchHourlySlot(
+        baseURL: String,
+        latitude: Double,
+        longitude: Double,
+        day: String,
+        eventDate: Date
+    ) async -> CurrentWeather? {
+        var components = URLComponents(string: baseURL)!
+        components.queryItems = [
+            URLQueryItem(name: "latitude", value: String(latitude)),
+            URLQueryItem(name: "longitude", value: String(longitude)),
+            URLQueryItem(name: "timezone", value: "auto"),
+            URLQueryItem(name: "start_date", value: day),
+            URLQueryItem(name: "end_date", value: day),
+            URLQueryItem(
+                name: "hourly",
+                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index"
+            ),
+            URLQueryItem(name: "wind_speed_unit", value: "kmh"),
+        ]
+        guard let url = components.url else { return nil }
+        guard let (data, response) = try? await URLSession.shared.data(from: url),
+              let http = response as? HTTPURLResponse,
+              (200 ... 299).contains(http.statusCode) else {
+            return nil
+        }
+        guard let decoded = try? JSONDecoder().decode(HourlyPayload.self, from: data) else {
+            return nil
+        }
+        let h = decoded.hourly
+        guard !h.time.isEmpty else { return nil }
+
+        guard let tz = TimeZone(identifier: decoded.timezone) else { return nil }
+        let tParser = DateFormatter()
+        tParser.locale = Locale(identifier: "en_US_POSIX")
+        tParser.timeZone = tz
+        tParser.dateFormat = "yyyy-MM-dd'T'HH:mm"
+
+        var bestIdx = 0
+        var bestDelta = TimeInterval.greatestFiniteMagnitude
+        for (i, s) in h.time.enumerated() {
+            guard let t = tParser.date(from: s) else { continue }
+            let d = abs(t.timeIntervalSince(eventDate))
+            if d < bestDelta {
+                bestDelta = d
+                bestIdx = i
+            }
+        }
+
+        func at<T>(_ arr: [T?], _ i: Int) -> T? {
+            guard i >= 0, i < arr.count else { return nil }
+            return arr[i]
+        }
+
+        let wc = at(h.weatherCode, bestIdx).flatMap { $0 }
+        return CurrentWeather(
+            conditionSummary: wc.map { wmoWeatherSummary(code: $0) },
+            weatherCode: wc,
+            temperatureC: at(h.temperature2m, bestIdx).flatMap { $0 },
+            apparentTemperatureC: at(h.apparentTemperature, bestIdx).flatMap { $0 },
+            relativeHumidityPercent: at(h.relativeHumidity2m, bestIdx).flatMap { $0 },
+            surfacePressureHpa: at(h.surfacePressure, bestIdx).flatMap { $0 },
+            pressureTrend: .unavailable,
+            precipitationMm: at(h.precipitation, bestIdx).flatMap { $0 },
+            windSpeedKph: at(h.windSpeed10m, bestIdx).flatMap { $0 },
+            windDirectionDegrees: at(h.windDirection10m, bestIdx).flatMap { $0 },
+            cloudCoverPercent: at(h.cloudCover, bestIdx).flatMap { $0 },
+            uvIndex: at(h.uvIndex, bestIdx).flatMap { $0 }
         )
     }
 
