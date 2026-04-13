@@ -26,15 +26,12 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         }
         let payload = ["action": "headacheLog"]
         if session.isReachable {
-            session.sendMessage(payload, replyHandler: { _ in
-                Task { @MainActor [weak self] in
-                    self?.confirmLogged()
-                }
-            }, errorHandler: { error in
+            session.sendMessage(payload, replyHandler: nil, errorHandler: { error in
                 Task { @MainActor [weak self] in
                     self?.statusMessage = error.localizedDescription
                 }
             })
+            confirmLogged()
         } else {
             do {
                 try session.updateApplicationContext(payload)
