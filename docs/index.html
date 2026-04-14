@@ -11,12 +11,12 @@
     <meta property="og:description" content="Log a headache in one tap. Automatic Health, weather, and environmental context. Export a doctor-friendly CSV. Free with no ads or accounts.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jackwallner.github.io/headaches/">
-    <meta property="og:image" content="https://jackwallner.github.io/headaches/icon_256.png">
+    <meta property="og:image" content="https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg">
     <meta property="og:site_name" content="Headache Logger">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Headache Logger - One-Tap Headache Tracking">
     <meta name="twitter:description" content="Log headaches in one tap with automatic context from Apple Health and local weather. Free, private, no account required.">
-    <meta name="twitter:image" content="https://jackwallner.github.io/headaches/icon_256.png">
+    <meta name="twitter:image" content="https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -31,7 +31,7 @@
         },
         "description": "Log a headache in one tap. Automatic context from Apple Health, weather, and air quality. Export to CSV for your doctor. Free for iPhone and Apple Watch.",
         "url": "https://jackwallner.github.io/headaches/",
-        "screenshot": "https://jackwallner.github.io/headaches/icon_256.png",
+        "screenshot": "https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg",
         "softwareVersion": "1.0",
         "author": {
             "@type": "Person",
@@ -311,6 +311,66 @@
 
         footer .divider { margin: 4px 0; }
 
+        /* Screenshots */
+        .screenshots {
+            padding: 0 0 72px;
+            background: #fafafa;
+        }
+
+        .screenshots-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .screenshots-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .screenshots-header p {
+            font-size: 17px;
+            color: #6e6e73;
+        }
+
+        .shot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        figure.shot {
+            margin: 0;
+            padding: 16px;
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        figure.shot img {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+
+        figure.shot.watch img {
+            max-width: 200px;
+        }
+
+        figure.shot figcaption {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #6e6e73;
+            text-align: center;
+            line-height: 1.4;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero { padding: 72px 20px 56px; }
@@ -321,6 +381,9 @@
 
             .features-header h2 { font-size: 28px; }
             .privacy h2, .cta h2 { font-size: 26px; }
+
+            .shot-grid { grid-template-columns: 1fr; }
+            .screenshots-header h2 { font-size: 28px; }
         }
     </style>
 </head>
@@ -341,6 +404,47 @@
         <p class="tagline">Press once when a headache starts. The app records the moment and fills in Health, weather, and environmental context automatically.</p>
         <p class="platforms">iPhone &middot; Apple Watch &middot; Widget</p>
         <a class="download-btn" href="#">Coming soon on the App Store</a>
+    </section>
+
+    <section class="screenshots" aria-label="App screenshots">
+        <div class="container">
+            <div class="screenshots-header">
+                <h2>Screenshots</h2>
+                <p>iPhone and Apple Watch.</p>
+            </div>
+            <div class="shot-grid">
+                <figure class="shot">
+                    <img
+                        src="./assets/screenshot-iphone-log.jpg"
+                        width="473"
+                        height="1024"
+                        alt="Headache Logger on iPhone: main screen with Log headache button, latest event summary, and recent logs."
+                        loading="lazy"
+                        decoding="async">
+                    <figcaption>iPhone &mdash; log a headache in one tap</figcaption>
+                </figure>
+                <figure class="shot">
+                    <img
+                        src="./assets/screenshot-iphone-history.jpg"
+                        width="473"
+                        height="1024"
+                        alt="Headache Logger History on iPhone: summary stats and list of past entries with context."
+                        loading="lazy"
+                        decoding="async">
+                    <figcaption>iPhone &mdash; history and patterns</figcaption>
+                </figure>
+                <figure class="shot watch">
+                    <img
+                        src="./assets/screenshot-watch.png"
+                        width="410"
+                        height="502"
+                        alt="Headache Logger on Apple Watch: Log headache button on the main screen."
+                        loading="lazy"
+                        decoding="async">
+                    <figcaption>Apple Watch &mdash; quick log from your wrist</figcaption>
+                </figure>
+            </div>
+        </div>
     </section>
 
     <section class="features">
