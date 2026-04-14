@@ -6,10 +6,9 @@ Log a headache in one tap. The app automatically captures 60+ data points from A
 
 **Free. No ads. No accounts. No cloud. Open source.**
 
-[Website](https://jackwallner.github.io/headaches/) | [Privacy Policy](https://jackwallner.github.io/headaches/privacy-policy.html) | [Support](https://jackwallner.github.io/headaches/support.html)
+[Website](https://jackwallner.github.io/headaches/) | [App Store](https://apps.apple.com/us/app/headache-migraine-logger/id6762074561) | [Privacy Policy](https://jackwallner.github.io/headaches/privacy-policy.html) | [Support](https://jackwallner.github.io/headaches/support.html)
 
-<!-- App Store badge goes here once live -->
-<!-- [![Download on the App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](APP_STORE_LINK) -->
+[![Download on the App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](https://apps.apple.com/us/app/headache-migraine-logger/id6762074561)
 
 ## Features
 
