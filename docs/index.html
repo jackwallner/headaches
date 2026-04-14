@@ -109,7 +109,7 @@
         /* Hero */
         .hero {
             text-align: center;
-            padding: 100px 24px 80px;
+            padding: 100px 24px 64px;
         }
 
         .hero h1 {
@@ -131,7 +131,7 @@
             font-size: 19px;
             color: #6e6e73;
             line-height: 1.5;
-            max-width: 480px;
+            max-width: 440px;
             margin: 0 auto 12px;
         }
 
@@ -155,6 +155,40 @@
         }
 
         .download-btn:hover { opacity: 0.85; }
+
+        /* Phone showcase (layout matches jackwallner.github.io/vitals/) */
+        .showcase {
+            padding: 0 24px 80px;
+        }
+
+        .showcase-inner {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            align-items: center;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .phone-frame {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .phone-frame img {
+            display: block;
+            width: auto;
+            height: 500px;
+            border-radius: 32px;
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.06);
+        }
+
+        /* Watch aspect ratio is wider; scale to align visually with phone column width */
+        .phone-frame.watch-frame img {
+            height: 380px;
+            border-radius: 24px;
+        }
 
         /* Features */
         .features {
@@ -311,79 +345,25 @@
 
         footer .divider { margin: 4px 0; }
 
-        /* Screenshots */
-        .screenshots {
-            padding: 0 0 72px;
-            background: #fafafa;
-        }
-
-        .screenshots-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .screenshots-header h2 {
-            font-size: 36px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-
-        .screenshots-header p {
-            font-size: 17px;
-            color: #6e6e73;
-        }
-
-        .shot-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            align-items: start;
-        }
-
-        figure.shot {
-            margin: 0;
-            padding: 16px;
-            border-radius: 18px;
-            background: #fff;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-        }
-
-        figure.shot img {
-            display: block;
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            margin: 0 auto;
-            border-radius: 12px;
-        }
-
-        figure.shot.watch img {
-            max-width: 200px;
-        }
-
-        figure.shot figcaption {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #6e6e73;
-            text-align: center;
-            line-height: 1.4;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
-            .hero { padding: 72px 20px 56px; }
+            .hero { padding: 72px 20px 48px; }
             .hero h1 { font-size: 36px; letter-spacing: -1px; }
             .hero .tagline { font-size: 17px; }
+
+            .showcase-inner { gap: 12px; }
+            .phone-frame img { height: 400px; border-radius: 24px; }
+            .phone-frame.watch-frame img { height: 300px; border-radius: 20px; }
 
             .features-grid { grid-template-columns: 1fr; }
 
             .features-header h2 { font-size: 28px; }
             .privacy h2, .cta h2 { font-size: 26px; }
+        }
 
-            .shot-grid { grid-template-columns: 1fr; }
-            .screenshots-header h2 { font-size: 28px; }
+        @media (max-width: 480px) {
+            .phone-frame:not(:first-child) { display: none; }
+            .phone-frame img { height: 440px; border-radius: 24px; }
         }
     </style>
 </head>
@@ -406,43 +386,34 @@
         <a class="download-btn" href="#">Coming soon on the App Store</a>
     </section>
 
-    <section class="screenshots" aria-label="App screenshots">
-        <div class="container">
-            <div class="screenshots-header">
-                <h2>Screenshots</h2>
-                <p>iPhone and Apple Watch.</p>
+    <section class="showcase" aria-label="App screenshots">
+        <div class="showcase-inner">
+            <div class="phone-frame">
+                <img
+                    src="./assets/screenshot-iphone-log.jpg"
+                    width="473"
+                    height="1024"
+                    alt="Headache Logger on iPhone: main screen with Log headache button, latest event summary, and recent logs."
+                    loading="lazy"
+                    decoding="async">
             </div>
-            <div class="shot-grid">
-                <figure class="shot">
-                    <img
-                        src="./assets/screenshot-iphone-log.jpg"
-                        width="473"
-                        height="1024"
-                        alt="Headache Logger on iPhone: main screen with Log headache button, latest event summary, and recent logs."
-                        loading="lazy"
-                        decoding="async">
-                    <figcaption>iPhone &mdash; log a headache in one tap</figcaption>
-                </figure>
-                <figure class="shot">
-                    <img
-                        src="./assets/screenshot-iphone-history.jpg"
-                        width="473"
-                        height="1024"
-                        alt="Headache Logger History on iPhone: summary stats and list of past entries with context."
-                        loading="lazy"
-                        decoding="async">
-                    <figcaption>iPhone &mdash; history and patterns</figcaption>
-                </figure>
-                <figure class="shot watch">
-                    <img
-                        src="./assets/screenshot-watch.png"
-                        width="410"
-                        height="502"
-                        alt="Headache Logger on Apple Watch: Log headache button on the main screen."
-                        loading="lazy"
-                        decoding="async">
-                    <figcaption>Apple Watch &mdash; quick log from your wrist</figcaption>
-                </figure>
+            <div class="phone-frame">
+                <img
+                    src="./assets/screenshot-iphone-history.jpg"
+                    width="473"
+                    height="1024"
+                    alt="Headache Logger History on iPhone: summary stats and list of past entries with context."
+                    loading="lazy"
+                    decoding="async">
+            </div>
+            <div class="phone-frame watch-frame">
+                <img
+                    src="./assets/screenshot-watch.png"
+                    width="410"
+                    height="502"
+                    alt="Headache Logger on Apple Watch: Log headache button on the main screen."
+                    loading="lazy"
+                    decoding="async">
             </div>
         </div>
     </section>
