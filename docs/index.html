@@ -156,7 +156,7 @@
 
         .download-btn:hover { opacity: 0.85; }
 
-        /* Phone showcase (layout matches jackwallner.github.io/vitals/) */
+        /* Phone showcase — same rules as jackwallner.github.io/vitals/ */
         .showcase {
             padding: 0 24px 80px;
         }
@@ -165,7 +165,7 @@
             display: flex;
             gap: 24px;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             max-width: 860px;
             margin: 0 auto;
         }
@@ -176,18 +176,10 @@
         }
 
         .phone-frame img {
-            display: block;
-            width: auto;
             height: 500px;
             border-radius: 32px;
             border: 1px solid rgba(0,0,0,0.08);
             box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.06);
-        }
-
-        /* Watch aspect ratio is wider; scale to align visually with phone column width */
-        .phone-frame.watch-frame img {
-            height: 380px;
-            border-radius: 24px;
         }
 
         /* Features */
@@ -353,7 +345,6 @@
 
             .showcase-inner { gap: 12px; }
             .phone-frame img { height: 400px; border-radius: 24px; }
-            .phone-frame.watch-frame img { height: 300px; border-radius: 20px; }
 
             .features-grid { grid-template-columns: 1fr; }
 
@@ -363,7 +354,7 @@
 
         @media (max-width: 480px) {
             .phone-frame:not(:first-child) { display: none; }
-            .phone-frame img { height: 440px; border-radius: 24px; }
+            .phone-frame img { height: 440px; }
         }
     </style>
 </head>
@@ -382,38 +373,20 @@
     <section class="hero">
         <h1>Log it in <span>one tap</span></h1>
         <p class="tagline">Press once when a headache starts. The app records the moment and fills in Health, weather, and environmental context automatically.</p>
-        <p class="platforms">iPhone &middot; Apple Watch &middot; Widget</p>
+        <p class="platforms">iPhone &middot; Apple Watch &middot; Widgets</p>
         <a class="download-btn" href="#">Coming soon on the App Store</a>
     </section>
 
-    <section class="showcase" aria-label="App screenshots">
+    <section class="showcase">
         <div class="showcase-inner">
             <div class="phone-frame">
-                <img
-                    src="./assets/screenshot-iphone-log.jpg"
-                    width="473"
-                    height="1024"
-                    alt="Headache Logger on iPhone: main screen with Log headache button, latest event summary, and recent logs."
-                    loading="lazy"
-                    decoding="async">
+                <img src="./assets/screenshot-iphone-log.jpg" alt="Headache Logger on iPhone: main screen with Log headache button, latest event summary, and recent logs.">
             </div>
             <div class="phone-frame">
-                <img
-                    src="./assets/screenshot-iphone-history.jpg"
-                    width="473"
-                    height="1024"
-                    alt="Headache Logger History on iPhone: summary stats and list of past entries with context."
-                    loading="lazy"
-                    decoding="async">
+                <img src="./assets/screenshot-iphone-history.jpg" alt="Headache Logger History on iPhone: summary stats and list of past entries with context.">
             </div>
-            <div class="phone-frame watch-frame">
-                <img
-                    src="./assets/screenshot-watch.png"
-                    width="410"
-                    height="502"
-                    alt="Headache Logger on Apple Watch: Log headache button on the main screen."
-                    loading="lazy"
-                    decoding="async">
+            <div class="phone-frame">
+                <img src="./assets/screenshot-watch.png" alt="Headache Logger on Apple Watch: Log headache button on the main screen.">
             </div>
         </div>
     </section>
@@ -421,7 +394,7 @@
     <section class="features">
         <div class="container">
             <div class="features-header">
-                <h2>Context without typing</h2>
+                <h2>Built to do one thing well</h2>
                 <p>Every tap captures what was happening around you.</p>
             </div>
         </div>
@@ -471,7 +444,7 @@
     </section>
 
     <section class="cta">
-        <h2>Start tracking patterns</h2>
+        <h2>Start tracking today</h2>
         <p>Free on the App Store. No account required.</p>
         <a class="download-btn" href="#">Coming soon on the App Store</a>
     </section>
