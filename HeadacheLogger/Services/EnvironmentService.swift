@@ -100,13 +100,21 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             let placemarks = try await reverseGeocode(location)
             let placemark = placemarks.first
 
-            let openMeteo = try await OpenMeteoClient.fetchWeatherNearestTo(
+            async let weatherTask = OpenMeteoClient.fetchWeatherNearestTo(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                eventDate: date
+            )
+            async let airQualityTask = OpenMeteoClient.fetchAirQuality(
                 latitude: location.coordinate.latitude,
                 longitude: location.coordinate.longitude,
                 eventDate: date
             )
 
-            let snapshot = makeSnapshot(placemark: placemark, openMeteo: openMeteo)
+            let openMeteo = try await weatherTask
+            let airQuality = await airQualityTask
+
+            let snapshot = makeSnapshot(placemark: placemark, openMeteo: openMeteo, airQuality: airQuality)
 
             let meaningful =
                 snapshot.locality != nil
@@ -130,7 +138,7 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    private func makeSnapshot(placemark: CLPlacemark?, openMeteo: OpenMeteoClient.CurrentWeather) -> EnvironmentSnapshot {
+    private func makeSnapshot(placemark: CLPlacemark?, openMeteo: OpenMeteoClient.CurrentWeather, airQuality: OpenMeteoClient.AirQualityData?) -> EnvironmentSnapshot {
         let locality = placemark?.locality
         let region = placemark?.administrativeArea
 
@@ -149,20 +157,20 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             windDirectionDegrees: openMeteo.windDirectionDegrees,
             cloudCoverPercent: openMeteo.cloudCoverPercent,
             uvIndex: openMeteo.uvIndex,
-            usAQI: nil,
-            europeanAQI: nil,
-            pm25: nil,
-            pm10: nil,
-            ozone: nil,
-            nitrogenDioxide: nil,
-            sulphurDioxide: nil,
-            carbonMonoxide: nil,
-            alderPollen: nil,
-            birchPollen: nil,
-            grassPollen: nil,
-            mugwortPollen: nil,
-            olivePollen: nil,
-            ragweedPollen: nil
+            usAQI: airQuality?.usAQI,
+            europeanAQI: airQuality?.europeanAQI,
+            pm25: airQuality?.pm25,
+            pm10: airQuality?.pm10,
+            ozone: airQuality?.ozone,
+            nitrogenDioxide: airQuality?.nitrogenDioxide,
+            sulphurDioxide: airQuality?.sulphurDioxide,
+            carbonMonoxide: airQuality?.carbonMonoxide,
+            alderPollen: airQuality?.alderPollen,
+            birchPollen: airQuality?.birchPollen,
+            grassPollen: airQuality?.grassPollen,
+            mugwortPollen: airQuality?.mugwortPollen,
+            olivePollen: airQuality?.olivePollen,
+            ragweedPollen: airQuality?.ragweedPollen
         )
     }
 
@@ -429,6 +437,137 @@ private enum OpenMeteoClient {
             cloudCoverPercent: at(h.cloudCover, idx).flatMap { $0 },
             uvIndex: at(h.uvIndex, idx).flatMap { $0 }
         )
+    }
+
+    // MARK: - Air Quality
+
+    struct AirQualityData {
+        let usAQI: Double?
+        let europeanAQI: Double?
+        let pm25: Double?
+        let pm10: Double?
+        let ozone: Double?
+        let nitrogenDioxide: Double?
+        let sulphurDioxide: Double?
+        let carbonMonoxide: Double?
+        let alderPollen: Double?
+        let birchPollen: Double?
+        let grassPollen: Double?
+        let mugwortPollen: Double?
+        let olivePollen: Double?
+        let ragweedPollen: Double?
+    }
+
+    private struct AirQualityHourlyPayload: Decodable {
+        let timezone: String
+        let hourly: Hourly
+        struct Hourly: Decodable {
+            let time: [String]
+            let usAqi: [Double?]
+            let europeanAqi: [Double?]
+            let pm25: [Double?]
+            let pm10: [Double?]
+            let ozone: [Double?]
+            let nitrogenDioxide: [Double?]
+            let sulphurDioxide: [Double?]
+            let carbonMonoxide: [Double?]
+            let alderPollen: [Double?]?
+            let birchPollen: [Double?]?
+            let grassPollen: [Double?]?
+            let mugwortPollen: [Double?]?
+            let olivePollen: [Double?]?
+            let ragweedPollen: [Double?]?
+
+            enum CodingKeys: String, CodingKey {
+                case time
+                case usAqi = "us_aqi"
+                case europeanAqi = "european_aqi"
+                case pm25 = "pm2_5"
+                case pm10
+                case ozone
+                case nitrogenDioxide = "nitrogen_dioxide"
+                case sulphurDioxide = "sulphur_dioxide"
+                case carbonMonoxide = "carbon_monoxide"
+                case alderPollen = "alder_pollen"
+                case birchPollen = "birch_pollen"
+                case grassPollen = "grass_pollen"
+                case mugwortPollen = "mugwort_pollen"
+                case olivePollen = "olive_pollen"
+                case ragweedPollen = "ragweed_pollen"
+            }
+        }
+    }
+
+    static func fetchAirQuality(latitude: Double, longitude: Double, eventDate: Date) async -> AirQualityData? {
+        let cal = Calendar.current
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = cal.timeZone
+        df.dateFormat = "yyyy-MM-dd"
+        let day = df.string(from: eventDate)
+
+        var components = URLComponents(string: "https://air-quality-api.open-meteo.com/v1/air-quality")!
+        components.queryItems = [
+            URLQueryItem(name: "latitude", value: String(latitude)),
+            URLQueryItem(name: "longitude", value: String(longitude)),
+            URLQueryItem(name: "timezone", value: "auto"),
+            URLQueryItem(name: "start_date", value: day),
+            URLQueryItem(name: "end_date", value: day),
+            URLQueryItem(
+                name: "hourly",
+                value: "us_aqi,european_aqi,pm2_5,pm10,ozone,nitrogen_dioxide,sulphur_dioxide,carbon_monoxide,alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen"
+            ),
+        ]
+
+        guard let url = components.url else { return nil }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+                return nil
+            }
+            let decoded = try JSONDecoder().decode(AirQualityHourlyPayload.self, from: data)
+            let h = decoded.hourly
+            guard !h.time.isEmpty else { return nil }
+            guard let tz = TimeZone(identifier: decoded.timezone) else { return nil }
+
+            var bestIdx: Int?
+            var bestDelta = TimeInterval.greatestFiniteMagnitude
+            for (i, s) in h.time.enumerated() {
+                guard let t = OpenMeteoTimeParsing.hourDate(from: s, timeZone: tz) else { continue }
+                let d = abs(t.timeIntervalSince(eventDate))
+                if d < bestDelta {
+                    bestDelta = d
+                    bestIdx = i
+                }
+            }
+            guard let idx = bestIdx else { return nil }
+
+            func at(_ arr: [Double?]?, _ i: Int) -> Double? {
+                guard let arr, i >= 0, i < arr.count else { return nil }
+                return arr[i]
+            }
+
+            return AirQualityData(
+                usAQI: at(h.usAqi, idx),
+                europeanAQI: at(h.europeanAqi, idx),
+                pm25: at(h.pm25, idx),
+                pm10: at(h.pm10, idx),
+                ozone: at(h.ozone, idx),
+                nitrogenDioxide: at(h.nitrogenDioxide, idx),
+                sulphurDioxide: at(h.sulphurDioxide, idx),
+                carbonMonoxide: at(h.carbonMonoxide, idx),
+                alderPollen: at(h.alderPollen, idx),
+                birchPollen: at(h.birchPollen, idx),
+                grassPollen: at(h.grassPollen, idx),
+                mugwortPollen: at(h.mugwortPollen, idx),
+                olivePollen: at(h.olivePollen, idx),
+                ragweedPollen: at(h.ragweedPollen, idx)
+            )
+        } catch {
+            print("OpenMeteoClient.fetchAirQuality failed | \(error)")
+            return nil
+        }
     }
 
     /// Short WMO code summary (Open-Meteo uses WMO Weather interpretation codes).

@@ -4,12 +4,7 @@ import Foundation
 enum HeadacheAppGroup {
     static let identifier = "group.com.jackwallner.headachelogger"
 
-    static var userDefaults: UserDefaults {
-        guard let suite = UserDefaults(suiteName: identifier) else {
-            fatalError("HeadacheAppGroup: could not open UserDefaults suite \(identifier)")
-        }
-        return suite
-    }
+    static let userDefaults: UserDefaults = UserDefaults(suiteName: identifier) ?? .standard
 }
 
 enum HeadacheStorageKey: String {

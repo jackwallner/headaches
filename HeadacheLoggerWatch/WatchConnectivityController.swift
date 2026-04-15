@@ -1,5 +1,5 @@
 import Foundation
-import WatchConnectivity
+@preconcurrency import WatchConnectivity
 import WatchKit
 
 /// Sends log requests to the paired iPhone (which runs capture with Health + location there).
@@ -7,6 +7,9 @@ import WatchKit
 final class WatchConnectivityController: NSObject, ObservableObject {
     @Published var statusMessage: String?
     @Published var showConfirmation = false
+    @Published var isSending = false
+    @Published var lastLoggedDate: Date?
+
     private var clearTask: Task<Void, Never>?
 
     func activate() {
@@ -16,38 +19,50 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         }
         WCSession.default.delegate = self
         WCSession.default.activate()
+        lastLoggedDate = Self.loadLastLoggedDate()
     }
 
     func requestLogFromPhone() {
+        guard !isSending else { return }
+
         let session = WCSession.default
         guard session.activationState == .activated else {
             statusMessage = "Connecting to iPhone…"
             return
         }
+
+        isSending = true
         let payload: [String: Any] = [
             "action": "headacheLog",
             "requestID": UUID().uuidString,
             "timestamp": Date.now.timeIntervalSince1970
         ]
+
         if session.isReachable {
+            statusMessage = "Sending…"
             session.sendMessage(payload, replyHandler: { [weak self] reply in
                 Task { @MainActor in
+                    guard let self else { return }
+                    self.isSending = false
                     if reply["status"] as? String == "ok" {
-                        self?.confirmLogged(message: "Logged.", showsConfirmation: true)
+                        self.confirmLogged(message: "Logged.", showsConfirmation: true)
                     } else {
-                        self?.clearTask?.cancel()
-                        self?.showConfirmation = false
-                        self?.statusMessage = "Could not save event. Try again."
+                        self.clearTask?.cancel()
+                        self.showConfirmation = false
+                        self.statusMessage = "Could not save event. Try again."
                     }
                 }
             }, errorHandler: { [weak self] error in
                 Task { @MainActor in
-                    self?.queueForLater(payload: payload, session: session, fallbackError: error)
+                    guard let self else { return }
+                    self.isSending = false
+                    let fallbackSession = WCSession.default
+                    self.queueForLater(payload: payload, session: fallbackSession, fallbackError: error)
                 }
             })
-            statusMessage = "Sending…"
         } else {
             queueForLater(payload: payload, session: session, fallbackError: nil)
+            isSending = false
         }
     }
 
@@ -60,13 +75,18 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         }
 
         session.transferUserInfo(payload)
-        confirmLogged(message: "Queued.", showsConfirmation: false)
+        confirmLogged(message: "Queued — will sync when iPhone is nearby.", showsConfirmation: false)
     }
 
     private func confirmLogged(message: String, showsConfirmation: Bool) {
         WKInterfaceDevice.current().play(.success)
         statusMessage = message
         showConfirmation = showsConfirmation
+
+        let now = Date.now
+        lastLoggedDate = now
+        Self.saveLastLoggedDate(now)
+
         clearTask?.cancel()
         clearTask = Task { @MainActor [weak self] in
             try? await Task.sleep(for: .seconds(4))
@@ -74,6 +94,17 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             self?.statusMessage = nil
             self?.showConfirmation = false
         }
+    }
+
+    private static let lastLoggedKey = "lastWatchLoggedDate"
+
+    private static func loadLastLoggedDate() -> Date? {
+        let interval = HeadacheAppGroup.userDefaults.double(forKey: lastLoggedKey)
+        return interval > 0 ? Date(timeIntervalSince1970: interval) : nil
+    }
+
+    private static func saveLastLoggedDate(_ date: Date) {
+        HeadacheAppGroup.userDefaults.set(date.timeIntervalSince1970, forKey: lastLoggedKey)
     }
 }
 

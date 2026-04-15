@@ -15,8 +15,8 @@ Log a headache in one tap. The app automatically captures 50+ data points from A
 - **One tap** - Log a headache instantly. No forms, no questions, no typing.
 - **Apple Health context** - Steps, sleep, HRV, resting heart rate, SpO2, VO2max, workouts, audio exposure, mindful minutes, and more.
 - **Weather & environment** - Temperature, barometric pressure + trend, humidity, wind, UV index, precipitation, cloud cover.
-- **Air quality** *(coming soon)* - US AQI, EU AQI, PM2.5, PM10, ozone, NO2, SO2, CO.
-- **Pollen** *(coming soon)* - Alder, birch, grass, mugwort, olive, ragweed.
+- **Air quality** - US AQI, EU AQI, PM2.5, PM10, ozone, NO2, SO2, CO.
+- **Pollen** - Alder, birch, grass, mugwort, olive, ragweed.
 - **Time patterns** - Weekday, hour, part of day, timezone.
 - **Apple Watch** - One-tap logging from your wrist. Entries queue and sync automatically.
 - **Home screen widget** - Log without opening the app via WidgetKit + App Intents.
