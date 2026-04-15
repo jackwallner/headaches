@@ -30,30 +30,43 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             "timestamp": Date.now.timeIntervalSince1970
         ]
         if session.isReachable {
-            session.sendMessage(payload, replyHandler: { [weak self] _ in
-                Task { @MainActor in self?.confirmLogged() }
+            session.sendMessage(payload, replyHandler: { [weak self] reply in
+                Task { @MainActor in
+                    if reply["status"] as? String == "ok" {
+                        self?.confirmLogged(message: "Logged.", showsConfirmation: true)
+                    } else {
+                        self?.clearTask?.cancel()
+                        self?.showConfirmation = false
+                        self?.statusMessage = "Could not save event. Try again."
+                    }
+                }
             }, errorHandler: { [weak self] error in
                 Task { @MainActor in
-                    self?.clearTask?.cancel()
-                    self?.showConfirmation = false
-                    self?.statusMessage = error.localizedDescription
+                    self?.queueForLater(payload: payload, session: session, fallbackError: error)
                 }
             })
             statusMessage = "Sending…"
         } else {
-            do {
-                try session.updateApplicationContext(payload)
-                confirmLogged()
-            } catch {
-                statusMessage = error.localizedDescription
-            }
+            queueForLater(payload: payload, session: session, fallbackError: nil)
         }
     }
 
-    private func confirmLogged() {
+    private func queueForLater(payload: [String: Any], session: WCSession, fallbackError: Error?) {
+        guard session.activationState == .activated else {
+            clearTask?.cancel()
+            showConfirmation = false
+            statusMessage = fallbackError?.localizedDescription ?? "Connecting to iPhone…"
+            return
+        }
+
+        session.transferUserInfo(payload)
+        confirmLogged(message: "Queued.", showsConfirmation: false)
+    }
+
+    private func confirmLogged(message: String, showsConfirmation: Bool) {
         WKInterfaceDevice.current().play(.success)
-        statusMessage = "Logged."
-        showConfirmation = true
+        statusMessage = message
+        showConfirmation = showsConfirmation
         clearTask?.cancel()
         clearTask = Task { @MainActor [weak self] in
             try? await Task.sleep(for: .seconds(4))

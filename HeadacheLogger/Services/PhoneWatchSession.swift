@@ -6,7 +6,7 @@ import WatchConnectivity
 final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable {
     nonisolated(unsafe) static let shared = PhoneWatchSession()
 
-    var onWatchRequestedCapture: ((Date) -> Void)?
+    var onWatchRequestedCapture: ((Date) -> Bool)?
 
     private override init() {
         super.init()
@@ -38,7 +38,7 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
         guard message["action"] as? String == "headacheLog" else { return }
         let tapDate = Self.extractTimestamp(from: message)
         DispatchQueue.main.async { [weak self] in
-            self?.handleHeadacheLogRequest(tapDate: tapDate)
+            _ = self?.handleHeadacheLogRequest(tapDate: tapDate)
         }
     }
 
@@ -48,9 +48,22 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
             return
         }
         let tapDate = Self.extractTimestamp(from: message)
-        replyHandler(["status": "ok"])
+        let accepted: Bool
+        if Thread.isMainThread {
+            accepted = handleHeadacheLogRequest(tapDate: tapDate)
+        } else {
+            accepted = DispatchQueue.main.sync { [weak self] in
+                self?.handleHeadacheLogRequest(tapDate: tapDate) ?? false
+            }
+        }
+        replyHandler(["status": accepted ? "ok" : "failed"])
+    }
+
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        guard userInfo["action"] as? String == "headacheLog" else { return }
+        let tapDate = Self.extractTimestamp(from: userInfo)
         DispatchQueue.main.async { [weak self] in
-            self?.handleHeadacheLogRequest(tapDate: tapDate)
+            _ = self?.handleHeadacheLogRequest(tapDate: tapDate)
         }
     }
 
@@ -58,12 +71,12 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
         guard applicationContext["action"] as? String == "headacheLog" else { return }
         let tapDate = Self.extractTimestamp(from: applicationContext)
         DispatchQueue.main.async { [weak self] in
-            self?.handleHeadacheLogRequest(tapDate: tapDate)
+            _ = self?.handleHeadacheLogRequest(tapDate: tapDate)
         }
     }
 
-    private func handleHeadacheLogRequest(tapDate: Date) {
-        onWatchRequestedCapture?(tapDate)
+    private func handleHeadacheLogRequest(tapDate: Date) -> Bool {
+        onWatchRequestedCapture?(tapDate) ?? false
     }
 
     private static func extractTimestamp(from payload: [String: Any]) -> Date {
