@@ -52,11 +52,16 @@ final class CaptureCoordinator: ObservableObject {
     }
 
     /// - Parameter fromWatch: Watch requests bypass the iPhone onboarding gate so logging works from the watch immediately.
-    func captureHeadache(in context: ModelContext, fromWatch: Bool = false, watchTapDate: Date? = nil) {
+    @discardableResult
+    func captureHeadache(
+        in context: ModelContext,
+        fromWatch: Bool = false,
+        watchTapDate: Date? = nil
+    ) -> Bool {
         if !fromWatch {
             guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else {
                 bannerMessage = "Finish setup on your iPhone first."
-                return
+                return false
             }
         }
 
@@ -70,7 +75,7 @@ final class CaptureCoordinator: ObservableObject {
             consoleError("CaptureCoordinator: initial save failed", error: error, trace: [:])
             lastCapturedEventID = nil
             bannerMessage = "Could not save event. Try again."
-            return
+            return false
         }
 
         isCapturing = true
@@ -122,6 +127,8 @@ final class CaptureCoordinator: ObservableObject {
                 bannerMessage = nil
             }
         }
+
+        return true
     }
 
     func undoLastCapture(in context: ModelContext) {
