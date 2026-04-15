@@ -31,8 +31,8 @@ private struct HeadacheLoggerRootContent: View {
         }
         .onAppear {
             #if os(iOS)
-            PhoneWatchSession.shared.onWatchRequestedCapture = { [captureCoordinator] in
-                captureCoordinator.captureHeadache(in: modelContext, fromWatch: true)
+            PhoneWatchSession.shared.onWatchRequestedCapture = { [captureCoordinator] tapDate in
+                captureCoordinator.captureHeadache(in: modelContext, fromWatch: true, watchTapDate: tapDate)
             }
             if !AppEnvironment.isUITesting {
                 PhoneWatchSession.shared.start()

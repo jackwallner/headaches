@@ -402,6 +402,19 @@ private enum OpenMeteoClient {
         }
 
         let wc: Int? = at(h.weatherCode, idx).flatMap { $0 }.map { Int(round($0)) }
+
+        let trend: PressureTrend = {
+            let priorIdx = idx - 3
+            guard let current = at(h.surfacePressure, idx).flatMap({ $0 }),
+                  let prior = at(h.surfacePressure, priorIdx).flatMap({ $0 }) else {
+                return .unavailable
+            }
+            let delta = current - prior
+            if delta > 1.0 { return .rising }
+            if delta < -1.0 { return .falling }
+            return .steady
+        }()
+
         return CurrentWeather(
             conditionSummary: wc.map { wmoWeatherSummary(code: $0) },
             weatherCode: wc,
@@ -409,7 +422,7 @@ private enum OpenMeteoClient {
             apparentTemperatureC: at(h.apparentTemperature, idx).flatMap { $0 },
             relativeHumidityPercent: at(h.relativeHumidity2m, idx).flatMap { $0 },
             surfacePressureHpa: at(h.surfacePressure, idx).flatMap { $0 },
-            pressureTrend: .unavailable,
+            pressureTrend: trend,
             precipitationMm: at(h.precipitation, idx).flatMap { $0 },
             windSpeedKph: at(h.windSpeed10m, idx).flatMap { $0 },
             windDirectionDegrees: at(h.windDirection10m, idx).flatMap { $0 },

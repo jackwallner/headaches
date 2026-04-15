@@ -16,12 +16,14 @@ final class CaptureCoordinator: ObservableObject {
         guard !isCapturing else { return }
         guard !isEnrichingWidgetLogs else { return }
 
+        let healthPending = HeadacheWidgetQuickLog.healthMessagePending
+        let envPending = HeadacheWidgetQuickLog.environmentMessagePending
         let pending: [HeadacheEvent] = (try? context.fetch(FetchDescriptor<HeadacheEvent>(
+            predicate: #Predicate {
+                $0.healthStatusMessage == healthPending && $0.environmentStatusMessage == envPending
+            },
             sortBy: [SortDescriptor(\HeadacheEvent.timestamp, order: .forward)]
-        )))?.filter { event in
-            event.healthStatusMessage == HeadacheWidgetQuickLog.healthMessagePending
-                && event.environmentStatusMessage == HeadacheWidgetQuickLog.environmentMessagePending
-        } ?? []
+        ))) ?? []
 
         guard !pending.isEmpty else { return }
 
@@ -50,7 +52,7 @@ final class CaptureCoordinator: ObservableObject {
     }
 
     /// - Parameter fromWatch: Watch requests bypass the iPhone onboarding gate so logging works from the watch immediately.
-    func captureHeadache(in context: ModelContext, fromWatch: Bool = false) {
+    func captureHeadache(in context: ModelContext, fromWatch: Bool = false, watchTapDate: Date? = nil) {
         if !fromWatch {
             guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else {
                 bannerMessage = "Finish setup on your iPhone first."
@@ -58,7 +60,7 @@ final class CaptureCoordinator: ObservableObject {
             }
         }
 
-        let event = HeadacheEvent()
+        let event = HeadacheEvent(timestamp: watchTapDate ?? .now)
         context.insert(event)
         lastCapturedEventID = event.id
 
@@ -66,6 +68,7 @@ final class CaptureCoordinator: ObservableObject {
             try context.save()
         } catch {
             consoleError("CaptureCoordinator: initial save failed", error: error, trace: [:])
+            lastCapturedEventID = nil
             bannerMessage = "Could not save event. Try again."
             return
         }
@@ -101,6 +104,9 @@ final class CaptureCoordinator: ObservableObject {
                 try context.save()
             } catch {
                 consoleError("CaptureCoordinator: finalize save failed", error: error, trace: ["eventID": "\(eventID)"])
+                isCapturing = false
+                bannerMessage = "Context captured but save failed. Reopen to retry."
+                return
             }
 
             isCapturing = false
@@ -128,13 +134,16 @@ final class CaptureCoordinator: ObservableObject {
             context.delete(event)
             do {
                 try context.save()
+                lastCapturedEventID = nil
+                bannerMessage = nil
             } catch {
                 consoleError("CaptureCoordinator: undo save failed", error: error, trace: ["eventID": "\(eventID)"])
+                bannerMessage = "Undo failed. Try again."
             }
+        } else {
+            lastCapturedEventID = nil
+            bannerMessage = nil
         }
-
-        lastCapturedEventID = nil
-        bannerMessage = nil
     }
 
     private func consoleError(_ message: String, error: Error?, trace: [String: String]) {

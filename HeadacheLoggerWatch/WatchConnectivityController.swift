@@ -24,14 +24,22 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             statusMessage = "Connecting to iPhone…"
             return
         }
-        let payload = ["action": "headacheLog"]
+        let payload: [String: Any] = [
+            "action": "headacheLog",
+            "requestID": UUID().uuidString,
+            "timestamp": Date.now.timeIntervalSince1970
+        ]
         if session.isReachable {
-            session.sendMessage(payload, replyHandler: nil, errorHandler: { error in
-                Task { @MainActor [weak self] in
+            session.sendMessage(payload, replyHandler: { [weak self] _ in
+                Task { @MainActor in self?.confirmLogged() }
+            }, errorHandler: { [weak self] error in
+                Task { @MainActor in
+                    self?.clearTask?.cancel()
+                    self?.showConfirmation = false
                     self?.statusMessage = error.localizedDescription
                 }
             })
-            confirmLogged()
+            statusMessage = "Sending…"
         } else {
             do {
                 try session.updateApplicationContext(payload)

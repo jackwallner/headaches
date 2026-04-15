@@ -106,7 +106,11 @@ struct HistoryView: View {
         for index in offsets {
             modelContext.delete(events[index])
         }
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            print("HistoryView: delete save failed | \(error)")
+        }
     }
 
     private func removeTemporaryExport() {
@@ -240,7 +244,7 @@ private struct DetailedEventRow: View {
             HStack(spacing: 8) {
                 DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "—")
                 DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { String(format: "%.1fh", $0) } ?? "—")
-                DataPill(title: "AQI", value: event.usAQI.map { String(format: "%.0f", $0) } ?? "—")
+                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "—")
             }
         }
         .padding(16)
