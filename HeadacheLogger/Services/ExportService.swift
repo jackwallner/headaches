@@ -174,7 +174,10 @@ enum ExportService {
     private static func csv(_ value: String?) -> String {
         let raw = value ?? ""
         let escaped = raw.replacingOccurrences(of: "\"", with: "\"\"")
-        return "\"\(escaped)\""
+        let needsFormulaGuard = escaped.first.map({ "=+-@".contains($0) }) == true
+            && Double(escaped) == nil
+        let safe = needsFormulaGuard ? "'" + escaped : escaped
+        return "\"\(safe)\""
     }
 
     private static func number(_ value: Double?, formatter: NumberFormatter) -> String? {
