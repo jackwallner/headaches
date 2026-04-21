@@ -4,7 +4,9 @@ import Foundation
 enum HeadacheAppGroup {
     static let identifier = "group.com.jackwallner.headachelogger"
 
-    static let userDefaults: UserDefaults = UserDefaults(suiteName: identifier) ?? .standard
+    /// `UserDefaults` is documented as thread-safe, so `nonisolated(unsafe)` is correct under
+    /// Swift 6 strict concurrency. The suite pointer itself never changes after launch.
+    nonisolated(unsafe) static let userDefaults: UserDefaults = UserDefaults(suiteName: identifier) ?? .standard
 }
 
 enum HeadacheStorageKey: String {
