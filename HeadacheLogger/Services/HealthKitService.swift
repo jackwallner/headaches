@@ -99,16 +99,7 @@ actor HealthKitService {
             )
         }
 
-        do {
-            try await synchronizeReadAuthorizationForCapture()
-        } catch {
-            print("HealthKitService.synchronizeReadAuthorizationForCapture error: \(error.localizedDescription)")
-            return HealthCaptureResult(
-                status: .failed,
-                message: error.localizedDescription,
-                snapshot: nil
-            )
-        }
+        await synchronizeReadAuthorizationForCapture()
 
         let snapshot = await loadSnapshotWithRetry(at: date)
 
@@ -119,7 +110,12 @@ actor HealthKitService {
 
     /// Aligns with Vitals: `authorizationStatus(for:)` does not reflect read access. Use request-status, re-prompt
     /// when `.shouldRequest`, and always query after `.unnecessary` (reads may still populate late).
-    private func synchronizeReadAuthorizationForCapture() async throws {
+    ///
+    /// C20: auth errors are non-fatal. If permissions are already granted (e.g. user enabled them in Settings),
+    /// a spurious `requestAuthorization` throw should not abort the capture — we fall through to queries.
+    private func synchronizeReadAuthorizationForCapture() async {
+        guard !hasRequestedAuthorization else { return }
+
         let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
             store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, error in
                 if let error {
@@ -130,7 +126,11 @@ actor HealthKitService {
         }
         switch status {
         case .shouldRequest:
-            try await store.requestAuthorization(toShare: [], read: readTypes)
+            do {
+                try await store.requestAuthorization(toShare: [], read: readTypes)
+            } catch {
+                print("HealthKitService.requestAuthorization error: \(error.localizedDescription)")
+            }
             hasRequestedAuthorization = true
         case .unnecessary, .unknown:
             hasRequestedAuthorization = true
