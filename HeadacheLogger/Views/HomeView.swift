@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -8,7 +9,8 @@ struct HomeView: View {
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
 
     private var latestEvent: HeadacheEvent? { events.first }
-    private var recentEvents: [HeadacheEvent] { Array(events.prefix(3)) }
+    // C18: skip the latest event so it doesn't duplicate between LatestEventCard and Recent Logs.
+    private var recentEvents: [HeadacheEvent] { Array(events.dropFirst().prefix(3)) }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -69,6 +71,16 @@ struct HomeView: View {
 
                 if let latestEvent {
                     LatestEventCard(event: latestEvent, useCelsius: useCelsius)
+
+                    if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
+                        CaptureRecoveryCard(
+                            event: latestEvent,
+                            isRetrying: captureCoordinator.isCapturing,
+                            onRetry: {
+                                captureCoordinator.retryCapture(eventID: latestEvent.id, in: modelContext)
+                            }
+                        )
+                    }
                 }
 
                 if !recentEvents.isEmpty {
@@ -256,6 +268,116 @@ private struct MetricChip: View {
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+private struct CaptureRecoveryCard: View {
+    let event: HeadacheEvent
+    var isRetrying: Bool
+    var onRetry: () -> Void
+    @Environment(\.openURL) private var openURL
+
+    private var healthIssue: String? {
+        guard event.healthStatus != .captured else { return nil }
+        let detail = event.healthStatusMessage ?? "no detail"
+        return "Health \(event.healthStatus.rawValue) — \(detail)"
+    }
+
+    private var environmentIssue: String? {
+        guard event.environmentStatus != .captured else { return nil }
+        let detail = event.environmentStatusMessage ?? "no detail"
+        return "Environment \(event.environmentStatus.rawValue) — \(detail)"
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Some context couldn't be captured", systemImage: "exclamationmark.bubble")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.orange)
+
+            VStack(alignment: .leading, spacing: 6) {
+                if let healthIssue {
+                    Text(healthIssue)
+                }
+                if let environmentIssue {
+                    Text(environmentIssue)
+                }
+            }
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+
+            HStack(spacing: 10) {
+                Button {
+                    onRetry()
+                } label: {
+                    if isRetrying {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Text("Try Again")
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+                .disabled(isRetrying)
+                .accessibilityIdentifier("captureRetryButton")
+
+                Button {
+                    if let url = mailURL() {
+                        openURL(url)
+                    }
+                } label: {
+                    Text("Email Developer")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier("captureReportButton")
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.orange.opacity(0.35), lineWidth: 1)
+        )
+        .accessibilityIdentifier("captureRecoveryCard")
+    }
+
+    private func mailURL() -> URL? {
+        let info = Bundle.main.infoDictionary
+        let version = (info?["CFBundleShortVersionString"] as? String) ?? "?"
+        let build = (info?["CFBundleVersion"] as? String) ?? "?"
+        let iosVersion = UIDevice.current.systemVersion
+        let deviceModel = UIDevice.current.model
+
+        let tsFormatter = ISO8601DateFormatter()
+        let bodyLines: [String] = [
+            "Hi Jack,",
+            "",
+            "Context capture hit an issue after logging a headache. Details below.",
+            "",
+            "— App version: \(version) (\(build))",
+            "— iOS: \(iosVersion) on \(deviceModel)",
+            "— Event ID: \(event.id.uuidString)",
+            "— Event time: \(tsFormatter.string(from: event.timestamp))",
+            "— Capture status: \(event.captureStatus.rawValue)",
+            "— Health status: \(event.healthStatus.rawValue)\(event.healthStatusMessage.map { " — \($0)" } ?? "")",
+            "— Environment status: \(event.environmentStatus.rawValue)\(event.environmentStatusMessage.map { " — \($0)" } ?? "")",
+            "",
+            "Anything else you want to add:",
+            "",
+        ]
+
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = "jackwallner@gmail.com"
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: "Headache Logger: capture failed"),
+            URLQueryItem(name: "body", value: bodyLines.joined(separator: "\n")),
+        ]
+        return components.url
     }
 }
 

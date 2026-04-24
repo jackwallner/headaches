@@ -9,20 +9,27 @@ private struct LogHeadacheProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
+        // C12: base the confirmation window on the **absolute tap time** (not widget render time)
+        // and widen the window to 10s so delayed re-renders (system under load, off-screen widget,
+        // queued reloadAllTimelines) still let the user see "Logged" at least briefly.
+        // M11: follow up with `.after(revertDate)` so iOS rebuilds the timeline once the window
+        // closes — prevents a rare stale-confirmation lockup after widget eviction.
+        let windowSeconds: TimeInterval = 10
         let lastLogged = HeadacheAppGroup.userDefaults.double(forKey: HeadacheStorageKey.widgetLastLoggedAt.rawValue)
-        let recentlyLogged = lastLogged > 0 && Date().timeIntervalSince1970 - lastLogged < 4
 
-        if recentlyLogged {
-            let now = Date()
-            let revert = now.addingTimeInterval(4)
-            let entries = [
-                Entry(date: now, showConfirmation: true),
-                Entry(date: revert, showConfirmation: false),
-            ]
-            completion(Timeline(entries: entries, policy: .never))
-        } else {
-            completion(Timeline(entries: [Entry(date: .now, showConfirmation: false)], policy: .never))
+        if lastLogged > 0 {
+            let tapDate = Date(timeIntervalSince1970: lastLogged)
+            let revertDate = tapDate.addingTimeInterval(windowSeconds)
+            if Date() < revertDate {
+                let entries = [
+                    Entry(date: tapDate, showConfirmation: true),
+                    Entry(date: revertDate, showConfirmation: false),
+                ]
+                completion(Timeline(entries: entries, policy: .after(revertDate)))
+                return
+            }
         }
+        completion(Timeline(entries: [Entry(date: .now, showConfirmation: false)], policy: .never))
     }
 
     struct Entry: TimelineEntry {

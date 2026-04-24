@@ -53,6 +53,6 @@ private struct HeadacheLoggerRootContent: View {
 
     private func runWidgetEnrichmentIfReady() {
         guard AppEnvironment.bypassOnboarding || hasCompletedOnboarding else { return }
-        captureCoordinator.enrichPendingWidgetQuickLogsIfNeeded(in: modelContext)
+        captureCoordinator.enrichPendingCapturesIfNeeded(in: modelContext)
     }
 }

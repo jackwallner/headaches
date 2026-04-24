@@ -13,7 +13,11 @@ struct LogHeadacheIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         guard HeadacheOnboardingStore.hasCompletedOnboarding else {
-            return .result(dialog: IntentDialog("Finish setup in Headache Logger first."))
+            // C20: the banner dialog is easy to miss. Surface a clearer call-to-action so users
+            // understand why the tap didn't log and what to do. (Changing `openAppWhenRun` to
+            // open the app on this path would require divergent return types across branches,
+            // which AppIntent cannot express; opening the app remains a manual step.)
+            return .result(dialog: IntentDialog("Open Headache Logger and finish setup to enable one-tap logging."))
         }
 
         do {

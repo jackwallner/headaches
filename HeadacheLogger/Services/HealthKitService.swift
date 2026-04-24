@@ -101,19 +101,20 @@ actor HealthKitService {
 
         do {
             try await synchronizeReadAuthorizationForCapture()
-
-            let snapshot = try await loadSnapshotWithRetry(at: date)
-
-            let status: CaptureSourceStatus = snapshot.hasMeaningfulValue ? .captured : .unavailable
-            let message: String? = status == .captured ? nil : "No Health context was available for this event."
-            return HealthCaptureResult(status: status, message: message, snapshot: snapshot)
         } catch {
+            print("HealthKitService.synchronizeReadAuthorizationForCapture error: \(error.localizedDescription)")
             return HealthCaptureResult(
                 status: .failed,
                 message: error.localizedDescription,
                 snapshot: nil
             )
         }
+
+        let snapshot = await loadSnapshotWithRetry(at: date)
+
+        let status: CaptureSourceStatus = snapshot.hasMeaningfulValue ? .captured : .unavailable
+        let message: String? = status == .captured ? nil : "No Health context was available for this event."
+        return HealthCaptureResult(status: status, message: message, snapshot: snapshot)
     }
 
     /// Aligns with Vitals: `authorizationStatus(for:)` does not reflect read access. Use request-status, re-prompt
@@ -139,23 +140,26 @@ actor HealthKitService {
     }
 
     /// Short delay + second pull catches Watch / iCloud Health lag (same idea as Vitals `fetchTodayStatsWithRetry`).
-    private func loadSnapshotWithRetry(at date: Date) async throws -> HealthSnapshot {
-        let first = try await loadSnapshotOnce(at: date)
+    private func loadSnapshotWithRetry(at date: Date) async -> HealthSnapshot {
+        let first = await loadSnapshotOnce(at: date)
         if first.hasMeaningfulValue { return first }
-        try await Task.sleep(for: .milliseconds(1500))
-        return try await loadSnapshotOnce(at: date)
+        try? await Task.sleep(for: .milliseconds(1500))
+        return await loadSnapshotOnce(at: date)
     }
 
-    private func loadSnapshotOnce(at date: Date) async throws -> HealthSnapshot {
+    /// Each sub-query is error-tolerant: a single HealthKit error (e.g. `HKError.noData` for a metric the user has
+    /// never logged) yields `nil` for that field instead of throwing and discarding the entire snapshot. Pre-2026-04
+    /// any one throw in this function marked the whole capture `.failed` and dropped values that *were* available.
+    private func loadSnapshotOnce(at date: Date) async -> HealthSnapshot {
         let dayStart = Calendar.current.startOfDay(for: date)
 
-        async let steps = cumulativeSum(
+        async let steps = optionalCumulativeSum(
                 identifier: .stepCount,
                 unit: .count(),
                 start: dayStart,
                 end: date
             )
-            async let activeEnergy = cumulativeSum(
+            async let activeEnergy = optionalCumulativeSum(
                 identifier: .activeEnergyBurned,
                 unit: .kilocalorie(),
                 start: dayStart,
@@ -167,44 +171,44 @@ actor HealthKitService {
                 start: dayStart,
                 end: date
             )
-            async let distance = cumulativeSum(
+            async let distance = optionalCumulativeSum(
                 identifier: .distanceWalkingRunning,
                 unit: .meterUnit(with: .kilo),
                 start: dayStart,
                 end: date
             )
-            async let exercise = cumulativeSum(
+            async let exercise = optionalCumulativeSum(
                 identifier: .appleExerciseTime,
                 unit: .minute(),
                 start: dayStart,
                 end: date
             )
-            async let sleepContext = sleepContextBefore(date: date)
-            async let restingHeartRate = latestQuantity(
+            async let sleepContext = optionalSleepContextBefore(date: date)
+            async let restingHeartRate = optionalLatestQuantity(
                 identifier: .restingHeartRate,
                 unit: .count().unitDivided(by: .minute()),
                 lookbackDays: 7,
                 relativeTo: date
             )
-            async let recentHeartRate = averageQuantity(
+            async let recentHeartRate = optionalAverageQuantity(
                 identifier: .heartRate,
                 unit: .count().unitDivided(by: .minute()),
                 hoursBack: 6,
                 relativeTo: date
             )
-            async let hrv = latestQuantity(
+            async let hrv = optionalLatestQuantity(
                 identifier: .heartRateVariabilitySDNN,
                 unit: .secondUnit(with: .milli),
                 lookbackDays: 7,
                 relativeTo: date
             )
-            async let respiratory = latestQuantity(
+            async let respiratory = optionalLatestQuantity(
                 identifier: .respiratoryRate,
                 unit: .count().unitDivided(by: .minute()),
                 lookbackDays: 7,
                 relativeTo: date
             )
-            async let workouts = workoutSummary(relativeTo: date)
+            async let workouts = optionalWorkoutSummary(relativeTo: date)
             async let standMinutes = optionalCumulativeSum(
                 identifier: .appleStandTime,
                 unit: .minute(),
@@ -234,16 +238,16 @@ actor HealthKitService {
             async let baroDelta = optionalBarometricDeltaHpa(hoursBack: 6, relativeTo: date)
             async let mindful = optionalMindfulMinutesToday(relativeTo: date)
 
-            let resolvedSteps = try await steps
-            let resolvedActiveEnergy = try await activeEnergy
-            let resolvedDistance = try await distance
-            let resolvedExercise = try await exercise
-            let resolvedSleepContext = try await sleepContext
-            let resolvedRestingHeartRate = try await restingHeartRate
-            let resolvedRecentHeartRate = try await recentHeartRate
-            let resolvedHRV = try await hrv
-            let resolvedRespiratory = try await respiratory
-            let resolvedWorkouts = try await workouts
+            let resolvedSteps: Double? = await steps
+            let resolvedActiveEnergy: Double? = await activeEnergy
+            let resolvedDistance: Double? = await distance
+            let resolvedExercise: Double? = await exercise
+            let resolvedSleepContext = await sleepContext
+            let resolvedRestingHeartRate = await restingHeartRate
+            let resolvedRecentHeartRate = await recentHeartRate
+            let resolvedHRV = await hrv
+            let resolvedRespiratory = await respiratory
+            let resolvedWorkouts = await workouts
 
             let resolvedBasalEnergy = await basalEnergy
             let resolvedStandMinutes = await standMinutes
@@ -262,7 +266,7 @@ actor HealthKitService {
             }()
 
             let snapshot = HealthSnapshot(
-                stepsToday: Int(resolvedSteps),
+                stepsToday: resolvedSteps.map { Int($0.rounded()) },
                 activeEnergyKcalToday: resolvedActiveEnergy,
                 distanceWalkingRunningKmToday: resolvedDistance,
                 exerciseMinutesToday: resolvedExercise,
@@ -301,12 +305,15 @@ actor HealthKitService {
         hasRequestedAuthorization = true
     }
 
+    /// Returns the cumulative sum of a sample type, or `nil` when HealthKit has no samples in the window
+    /// (which includes the "authorization denied" case — read denials silently yield zero samples, never an error).
+    /// Treating "no samples" as `nil` lets downstream code distinguish genuine activity from absence of data.
     private func cumulativeSum(
         identifier: HKQuantityTypeIdentifier,
         unit: HKUnit,
         start: Date,
         end: Date
-    ) async throws -> Double {
+    ) async throws -> Double? {
         let store = self.store
         let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
         return try await withCheckedThrowingContinuation { continuation in
@@ -320,7 +327,7 @@ actor HealthKitService {
                     return
                 }
 
-                let value = statistics?.sumQuantity()?.doubleValue(for: unit) ?? 0
+                let value = statistics?.sumQuantity()?.doubleValue(for: unit)
                 continuation.resume(returning: value)
             }
             store.execute(query)
@@ -337,6 +344,7 @@ actor HealthKitService {
         do {
             return try await cumulativeSum(identifier: identifier, unit: unit, start: start, end: end)
         } catch {
+            print("HealthKitService.optionalCumulativeSum \(identifier.rawValue) error: \(error.localizedDescription)")
             return nil
         }
     }
@@ -382,7 +390,41 @@ actor HealthKitService {
         do {
             return try await latestQuantity(identifier: identifier, unit: unit, lookbackDays: lookbackDays, relativeTo: date)
         } catch {
+            print("HealthKitService.optionalLatestQuantity \(identifier.rawValue) error: \(error.localizedDescription)")
             return nil
+        }
+    }
+
+    private func optionalAverageQuantity(
+        identifier: HKQuantityTypeIdentifier,
+        unit: HKUnit,
+        hoursBack: Int,
+        relativeTo date: Date
+    ) async -> Double? {
+        guard HKObjectType.quantityType(forIdentifier: identifier) != nil else { return nil }
+        do {
+            return try await averageQuantity(identifier: identifier, unit: unit, hoursBack: hoursBack, relativeTo: date)
+        } catch {
+            print("HealthKitService.optionalAverageQuantity \(identifier.rawValue) error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    private func optionalSleepContextBefore(date: Date) async -> (hours: Double?, wakeTime: Date?) {
+        do {
+            return try await sleepContextBefore(date: date)
+        } catch {
+            print("HealthKitService.optionalSleepContextBefore error: \(error.localizedDescription)")
+            return (nil, nil)
+        }
+    }
+
+    private func optionalWorkoutSummary(relativeTo date: Date) async -> (count: Int?, minutes: Double?) {
+        do {
+            return try await workoutSummary(relativeTo: date)
+        } catch {
+            print("HealthKitService.optionalWorkoutSummary error: \(error.localizedDescription)")
+            return (nil, nil)
         }
     }
 
@@ -514,17 +556,29 @@ actor HealthKitService {
     }
 
     /// Sleep hours in the standard window plus wake time from the longest merged asleep block.
+    /// C19: window is fixed at **yesterday 18:00 → min(event, today 12:00)** so that afternoon /
+    /// evening events no longer fold naps into "last night's sleep." Pre-noon events can still
+    /// reflect ongoing sleep (e.g. a 2 a.m. log includes the current sleep in progress).
     private func sleepContextBefore(date: Date) async throws -> (hours: Double?, wakeTime: Date?) {
         let store = self.store
         let calendar = Calendar.current
-        let end = date
-        let previousNoon = calendar.date(
-            bySettingHour: 12,
+        let previousEvening = calendar.date(
+            bySettingHour: 18,
             minute: 0,
             second: 0,
             of: calendar.date(byAdding: .day, value: -1, to: date) ?? date.addingTimeInterval(-86400)
         ) ?? date.addingTimeInterval(-86400)
-        let predicate = HKQuery.predicateForSamples(withStart: previousNoon, end: end, options: [])
+        let todayNoon = calendar.date(
+            bySettingHour: 12,
+            minute: 0,
+            second: 0,
+            of: date
+        ) ?? date
+        let end = min(date, todayNoon)
+        // Safety: if previousEvening somehow ends up after `end` (extreme edge cases), fall back
+        // to a 24h look-back so we never pass an inverted range to HealthKit.
+        let start = previousEvening < end ? previousEvening : date.addingTimeInterval(-86_400)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
             let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
@@ -596,7 +650,7 @@ actor HealthKitService {
     }
 }
 
-private extension HealthSnapshot {
+extension HealthSnapshot {
     var hasMeaningfulValue: Bool {
         stepsToday != nil ||
         activeEnergyKcalToday != nil ||

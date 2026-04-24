@@ -17,7 +17,11 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
 
     /// Call from onboarding so the first capture does not show the location sheet mid-query.
     func prepareLocationAuthorizationDuringOnboarding() async {
-        guard CLLocationManager.locationServicesEnabled() else { return }
+        // C13: same main-thread hazard as in captureSnapshot — keep it off main.
+        let servicesEnabled: Bool = await Task.detached(priority: .userInitiated) {
+            CLLocationManager.locationServicesEnabled()
+        }.value
+        guard servicesEnabled else { return }
         guard !HeadacheOnboardingStore.declinedLocation else { return }
         switch manager.authorizationStatus {
         case .notDetermined:
@@ -69,7 +73,13 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             )
         }
 
-        guard CLLocationManager.locationServicesEnabled() else {
+        // C13: `CLLocationManager.locationServicesEnabled()` is synchronous and Apple explicitly
+        // warns it must not run on the main thread (main-thread checker flags it in logs).
+        // Move it to a background executor so the capture Task doesn't stall the UI on cold launch.
+        let servicesEnabled: Bool = await Task.detached(priority: .userInitiated) {
+            CLLocationManager.locationServicesEnabled()
+        }.value
+        guard servicesEnabled else {
             return EnvironmentCaptureResult(
                 status: .unavailable,
                 message: "Location services are turned off for this device.",
@@ -207,6 +217,17 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
 // MARK: - Open-Meteo
 
 private enum OpenMeteoClient {
+    /// C15: 8s ceiling keeps the capture flow snappy. Default URLSession timeout is 60s, which
+    /// leaves the "Saving and collecting context…" banner spinning for a minute on network failure.
+    /// At 8s we fall back to the archive API or current-conditions branch much faster.
+    static let requestTimeout: TimeInterval = 8
+
+    static func makeRequest(url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.timeoutInterval = requestTimeout
+        return request
+    }
+
     struct CurrentWeather {
         let conditionSummary: String?
         let weatherCode: Int?
@@ -233,7 +254,7 @@ private enum OpenMeteoClient {
             let precipitation: Double?
             let weatherCode: Int?
             let cloudCover: Double?
-            let surfacePressure: Double?
+            let pressureMsl: Double?
             let windSpeed10m: Double?
             let windDirection10m: Double?
             let uvIndex: Double?
@@ -246,7 +267,7 @@ private enum OpenMeteoClient {
                 case precipitation
                 case weatherCode = "weather_code"
                 case cloudCover = "cloud_cover"
-                case surfacePressure = "surface_pressure"
+                case pressureMsl = "pressure_msl"
                 case windSpeed10m = "wind_speed_10m"
                 case windDirection10m = "wind_direction_10m"
                 case uvIndex = "uv_index"
@@ -261,7 +282,10 @@ private enum OpenMeteoClient {
             URLQueryItem(name: "longitude", value: String(longitude)),
             URLQueryItem(
                 name: "current",
-                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index"
+                // C7: `pressure_msl` (mean sea level) so users at altitude see meteorologically
+                // comparable values (Denver's station pressure ~830 hPa would otherwise confuse).
+                // Matches how migraine-pressure studies report values.
+                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index"
             ),
             URLQueryItem(name: "wind_speed_unit", value: "kmh"),
         ]
@@ -270,7 +294,7 @@ private enum OpenMeteoClient {
             throw URLError(.badURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(for: makeRequest(url: url))
         guard let http = response as? HTTPURLResponse, (200 ... 299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
         }
@@ -284,7 +308,7 @@ private enum OpenMeteoClient {
             temperatureC: c.temperature2m,
             apparentTemperatureC: c.apparentTemperature,
             relativeHumidityPercent: c.relativeHumidity2m,
-            surfacePressureHpa: c.surfacePressure,
+            surfacePressureHpa: c.pressureMsl,
             pressureTrend: .unavailable,
             precipitationMm: c.precipitation,
             windSpeedKph: c.windSpeed10m,
@@ -337,7 +361,7 @@ private enum OpenMeteoClient {
             /// Open-Meteo may encode codes as integers or floats in JSON arrays.
             let weatherCode: [Double?]
             let cloudCover: [Double?]
-            let surfacePressure: [Double?]
+            let pressureMsl: [Double?]
             let windSpeed10m: [Double?]
             let windDirection10m: [Double?]
             let uvIndex: [Double?]
@@ -350,7 +374,7 @@ private enum OpenMeteoClient {
                 case precipitation
                 case weatherCode = "weather_code"
                 case cloudCover = "cloud_cover"
-                case surfacePressure = "surface_pressure"
+                case pressureMsl = "pressure_msl"
                 case windSpeed10m = "wind_speed_10m"
                 case windDirection10m = "wind_direction_10m"
                 case uvIndex = "uv_index"
@@ -365,21 +389,36 @@ private enum OpenMeteoClient {
         day: String,
         eventDate: Date
     ) async -> CurrentWeather? {
+        // C8: request the previous day alongside the event day so the 3-hour-prior index for
+        // pressure trend is always populated (otherwise any event before ~03:00 local had
+        // `priorIdx = idx - 3 < 0`, collapsing trend to `.unavailable`).
+        let priorDay: String = {
+            let cal = Calendar.current
+            let df = DateFormatter()
+            df.locale = Locale(identifier: "en_US_POSIX")
+            df.timeZone = cal.timeZone
+            df.dateFormat = "yyyy-MM-dd"
+            let prior = cal.date(byAdding: .day, value: -1, to: eventDate)
+                ?? eventDate.addingTimeInterval(-86_400)
+            return df.string(from: prior)
+        }()
+
         var components = URLComponents(string: baseURL)!
         components.queryItems = [
             URLQueryItem(name: "latitude", value: String(latitude)),
             URLQueryItem(name: "longitude", value: String(longitude)),
             URLQueryItem(name: "timezone", value: "auto"),
-            URLQueryItem(name: "start_date", value: day),
+            URLQueryItem(name: "start_date", value: priorDay),
             URLQueryItem(name: "end_date", value: day),
             URLQueryItem(
                 name: "hourly",
-                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index"
+                // C7: use `pressure_msl` to match current-weather query; comparable across altitudes.
+                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index"
             ),
             URLQueryItem(name: "wind_speed_unit", value: "kmh"),
         ]
         guard let url = components.url else { return nil }
-        guard let (data, response) = try? await URLSession.shared.data(from: url),
+        guard let (data, response) = try? await URLSession.shared.data(for: makeRequest(url: url)),
               let http = response as? HTTPURLResponse,
               (200 ... 299).contains(http.statusCode) else {
             return nil
@@ -413,8 +452,8 @@ private enum OpenMeteoClient {
 
         let trend: PressureTrend = {
             let priorIdx = idx - 3
-            guard let current = at(h.surfacePressure, idx).flatMap({ $0 }),
-                  let prior = at(h.surfacePressure, priorIdx).flatMap({ $0 }) else {
+            guard let current = at(h.pressureMsl, idx).flatMap({ $0 }),
+                  let prior = at(h.pressureMsl, priorIdx).flatMap({ $0 }) else {
                 return .unavailable
             }
             let delta = current - prior
@@ -429,7 +468,7 @@ private enum OpenMeteoClient {
             temperatureC: at(h.temperature2m, idx).flatMap { $0 },
             apparentTemperatureC: at(h.apparentTemperature, idx).flatMap { $0 },
             relativeHumidityPercent: at(h.relativeHumidity2m, idx).flatMap { $0 },
-            surfacePressureHpa: at(h.surfacePressure, idx).flatMap { $0 },
+            surfacePressureHpa: at(h.pressureMsl, idx).flatMap { $0 },
             pressureTrend: trend,
             precipitationMm: at(h.precipitation, idx).flatMap { $0 },
             windSpeedKph: at(h.windSpeed10m, idx).flatMap { $0 },
@@ -522,7 +561,7 @@ private enum OpenMeteoClient {
         guard let url = components.url else { return nil }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(for: makeRequest(url: url))
             guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
                 return nil
             }
@@ -597,6 +636,9 @@ private final class OneShotLocationManager: NSObject, CLLocationManagerDelegate 
     private let manager = CLLocationManager()
     private let completion: (CLLocation?) -> Void
     private var selfRetain: OneShotLocationManager?
+    private var timeoutWorkItem: DispatchWorkItem?
+    /// Hard cap so a dropped auth prompt or flaky Core Location never leaks the instance (C14).
+    private let timeoutSeconds: TimeInterval = 15
 
     init(completion: @escaping (CLLocation?) -> Void) {
         self.completion = completion
@@ -607,6 +649,13 @@ private final class OneShotLocationManager: NSObject, CLLocationManagerDelegate 
 
     func start() {
         selfRetain = self
+        // C14: arm a timeout so we don't rely solely on a delegate callback arriving.
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.finish(nil)
+        }
+        timeoutWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeoutSeconds, execute: workItem)
+
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -618,6 +667,10 @@ private final class OneShotLocationManager: NSObject, CLLocationManagerDelegate 
     }
 
     private func finish(_ location: CLLocation?) {
+        // C14: guard against double-finish from (a) delegate callback and (b) timeout racing.
+        guard selfRetain != nil else { return }
+        timeoutWorkItem?.cancel()
+        timeoutWorkItem = nil
         completion(location)
         selfRetain = nil
     }

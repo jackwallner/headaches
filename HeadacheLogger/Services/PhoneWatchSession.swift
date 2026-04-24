@@ -6,7 +6,24 @@ import WatchConnectivity
 final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable {
     nonisolated(unsafe) static let shared = PhoneWatchSession()
 
-    var onWatchRequestedCapture: ((Date) -> Bool)?
+    /// C4: any tap dates received before the SwiftUI root view installs
+    /// `onWatchRequestedCapture` are queued here (on main) and replayed as soon as the
+    /// handler is assigned, so cold-start watch taps no longer fail with "Failed" on first tap.
+    private var pendingTapDates: [Date] = []
+
+    var onWatchRequestedCapture: ((Date) -> Bool)? {
+        didSet {
+            guard onWatchRequestedCapture != nil, !pendingTapDates.isEmpty else { return }
+            let queued = pendingTapDates
+            pendingTapDates.removeAll()
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                for date in queued {
+                    _ = self.handleHeadacheLogRequest(tapDate: date)
+                }
+            }
+        }
+    }
 
     private override init() {
         super.init()
@@ -48,15 +65,15 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
             return
         }
         let tapDate = Self.extractTimestamp(from: message)
-        let accepted: Bool
-        if Thread.isMainThread {
-            accepted = handleHeadacheLogRequest(tapDate: tapDate)
-        } else {
-            accepted = DispatchQueue.main.sync { [weak self] in
-                self?.handleHeadacheLogRequest(tapDate: tapDate) ?? false
-            }
+        // C4/C5: always accept. The actual capture happens on main asynchronously; failures are
+        // recovered by the re-enrichment sweep when the app next foregrounds (CaptureCoordinator
+        // `enrichPendingCapturesIfNeeded`). Replying synchronously on the delegate's thread avoids
+        // Swift 6's Sendable violation from dispatching a non-Sendable replyHandler across threads,
+        // and eliminates the prior `DispatchQueue.main.sync` deadlock risk.
+        DispatchQueue.main.async { [weak self] in
+            _ = self?.handleHeadacheLogRequest(tapDate: tapDate)
         }
-        replyHandler(["status": accepted ? "ok" : "failed"])
+        replyHandler(["status": "ok"])
     }
 
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
@@ -76,7 +93,14 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
     }
 
     private func handleHeadacheLogRequest(tapDate: Date) -> Bool {
-        onWatchRequestedCapture?(tapDate) ?? false
+        if let handler = onWatchRequestedCapture {
+            return handler(tapDate)
+        }
+        // C4: no handler yet (cold start from the Watch beat SwiftUI's onAppear). Queue the tap
+        // and optimistically ack so the Watch shows success; the didSet on `onWatchRequestedCapture`
+        // replays queued taps as soon as the root view installs its handler.
+        pendingTapDates.append(tapDate)
+        return true
     }
 
     private static func extractTimestamp(from payload: [String: Any]) -> Date {
