@@ -16,6 +16,7 @@ enum ExportService {
             "timestamp",
             "timezone",
             "weekday",
+            "weekday_index",
             "hour",
             "minute",
             "part_of_day",
@@ -83,6 +84,7 @@ enum ExportService {
                 csv(timestampFormatter.string(from: event.timestamp)),
                 csv(event.timezoneIdentifier),
                 csv(event.weekdayName),
+                csv(String(event.weekdayIndex)),
                 csv(String(event.hourOfDay)),
                 csv(String(event.minuteOfHour)),
                 csv(event.partOfDay.rawValue),
@@ -145,7 +147,9 @@ enum ExportService {
             ].joined(separator: ",")
         }
 
-        let contents = (preambleLines + [header] + rows).joined(separator: "\n")
+        // M12: CRLF row separator per RFC 4180; Excel and a handful of Windows tools parse
+        // quoted multi-line cells more reliably with CRLF than LF.
+        let contents = (preambleLines + [header] + rows).joined(separator: "\r\n")
         let filename = "headache-events-\(Int(Date.now.timeIntervalSince1970)).csv"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         try contents.write(to: url, atomically: true, encoding: .utf8)

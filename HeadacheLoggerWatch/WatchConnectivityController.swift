@@ -11,14 +11,20 @@ final class WatchConnectivityController: NSObject, ObservableObject {
     @Published var lastLoggedDate: Date?
 
     private var clearTask: Task<Void, Never>?
+    private var sendTimeoutTask: Task<Void, Never>?
+    /// M15: prevent re-assigning the delegate / re-activating on every `onAppear`. The first
+    /// successful activate "sticks"; repeated calls are cheap no-ops.
+    private var didActivate = false
 
     func activate() {
+        guard !didActivate else { return }
         guard WCSession.isSupported() else {
             statusMessage = "Watch Connectivity unavailable."
             return
         }
         WCSession.default.delegate = self
         WCSession.default.activate()
+        didActivate = true
         lastLoggedDate = Self.loadLastLoggedDate()
     }
 
@@ -32,6 +38,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         }
 
         isSending = true
+        armSendTimeout()
         let payload: [String: Any] = [
             "action": "headacheLog",
             "requestID": UUID().uuidString,
@@ -43,6 +50,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             session.sendMessage(payload, replyHandler: { [weak self] reply in
                 Task { @MainActor in
                     guard let self else { return }
+                    self.cancelSendTimeout()
                     self.isSending = false
                     if reply["status"] as? String == "ok" {
                         self.confirmLogged(message: "Logged.", showsConfirmation: true)
@@ -55,15 +63,36 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             }, errorHandler: { [weak self] error in
                 Task { @MainActor in
                     guard let self else { return }
+                    self.cancelSendTimeout()
                     self.isSending = false
                     let fallbackSession = WCSession.default
                     self.queueForLater(payload: payload, session: fallbackSession, fallbackError: error)
                 }
             })
         } else {
+            cancelSendTimeout()
             queueForLater(payload: payload, session: session, fallbackError: nil)
             isSending = false
         }
+    }
+
+    /// C6: fall back after 10s if neither replyHandler nor errorHandler fires, so the Log button
+    /// never stays disabled indefinitely (WC occasionally drops callbacks across session transitions).
+    private func armSendTimeout() {
+        sendTimeoutTask?.cancel()
+        sendTimeoutTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(10))
+            guard !Task.isCancelled, let self, self.isSending else { return }
+            self.isSending = false
+            self.clearTask?.cancel()
+            self.showConfirmation = false
+            self.statusMessage = "Timed out. Try again."
+        }
+    }
+
+    private func cancelSendTimeout() {
+        sendTimeoutTask?.cancel()
+        sendTimeoutTask = nil
     }
 
     private func queueForLater(payload: [String: Any], session: WCSession, fallbackError: Error?) {
@@ -110,9 +139,17 @@ final class WatchConnectivityController: NSObject, ObservableObject {
 
 extension WatchConnectivityController: WCSessionDelegate {
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        guard let error else { return }
+        let isActivated = activationState == .activated
         Task { @MainActor [weak self] in
-            self?.statusMessage = error.localizedDescription
+            guard let self else { return }
+            if let error {
+                self.statusMessage = error.localizedDescription
+                return
+            }
+            // M14: clear any stale "Connecting to iPhone…" once the session is actually activated.
+            if isActivated, self.statusMessage == "Connecting to iPhone…" {
+                self.statusMessage = nil
+            }
         }
     }
 }

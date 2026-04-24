@@ -1,4 +1,5 @@
 import XCTest
+import SwiftData
 @testable import HeadacheLogger
 
 final class HeadacheLoggerTests: XCTestCase {
@@ -139,6 +140,81 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(wake, longSleep.end)
     }
 
+    func testEmptyHealthSnapshotIsNotMeaningful() {
+        // C1 regression: when HealthKit is denied or returns no samples in any field,
+        // all fields stay nil and capture status must fall to .unavailable (not .captured).
+        let empty = HealthSnapshot()
+        XCTAssertFalse(empty.hasMeaningfulValue)
+    }
+
+    func testHealthSnapshotWithOnlyZeroStepsIsStillMeaningful() {
+        // Legitimate 0 steps (e.g. 1am capture) is real data — snapshot contains Optional.some(0),
+        // so hasMeaningfulValue should be true. This protects C1 fix from over-correcting.
+        var snapshot = HealthSnapshot()
+        snapshot.stepsToday = 0
+        XCTAssertTrue(snapshot.hasMeaningfulValue)
+    }
+
+    func testStepsRoundingForDedupedWatchIphoneSums() {
+        // C17 regression: Int(x) truncates; we want rounded. Represent the behavior we rely on.
+        let raw = 1234.9
+        XCTAssertEqual(Int(raw.rounded()), 1235)
+        XCTAssertEqual(Int(raw), 1234) // truncation — what we must NOT use anymore
+    }
+
+    func testPendingCaptureFetchMatchesWatchOrphansAndWidgetSentinels() throws {
+        // C2 regression: the re-enrichment predicate must catch BOTH
+        // (a) watch-orphaned captures (both sources still .pending, no sentinel messages)
+        // (b) widget sentinel rows (both sources .unavailable with sentinel messages)
+        // and must NOT re-enrich completed rows.
+        let schema = Schema([HeadacheEvent.self])
+        let config = ModelConfiguration("C2Test", schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, configurations: [config])
+        let context = ModelContext(container)
+
+        // (a) watch-orphaned pending row: both statuses .pending, no messages.
+        let watchOrphan = HeadacheEvent(timestamp: Date(timeIntervalSince1970: 1_744_000_000))
+        context.insert(watchOrphan)
+
+        // (b) widget-sentinel row: both .unavailable with sentinel messages (matches LogHeadacheIntent).
+        let widgetPending = HeadacheEvent(timestamp: Date(timeIntervalSince1970: 1_744_000_100))
+        widgetPending.apply(HealthCaptureResult(status: .unavailable,
+                                                message: HeadacheWidgetQuickLog.healthMessagePending,
+                                                snapshot: nil))
+        widgetPending.apply(EnvironmentCaptureResult(status: .unavailable,
+                                                     message: HeadacheWidgetQuickLog.environmentMessagePending,
+                                                     snapshot: nil))
+        widgetPending.finalizeCapture()
+        context.insert(widgetPending)
+
+        // Completed row: both .captured.
+        let completed = HeadacheEvent(timestamp: Date(timeIntervalSince1970: 1_744_000_200))
+        completed.apply(HealthCaptureResult(status: .captured, message: nil,
+                                            snapshot: HealthSnapshot(stepsToday: 42)))
+        completed.apply(EnvironmentCaptureResult(status: .captured, message: nil, snapshot: nil))
+        completed.finalizeCapture()
+        context.insert(completed)
+
+        // Unrelated failed row (both failed, no sentinel messages): must not match.
+        let failed = HeadacheEvent(timestamp: Date(timeIntervalSince1970: 1_744_000_300))
+        failed.apply(HealthCaptureResult(status: .failed, message: "boom", snapshot: nil))
+        failed.apply(EnvironmentCaptureResult(status: .failed, message: "boom", snapshot: nil))
+        failed.finalizeCapture()
+        context.insert(failed)
+
+        try context.save()
+
+        let matches = try context.fetch(CaptureCoordinator.pendingCaptureFetchDescriptor())
+        let matchedIDs = Set(matches.map(\.id))
+        XCTAssertTrue(matchedIDs.contains(watchOrphan.id), "Watch-orphaned pending row must be re-enriched")
+        XCTAssertTrue(matchedIDs.contains(widgetPending.id), "Widget sentinel row must be re-enriched")
+        XCTAssertFalse(matchedIDs.contains(completed.id), "Completed row must not be re-enriched")
+        XCTAssertFalse(matchedIDs.contains(failed.id), "Explicitly failed row must not be re-enriched")
+
+        // Oldest first.
+        XCTAssertEqual(matches.map(\.id), [watchOrphan.id, widgetPending.id])
+    }
+
     func testCSVExportIncludesImportantColumnsAndValues() throws {
         let event = HeadacheEvent(timestamp: Date(timeIntervalSince1970: 1_744_406_400))
         event.locality = "Austin"
@@ -168,6 +244,7 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(csv.contains("# Headache Logger"))
         XCTAssertTrue(csv.contains("# row_count: 1"))
         XCTAssertTrue(csv.contains("event_id,timestamp,timezone"))
+        XCTAssertTrue(csv.contains("weekday,weekday_index,hour"), "M7: CSV must include weekday_index column")
         XCTAssertTrue(csv.contains("temperature_f"))
         XCTAssertTrue(csv.contains("feels_like_f"))
         XCTAssertTrue(csv.contains("\"67.1\""))

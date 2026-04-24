@@ -382,9 +382,12 @@ final class HeadacheEvent {
 }
 
 private extension HeadacheEvent {
+    /// M1: fixed to en_US_POSIX so `weekdayName` is stable per row across device-locale changes.
+    /// The user-facing UI formats weekdays at render time from the locale; this field is the
+    /// machine-readable column persisted for CSV export / downstream analysis.
     static let weekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = .autoupdatingCurrent
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "EEEE"
         return formatter
     }()

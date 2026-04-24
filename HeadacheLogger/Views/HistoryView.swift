@@ -5,9 +5,25 @@ struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
-    @State private var exportURL: URL?
+    // C9: a single source of truth avoids the sibling `.sheet(isPresented:)` race that
+    // SwiftUI historically exhibited and keeps sheet presentation deterministic under test.
+    @State private var activeSheet: ActiveSheet?
     @State private var showExportError = false
-    @State private var noteTargetID: UUID?
+    /// Tracked separately from `activeSheet` because SwiftUI nils the binding before `onDismiss` fires,
+    /// and we still need the temp file URL to clean it up.
+    @State private var pendingExportURL: URL?
+
+    private enum ActiveSheet: Identifiable {
+        case export(URL)
+        case notes(UUID)
+
+        var id: String {
+            switch self {
+            case .export(let url): return "export:\(url.path)"
+            case .notes(let uuid): return "notes:\(uuid.uuidString)"
+            }
+        }
+    }
 
     var body: some View {
         List {
@@ -29,7 +45,7 @@ struct HistoryView: View {
                 Section("Entries") {
                     ForEach(events, id: \.id) { event in
                         DetailedEventRow(event: event, useCelsius: useCelsius) {
-                            noteTargetID = event.id
+                            activeSheet = .notes(event.id)
                         }
                             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                             .listRowBackground(Color.clear)
@@ -54,9 +70,14 @@ struct HistoryView: View {
                 }
             }
         }
-        .sheet(isPresented: shareSheetBinding, onDismiss: removeTemporaryExport) {
-            if let exportURL {
-                ShareSheet(items: [exportURL])
+        .sheet(item: $activeSheet, onDismiss: handleSheetDismiss) { sheet in
+            switch sheet {
+            case .export(let url):
+                ShareSheet(items: [url])
+            case .notes(let targetID):
+                if let event = events.first(where: { $0.id == targetID }) {
+                    EventNotesSheet(event: event)
+                }
             }
         }
         .alert("Export Failed", isPresented: $showExportError) {
@@ -64,39 +85,17 @@ struct HistoryView: View {
         } message: {
             Text("The CSV export could not be created. Please try again.")
         }
-        .sheet(isPresented: noteSheetBinding) {
-            if let targetID = noteTargetID,
-               let event = events.first(where: { $0.id == targetID }) {
-                EventNotesSheet(event: event)
-            }
-        }
     }
 
-    private var noteSheetBinding: Binding<Bool> {
-        Binding(
-            get: { noteTargetID != nil },
-            set: { isPresented in
-                if !isPresented {
-                    noteTargetID = nil
-                }
-            }
-        )
-    }
-
-    private var shareSheetBinding: Binding<Bool> {
-        Binding(
-            get: { exportURL != nil },
-            set: { isPresented in
-                if !isPresented {
-                    removeTemporaryExport()
-                }
-            }
-        )
+    private func handleSheetDismiss() {
+        removeTemporaryExport()
     }
 
     private func export() {
         do {
-            exportURL = try ExportService.exportCSV(events: events)
+            let url = try ExportService.exportCSV(events: events)
+            pendingExportURL = url
+            activeSheet = .export(url)
         } catch {
             showExportError = true
         }
@@ -114,9 +113,9 @@ struct HistoryView: View {
     }
 
     private func removeTemporaryExport() {
-        if let exportURL {
-            try? FileManager.default.removeItem(at: exportURL)
-            self.exportURL = nil
+        if let url = pendingExportURL {
+            try? FileManager.default.removeItem(at: url)
+            pendingExportURL = nil
         }
     }
 }
@@ -273,6 +272,8 @@ private struct DetailedEventRow: View {
 
 private struct EventNotesSheet: View {
     @Environment(\.dismiss) private var dismiss
+    // C11: SwiftData autosave can miss a background/kill immediately after dismiss; call save() explicitly.
+    @Environment(\.modelContext) private var modelContext
     let event: HeadacheEvent
     @State private var text: String
 
@@ -307,6 +308,12 @@ private struct EventNotesSheet: View {
                     Button("Save") {
                         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
                         event.userNotes = trimmed.isEmpty ? nil : trimmed
+                        // C11: guard against lost edits if the app is killed after dismiss before autosave runs.
+                        do {
+                            try modelContext.save()
+                        } catch {
+                            print("EventNotesSheet: save failed | \(error)")
+                        }
                         dismiss()
                     }
                     .fontWeight(.semibold)
