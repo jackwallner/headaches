@@ -126,6 +126,7 @@ struct HomeView: View {
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("One Tap Headache Tracker")
+        .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")
         .sheet(isPresented: $showSeverityNotesSheet, onDismiss: { severityNotesEventID = nil }) {
             if let eventID = severityNotesEventID {
