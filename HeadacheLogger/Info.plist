@@ -11,9 +11,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>HeadacheLogger</string>
+	<string>OneTapHeadacheTracker</string>
 	<key>CFBundleDisplayName</key>
-	<string>Headache Logger</string>
+	<string>One Tap Headache Tracker</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,11 +25,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Headache Logger reads activity, sleep, heart, and related metrics from Apple Health to attach context when you log an event. The app never writes Health data.</string>
+	<string>One Tap Headache Tracker reads activity, sleep, heart, and related metrics from Apple Health to attach context when you log an event. The app never writes Health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Headache Logger does not write data to Apple Health.</string>
+	<string>One Tap Headache Tracker does not write data to Apple Health.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Headache Logger uses your approximate location to fetch local weather and place context when you log an event.</string>
+	<string>One Tap Headache Tracker uses your approximate location to fetch local weather and place context when you log an event.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

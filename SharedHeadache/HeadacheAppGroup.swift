@@ -17,6 +17,8 @@ enum HeadacheStorageKey: String {
     case useCelsiusTemperature = "headacheUseCelsiusTemperature"
     /// Timestamp of the most recent widget quick-log, for brief confirmation UI.
     case widgetLastLoggedAt = "headacheWidgetLastLoggedAt"
+    /// When true, the app prompts for severity and notes after each one-tap log.
+    case promptForSeverityNotes = "headachePromptForSeverityNotes"
 }
 
 enum HeadacheOnboardingStore {
@@ -35,11 +37,17 @@ enum HeadacheOnboardingStore {
         set { HeadacheAppGroup.userDefaults.set(newValue, forKey: HeadacheStorageKey.declinedLocation.rawValue) }
     }
 
+    static var promptForSeverityNotes: Bool {
+        get { HeadacheAppGroup.userDefaults.bool(forKey: HeadacheStorageKey.promptForSeverityNotes.rawValue) }
+        set { HeadacheAppGroup.userDefaults.set(newValue, forKey: HeadacheStorageKey.promptForSeverityNotes.rawValue) }
+    }
+
     /// Reset for UI tests / previews only.
     static func resetForTesting() {
         hasCompletedOnboarding = false
         declinedHealthRead = false
         declinedLocation = false
+        promptForSeverityNotes = false
     }
 }
 

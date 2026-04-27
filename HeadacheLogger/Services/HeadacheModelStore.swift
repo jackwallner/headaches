@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-/// SwiftData store for Headache Logger.
+/// SwiftData store for One Tap Headache Tracker.
 ///
 /// **Crash fix (TestFlight):** Do not use `ModelConfiguration`'s `groupContainer:` parameter when the app group
 /// may be unavailable — SwiftData asserts in `discoverDirectory`. Resolve a concrete file URL instead: prefer

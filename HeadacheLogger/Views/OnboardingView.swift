@@ -17,6 +17,8 @@ struct OnboardingView: View {
                     healthPage
                 case 2:
                     locationPage
+                case 3:
+                    severityNotesPage
                 default:
                     welcomePage
                 }
@@ -28,7 +30,7 @@ struct OnboardingView: View {
 
     private var welcomePage: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("Headache Logger")
+            Text("One Tap Headache Tracker")
                 .font(.largeTitle.bold())
             Text("Log headaches with one tap. The app enriches each entry with time, optional Apple Health context, and optional local weather — so you and your clinician can spot patterns.")
                 .font(.body)
@@ -120,6 +122,38 @@ struct OnboardingView: View {
 
                 Button("Not Now") {
                     HeadacheOnboardingStore.declinedLocation = true
+                    step = 3
+                }
+                .foregroundStyle(.secondary)
+            }
+        }
+        .padding(24)
+    }
+
+    private var severityNotesPage: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Label("Event Details", systemImage: "note.text")
+                .font(.title2.bold())
+                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+            Text("Would you like to record severity and notes each time you log a headache? You can change this in Settings later.")
+                .font(.body)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            VStack(spacing: 12) {
+                Button {
+                    HeadacheOnboardingStore.promptForSeverityNotes = true
+                    finishOnboarding()
+                } label: {
+                    Text("Enable")
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .frame(maxWidth: .infinity)
+
+                Button("Skip") {
+                    HeadacheOnboardingStore.promptForSeverityNotes = false
                     finishOnboarding()
                 }
                 .foregroundStyle(.secondary)
