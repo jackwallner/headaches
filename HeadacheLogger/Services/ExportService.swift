@@ -75,6 +75,7 @@ enum ExportService {
             "barometric_pressure_delta_hpa_6h",
             "health_message",
             "environment_message",
+            "severity",
             "user_notes",
         ].joined(separator: ",")
 
@@ -143,6 +144,7 @@ enum ExportService {
                 csv(number(event.barometricPressureDeltaHpa6h, formatter: decimalFormatter)),
                 csv(event.healthStatusMessage),
                 csv(event.environmentStatusMessage),
+                csv(event.severity?.rawValue),
                 csv(event.userNotes),
             ].joined(separator: ",")
         }
@@ -159,13 +161,14 @@ enum ExportService {
     /// Lines prefixed with `#` so spreadsheet tools and simple parsers can treat them as comments; tabular CSV starts after the preamble.
     private static func csvPreamble(eventCount: Int, generatedAtISO8601: String) -> [String] {
         [
-            "# Headache Logger — exported headache event log",
+            "# One Tap Headache Tracker — exported headache event log",
             "# What this file is: one row per time you tapped Headache in the app; each row is a timestamped snapshot of optional context (not a diagnosis).",
             "# Time: timestamp (UTC ISO8601 with fractional seconds), timezone ID, weekday name, hour/minute, part_of_day (overnight/morning/afternoon/evening).",
             "# Health (Apple Health when permitted): activity (steps, active/basal energy, distance, exercise, stand, flights), sleep (hours in window, inferred main-sleep wake time, hours since wake), heart (resting, recent avg, HRV, SpO₂, VO₂ max, walking speed), breathing rate, environmental audio (6h avg dB), mindful minutes today, barometric pressure change over 6h (device samples), workouts in last 24h.",
             "# Environment (when location/weather services work): human-readable location, weather summary, temperature (°C and °F columns), humidity, pressure and trend, precipitation, wind, cloud cover, UV, air quality indices and pollutants, pollen-style counts when exposed by the data provider.",
             "# Status columns: capture_status plus health_status / environment_status reflect whether those bundles were captured; health_message and environment_message explain gaps or errors when present.",
-            "# user_notes: optional text you added later in History (not captured at tap time).",
+            "# severity: optional rating (slight/medium/extreme) captured at tap time when the prompt is enabled.",
+            "# user_notes: optional text you can add at tap time or later in History.",
             "# Empty quoted cells mean the value was unavailable or not recorded for that event.",
             "# This export is for personal tracking and sharing with a clinician or researcher; it does not establish medical facts by itself.",
             "#",

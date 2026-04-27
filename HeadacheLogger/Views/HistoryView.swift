@@ -31,7 +31,7 @@ struct HistoryView: View {
                 ContentUnavailableView(
                     "No Headaches Logged Yet",
                     systemImage: "waveform.path.ecg",
-                    description: Text("Use the Headache button on the Headache Logger tab and the app will start building a timeline you can share with your doctor.")
+                    description: Text("Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor.")
                 )
                 .accessibilityIdentifier("historyEmptyState")
                 .listRowBackground(Color.clear)
@@ -212,6 +212,15 @@ private struct DetailedEventRow: View {
                     .background(statusColor.opacity(0.12), in: Capsule())
                     .foregroundStyle(statusColor)
 
+                if let severity = event.severity {
+                    Text(severity.rawValue.capitalized)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(severityColor(severity).opacity(0.12), in: Capsule())
+                        .foregroundStyle(severityColor(severity))
+                }
+
                 Button {
                     onEditNotes()
                 } label: {
@@ -266,6 +275,14 @@ private struct DetailedEventRow: View {
         case .partial: .orange
         case .failed: .red
         case .pending: .blue
+        }
+    }
+
+    private func severityColor(_ severity: HeadacheSeverity) -> Color {
+        switch severity {
+        case .slight: .yellow
+        case .medium: .orange
+        case .extreme: .red
         }
     }
 }

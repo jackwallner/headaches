@@ -38,6 +38,12 @@ enum PressureTrend: String, Codable, CaseIterable, Sendable {
     case unavailable
 }
 
+enum HeadacheSeverity: String, Codable, CaseIterable, Sendable {
+    case slight
+    case medium
+    case extreme
+}
+
 struct HealthSnapshot: Sendable {
     var stepsToday: Int? = nil
     var activeEnergyKcalToday: Double? = nil
@@ -187,6 +193,9 @@ final class HeadacheEvent {
     /// Optional notes added later from History (not collected at tap time).
     var userNotes: String?
 
+    /// Optional severity collected at tap time when the prompt setting is enabled.
+    var severityRaw: String?
+
     init(timestamp: Date = .now) {
         let calendar = Calendar.current
 
@@ -262,6 +271,7 @@ final class HeadacheEvent {
         self.barometricPressureDeltaHpa6h = nil
 
         self.userNotes = nil
+        self.severityRaw = nil
     }
 
     var partOfDay: PartOfDay {
@@ -287,6 +297,11 @@ final class HeadacheEvent {
     var pressureTrend: PressureTrend {
         get { PressureTrend(rawValue: pressureTrendRaw) ?? .unavailable }
         set { pressureTrendRaw = newValue.rawValue }
+    }
+
+    var severity: HeadacheSeverity? {
+        get { severityRaw.flatMap { HeadacheSeverity(rawValue: $0) } }
+        set { severityRaw = newValue?.rawValue }
     }
 
     var locationLabel: String {

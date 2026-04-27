@@ -9,7 +9,7 @@ struct RootTabView: View {
                 HomeView()
             }
             .tabItem {
-                Label("Headache Logger", systemImage: "brain.head.profile")
+                Label("One Tap", systemImage: "brain.head.profile")
             }
 
             NavigationStack {

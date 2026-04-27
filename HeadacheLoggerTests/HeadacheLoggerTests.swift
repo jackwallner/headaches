@@ -162,6 +162,36 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(Int(raw), 1234) // truncation — what we must NOT use anymore
     }
 
+    func testSeverityEnumCases() {
+        XCTAssertEqual(HeadacheSeverity.slight.rawValue, "slight")
+        XCTAssertEqual(HeadacheSeverity.medium.rawValue, "medium")
+        XCTAssertEqual(HeadacheSeverity.extreme.rawValue, "extreme")
+        XCTAssertEqual(HeadacheSeverity.allCases.count, 3)
+    }
+
+    func testEventSeverityRoundTrip() {
+        let event = HeadacheEvent()
+        XCTAssertNil(event.severity)
+        XCTAssertNil(event.severityRaw)
+
+        event.severity = .extreme
+        XCTAssertEqual(event.severity, .extreme)
+        XCTAssertEqual(event.severityRaw, "extreme")
+
+        event.severity = nil
+        XCTAssertNil(event.severity)
+        XCTAssertNil(event.severityRaw)
+    }
+
+    func testOnboardingStorePromptForSeverityNotesDefaultsToFalse() {
+        HeadacheOnboardingStore.resetForTesting()
+        XCTAssertFalse(HeadacheOnboardingStore.promptForSeverityNotes)
+        HeadacheOnboardingStore.promptForSeverityNotes = true
+        XCTAssertTrue(HeadacheOnboardingStore.promptForSeverityNotes)
+        HeadacheOnboardingStore.resetForTesting()
+        XCTAssertFalse(HeadacheOnboardingStore.promptForSeverityNotes)
+    }
+
     func testPendingCaptureFetchMatchesWatchOrphansAndWidgetSentinels() throws {
         // C2 regression: the re-enrichment predicate must catch BOTH
         // (a) watch-orphaned captures (both sources still .pending, no sentinel messages)
@@ -234,6 +264,7 @@ final class HeadacheLoggerTests: XCTestCase {
         event.healthStatusMessage = "Heart data unavailable"
         event.environmentStatusMessage = "Pollen unavailable"
         event.userNotes = "Saw aura first"
+        event.severity = .medium
 
         let url = try ExportService.exportCSV(events: [event])
         defer { try? FileManager.default.removeItem(at: url) }
@@ -241,13 +272,14 @@ final class HeadacheLoggerTests: XCTestCase {
         let data = try Data(contentsOf: url)
         let csv = try XCTUnwrap(String(data: data, encoding: .utf8))
 
-        XCTAssertTrue(csv.contains("# Headache Logger"))
+        XCTAssertTrue(csv.contains("# One Tap Headache Tracker"))
         XCTAssertTrue(csv.contains("# row_count: 1"))
         XCTAssertTrue(csv.contains("event_id,timestamp,timezone"))
         XCTAssertTrue(csv.contains("weekday,weekday_index,hour"), "M7: CSV must include weekday_index column")
         XCTAssertTrue(csv.contains("temperature_f"))
         XCTAssertTrue(csv.contains("feels_like_f"))
         XCTAssertTrue(csv.contains("\"67.1\""))
+        XCTAssertTrue(csv.contains(",severity"))
         XCTAssertTrue(csv.contains(",user_notes"))
         XCTAssertTrue(csv.contains("last_main_sleep_wake_utc"))
         XCTAssertTrue(csv.contains("barometric_pressure_delta_hpa_6h"))
@@ -260,5 +292,6 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(csv.contains("\"Heart data unavailable\""))
         XCTAssertTrue(csv.contains("\"Pollen unavailable\""))
         XCTAssertTrue(csv.contains("\"Saw aura first\""))
+        XCTAssertTrue(csv.contains("\"medium\""))
     }
 }

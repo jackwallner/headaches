@@ -6,7 +6,10 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
+    @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
+    @State private var severityNotesEventID: UUID?
+    @State private var showSeverityNotesSheet = false
 
     private var latestEvent: HeadacheEvent? { events.first }
     // C18: skip the latest event so it doesn't duplicate between LatestEventCard and Recent Logs.
@@ -32,7 +35,11 @@ struct HomeView: View {
 
                 VStack(spacing: 14) {
                     Button {
-                        captureCoordinator.captureHeadache(in: modelContext)
+                        let success = captureCoordinator.captureHeadache(in: modelContext)
+                        if success && promptForSeverityNotes {
+                            severityNotesEventID = captureCoordinator.lastCapturedEventID
+                            showSeverityNotesSheet = true
+                        }
                     } label: {
                         VStack(spacing: 12) {
                             Image(systemName: "brain.head.profile")
@@ -118,8 +125,13 @@ struct HomeView: View {
             .padding(20)
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("Headache Logger")
+        .navigationTitle("One Tap Headache Tracker")
         .accessibilityIdentifier("homeView")
+        .sheet(isPresented: $showSeverityNotesSheet, onDismiss: { severityNotesEventID = nil }) {
+            if let eventID = severityNotesEventID {
+                SeverityNotesSheet(eventID: eventID)
+            }
+        }
     }
 }
 
@@ -146,6 +158,9 @@ private struct LatestEventCard: View {
             HStack(spacing: 8) {
                 StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? .green : .orange)
                 StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? .blue : .orange)
+                if let severity = event.severity {
+                    StatusBadge(label: severity.rawValue.capitalized, tint: severityColor(severity))
+                }
             }
 
             if !event.locationLabel.isEmpty || event.weatherSummary != nil {
@@ -194,6 +209,14 @@ private struct LatestEventCard: View {
         case .partial: .orange
         case .failed: .red
         case .pending: .blue
+        }
+    }
+
+    private func severityColor(_ severity: HeadacheSeverity) -> Color {
+        switch severity {
+        case .slight: .yellow
+        case .medium: .orange
+        case .extreme: .red
         }
     }
 }
@@ -374,10 +397,78 @@ private struct CaptureRecoveryCard: View {
         components.scheme = "mailto"
         components.path = "jackwallner@gmail.com"
         components.queryItems = [
-            URLQueryItem(name: "subject", value: "Headache Logger: capture failed"),
+            URLQueryItem(name: "subject", value: "One Tap Headache Tracker: capture failed"),
             URLQueryItem(name: "body", value: bodyLines.joined(separator: "\n")),
         ]
         return components.url
+    }
+}
+
+private struct SeverityNotesSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    let eventID: UUID
+    @State private var selectedSeverity: HeadacheSeverity?
+    @State private var notes: String = ""
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Severity")
+                        .font(.headline)
+                    Picker("Severity", selection: $selectedSeverity) {
+                        Text("Not set").tag(Optional<HeadacheSeverity>.none)
+                        ForEach(HeadacheSeverity.allCases, id: \.self) { severity in
+                            Text(severity.rawValue.capitalized).tag(Optional(severity))
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Notes")
+                        .font(.headline)
+                    TextEditor(text: $notes)
+                        .frame(minHeight: 120)
+                        .padding(8)
+                        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                }
+
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Headache Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        save()
+                        dismiss()
+                    }
+                    .fontWeight(.semibold)
+                }
+            }
+        }
+    }
+
+    private func save() {
+        var descriptor = FetchDescriptor<HeadacheEvent>(predicate: #Predicate { $0.id == eventID })
+        descriptor.fetchLimit = 1
+        guard let event = try? modelContext.fetch(descriptor).first else { return }
+        event.severity = selectedSeverity
+        let trimmed = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        event.userNotes = trimmed.isEmpty ? nil : trimmed
+        do {
+            try modelContext.save()
+        } catch {
+            print("SeverityNotesSheet: save failed | \(error)")
+        }
     }
 }
 

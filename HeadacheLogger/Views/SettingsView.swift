@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @AppStorage("appearance") private var appearanceRaw = AppAppearance.system.rawValue
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
+    @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
 
     private let privacyPolicyURL = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html")
@@ -25,6 +26,13 @@ struct SettingsView: View {
             Section("Temperature") {
                 Toggle("Show Celsius", isOn: $useCelsius)
                 Text("Off (default): Fahrenheit (°F). On: Celsius (°C). Exported CSV always includes both °C and °F columns.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Logging") {
+                Toggle("Prompt for severity and notes", isOn: $promptForSeverityNotes)
+                Text("When on, each tap shows a quick sheet to rate severity (slight, medium, extreme) and add notes before saving.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -72,7 +80,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationTitle("About")
+        .navigationTitle("Settings")
         .onAppear {
             locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
         }

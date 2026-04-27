@@ -50,7 +50,7 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_NAME: HeadacheLogger
+        PRODUCT_NAME: OneTapHeadacheTracker
         PRODUCT_BUNDLE_IDENTIFIER: com.jackwallner.headachelogger
         INFOPLIST_FILE: HeadacheLogger/Info.plist
         CODE_SIGN_ENTITLEMENTS: HeadacheLogger/HeadacheLogger.entitlements

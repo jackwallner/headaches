@@ -6,7 +6,7 @@ import WidgetKit
 /// the event is stored at tap time; the main app enriches Health + weather using **that** timestamp when it opens.
 struct LogHeadacheIntent: AppIntent {
     static let title: LocalizedStringResource = "Log headache"
-    static let description: IntentDescription = "Records a headache in Headache Logger."
+    static let description: IntentDescription = "Records a headache in One Tap Headache Tracker."
 
     /// Keep the user on the Home Screen after tapping.
     static let openAppWhenRun = false
@@ -17,7 +17,7 @@ struct LogHeadacheIntent: AppIntent {
             // understand why the tap didn't log and what to do. (Changing `openAppWhenRun` to
             // open the app on this path would require divergent return types across branches,
             // which AppIntent cannot express; opening the app remains a manual step.)
-            return .result(dialog: IntentDialog("Open Headache Logger and finish setup to enable one-tap logging."))
+            return .result(dialog: IntentDialog("Open One Tap Headache Tracker and finish setup to enable one-tap logging."))
         }
 
         do {
