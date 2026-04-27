@@ -1,4 +1,4 @@
-# Headache Logger App Store Notes
+# One Tap Headache Tracker App Store Notes
 
 ## Public URLs
 
@@ -9,7 +9,7 @@
 
 ## App Store Listing Draft
 
-- App Name: `Headache Logger`
+- App Name: `One Tap Headache Tracker`
 - Subtitle: `One-tap headache tracking`
 - Promotional Text:
   `Log a headache in one tap and automatically capture surrounding Health, time, and weather context. Export your history as a CSV whenever you want to share patterns with your doctor.`
@@ -18,11 +18,11 @@
 
 ## Description Draft
 
-Headache Logger helps you capture a headache the moment it starts.
+One Tap Headache Tracker helps you capture a headache the moment it starts.
 
 Tap once on iPhone or Apple Watch and the app records the time immediately, then fills in as much surrounding context as it can automatically.
 
-Headache Logger can include:
+One Tap Headache Tracker can include:
 
 - Time context such as weekday, hour, minute, time zone, and part of day
 - Apple Health context such as steps, activity, sleep, heart metrics, breathing, and recent workouts
@@ -30,7 +30,7 @@ Headache Logger can include:
 - One-tap Apple Watch logging that syncs back to your paired iPhone
 - CSV export for sharing your history with a doctor
 
-Headache Logger is local-first:
+One Tap Headache Tracker is local-first:
 
 - No account required
 - No ads
