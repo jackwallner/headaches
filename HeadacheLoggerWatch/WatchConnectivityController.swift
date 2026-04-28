@@ -65,8 +65,13 @@ final class WatchConnectivityController: NSObject, ObservableObject {
                     guard let self else { return }
                     self.cancelSendTimeout()
                     self.isSending = false
+                    self.clearTask?.cancel()
+                    self.showConfirmation = false
+                    self.statusMessage = error.localizedDescription
                     let fallbackSession = WCSession.default
-                    self.queueForLater(payload: payload, session: fallbackSession, fallbackError: error)
+                    if fallbackSession.activationState == .activated {
+                        fallbackSession.transferUserInfo(payload)
+                    }
                 }
             })
         } else {

@@ -243,8 +243,10 @@ private enum OpenMeteoClient {
         let uvIndex: Double?
     }
 
-    private struct Response: Decodable {
+    private struct CurrentWithHourlyResponse: Decodable {
+        let timezone: String
         let current: Current
+        let hourly: Hourly
 
         struct Current: Decodable {
             let time: String
@@ -273,6 +275,16 @@ private enum OpenMeteoClient {
                 case uvIndex = "uv_index"
             }
         }
+
+        struct Hourly: Decodable {
+            let time: [String]
+            let pressureMsl: [Double?]
+
+            enum CodingKeys: String, CodingKey {
+                case time
+                case pressureMsl = "pressure_msl"
+            }
+        }
     }
 
     static func fetchCurrent(latitude: Double, longitude: Double) async throws -> CurrentWeather {
@@ -280,6 +292,7 @@ private enum OpenMeteoClient {
         components.queryItems = [
             URLQueryItem(name: "latitude", value: String(latitude)),
             URLQueryItem(name: "longitude", value: String(longitude)),
+            URLQueryItem(name: "timezone", value: "auto"),
             URLQueryItem(
                 name: "current",
                 // C7: `pressure_msl` (mean sea level) so users at altitude see meteorologically
@@ -287,6 +300,8 @@ private enum OpenMeteoClient {
                 // Matches how migraine-pressure studies report values.
                 value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index"
             ),
+            URLQueryItem(name: "hourly", value: "pressure_msl"),
+            URLQueryItem(name: "past_hours", value: "6"),
             URLQueryItem(name: "wind_speed_unit", value: "kmh"),
         ]
 
@@ -299,8 +314,35 @@ private enum OpenMeteoClient {
             throw URLError(.badServerResponse)
         }
 
-        let decoded = try JSONDecoder().decode(Response.self, from: data)
+        let decoded = try JSONDecoder().decode(CurrentWithHourlyResponse.self, from: data)
         let c = decoded.current
+
+        let trend: PressureTrend = {
+            guard let tz = TimeZone(identifier: decoded.timezone) else { return .unavailable }
+            let h = decoded.hourly
+            var bestIdx: Int?
+            var bestDelta = TimeInterval.greatestFiniteMagnitude
+            let now = Date()
+            for (i, s) in h.time.enumerated() {
+                guard let t = OpenMeteoTimeParsing.hourDate(from: s, timeZone: tz) else { continue }
+                let d = abs(t.timeIntervalSince(now))
+                if d < bestDelta {
+                    bestDelta = d
+                    bestIdx = i
+                }
+            }
+            guard let idx = bestIdx else { return .unavailable }
+            let priorIdx = idx - 3
+            guard priorIdx >= 0, priorIdx < h.pressureMsl.count,
+                  let current = h.pressureMsl[idx].flatMap({ $0 }),
+                  let prior = h.pressureMsl[priorIdx].flatMap({ $0 }) else {
+                return .unavailable
+            }
+            let delta = current - prior
+            if delta > 1.0 { return .rising }
+            if delta < -1.0 { return .falling }
+            return .steady
+        }()
 
         return CurrentWeather(
             conditionSummary: c.weatherCode.map { wmoWeatherSummary(code: $0) },
@@ -309,7 +351,7 @@ private enum OpenMeteoClient {
             apparentTemperatureC: c.apparentTemperature,
             relativeHumidityPercent: c.relativeHumidity2m,
             surfacePressureHpa: c.pressureMsl,
-            pressureTrend: .unavailable,
+            pressureTrend: trend,
             precipitationMm: c.precipitation,
             windSpeedKph: c.windSpeed10m,
             windDirectionDegrees: c.windDirection10m,
