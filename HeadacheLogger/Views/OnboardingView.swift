@@ -4,7 +4,6 @@ struct OnboardingView: View {
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
 
     @State private var step = 0
-    @State private var healthError: String?
     @State private var isWorking = false
 
     var body: some View {
@@ -52,43 +51,27 @@ struct OnboardingView: View {
             Label("Apple Health", systemImage: "heart.text.square.fill")
                 .font(.title2.bold())
                 .foregroundStyle(.pink)
-            Text("Allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
+            Text("Next, iOS will ask whether to allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
                 .font(.body)
                 .foregroundStyle(.secondary)
 
-            if let healthError {
-                Text(healthError)
-                    .font(.footnote)
-                    .foregroundStyle(.red)
-            }
-
             Spacer()
 
-            VStack(spacing: 12) {
-                Button {
-                    Task { await enableHealthTapped() }
-                } label: {
-                    if isWorking {
-                        ProgressView()
-                            .tint(.white)
-                    } else {
-                        Text("Allow Health Access")
-                    }
+            Button {
+                Task { await enableHealthTapped() }
+            } label: {
+                if isWorking {
+                    ProgressView()
+                        .tint(.white)
+                } else {
+                    Text("Continue")
                 }
-                .disabled(isWorking)
-                .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
-                .frame(maxWidth: .infinity)
-
-                Button("Not Now") {
-                    HeadacheOnboardingStore.declinedHealthRead = true
-                    Task {
-                        await HealthKitService.shared.markHealthSkippedInOnboarding()
-                        await MainActor.run { step = 2 }
-                    }
-                }
-                .foregroundStyle(.secondary)
             }
+            .disabled(isWorking)
+            .buttonStyle(.borderedProminent)
+            .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .controlSize(.large)
+            .frame(maxWidth: .infinity)
         }
         .padding(24)
     }
@@ -98,34 +81,27 @@ struct OnboardingView: View {
             Label("Location", systemImage: "location.fill")
                 .font(.title2.bold())
                 .foregroundStyle(.blue)
-            Text("Used only to fetch approximate weather and place labels when you log. We don’t track you in the background.")
+            Text("Next, iOS will ask whether to share your location. It is used only to fetch approximate weather and place labels when you log. We don’t track you in the background.")
                 .font(.body)
                 .foregroundStyle(.secondary)
 
             Spacer()
 
-            VStack(spacing: 12) {
-                Button {
-                    Task { await enableLocationTapped() }
-                } label: {
-                    if isWorking {
-                        ProgressView()
-                            .tint(.white)
-                    } else {
-                        Text("Allow Location Access")
-                    }
+            Button {
+                Task { await enableLocationTapped() }
+            } label: {
+                if isWorking {
+                    ProgressView()
+                        .tint(.white)
+                } else {
+                    Text("Continue")
                 }
-                .disabled(isWorking)
-                .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
-                .frame(maxWidth: .infinity)
-
-                Button("Not Now") {
-                    HeadacheOnboardingStore.declinedLocation = true
-                    step = 3
-                }
-                .foregroundStyle(.secondary)
             }
+            .disabled(isWorking)
+            .buttonStyle(.borderedProminent)
+            .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .controlSize(.large)
+            .frame(maxWidth: .infinity)
         }
         .padding(24)
     }
@@ -163,15 +139,16 @@ struct OnboardingView: View {
     }
 
     private func enableHealthTapped() async {
-        healthError = nil
         isWorking = true
         defer { isWorking = false }
         do {
             try await HealthKitService.shared.prepareAuthorizationDuringOnboarding()
-            await MainActor.run { step = 2 }
         } catch {
-            healthError = error.localizedDescription
+            // OS prompt was presented (or HealthKit is unavailable). Either way advance —
+            // Apple requires the pre-prompt screen to always proceed to the system flow.
+            await HealthKitService.shared.markHealthSkippedInOnboarding()
         }
+        await MainActor.run { step = 2 }
     }
 
     private func enableLocationTapped() async {
