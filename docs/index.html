@@ -404,6 +404,83 @@
             .phone-frame:not(:first-child) { display: none; }
             .phone-frame img { height: 440px; }
         }
+
+        /* More Info */
+        .more-info {
+            padding: 64px 24px;
+            background: #fff;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .more-info-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .more-info-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .more-info-header p {
+            font-size: 17px;
+            color: #6e6e73;
+        }
+
+        .more-info-content {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .more-info-section {
+            margin-bottom: 40px;
+        }
+
+        .more-info-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #86868b;
+            margin-bottom: 12px;
+        }
+
+        .more-info-section p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .more-info-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .more-info-section strong {
+            font-weight: 600;
+        }
+
+        .specs-table {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .specs-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .specs-table td:first-child {
+            color: #86868b;
+            width: 140px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -498,9 +575,45 @@
         </div>
     </section>
 
+    <section class="more-info">
+        <div class="container">
+            <div class="more-info-header">
+                <h2>More info</h2>
+                <p>How it's built and why it matters.</p>
+            </div>
+            <div class="more-info-content">
+                <div class="more-info-section">
+                    <h3>The Pitch</h3>
+                    <p>When you have a headache, you don't want to fill out a form. You want to press one button and move on. But later, when you're trying to find patterns, you wish you had more context.</p>
+                    <p>Headache & Migraine Logger solves both: one tap to log, rich context attached automatically. Your future self gets a spreadsheet with everything that might have triggered it.</p>
+                </div>
+
+                <div class="more-info-section">
+                    <h3>Specs</h3>
+                    <table class="specs-table">
+                        <tr><td>Platform</td><td>iOS 17+, watchOS 10+</td></tr>
+                        <tr><td>Storage</td><td>SwiftData with CloudKit sync</td></tr>
+                        <tr><td>Health Data</td><td>Sleep, HRV, activity, mindful minutes, heart rate, etc.</td></tr>
+                        <tr><td>Weather</td><td>Open-Meteo API (pressure, temp, humidity, pollen)</td></tr>
+                        <tr><td>Air Quality</td><td>OpenAQ integration for local AQI at time of entry</td></tr>
+                        <tr><td>Export</td><td>60-column CSV with all signals joined by timestamp</td></tr>
+                    </table>
+                </div>
+
+                <div class="more-info-section">
+                    <h3>What Mattered</h3>
+                    <p><strong>One-tap logging.</strong> The default flow: open app, tap severity, done. Optional notes if you want. The app captures the timestamp and starts fetching context immediately in the background. No loading spinner blocking the UI.</p>
+                    <p><strong>Context without clutter.</strong> Every headache entry stores 50+ variables you didn't have to input: weather pressure changes, air quality index, sleep duration from last night, HRV trend from the past week. It's there when you need it, invisible when you don't.</p>
+                    <p><strong>CSV export for doctors.</strong> The export isn't a pretty PDF — it's a raw CSV with every column labeled. Doctors and researchers can import it directly. Users have emailed it to neurologists who appreciated the granularity.</p>
+                    <p><strong>Watch app for discrete logging.</strong> In a meeting when a headache starts? Log it from your wrist. No phone pull-out, no obvious app usage. The complication shows today's count at a glance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="cta">
         <h2>Now on the App Store</h2>
-        <p>One Tap Headache Tracker is approved and live. Free with no account required.</p>
+        <p>Headache & Migraine Logger is approved and live. Free with no account required.</p>
         <a class="download-btn" href="https://apps.apple.com/us/app/headache-migraine-logger/id6762074561">Download on the App Store</a>
     </section>
 
