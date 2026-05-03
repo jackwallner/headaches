@@ -19,6 +19,21 @@ enum HeadacheStorageKey: String {
     case widgetLastLoggedAt = "headacheWidgetLastLoggedAt"
     /// When true, the app prompts for severity and notes after each one-tap log.
     case promptForSeverityNotes = "headachePromptForSeverityNotes"
+
+    // MARK: - Pro / Proactive Alerts
+    case proAlertsEnabled = "headacheProAlertsEnabled"
+    case proAlertPressureDropThreshold = "headacheProAlertPressureDropThreshold"
+    case proAlertAirQualityEnabled = "headacheProAlertAirQualityEnabled"
+    case proAlertAirQualityThreshold = "headacheProAlertAirQualityThreshold"
+    case proAlertQuietHoursEnabled = "headacheProAlertQuietHoursEnabled"
+    case proAlertQuietStartHour = "headacheProAlertQuietStartHour"
+    case proAlertQuietEndHour = "headacheProAlertQuietEndHour"
+    case proAlertLastFiredAt = "headacheProAlertLastFiredAt"
+    case proAlertLastFiredKind = "headacheProAlertLastFiredKind"
+    /// Cached last-known coordinates so the background task can fetch a forecast without "Always" auth.
+    case lastKnownLatitude = "headacheLastKnownLatitude"
+    case lastKnownLongitude = "headacheLastKnownLongitude"
+    case lastKnownLocationCapturedAt = "headacheLastKnownLocationCapturedAt"
 }
 
 enum HeadacheOnboardingStore {

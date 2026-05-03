@@ -1,0 +1,35 @@
+{
+  "identifier" : "OneTapHeadachePro",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "PRO_LIFETIME_001",
+      "localizations" : [
+        {
+          "description" : "Get notified before a likely headache day. Predictive barometric pressure and air quality alerts based on your local forecast.",
+          "displayName" : "Pro Lifetime Unlock",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.jackwallner.headachelogger.pro.lifetime",
+      "referenceName" : "Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "OneTapHeadacheTracker",
+    "_developerTeamID" : "YXG4MP6W39",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 0,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

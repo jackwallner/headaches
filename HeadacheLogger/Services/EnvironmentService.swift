@@ -106,6 +106,12 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             )
         }
 
+        // Cache for the Pro background task so it can fetch a forecast without "Always" auth.
+        CachedLocation.save(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+
         do {
             let placemarks = try await reverseGeocode(location)
             let placemark = placemarks.first
