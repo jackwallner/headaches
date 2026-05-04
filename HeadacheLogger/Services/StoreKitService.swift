@@ -94,8 +94,13 @@ final class StoreKitService: ObservableObject {
         Task(priority: .background) { [weak self] in
             for await result in Transaction.updates {
                 guard let self else { return }
-                if case .verified(let transaction) = result {
+                switch result {
+                case .verified(let transaction):
                     await self.updateEntitlement()
+                    await transaction.finish()
+                case .unverified(let transaction, let error):
+                    // Finish even if verification failed so StoreKit stops redelivering it.
+                    print("Transaction unverified: \(error)")
                     await transaction.finish()
                 }
             }

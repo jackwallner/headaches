@@ -12,7 +12,7 @@
 - App Name: `One Tap Headache Tracker`
 - Subtitle: `One-tap headache tracking`
 - Promotional Text:
-  `Log a headache in one tap and automatically capture surrounding Health, time, and weather context. Export your history as a CSV whenever you want to share patterns with your doctor.`
+  `Log a headache in one tap and automatically capture surrounding Health, time, and weather context. Export your history as a CSV whenever you want to share patterns with your doctor. Pro users get proactive alerts before headache weather arrives.`
 - Keywords:
   `headache,migraine,health,journal,tracker,watch,export,doctor,weather,symptoms`
 
@@ -29,6 +29,7 @@ One Tap Headache Tracker can include:
 - Weather and environmental context such as temperature, pressure, air quality, UV, and pollen-style signals
 - One-tap Apple Watch logging that syncs back to your paired iPhone
 - CSV export for sharing your history with a doctor
+- Pro: Proactive Alerts — get notified before barometric pressure drops or air quality spikes
 
 One Tap Headache Tracker is local-first:
 
@@ -44,6 +45,7 @@ One Tap Headache Tracker is local-first:
 - The main experience is the `Log` tab on iPhone and the watch companion app.
 - HealthKit and Location permissions are optional. If either permission is denied, the app still logs the headache and stores partial context.
 - The `History` tab exports a CSV through the standard iOS share sheet.
+- The `Settings` tab contains a Pro paywall and a Proactive Alerts configuration screen for paid users.
 - The `About` tab contains links for privacy policy and support.
 - The Apple Watch app queues headache entries to the paired iPhone using `WatchConnectivity`.
 
@@ -54,12 +56,24 @@ Review this carefully in App Store Connect before submission.
 Recommended answers based on the current implementation:
 
 - Tracking: `No`
-- Linked-to-user data: likely `None`
+- Linked-to-user data:
+  - `Purchases` → Linked to user (Apple ID transaction ID for IAP)
+  - Everything else → Not linked to user
 - Data used for tracking: `None`
 - Data collected off device for app functionality:
-  `Precise Location` may need to be disclosed because latitude and longitude are sent from the device to Open-Meteo to fetch weather and air-quality context.
+  - `Precise Location` — latitude and longitude are sent from the device to Open-Meteo to fetch weather and air-quality context. This is collected only at the moment you log a headache.
+  - `Purchases` — handled by StoreKit; Apple processes the transaction.
 - Health data:
-  HealthKit values are used locally on device and are not uploaded to a developer-owned backend by the current app implementation.
+  - `Health & Fitness` — disclosed. HealthKit values are read locally on device and are not uploaded to a developer-owned backend.
+
+### New for v1.1.0 (Pro)
+
+Add or update these privacy declarations:
+
+1. **Purchases** → Data type: `Purchases` → Purpose: `App Functionality` → Linked to user: `Yes` (Apple ID)
+2. **Notifications** → The app posts local notifications for Proactive Alerts. No notification data is sent off-device.
+3. **Location** → Already declared as `Precise Location` for app functionality. The background Pro task uses only the last-known coarse location captured during foreground use. No continuous tracking.
+4. **Health & Fitness** → Already declared; no change from v1.0.
 
 ## Submission Checklist
 
