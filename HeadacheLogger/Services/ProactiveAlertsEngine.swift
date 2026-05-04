@@ -1,4 +1,5 @@
 import Foundation
+import StoreKit
 import UserNotifications
 
 /// Pulls a 24-hour forecast from Open-Meteo (and the air-quality endpoint) and decides whether
