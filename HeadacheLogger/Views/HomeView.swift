@@ -78,6 +78,7 @@ struct HomeView: View {
 
                 if let latestEvent {
                     LatestEventCard(event: latestEvent, useCelsius: useCelsius)
+                        .id("\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(latestEvent.captureCompletedAt?.timeIntervalSince1970 ?? 0)")
 
                     if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
                         CaptureRecoveryCard(
@@ -87,6 +88,7 @@ struct HomeView: View {
                                 captureCoordinator.retryCapture(eventID: latestEvent.id, in: modelContext)
                             }
                         )
+                        .id("recovery-\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(captureCoordinator.isCapturing)")
                     }
                 }
 
@@ -97,6 +99,7 @@ struct HomeView: View {
 
                         ForEach(recentEvents, id: \.id) { event in
                             RecentEventRow(event: event)
+                                .id("recent-\(event.id)-\(event.captureStatus.rawValue)")
                         }
                     }
                 }

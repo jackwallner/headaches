@@ -67,6 +67,9 @@ private struct HeadacheLoggerRootContent: View {
                 scheduleBackgroundIfNeeded()
             }
         }
+        .onChange(of: storeKitService.isProUnlocked) { _, _ in
+            scheduleBackgroundIfNeeded()
+        }
     }
 
     private func runWidgetEnrichmentIfReady() {

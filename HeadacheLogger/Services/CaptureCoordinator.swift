@@ -96,7 +96,7 @@ final class CaptureCoordinator: ObservableObject {
         }
 
         isCapturing = true
-        bannerMessage = nil
+        bannerMessage = "Saving and collecting context…"
 
         let eventID = event.id
         let timestamp = event.timestamp
@@ -162,7 +162,7 @@ final class CaptureCoordinator: ObservableObject {
         }
 
         isCapturing = true
-        bannerMessage = nil
+        bannerMessage = "Retrying context capture…"
         let timestamp = event.timestamp
 
         Task { @MainActor in
@@ -216,7 +216,7 @@ final class CaptureCoordinator: ObservableObject {
             do {
                 try context.save()
                 lastCapturedEventID = nil
-                bannerMessage = nil
+                bannerMessage = "Last entry undone."
             } catch {
                 consoleError("CaptureCoordinator: undo save failed", error: error, trace: ["eventID": "\(eventID)"])
                 bannerMessage = "Undo failed. Try again."

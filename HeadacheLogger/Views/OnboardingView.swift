@@ -155,7 +155,7 @@ struct OnboardingView: View {
         isWorking = true
         defer { isWorking = false }
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
-        finishOnboarding()
+        await MainActor.run { step = 3 }
     }
 
     private func finishOnboarding() {

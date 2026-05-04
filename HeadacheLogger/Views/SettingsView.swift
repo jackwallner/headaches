@@ -115,7 +115,10 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .onAppear {
-            locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
+            refreshLocationStatus()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            refreshLocationStatus()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
@@ -123,7 +126,10 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
+    private func refreshLocationStatus() {
+        locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
+    }
+
     private func proRowLabel(unlocked: Bool) -> some View {
         HStack(spacing: 12) {
             Image(systemName: unlocked ? "bell.badge.fill" : "lock.fill")

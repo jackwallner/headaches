@@ -25,6 +25,8 @@ struct HistoryView: View {
         }
     }
 
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         List {
             if events.isEmpty {
@@ -47,8 +49,9 @@ struct HistoryView: View {
                         DetailedEventRow(event: event, useCelsius: useCelsius) {
                             activeSheet = .notes(event.id)
                         }
-                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                            .listRowBackground(Color.clear)
+                        .id("history-\(event.id)-\(event.captureStatus.rawValue)")
+                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowBackground(Color.clear)
                     }
                     .onDelete(perform: deleteEvents)
                 }
@@ -58,6 +61,11 @@ struct HistoryView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("History")
         .accessibilityIdentifier("historyView")
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                try? modelContext.save()
+            }
+        }
         .toolbar {
             if !events.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
