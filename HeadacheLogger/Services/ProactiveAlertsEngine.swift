@@ -19,7 +19,20 @@ enum ProactiveAlertsEngine {
     /// Minimum gap between two notifications so the user doesn't get spammed.
     static let minNotificationGap: TimeInterval = 6 * 60 * 60
 
+    private static let proProductId = "com.jackwallner.headachelogger.pro.lifetime"
+
     static func runIfEligible() async -> Bool {
+        // Re-verify entitlement in background — a refund or revocation could have cancelled it.
+        var hasEntitlement = false
+        for await result in Transaction.currentEntitlements {
+            if case .verified(let transaction) = result,
+               transaction.productID == proProductId,
+               transaction.revocationDate == nil {
+                hasEntitlement = true
+            }
+        }
+        guard hasEntitlement else { return false }
+
         let prefs = ProAlertPreferenceValues.current()
         guard prefs.alertsEnabled else { return false }
         guard let coord = CachedLocation.current() else { return false }

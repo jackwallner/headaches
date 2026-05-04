@@ -45,6 +45,7 @@ final class StoreKitService: ObservableObject {
     func fetchProducts() async {
         isLoadingProducts = true
         defer { isLoadingProducts = false }
+        lastError = nil
         do {
             products = try await Product.products(for: [Self.proProductId])
         } catch {
@@ -53,6 +54,7 @@ final class StoreKitService: ObservableObject {
     }
 
     func purchase(_ product: Product) async throws -> Bool {
+        lastError = nil
         let result = try await product.purchase()
         switch result {
         case .success(let verification):
@@ -70,6 +72,7 @@ final class StoreKitService: ObservableObject {
     }
 
     func restorePurchases() async {
+        lastError = nil
         do {
             try await AppStore.sync()
             await updateEntitlement()
