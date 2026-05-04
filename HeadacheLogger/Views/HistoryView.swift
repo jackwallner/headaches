@@ -9,6 +9,7 @@ struct HistoryView: View {
     // SwiftUI historically exhibited and keeps sheet presentation deterministic under test.
     @State private var activeSheet: ActiveSheet?
     @State private var showExportError = false
+    @State private var selectedYear: Int? = nil
     /// Tracked separately from `activeSheet` because SwiftUI nils the binding before `onDismiss` fires,
     /// and we still need the temp file URL to clean it up.
     @State private var pendingExportURL: URL?
@@ -27,25 +28,38 @@ struct HistoryView: View {
 
     @Environment(\.scenePhase) private var scenePhase
 
+    private var availableYears: [Int] {
+        let years = events.compactMap { Calendar.current.component(.year, from: $0.timestamp) }
+        return Array(Set(years)).sorted(by: >)
+    }
+
+    private var filteredEvents: [HeadacheEvent] {
+        guard let selectedYear else { return events }
+        return events.filter { Calendar.current.component(.year, from: $0.timestamp) == selectedYear }
+    }
+
     var body: some View {
         List {
-            if events.isEmpty {
+            if filteredEvents.isEmpty {
                 ContentUnavailableView(
-                    "No Headaches Logged Yet",
+                    events.isEmpty ? "No Headaches Logged Yet" : "No Entries for \(String(selectedYear ?? 0))",
                     systemImage: "waveform.path.ecg",
-                    description: Text("Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor.")
+                    description: Text(events.isEmpty
+                        ? "Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor."
+                        : "Try selecting a different year or tap All Years."
+                    )
                 )
                 .accessibilityIdentifier("historyEmptyState")
                 .listRowBackground(Color.clear)
             } else {
                 Section {
-                    SummaryGrid(events: events, useCelsius: useCelsius)
+                    SummaryGrid(events: filteredEvents, useCelsius: useCelsius)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
 
                 Section("Entries") {
-                    ForEach(events, id: \.id) { event in
+                    ForEach(filteredEvents, id: \.id) { event in
                         DetailedEventRow(event: event, useCelsius: useCelsius) {
                             activeSheet = .notes(event.id)
                         }
@@ -68,6 +82,27 @@ struct HistoryView: View {
         }
         .toolbar {
             if !events.isEmpty {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Button("All Years") {
+                            selectedYear = nil
+                        }
+                        .disabled(selectedYear == nil)
+                        Divider()
+                        ForEach(availableYears, id: \.self) { year in
+                            Button(String(year)) {
+                                selectedYear = year
+                            }
+                            .disabled(selectedYear == year)
+                        }
+                    } label: {
+                        Label(
+                            selectedYear.map(String.init) ?? "All Years",
+                            systemImage: "calendar"
+                        )
+                        .labelStyle(.titleAndIcon)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         export()
@@ -101,7 +136,7 @@ struct HistoryView: View {
 
     private func export() {
         do {
-            let url = try ExportService.exportCSV(events: events)
+            let url = try ExportService.exportCSV(events: filteredEvents)
             pendingExportURL = url
             activeSheet = .export(url)
         } catch {
@@ -111,7 +146,10 @@ struct HistoryView: View {
 
     private func deleteEvents(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(events[index])
+            let eventToDelete = filteredEvents[index]
+            if let originalIndex = events.firstIndex(where: { $0.id == eventToDelete.id }) {
+                modelContext.delete(events[originalIndex])
+            }
         }
         do {
             try modelContext.save()
