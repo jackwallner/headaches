@@ -20,6 +20,13 @@ struct RootTabView: View {
             }
 
             NavigationStack {
+                InsightsView()
+            }
+            .tabItem {
+                Label("Patterns", systemImage: "chart.bar.xaxis")
+            }
+
+            NavigationStack {
                 SettingsView()
             }
             .tabItem {

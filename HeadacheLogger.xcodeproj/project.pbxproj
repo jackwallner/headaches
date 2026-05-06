@@ -16,6 +16,7 @@
 		241DD8715CD0129FEB0E4693 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BE807C4B06F925D4E872E /* AppAppearance.swift */; };
 		2751DCAD06E95DF91DE183FD /* BackgroundRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB391699EDD40FD6CADD8D1E /* BackgroundRefreshService.swift */; };
 		3AD9AE844511D0CA7CCBD2B2 /* ProAlertsConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DCE63E131C76802F1F575B /* ProAlertsConfigView.swift */; };
+		3B3E6ABE557601B722370E58 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0E5946D1956839971B4BD1 /* InsightsView.swift */; };
 		3D42B6E3B8CE8428D6E4E2C1 /* SleepIntervalMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */; };
 		49AE2469750959923DB47B54 /* HeadacheLoggerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
@@ -51,6 +52,7 @@
 		F4D36C76D423D4BEF2CA59FD /* ProactiveAlertsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */; };
 		FA8EFEC5D1F70EC66FAEF806 /* ProAlertPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26C529527476DB4EF2D977F /* ProAlertPreferences.swift */; };
 		FC374774D642F632FF0C187D /* HeadacheLoggerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */; };
+		FDC181FFD202D30A2E2E336A /* InsightsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C7A2B35897EC80F7A321C /* InsightsEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,7 @@
 		0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveAlertsEngine.swift; sourceTree = "<group>"; };
 		0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheEvent.swift; sourceTree = "<group>"; };
 		0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		228C7A2B35897EC80F7A321C /* InsightsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsEngine.swift; sourceTree = "<group>"; };
 		254CAEEDC5A2E194D94ED45D /* HeadacheLoggerTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HeadacheLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSession.swift; sourceTree = "<group>"; };
 		315BBD7D34A29D46F55EF950 /* StoreKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitService.swift; sourceTree = "<group>"; };
@@ -149,6 +152,7 @@
 		EB391699EDD40FD6CADD8D1E /* BackgroundRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshService.swift; sourceTree = "<group>"; };
 		F26C529527476DB4EF2D977F /* ProAlertPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProAlertPreferences.swift; sourceTree = "<group>"; };
 		F790B5264C2F84568B71E41B /* HeadacheLogger.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HeadacheLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA0E5946D1956839971B4BD1 /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -246,6 +250,7 @@
 				9559AD161DB11A658E6B00B1 /* ExportService.swift */,
 				E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */,
 				A8472C3F09A9A16899D362E3 /* HealthKitService.swift */,
+				228C7A2B35897EC80F7A321C /* InsightsEngine.swift */,
 				2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */,
 				0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */,
 				315BBD7D34A29D46F55EF950 /* StoreKitService.swift */,
@@ -274,6 +279,7 @@
 			children = (
 				9E9FDF0333E813841B3E325A /* HistoryView.swift */,
 				334426D57EADD647A3B13738 /* HomeView.swift */,
+				FA0E5946D1956839971B4BD1 /* InsightsView.swift */,
 				C9374226F8FD525B4B20127E /* OnboardingView.swift */,
 				BE8412887F4E26C9B3CC85AC /* PaywallView.swift */,
 				93DCE63E131C76802F1F575B /* ProAlertsConfigView.swift */,
@@ -484,6 +490,8 @@
 				9BFB6F53C055BF3E8BCD2572 /* HealthKitService.swift in Sources */,
 				AEB435D0B9D90A9DE04104C1 /* HistoryView.swift in Sources */,
 				D9447241D9F98FDCBFED788D /* HomeView.swift in Sources */,
+				FDC181FFD202D30A2E2E336A /* InsightsEngine.swift in Sources */,
+				3B3E6ABE557601B722370E58 /* InsightsView.swift in Sources */,
 				8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */,
 				1EE3B2967FF4A10BB0B96280 /* OpenMeteoTimeParsing.swift in Sources */,
 				EDFC1B480765BA3ACFBBB289 /* PaywallView.swift in Sources */,

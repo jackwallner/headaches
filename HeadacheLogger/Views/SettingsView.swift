@@ -47,6 +47,12 @@ struct SettingsView: View {
                     } label: {
                         proRowLabel(unlocked: true)
                     }
+                    if store.hasSubscription {
+                        Button("Manage Subscription") {
+                            guard let url = URL(string: "https://apps.apple.com/account/subscriptions") else { return }
+                            openURL(url)
+                        }
+                    }
                 } else {
                     Button {
                         showPaywall = true
@@ -58,7 +64,7 @@ struct SettingsView: View {
             } header: {
                 Text("Pro")
             } footer: {
-                Text("Pro adds a daily background forecast check. The app pings you when a sharp barometric pressure drop or air-quality spike is on the way.")
+                Text("Pro adds a daily background forecast check and personalized pattern insights. The app pings you when a sharp barometric pressure drop or air-quality spike is on the way.")
             }
 
             Section("How Logging Works") {
@@ -106,10 +112,8 @@ struct SettingsView: View {
                     guard let supportURL else { return }
                     openURL(supportURL)
                 }
-                if store.isProUnlocked {
-                    Button("Restore Purchases") {
-                        Task { await store.restorePurchases() }
-                    }
+                Button("Restore Purchases") {
+                    Task { await store.restorePurchases() }
                 }
             }
         }

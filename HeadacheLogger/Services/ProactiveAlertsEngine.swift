@@ -20,14 +20,18 @@ enum ProactiveAlertsEngine {
     /// Minimum gap between two notifications so the user doesn't get spammed.
     static let minNotificationGap: TimeInterval = 6 * 60 * 60
 
-    private static let proProductId = "com.jackwallner.headachelogger.pro.lifetime"
+    private static let proProductIds: Set<String> = [
+        "com.jackwallner.headachelogger.pro.yearly",
+        "com.jackwallner.headachelogger.pro.lifetime",
+    ]
 
     static func runIfEligible() async -> Bool {
-        // Re-verify entitlement in background — a refund or revocation could have cancelled it.
+        // Re-verify entitlement in background — a refund, revocation or expired subscription
+        // should immediately stop alerts from firing.
         var hasEntitlement = false
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
-               transaction.productID == proProductId,
+               proProductIds.contains(transaction.productID),
                transaction.revocationDate == nil {
                 hasEntitlement = true
             }
