@@ -1,3 +1,4 @@
+import Charts
 import SwiftData
 import SwiftUI
 
@@ -36,11 +37,25 @@ struct InsightsView: View {
                 Section {
                     InsightsHeader(summary: summary)
                         .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                }
+                Section {
+                    ProactiveAlertsCard()
+                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                } header: {
+                    Text("Get ahead of triggers")
+                } footer: {
+                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
+                        .font(.footnote)
                 }
                 Section {
                     ForEach(summary.insights) { insight in
-                        InsightRow(insight: insight)
+                        NavigationLink {
+                            InsightDetailView(insight: insight, totalEvents: summary.totalEvents)
+                        } label: {
+                            InsightRow(insight: insight)
+                        }
                     }
                 } header: {
                     Text("Your patterns")
@@ -78,46 +93,42 @@ struct InsightsView: View {
                     Text("See what triggers your headaches")
                         .font(.title2.bold())
                         .multilineTextAlignment(.center)
-                    Text("Pro analyzes your logged events and surfaces the patterns hiding in the data — sleep, pressure, time of day, weather.")
+                    Text("Pro analyzes your logged events and surfaces the patterns hiding in the data — sleep, pressure, time of day, weather — with a chart and explanation for each one.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
                 .padding(.top, 24)
+                .padding(.horizontal, 20)
 
                 VStack(spacing: 10) {
-                    SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median sleep the night before: 5h 40m.")
-                    SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of your headaches followed a pressure drop.")
-                    SampleInsightRow(icon: "sun.max.fill", title: "Most common time: Afternoon", detail: "48% of your headaches happened in the afternoon.")
+                    SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches — 1.6× the even baseline.")
+                    SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m — 47% under 6 hours.")
+                    SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
+                    SampleInsightRow(icon: "bell.badge.fill", title: "Proactive Alerts", detail: "Get notified 12–24h before risky weather.")
                 }
                 .padding(.horizontal, 16)
-                .opacity(0.85)
-                .overlay(
-                    LinearGradient(
-                        colors: [.clear, Color(.systemBackground)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .allowsHitTesting(false)
-                )
-
-                VStack(spacing: 6) {
-                    Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    Button {
-                        showPaywall = true
-                    } label: {
-                        Text("Unlock Pro")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity, minHeight: 50)
-                            .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
-                            .foregroundStyle(.white)
-                    }
-                    .padding(.horizontal, 20)
-                }
-                .padding(.bottom, 32)
             }
+            .padding(.bottom, 24)
+        }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 6) {
+                Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Button {
+                    showPaywall = true
+                } label: {
+                    Text("Unlock Pro")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 20)
+            }
+            .padding(.vertical, 12)
+            .background(.regularMaterial)
         }
     }
 
@@ -186,5 +197,263 @@ private struct SampleInsightRow: View {
         }
         .padding(12)
         .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+// MARK: - Proactive Alerts Card
+
+private struct ProactiveAlertsCard: View {
+    @StateObject private var prefs = ProAlertPreferences.shared
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        NavigationLink {
+            ProAlertsConfigView()
+        } label: {
+            HStack(alignment: .center, spacing: 14) {
+                Image(systemName: prefs.alertsEnabled ? "bell.badge.fill" : "bell.slash.fill")
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(prefs.alertsEnabled ? brandColor : .secondary)
+                    .frame(width: 32)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 8) {
+                        Text("Proactive Alerts")
+                            .font(.headline)
+                        if prefs.alertsEnabled {
+                            Text("On")
+                                .font(.caption2.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.green.opacity(0.18), in: Capsule())
+                                .foregroundStyle(Color.green)
+                        } else {
+                            Text("Suggested setup")
+                                .font(.caption2.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(brandColor.opacity(0.15), in: Capsule())
+                                .foregroundStyle(brandColor)
+                        }
+                    }
+                    Text(prefs.alertsEnabled
+                         ? "You'll be notified when a pressure drop or AQI spike is forecast. Tap to tune thresholds and quiet hours."
+                         : "Turn on a daily background forecast check — get a notification 12–24 hours before a barometric drop or AQI spike.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(brandColor.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(brandColor.opacity(prefs.alertsEnabled ? 0.0 : 0.25), lineWidth: 1)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 14))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Detail screen
+
+struct InsightDetailView: View {
+    let insight: InsightsEngine.Insight
+    let totalEvents: Int
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                heroBlock
+                chartBlock
+                sectionBlock(
+                    title: "Your pattern",
+                    body: insight.yourPattern,
+                    icon: "person.crop.circle.fill"
+                )
+                sectionBlock(
+                    title: "Why this matters",
+                    body: insight.whyItMatters,
+                    icon: "lightbulb.fill"
+                )
+                if shouldShowAlertsCTA {
+                    NavigationLink {
+                        ProAlertsConfigView()
+                    } label: {
+                        alertsCTAContent
+                    }
+                    .buttonStyle(.plain)
+                }
+                disclaimer
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
+        }
+        .navigationTitle(insight.title)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var heroBlock: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Image(systemName: insight.icon)
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(brandColor)
+                    .frame(width: 36, height: 36)
+                Text(insight.title)
+                    .font(.title2.bold())
+            }
+            Text(insight.detail)
+                .font(.body)
+                .foregroundStyle(.secondary)
+            Text("Based on \(totalEvents) logged headache\(totalEvents == 1 ? "" : "s").")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+    }
+
+    @ViewBuilder
+    private var chartBlock: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(insight.breakdown.axisCaption)
+                .font(.subheadline.weight(.semibold))
+            BreakdownChart(breakdown: insight.breakdown, accent: brandColor)
+                .frame(height: 220)
+            if let baseline = insight.breakdown.evenBaseline {
+                HStack(spacing: 6) {
+                    Rectangle()
+                        .frame(width: 18, height: 2)
+                        .foregroundStyle(.secondary)
+                    Text("Even baseline (\(percentString(baseline))) — what you'd see if headaches were spread evenly across these buckets.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(16)
+        .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func sectionBlock(title: String, body: String, icon: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .foregroundStyle(brandColor)
+                Text(title)
+                    .font(.headline)
+            }
+            Text(body)
+                .font(.callout)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var shouldShowAlertsCTA: Bool {
+        switch insight.category {
+        case .pressure, .airQuality, .weather: return true
+        default: return false
+        }
+    }
+
+    private var alertsCTAContent: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "bell.badge.fill")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(brandColor)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Set up Proactive Alerts")
+                    .font(.headline)
+                Text("Get a notification before this signal spikes.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.footnote.bold())
+                .foregroundStyle(.secondary)
+        }
+        .padding(14)
+        .background(brandColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(brandColor.opacity(0.25), lineWidth: 1)
+        )
+    }
+
+    private var disclaimer: some View {
+        Text("Computed locally from your logged events. Descriptive only — not a clinical diagnosis.")
+            .font(.footnote)
+            .foregroundStyle(.tertiary)
+            .padding(.top, 4)
+    }
+
+    private func percentString(_ value: Double) -> String {
+        "\(Int((value * 100).rounded()))%"
+    }
+}
+
+private struct BreakdownChart: View {
+    let breakdown: InsightsEngine.Breakdown
+    let accent: Color
+
+    var body: some View {
+        Chart {
+            ForEach(breakdown.buckets) { bucket in
+                BarMark(
+                    x: .value("Bucket", bucket.label),
+                    y: .value("Share", bucket.share)
+                )
+                .foregroundStyle(bucket.isPeak ? accent : Color.secondary.opacity(0.45))
+                .annotation(position: .top, alignment: .center) {
+                    Text(percentLabel(bucket.share))
+                        .font(.caption2.weight(bucket.isPeak ? .bold : .regular))
+                        .foregroundStyle(bucket.isPeak ? accent : .secondary)
+                }
+                .cornerRadius(4)
+            }
+            if let baseline = breakdown.evenBaseline {
+                RuleMark(y: .value("Even baseline", baseline))
+                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                    .foregroundStyle(.secondary)
+                    .annotation(position: .topTrailing, alignment: .trailing) {
+                        Text("Even baseline")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 4)
+                    }
+            }
+        }
+        .chartYAxis {
+            AxisMarks(values: .automatic(desiredCount: 5)) { value in
+                AxisGridLine()
+                AxisTick()
+                AxisValueLabel {
+                    if let d = value.as(Double.self) {
+                        Text(percentLabel(d))
+                            .font(.caption2)
+                    }
+                }
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .automatic) { _ in
+                AxisValueLabel()
+                    .font(.caption2)
+            }
+        }
+        .chartYScale(domain: 0...max(0.4, (breakdown.buckets.map(\.share).max() ?? 0.4) * 1.25))
+    }
+
+    private func percentLabel(_ value: Double) -> String {
+        "\(Int((value * 100).rounded()))%"
     }
 }
