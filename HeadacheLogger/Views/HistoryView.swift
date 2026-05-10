@@ -375,7 +375,9 @@ private struct EventNotesSheet: View {
                         do {
                             try modelContext.save()
                         } catch {
+                            #if DEBUG
                             print("EventNotesSheet: save failed | \(error)")
+                            #endif
                         }
                         dismiss()
                     }

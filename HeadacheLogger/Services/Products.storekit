@@ -42,9 +42,29 @@
         {
           "adHocOffers" : [],
           "codeOffers" : [],
-          "displayPrice" : "9.99",
+          "displayPrice" : "2.99",
           "familyShareable" : true,
           "groupNumber" : 1,
+          "internalID" : "PRO_MONTHLY_001",
+          "localizations" : [
+            {
+              "description" : "Monthly Pro access. Proactive alerts and personalized headache pattern insights.",
+              "displayName" : "Pro Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.jackwallner.headachelogger.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Pro Monthly",
+          "subscriptionGroupID" : "21567890",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "9.99",
+          "familyShareable" : true,
+          "groupNumber" : 2,
           "internalID" : "PRO_YEARLY_001",
           "introductoryOffer" : {
             "internalID" : "PRO_YEARLY_INTRO_FREE_TRIAL",

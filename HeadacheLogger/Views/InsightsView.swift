@@ -29,9 +29,17 @@ struct InsightsView: View {
     @ViewBuilder
     private var proContent: some View {
         if events.count < InsightsEngine.minimumSampleSize {
-            emptyState
+            proLearningState(
+                title: "Headache Pro is active",
+                detail: "Proactive Alerts are ready now. Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs — you have \(events.count).",
+                progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
+            )
         } else if summary.insights.isEmpty {
-            notEnoughSignal
+            proLearningState(
+                title: "Still watching for a clear pattern",
+                detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
+                progress: nil
+            )
         } else {
             List {
                 Section {
@@ -72,6 +80,42 @@ struct InsightsView: View {
             Label("Not enough data yet", systemImage: "chart.bar.xaxis")
         } description: {
             Text("Log at least \(InsightsEngine.minimumSampleSize) headaches and we'll start surfacing patterns from the time, sleep, weather, and Health context already attached to each entry.")
+        }
+    }
+
+    private func proLearningState(title: String, detail: String, progress: Double?) -> some View {
+        List {
+            Section {
+                ProactiveAlertsCard()
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowBackground(Color.clear)
+            } header: {
+                Text("Headache Pro")
+            } footer: {
+                Text("Proactive Alerts are the main premium feature and do not require a minimum number of logged headaches.")
+                    .font(.footnote)
+            }
+
+            Section {
+                VStack(alignment: .leading, spacing: 12) {
+                    Label(title, systemImage: "sparkles")
+                        .font(.headline)
+                        .foregroundStyle(brandColor)
+                    Text(detail)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    if let progress {
+                        ProgressView(value: min(progress, 1))
+                        Text("\(events.count) of \(InsightsEngine.minimumSampleSize) logs for personalized patterns")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    SampleInsightRow(icon: "barometer", title: "Example: Falling pressure pattern", detail: "Once enough logs exist, Pro can show whether headaches cluster after pressure drops.")
+                }
+                .padding(.vertical, 4)
+            } header: {
+                Text("Personalized patterns")
+            }
         }
     }
 
@@ -116,10 +160,13 @@ struct InsightsView: View {
                 Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                Text(paywallPriceLine)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Button {
                     showPaywall = true
                 } label: {
-                    Text("Unlock Pro")
+                    Text("Unlock Headache Pro")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
@@ -133,6 +180,22 @@ struct InsightsView: View {
     }
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    private var paywallPriceLine: String {
+        if let yearly = store.yearlyProduct, let lifetime = store.lifetimeProduct {
+            return "\(yearly.displayPrice)/year or \(lifetime.displayPrice) lifetime"
+        }
+        if let yearly = store.yearlyProduct {
+            return "\(yearly.displayPrice)/year"
+        }
+        if let monthly = store.monthlyProduct {
+            return "Plans from \(monthly.displayPrice)/month"
+        }
+        if store.isLoadingProducts {
+            return "Loading prices…"
+        }
+        return "Pricing shown before purchase"
+    }
 }
 
 private struct InsightsHeader: View {

@@ -10,6 +10,8 @@ struct SettingsView: View {
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
     @State private var showPaywall = false
+    @State private var isRestoring = false
+    @State private var restoreMessage: String?
 
     private let privacyPolicyURL = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html")
     private let supportURL = URL(string: "https://jackwallner.github.io/headaches/support.html")
@@ -35,7 +37,7 @@ struct SettingsView: View {
 
             Section("Logging") {
                 Toggle("Prompt for severity and notes", isOn: $promptForSeverityNotes)
-                Text("When on, each tap shows a quick sheet to rate severity (slight, medium, extreme) and add notes before saving.")
+                Text("When on, each tap logs immediately, then shows an optional quick sheet for severity and notes.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -53,6 +55,16 @@ struct SettingsView: View {
                             openURL(url)
                         }
                     }
+                    Button {
+                        Task { await restorePurchases() }
+                    } label: {
+                        if isRestoring {
+                            ProgressView()
+                        } else {
+                            Text("Restore Purchases")
+                        }
+                    }
+                    .disabled(isRestoring)
                 } else {
                     Button {
                         showPaywall = true
@@ -60,6 +72,16 @@ struct SettingsView: View {
                         proRowLabel(unlocked: false)
                     }
                     .buttonStyle(.plain)
+                    Button {
+                        Task { await restorePurchases() }
+                    } label: {
+                        if isRestoring {
+                            ProgressView()
+                        } else {
+                            Text("Restore Purchases")
+                        }
+                    }
+                    .disabled(isRestoring)
                 }
             } header: {
                 Text("Pro")
@@ -112,9 +134,6 @@ struct SettingsView: View {
                     guard let supportURL else { return }
                     openURL(supportURL)
                 }
-                Button("Restore Purchases") {
-                    Task { await store.restorePurchases() }
-                }
             }
         }
         .navigationTitle("Settings")
@@ -128,10 +147,33 @@ struct SettingsView: View {
             PaywallView()
                 .environmentObject(store)
         }
+        .alert("Restore Purchases", isPresented: restoreBinding) {
+            Button("OK", role: .cancel) { restoreMessage = nil }
+        } message: {
+            Text(restoreMessage ?? "")
+        }
+    }
+
+    private var restoreBinding: Binding<Bool> {
+        Binding(
+            get: { restoreMessage != nil },
+            set: { if !$0 { restoreMessage = nil } }
+        )
     }
 
     private func refreshLocationStatus() {
         locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
+    }
+
+    private func restorePurchases() async {
+        isRestoring = true
+        defer { isRestoring = false }
+        await store.restorePurchases()
+        if store.isProUnlocked {
+            restoreMessage = "Your Headache Pro access is active."
+        } else {
+            restoreMessage = store.lastError ?? "No previous Headache Pro purchase was found on this Apple ID."
+        }
     }
 
     private func proRowLabel(unlocked: Bool) -> some View {

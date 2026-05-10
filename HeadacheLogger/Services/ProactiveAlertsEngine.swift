@@ -20,10 +20,7 @@ enum ProactiveAlertsEngine {
     /// Minimum gap between two notifications so the user doesn't get spammed.
     static let minNotificationGap: TimeInterval = 6 * 60 * 60
 
-    private static let proProductIds: Set<String> = [
-        "com.jackwallner.headachelogger.pro.yearly",
-        "com.jackwallner.headachelogger.pro.lifetime",
-    ]
+    private static let proProductIds = StoreKitService.allProProductIds
 
     static func runIfEligible() async -> Bool {
         // Re-verify entitlement in background — a refund, revocation or expired subscription

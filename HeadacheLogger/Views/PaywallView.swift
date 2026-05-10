@@ -3,6 +3,7 @@ import SwiftUI
 
 struct PaywallView: View {
     enum Plan: String, CaseIterable, Identifiable {
+        case monthly
         case yearly
         case lifetime
         var id: String { rawValue }
@@ -15,6 +16,10 @@ struct PaywallView: View {
     @State private var isPurchasing = false
     @State private var isRestoring = false
     @State private var purchaseError: String?
+    @State private var purchaseMessage: String?
+    @State private var restoreMessage: String?
+    @State private var showSuccess = false
+    @State private var showAlertSetup = false
 
     private let privacyURL = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html")
     private let termsURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
@@ -31,7 +36,7 @@ struct PaywallView: View {
                 }
                 .padding(20)
             }
-            .navigationTitle("Pro")
+            .navigationTitle("Headache Pro")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -43,6 +48,44 @@ struct PaywallView: View {
             } message: {
                 Text(purchaseError ?? "")
             }
+            .alert("Purchase Update", isPresented: messageBinding) {
+                Button("OK", role: .cancel) { purchaseMessage = nil }
+            } message: {
+                Text(purchaseMessage ?? "")
+            }
+            .alert("Restore Purchases", isPresented: restoreBinding) {
+                Button("OK", role: .cancel) { restoreMessage = nil }
+            } message: {
+                Text(restoreMessage ?? "")
+            }
+            .alert("Welcome to Headache Pro", isPresented: $showSuccess) {
+                Button("Set Up Proactive Alerts") {
+                    showAlertSetup = true
+                }
+                Button("Done", role: .cancel) {
+                    dismiss()
+                }
+            } message: {
+                Text("Your access is active. Turn on Proactive Alerts now so the app can warn you before pressure drops or AQI spikes.")
+            }
+            .sheet(isPresented: $showAlertSetup, onDismiss: { dismiss() }) {
+                NavigationStack {
+                    ProAlertsConfigView()
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Done") {
+                                    showAlertSetup = false
+                                }
+                            }
+                        }
+                }
+            }
+            .task {
+                ensureValidSelection()
+            }
+            .onChange(of: store.products.count) { _, _ in
+                ensureValidSelection()
+            }
         }
     }
 
@@ -53,6 +96,20 @@ struct PaywallView: View {
         )
     }
 
+    private var messageBinding: Binding<Bool> {
+        Binding(
+            get: { purchaseMessage != nil },
+            set: { if !$0 { purchaseMessage = nil } }
+        )
+    }
+
+    private var restoreBinding: Binding<Bool> {
+        Binding(
+            get: { restoreMessage != nil },
+            set: { if !$0 { restoreMessage = nil } }
+        )
+    }
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
             Image(systemName: "bell.badge.fill")
@@ -60,7 +117,7 @@ struct PaywallView: View {
                 .foregroundStyle(brandColor)
             Text("Get a heads-up before headache weather")
                 .font(.title2.bold())
-            Text("Pro turns on Proactive Alerts and Personalized Insights — see what triggers your headaches and get a notification before risky days.")
+            Text("Headache Pro is built around Proactive Alerts: background forecast checks for pressure drops and AQI spikes, plus personalized patterns from the headaches you already log.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
         }
@@ -69,24 +126,19 @@ struct PaywallView: View {
     private var featureList: some View {
         VStack(alignment: .leading, spacing: 16) {
             FeatureRow(
-                icon: "chart.bar.xaxis",
-                title: "Personalized pattern insights",
-                detail: "See which conditions your headaches cluster around — sleep, pressure, time of day, weather."
-            )
-            FeatureRow(
-                icon: "barometer",
-                title: "Barometric pressure alerts",
-                detail: "Notified when a sharp pressure drop is forecast within the next 24 hours."
-            )
-            FeatureRow(
-                icon: "aqi.medium",
-                title: "Air quality alerts",
-                detail: "Heads-up when local AQI is forecast to spike past your threshold."
+                icon: "bell.badge.fill",
+                title: "Proactive headache-weather alerts",
+                detail: "Get notified before sharp pressure drops or AQI spikes are forecast near you."
             )
             FeatureRow(
                 icon: "slider.horizontal.3",
-                title: "Custom sensitivity & quiet hours",
-                detail: "Tune what counts as a trigger. Mute alerts overnight."
+                title: "Sensitivity and quiet hours",
+                detail: "Tune alert thresholds and keep overnight notifications muted."
+            )
+            FeatureRow(
+                icon: "chart.bar.xaxis",
+                title: "Personalized pattern insights",
+                detail: "See which conditions your logged headaches cluster around — sleep, pressure, time of day, weather."
             )
             FeatureRow(
                 icon: "lock.shield",
@@ -105,7 +157,7 @@ struct PaywallView: View {
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, minHeight: 80)
-        } else if store.yearlyProduct == nil && store.lifetimeProduct == nil {
+        } else if store.monthlyProduct == nil && store.yearlyProduct == nil && store.lifetimeProduct == nil {
             VStack(spacing: 8) {
                 Text("Unable to load purchase options right now.")
                     .foregroundStyle(.secondary)
@@ -116,12 +168,24 @@ struct PaywallView: View {
             .frame(maxWidth: .infinity)
         } else {
             VStack(spacing: 12) {
+                if let monthly = store.monthlyProduct {
+                    PlanCard(
+                        title: "Monthly",
+                        price: monthly.displayPrice + " / month",
+                        badge: nil,
+                        subtitle: "Auto-renews. Cancel anytime in Settings.",
+                        isSelected: selectedPlan == .monthly,
+                        accent: brandColor
+                    ) {
+                        selectedPlan = .monthly
+                    }
+                }
                 if let yearly = store.yearlyProduct {
                     PlanCard(
                         title: "Yearly",
                         price: yearly.displayPrice + " / year",
                         badge: trialBadge(for: yearly),
-                        subtitle: "Auto-renews. Cancel anytime in Settings.",
+                        subtitle: yearlySubtitle(for: yearly),
                         isSelected: selectedPlan == .yearly,
                         accent: brandColor
                     ) {
@@ -147,7 +211,7 @@ struct PaywallView: View {
     private var purchaseSection: some View {
         VStack(spacing: 12) {
             Button {
-                guard let product = activeProduct else { return }
+                guard let product = resolvedProduct else { return }
                 Task { await purchase(product) }
             } label: {
                 HStack {
@@ -162,7 +226,7 @@ struct PaywallView: View {
                 .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
                 .foregroundStyle(.white)
             }
-            .disabled(activeProduct == nil || isPurchasing || isRestoring)
+            .disabled(resolvedProduct == nil || isPurchasing || isRestoring)
 
             Button {
                 Task { await restore() }
@@ -184,15 +248,28 @@ struct PaywallView: View {
 
     @ViewBuilder
     private var subscriptionDisclosure: some View {
-        if selectedPlan == .yearly {
+        switch selectedPlan {
+        case .monthly:
+            Text("Payment is charged to your Apple ID at confirmation. The subscription auto-renews monthly at the listed price unless cancelled at least 24 hours before the renewal date. Manage or cancel any time in iPhone Settings → Apple ID → Subscriptions.")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.top, 4)
+        case .yearly:
             VStack(spacing: 4) {
+                if let yearly = store.yearlyProduct, hasFreeTrial(yearly) {
+                    Text("After the 7-day free trial, this subscription automatically renews as a paid subscription.")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
                 Text("Payment is charged to your Apple ID at confirmation. The subscription auto-renews yearly at the listed price unless cancelled at least 24 hours before the renewal date. Manage or cancel any time in iPhone Settings → Apple ID → Subscriptions.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
             .padding(.top, 4)
-        } else {
+        case .lifetime:
             Text("One-time purchase. No subscription, no auto-renewal.")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -217,32 +294,65 @@ struct PaywallView: View {
 
     private var activeProduct: Product? {
         switch selectedPlan {
+        case .monthly: return store.monthlyProduct
         case .yearly: return store.yearlyProduct
         case .lifetime: return store.lifetimeProduct
         }
     }
 
+    private var activePlan: Plan? {
+        if activeProduct != nil { return selectedPlan }
+        return firstAvailablePlan
+    }
+
+    private var resolvedProduct: Product? {
+        guard let activePlan else { return nil }
+        switch activePlan {
+        case .monthly: return store.monthlyProduct
+        case .yearly: return store.yearlyProduct
+        case .lifetime: return store.lifetimeProduct
+        }
+    }
+
+    private var firstAvailablePlan: Plan? {
+        if store.yearlyProduct != nil { return .yearly }
+        if store.monthlyProduct != nil { return .monthly }
+        if store.lifetimeProduct != nil { return .lifetime }
+        return nil
+    }
+
     private var primaryButtonTitle: String {
-        guard let product = activeProduct else { return "Unavailable" }
-        switch selectedPlan {
+        guard let product = resolvedProduct, let activePlan else { return "Unavailable" }
+        switch activePlan {
+        case .monthly:
+            return "Subscribe — \(product.displayPrice)/month"
         case .yearly:
-            if hasFreeTrial(product) {
-                return "Start 7-Day Free Trial"
-            } else {
-                return "Subscribe — \(product.displayPrice)/year"
-            }
+            return "Continue — \(product.displayPrice)/year"
         case .lifetime:
             return "Buy Lifetime — \(product.displayPrice)"
         }
     }
 
     private func trialBadge(for product: Product) -> String? {
-        hasFreeTrial(product) ? "7-day free trial" : nil
+        hasFreeTrial(product) ? "Trial if eligible" : nil
     }
 
     private func hasFreeTrial(_ product: Product) -> Bool {
         guard let intro = product.subscription?.introductoryOffer else { return false }
         return intro.paymentMode == .freeTrial
+    }
+
+    private func yearlySubtitle(for product: Product) -> String {
+        if hasFreeTrial(product) {
+            return "Apple confirms trial eligibility before purchase. Auto-renews; cancel anytime in Settings."
+        }
+        return "Auto-renews. Cancel anytime in Settings."
+    }
+
+    private func ensureValidSelection() {
+        if activeProduct == nil, let fallback = firstAvailablePlan {
+            selectedPlan = fallback
+        }
     }
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
@@ -251,14 +361,19 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
         do {
-            let success = try await store.purchase(product)
-            if success {
-                dismiss()
+            let outcome = try await store.purchase(product)
+            switch outcome {
+            case .purchased:
+                showSuccess = true
+            case .cancelled:
+                purchaseMessage = "Purchase cancelled. Nothing was charged."
+            case .pending:
+                purchaseMessage = "Purchase pending. We'll unlock Headache Pro automatically if Apple approves it."
             }
         } catch StoreError.failedVerification {
             purchaseError = "Apple couldn't verify the purchase. Please try Restore Purchases or contact support."
         } catch {
-            purchaseError = error.localizedDescription
+            purchaseError = "Purchase could not be completed. Please check your connection and try again."
         }
     }
 
@@ -267,11 +382,11 @@ struct PaywallView: View {
         defer { isRestoring = false }
         await store.restorePurchases()
         if store.isProUnlocked {
-            dismiss()
+            showSuccess = true
         } else if store.lastError == nil {
-            purchaseError = "No previous purchase was found on this Apple ID."
+            restoreMessage = "No previous Headache Pro purchase was found on this Apple ID."
         } else {
-            purchaseError = store.lastError
+            restoreMessage = store.lastError
         }
     }
 }

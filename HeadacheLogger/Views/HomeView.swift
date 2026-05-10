@@ -37,8 +37,13 @@ struct HomeView: View {
                     Button {
                         let success = captureCoordinator.captureHeadache(in: modelContext)
                         if success && promptForSeverityNotes {
-                            severityNotesEventID = captureCoordinator.lastCapturedEventID
-                            showSeverityNotesSheet = true
+                            let capturedID = captureCoordinator.lastCapturedEventID
+                            Task { @MainActor in
+                                try? await Task.sleep(nanoseconds: 500_000_000)
+                                if let capturedID, captureCoordinator.lastCapturedEventID == capturedID {
+                                    showDetails(for: capturedID)
+                                }
+                            }
                         }
                     } label: {
                         VStack(spacing: 12) {
@@ -68,6 +73,14 @@ struct HomeView: View {
                     .accessibilityIdentifier("logHeadacheButton")
 
                     if captureCoordinator.lastCapturedEventID != nil {
+                        Button("Add Details") {
+                            if let eventID = captureCoordinator.lastCapturedEventID {
+                                showDetails(for: eventID)
+                            }
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .accessibilityIdentifier("addDetailsButton")
+
                         Button("Undo Last Tap") {
                             captureCoordinator.undoLastCapture(in: modelContext)
                         }
@@ -136,6 +149,11 @@ struct HomeView: View {
                 SeverityNotesSheet(eventID: eventID)
             }
         }
+    }
+
+    private func showDetails(for eventID: UUID) {
+        severityNotesEventID = eventID
+        showSeverityNotesSheet = true
     }
 }
 
@@ -471,7 +489,9 @@ private struct SeverityNotesSheet: View {
         do {
             try modelContext.save()
         } catch {
+            #if DEBUG
             print("SeverityNotesSheet: save failed | \(error)")
+            #endif
         }
     }
 }

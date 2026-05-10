@@ -41,7 +41,9 @@ final class PhoneWatchSession: NSObject, WCSessionDelegate, @unchecked Sendable 
         error: Error?
     ) {
         if let error {
+            #if DEBUG
             print("PhoneWatchSession activation error: \(error)")
+            #endif
         }
     }
 

@@ -30,7 +30,9 @@ final class BackgroundRefreshService: Sendable {
             try BGTaskScheduler.shared.submit(request)
         } catch {
             // BGTaskSchedulerErrorDomain.unavailable is expected on simulator and fine.
+            #if DEBUG
             print("BackgroundRefreshService.schedule failed: \(error)")
+            #endif
         }
     }
 

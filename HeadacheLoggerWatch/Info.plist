@@ -13,7 +13,7 @@
 	<key>CFBundleName</key>
 	<string>HeadacheLogger</string>
 	<key>CFBundleDisplayName</key>
-	<string>Headache</string>
+	<string>Headache Logger</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

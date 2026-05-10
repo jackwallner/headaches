@@ -129,7 +129,9 @@ actor HealthKitService {
             do {
                 try await store.requestAuthorization(toShare: [], read: readTypes)
             } catch {
+                #if DEBUG
                 print("HealthKitService.requestAuthorization error: \(error.localizedDescription)")
+                #endif
             }
             hasRequestedAuthorization = true
         case .unnecessary, .unknown:
@@ -405,7 +407,9 @@ actor HealthKitService {
         do {
             return try await averageQuantity(identifier: identifier, unit: unit, hoursBack: hoursBack, relativeTo: date)
         } catch {
+            #if DEBUG
             print("HealthKitService.optionalAverageQuantity \(identifier.rawValue) error: \(error.localizedDescription)")
+            #endif
             return nil
         }
     }

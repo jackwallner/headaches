@@ -58,6 +58,8 @@ enum HeadacheModelStore {
         if !trace.isEmpty {
             parts.append(trace.map { "\($0.key)=\($0.value)" }.joined(separator: " "))
         }
+        #if DEBUG
         print(parts.joined(separator: " | "))
+        #endif
     }
 }

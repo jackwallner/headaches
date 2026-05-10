@@ -26,7 +26,9 @@ struct LogHeadacheIntent: AppIntent {
                 WidgetCenter.shared.reloadAllTimelines()
             }
         } catch {
+            #if DEBUG
             print("LogHeadacheIntent: save failed | error=\(String(describing: error))")
+            #endif
             throw error
         }
 

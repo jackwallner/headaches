@@ -5,6 +5,12 @@ enum StoreError: Error {
     case failedVerification
 }
 
+enum PurchaseOutcome {
+    case purchased
+    case cancelled
+    case pending
+}
+
 /// On-device entitlement state for Pro. No accounts, no servers — StoreKit 2 handles everything.
 ///
 /// Two products unlock the same Pro entitlement:
@@ -12,9 +18,10 @@ enum StoreError: Error {
 /// - `com.jackwallner.headachelogger.pro.lifetime` — one-time non-consumable.
 @MainActor
 final class StoreKitService: ObservableObject {
-    static let yearlyProductId = "com.jackwallner.headachelogger.pro.yearly"
-    static let lifetimeProductId = "com.jackwallner.headachelogger.pro.lifetime"
-    static let allProProductIds: Set<String> = [yearlyProductId, lifetimeProductId]
+    nonisolated static let monthlyProductId = "com.jackwallner.headachelogger.pro.monthly"
+    nonisolated static let yearlyProductId = "com.jackwallner.headachelogger.pro.yearly"
+    nonisolated static let lifetimeProductId = "com.jackwallner.headachelogger.pro.lifetime"
+    nonisolated static let allProProductIds: Set<String> = [monthlyProductId, yearlyProductId, lifetimeProductId]
 
     @Published private(set) var isProUnlocked: Bool = false
     @Published private(set) var products: [Product] = []
@@ -35,6 +42,10 @@ final class StoreKitService: ObservableObject {
         updatesTask?.cancel()
     }
 
+    var monthlyProduct: Product? {
+        products.first { $0.id == Self.monthlyProductId }
+    }
+
     var yearlyProduct: Product? {
         products.first { $0.id == Self.yearlyProductId }
     }
@@ -43,9 +54,10 @@ final class StoreKitService: ObservableObject {
         products.first { $0.id == Self.lifetimeProductId }
     }
 
-    /// True when the active entitlement comes from the auto-renewable subscription.
+    /// True when the active entitlement comes from an auto-renewable subscription.
     var hasSubscription: Bool {
-        activeProductId == Self.yearlyProductId
+        guard let active = activeProductId else { return false }
+        return active == Self.monthlyProductId || active == Self.yearlyProductId
     }
 
     /// Public helper for previews and tests only.
@@ -70,7 +82,7 @@ final class StoreKitService: ObservableObject {
         }
     }
 
-    func purchase(_ product: Product) async throws -> Bool {
+    func purchase(_ product: Product) async throws -> PurchaseOutcome {
         lastError = nil
         let result = try await product.purchase()
         switch result {
@@ -78,13 +90,13 @@ final class StoreKitService: ObservableObject {
             let transaction = try checkVerified(verification)
             await updateEntitlement()
             await transaction.finish()
-            return true
+            return .purchased
         case .userCancelled:
-            return false
+            return .cancelled
         case .pending:
-            return false
+            return .pending
         @unknown default:
-            return false
+            return .pending
         }
     }
 
@@ -106,9 +118,10 @@ final class StoreKitService: ObservableObject {
                Self.allProProductIds.contains(transaction.productID),
                transaction.revocationDate == nil {
                 unlocked = true
-                // Prefer subscription as the "active" surface when both somehow coexist;
-                // lifetime overrides only if subscription is gone.
-                if active == nil || transaction.productID == Self.yearlyProductId {
+                // Prefer yearly > monthly > lifetime when multiple entitlements coexist.
+                if active == nil
+                    || transaction.productID == Self.yearlyProductId
+                    || (active == Self.lifetimeProductId && transaction.productID != Self.lifetimeProductId) {
                     active = transaction.productID
                 }
             }
@@ -127,7 +140,9 @@ final class StoreKitService: ObservableObject {
                     await transaction.finish()
                 case .unverified(let transaction, let error):
                     // Finish even if verification failed so StoreKit stops redelivering it.
+                    #if DEBUG
                     print("Transaction unverified: \(error)")
+                    #endif
                     await transaction.finish()
                 }
             }

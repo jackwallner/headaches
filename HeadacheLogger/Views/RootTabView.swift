@@ -30,7 +30,7 @@ struct RootTabView: View {
                 SettingsView()
             }
             .tabItem {
-                Label("About", systemImage: "slider.horizontal.3")
+                Label("Settings", systemImage: "slider.horizontal.3")
             }
         }
         .tint(Color(red: 0.95, green: 0.25, blue: 0.36))

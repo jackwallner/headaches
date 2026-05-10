@@ -13,7 +13,7 @@ settings:
     DEVELOPMENT_TEAM: YXG4MP6W39
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "1.1.0"
-    CURRENT_PROJECT_VERSION: "38"
+    CURRENT_PROJECT_VERSION: "42"
     GENERATE_INFOPLIST_FILE: NO
 
 schemes:
@@ -87,6 +87,10 @@ targets:
     platform: watchOS
     sources:
       - path: HeadacheLoggerWatch
+        excludes:
+          - PrivacyInfo.xcprivacy
+      - path: HeadacheLoggerWatch/PrivacyInfo.xcprivacy
+        buildPhase: resources
       - path: SharedHeadache
     settings:
       base:

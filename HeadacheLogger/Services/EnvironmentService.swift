@@ -216,7 +216,9 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
         if !trace.isEmpty {
             parts.append(trace.map { "\($0.key)=\($0.value)" }.joined(separator: " "))
         }
+        #if DEBUG
         print(parts.joined(separator: " | "))
+        #endif
     }
 }
 
@@ -652,7 +654,9 @@ private enum OpenMeteoClient {
                 ragweedPollen: at(h.ragweedPollen, idx)
             )
         } catch {
+            #if DEBUG
             print("OpenMeteoClient.fetchAirQuality failed | \(error)")
+            #endif
             return nil
         }
     }
