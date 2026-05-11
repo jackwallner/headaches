@@ -27,6 +27,12 @@ final class ProAlertPreferences: ObservableObject {
 
     @AppStorage(HeadacheStorageKey.proAlertQuietEndHour.rawValue, store: HeadacheAppGroup.userDefaults)
     var quietHoursEnd: Int = 7
+
+    @AppStorage(HeadacheStorageKey.patternAlertsEnabled.rawValue, store: HeadacheAppGroup.userDefaults)
+    var patternAlertsEnabled: Bool = false
+
+    @AppStorage(HeadacheStorageKey.patternAlertSensitivity.rawValue, store: HeadacheAppGroup.userDefaults)
+    var patternAlertSensitivity: Double = 0.0
 }
 
 /// Plain-value snapshot of preferences. Safe to read from any thread / background task.
@@ -38,6 +44,8 @@ struct ProAlertPreferenceValues: Sendable {
     var quietHoursEnabled: Bool
     var quietHoursStart: Int
     var quietHoursEnd: Int
+    var patternAlertsEnabled: Bool
+    var patternAlertSensitivity: Double
 
     static func current() -> ProAlertPreferenceValues {
         let defaults = HeadacheAppGroup.userDefaults
@@ -47,6 +55,8 @@ struct ProAlertPreferenceValues: Sendable {
         let quietEnabled = defaults.object(forKey: HeadacheStorageKey.proAlertQuietHoursEnabled.rawValue) as? Bool ?? true
         let quietStart = defaults.object(forKey: HeadacheStorageKey.proAlertQuietStartHour.rawValue) as? Int ?? 22
         let quietEnd = defaults.object(forKey: HeadacheStorageKey.proAlertQuietEndHour.rawValue) as? Int ?? 7
+        let patternEnabled = defaults.object(forKey: HeadacheStorageKey.patternAlertsEnabled.rawValue) as? Bool ?? false
+        let patternSensitivity = defaults.object(forKey: HeadacheStorageKey.patternAlertSensitivity.rawValue) as? Double ?? 0.0
         return ProAlertPreferenceValues(
             alertsEnabled: defaults.bool(forKey: HeadacheStorageKey.proAlertsEnabled.rawValue),
             pressureDropThresholdHpa: pressureRaw ?? 4.0,
@@ -54,7 +64,9 @@ struct ProAlertPreferenceValues: Sendable {
             airQualityThreshold: aqThreshold,
             quietHoursEnabled: quietEnabled,
             quietHoursStart: quietStart,
-            quietHoursEnd: quietEnd
+            quietHoursEnd: quietEnd,
+            patternAlertsEnabled: patternEnabled,
+            patternAlertSensitivity: patternSensitivity
         )
     }
 

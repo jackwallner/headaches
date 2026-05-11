@@ -11,10 +11,10 @@
 
 - App Name: `One Tap Headache Tracker`
 - Subtitle: `One-tap headache tracking`
-- Promotional Text:
-  `Log a headache in one tap and automatically capture surrounding Health, time, and weather context. Export your history as a CSV whenever you want to share patterns with your doctor. Pro users get proactive alerts before headache weather arrives.`
-- Keywords:
-  `headache,migraine,health,journal,tracker,watch,export,doctor,weather,symptoms`
+- Promotional Text (170 char max):
+  `Log a headache in one tap and capture surrounding Health, time, and weather context. Pro tracks your patterns and alerts you before risky weather arrives.`
+- Keywords (100 char max):
+  `headache,migraine,tracker,log,journal,diary,weather,barometric,pressure,trigger,doctor,export,csv,watch,health,symptoms`
 
 ## Description Draft
 
@@ -39,15 +39,90 @@ One Tap Headache Tracker is local-first:
 - No cloud sync
 - Manual export only when you decide to share data
 
-## Review Notes Draft
+Download One Tap Headache Tracker and start understanding your headaches.
 
-- No account or login is required.
-- The main experience is the `Log` tab on iPhone and the watch companion app.
-- HealthKit and Location permissions are optional. If either permission is denied, the app still logs the headache and stores partial context.
-- The `History` tab exports a CSV through the standard iOS share sheet.
-- The `Settings` tab contains a Pro paywall and a Proactive Alerts configuration screen for paid users.
-- The `About` tab contains links for privacy policy and support.
-- The Apple Watch app queues headache entries to the paired iPhone using `WatchConnectivity`.
+## What's New in v1.1.0 — Copy-Paste into App Store Connect
+
+New: Pro tier (optional). Two new features for Pro subscribers and lifetime buyers:
+• Proactive Alerts — a heads-up when sharp barometric pressure drops or air-quality spikes are forecast.
+• Personalized Insights — see what conditions your headaches actually cluster around.
+Free version is unchanged. Try Pro free for 7 days.
+
+## App Review Information — Copy-Paste into App Store Connect
+
+Below is the complete text for App Store Connect → App Review → App Review Information.
+
+---
+
+**Sign-In Required:** No. No accounts, no sign-in, no demo credentials needed.
+
+**Hardware Required:** None beyond a standard iPhone. Apple Watch testing is optional — the iPhone app is fully self-contained. If testing on Apple Watch, pair it to the same iPhone being reviewed.
+
+**Permissions Required During Review:** The app requests HealthKit (read-only) and Location (When In Use) on first launch. Granting both is recommended for the full experience, but the app works if either is denied — it simply stores partial context for the headache entry. HealthKit is only read locally; no Health data leaves the device. Location is used only to fetch anonymous weather data from the public Open-Meteo API at the moment a headache is logged.
+
+**Lifecycle for Review (Recommended Order):**
+
+1. **Onboarding** — First launch shows a brief onboarding explaining what the app does. HealthKit and Location permissions are requested. Grant both if possible; test denial flow separately if needed.
+
+2. **Log Tab (Core Experience)** — Tap the large `Tap to log a headache` button. The time is recorded immediately (to the second). After logging, the app shows what context was captured: weekday, time of day, step count, sleep, heart rate, breathing rate, recent workouts (from HealthKit), and environmental data (temperature, pressure, humidity, AQI, UV index, pollen-style signals from Open-Meteo). All fetched automatically — no manual data entry required.
+
+3. **Un-log (Undo)** — After logging, the log screen shows a "headache started at X:XX" banner with a small `×` dismiss button. Tapping it removes the entry from the database.
+
+4. **History Tab** — Lists all logged headaches in reverse chronological order. Each entry shows the timestamp, captured context, and any note. Tap on any entry to see full detail. The `Export` button (share icon, top right) opens the standard iOS share sheet with a CSV file containing all entries and their full context. Test: share to Files, Mail, or any share target — the CSV includes columns for date, weekday, hour, HealthKit values, weather values, and notes.
+
+5. **Insights Tab (Free/Pro)** — Free users see a teaser screen with static sample data ("40% of your headaches...") and a "Get Pro" button. Pro users see real personalized insights computed from their logged events — distributions by weekday, hour, pressure trend, temperature bracket, etc. This is gated behind the Pro entitlement.
+
+6. **Settings Tab** — Contains:
+   - **Proactive Alerts row** — If not Pro, it's locked with a lock icon and tapping it opens the paywall. If Pro, it navigates to the alerts configuration screen where the user can toggle alerts on/off and set quiet hours.
+   - **Restore Purchases** — Always visible. Calls StoreKit restore.
+   - **Manage Subscription** — Visible only when a subscription is active. Opens the system subscription management sheet.
+   - **Rate the App** — Opens standard SKStoreReviewController prompt.
+
+7. **About Tab** — Links to privacy policy (https://jackwallner.github.io/headaches/privacy-policy.html) and support page (https://jackwallner.github.io/headaches/support.html). These are standard WKWebView or Safari links.
+
+**Pro / In-App Purchase Testing:**
+
+The app sells two IAP products, both unlocking the same on-device entitlement:
+
+- **Pro Yearly** (com.jackwallner.headachelogger.pro.yearly) — $9.99/year auto-renewable subscription with a 7-day free introductory offer for new subscribers.
+- **Pro Lifetime** (com.jackwallner.headachelogger.pro.lifetime) — $24.99 one-time non-consumable purchase.
+
+Both are available from the Paywall screen. To reach the paywall:
+- Tap the locked "Proactive Alerts" row in Settings, OR
+- Tap "Get Pro" on the Insights tab teaser.
+
+The paywall shows both options side by side with a "Start 7-Day Free Trial" button for yearly (when eligible) and a "Buy Lifetime" button. A "Restore Purchases" link is at the bottom. After purchasing, the paywall dismisses automatically and Pro features are unlocked.
+
+Once Pro is active:
+- The "Proactive Alerts" row in Settings navigates to the alert config screen.
+- The Insights tab shows real personalized data.
+- Toggle "Proactive Alerts" ON to enable the background task.
+
+**Proactive Alerts — Background Task Testing:**
+
+When Proactive Alerts is toggled ON:
+1. The app registers and schedules a BGAppRefreshTask with identifier `com.jackwallner.headachelogger.weatherCheck`.
+2. iOS runs this task periodically in the background (at the system's discretion).
+3. The task uses the device's last-known coarse location (stored from the most recent foreground use) to query the public Open-Meteo API for a 24-hour forecast.
+4. If a barometric pressure drop ≥ 4 hPa or AQI ≥ 100 is forecast within the next 24 hours, a local notification is posted.
+5. The task enforces a minimum 6-hour cooldown between notifications regardless of forecast changes.
+
+To trigger the background task during review (on a physical device):
+- In Xcode, pause the app after backgrounding it.
+- In the LLDB console: `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.jackwallner.headachelogger.weatherCheck"]`
+- A notification should appear if qualifying weather is forecast.
+
+**Testing with Denied Permissions:**
+
+The app handles permission denials gracefully. If HealthKit is denied, the context card still shows all non-Health data (time, weather). If Location is denied, the weather card shows "Location not available" and no weather data is fetched. In either case, the headache is still logged and appears in History.
+
+**Note on Double-Tap (Watch):**
+
+On Apple Watch, a single tap on "Log Headache" queues the entry via WatchConnectivity to the paired iPhone. The watch app handles connectivity failures gracefully — if the phone isn't reachable, the entry is transferred when the connection re-establishes. Deduplication is handled on the phone side for edge cases where both the message and transferUserInfo fallback fire.
+
+**No Backend / No Servers:**
+
+All processing is on-device. The only external network request is to the public Open-Meteo weather API (api.open-meteo.com) for weather and air-quality data at the moment a headache is logged. No data is collected by the developer. There is no cloud sync, no analytics SDK, and no advertising.
 
 ## App Privacy Guidance
 

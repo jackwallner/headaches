@@ -37,6 +37,13 @@ actor HealthKitService {
             .walkingSpeed,
             .appleStandTime,
             .flightsClimbed,
+            .dietaryCaffeine,
+            .dietaryWater,
+            .bloodPressureSystolic,
+            .bloodPressureDiastolic,
+            .bloodGlucose,
+            .headphoneAudioExposure,
+            .timeInDaylight,
         ]
         for id in extraQuantityIDs {
             if let t = HKObjectType.quantityType(forIdentifier: id) {
@@ -48,6 +55,9 @@ actor HealthKitService {
         }
         if let mindful = HKObjectType.categoryType(forIdentifier: .mindfulSession) {
             types.insert(mindful)
+        }
+        if let menstrual = HKObjectType.categoryType(forIdentifier: .menstrualFlow) {
+            types.insert(menstrual)
         }
         return types
     }
@@ -86,7 +96,15 @@ actor HealthKitService {
                     basalEnergyKcalToday: 1400,
                     flightsClimbedToday: 4,
                     mindfulMinutesToday: 10,
-                    barometricPressureDeltaHpa6h: -0.8
+                    barometricPressureDeltaHpa6h: -0.8,
+                    caffeineMgToday: 120,
+                    waterMlToday: 750,
+                    daysSinceLastPeriodStart: nil,
+                    bloodPressureSystolicMmHg: 118,
+                    bloodPressureDiastolicMmHg: 76,
+                    bloodGlucoseMgPerDL: 92,
+                    headphoneAudioExposureDbA: 65,
+                    timeInDaylightMinutesToday: 45
                 )
             )
         }
@@ -239,6 +257,44 @@ actor HealthKitService {
             async let envAudio = optionalAverageEnvironmentalAudio(hoursBack: 6, relativeTo: date)
             async let baroDelta = optionalBarometricDeltaHpa(hoursBack: 6, relativeTo: date)
             async let mindful = optionalMindfulMinutesToday(relativeTo: date)
+            async let caffeine = optionalCumulativeSum(
+                identifier: .dietaryCaffeine,
+                unit: .gramUnit(with: .milli),
+                start: dayStart,
+                end: date
+            )
+            async let water = optionalCumulativeSum(
+                identifier: .dietaryWater,
+                unit: .literUnit(with: .milli),
+                start: dayStart,
+                end: date
+            )
+            async let periodDays = optionalDaysSinceLastPeriodStart(relativeTo: date)
+            async let sysBP = optionalLatestQuantity(
+                identifier: .bloodPressureSystolic,
+                unit: HKUnit.millimeterOfMercury(),
+                lookbackDays: 30,
+                relativeTo: date
+            )
+            async let diaBP = optionalLatestQuantity(
+                identifier: .bloodPressureDiastolic,
+                unit: HKUnit.millimeterOfMercury(),
+                lookbackDays: 30,
+                relativeTo: date
+            )
+            async let glucose = optionalLatestQuantity(
+                identifier: .bloodGlucose,
+                unit: HKUnit(from: "mg/dL"),
+                lookbackDays: 7,
+                relativeTo: date
+            )
+            async let headphoneAudio = optionalAverageHeadphoneAudio(hoursBack: 6, relativeTo: date)
+            async let daylight = optionalCumulativeSum(
+                identifier: .timeInDaylight,
+                unit: .minute(),
+                start: dayStart,
+                end: date
+            )
 
             let resolvedSteps: Double? = await steps
             let resolvedActiveEnergy: Double? = await activeEnergy
@@ -260,6 +316,14 @@ actor HealthKitService {
             let resolvedEnvAudio = await envAudio
             let resolvedBaroDelta = await baroDelta
             let resolvedMindful = await mindful
+            let resolvedCaffeine = await caffeine
+            let resolvedWater = await water
+            let resolvedPeriodDays = await periodDays
+            let resolvedSysBP = await sysBP
+            let resolvedDiaBP = await diaBP
+            let resolvedGlucose = await glucose
+            let resolvedHeadphoneAudio = await headphoneAudio
+            let resolvedDaylight = await daylight
 
             let (resolvedSleepHours, wakeTime) = resolvedSleepContext
             let hoursSinceWake: Double? = {
@@ -289,7 +353,15 @@ actor HealthKitService {
                 basalEnergyKcalToday: resolvedBasalEnergy,
                 flightsClimbedToday: resolvedFlights,
                 mindfulMinutesToday: resolvedMindful,
-                barometricPressureDeltaHpa6h: resolvedBaroDelta
+                barometricPressureDeltaHpa6h: resolvedBaroDelta,
+                caffeineMgToday: resolvedCaffeine,
+                waterMlToday: resolvedWater,
+                daysSinceLastPeriodStart: resolvedPeriodDays,
+                bloodPressureSystolicMmHg: resolvedSysBP,
+                bloodPressureDiastolicMmHg: resolvedDiaBP,
+                bloodGlucoseMgPerDL: resolvedGlucose,
+                headphoneAudioExposureDbA: resolvedHeadphoneAudio,
+                timeInDaylightMinutesToday: resolvedDaylight
             )
 
             return snapshot
@@ -498,6 +570,21 @@ actor HealthKitService {
         }
     }
 
+    private func optionalAverageHeadphoneAudio(hoursBack: Int, relativeTo date: Date) async -> Double? {
+        guard HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure) != nil else { return nil }
+        let unit = HKUnit.decibelAWeightedSoundPressureLevel()
+        do {
+            return try await averageQuantity(
+                identifier: .headphoneAudioExposure,
+                unit: unit,
+                hoursBack: hoursBack,
+                relativeTo: date
+            )
+        } catch {
+            return nil
+        }
+    }
+
     private func optionalBarometricDeltaHpa(hoursBack: Int, relativeTo date: Date) async -> Double? {
         guard let quantityType = HKObjectType.quantityType(forIdentifier: Self.barometricPressureIdentifier) else { return nil }
         let store = self.store
@@ -554,6 +641,42 @@ actor HealthKitService {
                     return
                 }
                 continuation.resume(returning: seconds / 60.0)
+            }
+            store.execute(query)
+        }
+    }
+
+    private func optionalDaysSinceLastPeriodStart(relativeTo date: Date) async -> Int? {
+        guard let menstrualType = HKObjectType.categoryType(forIdentifier: .menstrualFlow) else { return nil }
+        let store = self.store
+        let lookback = Calendar.current.date(byAdding: .day, value: -90, to: date) ?? date.addingTimeInterval(-90 * 86_400)
+        let predicate = HKQuery.predicateForSamples(withStart: lookback, end: date, options: [])
+
+        return await withCheckedContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: menstrualType,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if error != nil {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                let cats = (samples as? [HKCategorySample]) ?? []
+                let flowValues: Set<Int> = [
+                    HKCategoryValueMenstrualFlow.unspecified.rawValue,
+                    HKCategoryValueMenstrualFlow.light.rawValue,
+                    HKCategoryValueMenstrualFlow.medium.rawValue,
+                    HKCategoryValueMenstrualFlow.heavy.rawValue,
+                ]
+                guard let lastFlow = cats.first(where: { flowValues.contains($0.value) }) else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                let days = Calendar.current.dateComponents([.day], from: lastFlow.startDate, to: date).day
+                continuation.resume(returning: days)
             }
             store.execute(query)
         }
@@ -677,6 +800,14 @@ extension HealthSnapshot {
         basalEnergyKcalToday != nil ||
         flightsClimbedToday != nil ||
         mindfulMinutesToday != nil ||
-        barometricPressureDeltaHpa6h != nil
+        barometricPressureDeltaHpa6h != nil ||
+        caffeineMgToday != nil ||
+        waterMlToday != nil ||
+        daysSinceLastPeriodStart != nil ||
+        bloodPressureSystolicMmHg != nil ||
+        bloodPressureDiastolicMmHg != nil ||
+        bloodGlucoseMgPerDL != nil ||
+        headphoneAudioExposureDbA != nil ||
+        timeInDaylightMinutesToday != nil
     }
 }

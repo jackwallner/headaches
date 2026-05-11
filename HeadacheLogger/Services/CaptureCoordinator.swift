@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import CoreMotion
 
 @MainActor
 final class CaptureCoordinator: ObservableObject {
@@ -45,6 +46,7 @@ final class CaptureCoordinator: ObservableObject {
             }
             if updated > 0 {
                 bannerMessage = updated == 1 ? "Updated context for a pending log." : "Updated context for \(updated) pending logs."
+                await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
             }
         }
     }
@@ -84,6 +86,17 @@ final class CaptureCoordinator: ObservableObject {
 
         let event = HeadacheEvent(timestamp: watchTapDate ?? .now)
         context.insert(event)
+
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        let rawBattery = UIDevice.current.batteryLevel
+        event.batteryLevelPercent = rawBattery >= 0 ? Double(rawBattery * 100) : nil
+        event.isCharging = rawBattery >= 0 ? UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full : nil
+        event.isLowPowerMode = ProcessInfo.processInfo.isLowPowerModeEnabled
+
+        Task {
+            let activity = await currentMotionActivity()
+            event.motionActivity = activity
+        }
         lastCapturedEventID = event.id
 
         do {
@@ -143,6 +156,8 @@ final class CaptureCoordinator: ObservableObject {
             case .pending:
                 bannerMessage = nil
             }
+
+            await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
         }
 
         return true
@@ -202,6 +217,8 @@ final class CaptureCoordinator: ObservableObject {
             case .pending:
                 bannerMessage = nil
             }
+
+            await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
         }
     }
 
@@ -224,6 +241,28 @@ final class CaptureCoordinator: ObservableObject {
         } else {
             lastCapturedEventID = nil
             bannerMessage = nil
+        }
+    }
+
+    private func currentMotionActivity() async -> MotionActivity? {
+        guard CMMotionActivityManager.isActivityAvailable() else { return nil }
+        return await withCheckedContinuation { continuation in
+            let manager = CMMotionActivityManager()
+            let now = Date()
+            manager.queryActivityStarting(from: now.addingTimeInterval(-600), to: now, to: .main) { activities, error in
+                guard error == nil, let latest = activities?.last else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                let activity: MotionActivity
+                if latest.stationary { activity = .stationary }
+                else if latest.automotive { activity = .automotive }
+                else if latest.cycling { activity = .cycling }
+                else if latest.running { activity = .running }
+                else if latest.walking { activity = .walking }
+                else { activity = .unknown }
+                continuation.resume(returning: activity)
+            }
         }
     }
 

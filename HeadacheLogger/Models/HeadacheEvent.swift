@@ -44,6 +44,15 @@ enum HeadacheSeverity: String, Codable, CaseIterable, Sendable {
     case extreme
 }
 
+enum MotionActivity: String, Codable, CaseIterable, Sendable {
+    case stationary
+    case walking
+    case running
+    case automotive
+    case cycling
+    case unknown
+}
+
 struct HealthSnapshot: Sendable {
     var stepsToday: Int? = nil
     var activeEnergyKcalToday: Double? = nil
@@ -72,6 +81,22 @@ struct HealthSnapshot: Sendable {
     var mindfulMinutesToday: Double? = nil
     /// Change in barometric pressure (hPa) from oldest to newest sample in the 6 hours before capture (device/wearable samples).
     var barometricPressureDeltaHpa6h: Double? = nil
+    /// Caffeine consumed today (mg), cumulative from midnight to event time.
+    var caffeineMgToday: Double? = nil
+    /// Water consumed today (mL), cumulative from midnight to event time.
+    var waterMlToday: Double? = nil
+    /// Days since the most recent menstrual flow began, when Health has cycle data.
+    var daysSinceLastPeriodStart: Int? = nil
+    /// Latest systolic blood pressure (mmHg) within 30-day lookback.
+    var bloodPressureSystolicMmHg: Double? = nil
+    /// Latest diastolic blood pressure (mmHg) within 30-day lookback.
+    var bloodPressureDiastolicMmHg: Double? = nil
+    /// Latest blood glucose (mg/dL) within 7-day lookback, when CGM or manual data exists.
+    var bloodGlucoseMgPerDL: Double? = nil
+    /// Average headphone audio level (A-weighted dB) over the 6 hours before capture.
+    var headphoneAudioExposureDbA: Double? = nil
+    /// Cumulative time in daylight (minutes) from midnight to event time.
+    var timeInDaylightMinutesToday: Double? = nil
 }
 
 struct HealthCaptureResult: Sendable {
@@ -83,6 +108,7 @@ struct HealthCaptureResult: Sendable {
 struct EnvironmentSnapshot: Sendable {
     var locality: String? = nil
     var region: String? = nil
+    var altitudeM: Double? = nil
     var weatherSummary: String? = nil
     var weatherCode: Int? = nil
     var temperatureC: Double? = nil
@@ -95,6 +121,7 @@ struct EnvironmentSnapshot: Sendable {
     var windDirectionDegrees: Double? = nil
     var cloudCoverPercent: Double? = nil
     var uvIndex: Double? = nil
+    var dewPointC: Double? = nil
     var usAQI: Double? = nil
     var europeanAQI: Double? = nil
     var pm25: Double? = nil
@@ -139,6 +166,7 @@ final class HeadacheEvent {
 
     var locality: String?
     var region: String?
+    var altitudeM: Double?
     var weatherSummary: String?
     var weatherCode: Int?
     var temperatureC: Double?
@@ -151,6 +179,7 @@ final class HeadacheEvent {
     var windDirectionDegrees: Double?
     var cloudCoverPercent: Double?
     var uvIndex: Double?
+    var dewPointC: Double?
     var usAQI: Double?
     var europeanAQI: Double?
     var pm25: Double?
@@ -189,6 +218,22 @@ final class HeadacheEvent {
     var flightsClimbedToday: Double?
     var mindfulMinutesToday: Double?
     var barometricPressureDeltaHpa6h: Double?
+    var caffeineMgToday: Double?
+    var waterMlToday: Double?
+    var daysSinceLastPeriodStart: Int?
+    var bloodPressureSystolicMmHg: Double?
+    var bloodPressureDiastolicMmHg: Double?
+    var bloodGlucoseMgPerDL: Double?
+    var headphoneAudioExposureDbA: Double?
+    var timeInDaylightMinutesToday: Double?
+
+    /// Device state captured at log time — proxy for phone usage intensity.
+    var batteryLevelPercent: Double?
+    var isCharging: Bool?
+    var isLowPowerMode: Bool?
+
+    /// Current motion activity at log time (stationary, walking, running, automotive, cycling, unknown).
+    var motionActivityRaw: String?
 
     /// Optional notes added later from History (not collected at tap time).
     var userNotes: String?
@@ -219,6 +264,7 @@ final class HeadacheEvent {
 
         self.locality = nil
         self.region = nil
+        self.altitudeM = nil
         self.weatherSummary = nil
         self.weatherCode = nil
         self.temperatureC = nil
@@ -231,6 +277,7 @@ final class HeadacheEvent {
         self.windDirectionDegrees = nil
         self.cloudCoverPercent = nil
         self.uvIndex = nil
+        self.dewPointC = nil
         self.usAQI = nil
         self.europeanAQI = nil
         self.pm25 = nil
@@ -269,6 +316,18 @@ final class HeadacheEvent {
         self.flightsClimbedToday = nil
         self.mindfulMinutesToday = nil
         self.barometricPressureDeltaHpa6h = nil
+        self.caffeineMgToday = nil
+        self.waterMlToday = nil
+        self.daysSinceLastPeriodStart = nil
+        self.bloodPressureSystolicMmHg = nil
+        self.bloodPressureDiastolicMmHg = nil
+        self.bloodGlucoseMgPerDL = nil
+        self.headphoneAudioExposureDbA = nil
+        self.timeInDaylightMinutesToday = nil
+        self.batteryLevelPercent = nil
+        self.isCharging = nil
+        self.isLowPowerMode = nil
+        self.motionActivityRaw = nil
 
         self.userNotes = nil
         self.severityRaw = nil
@@ -302,6 +361,11 @@ final class HeadacheEvent {
     var severity: HeadacheSeverity? {
         get { severityRaw.flatMap { HeadacheSeverity(rawValue: $0) } }
         set { severityRaw = newValue?.rawValue }
+    }
+
+    var motionActivity: MotionActivity? {
+        get { motionActivityRaw.flatMap { MotionActivity(rawValue: $0) } }
+        set { motionActivityRaw = newValue?.rawValue }
     }
 
     var locationLabel: String {
@@ -338,6 +402,14 @@ final class HeadacheEvent {
         flightsClimbedToday = snapshot.flightsClimbedToday
         mindfulMinutesToday = snapshot.mindfulMinutesToday
         barometricPressureDeltaHpa6h = snapshot.barometricPressureDeltaHpa6h
+        caffeineMgToday = snapshot.caffeineMgToday
+        waterMlToday = snapshot.waterMlToday
+        daysSinceLastPeriodStart = snapshot.daysSinceLastPeriodStart
+        bloodPressureSystolicMmHg = snapshot.bloodPressureSystolicMmHg
+        bloodPressureDiastolicMmHg = snapshot.bloodPressureDiastolicMmHg
+        bloodGlucoseMgPerDL = snapshot.bloodGlucoseMgPerDL
+        headphoneAudioExposureDbA = snapshot.headphoneAudioExposureDbA
+        timeInDaylightMinutesToday = snapshot.timeInDaylightMinutesToday
     }
 
     func apply(_ result: EnvironmentCaptureResult) {
@@ -347,6 +419,7 @@ final class HeadacheEvent {
         guard let snapshot = result.snapshot else { return }
         locality = snapshot.locality
         region = snapshot.region
+        altitudeM = snapshot.altitudeM
         weatherSummary = snapshot.weatherSummary
         weatherCode = snapshot.weatherCode
         temperatureC = snapshot.temperatureC
@@ -359,6 +432,7 @@ final class HeadacheEvent {
         windDirectionDegrees = snapshot.windDirectionDegrees
         cloudCoverPercent = snapshot.cloudCoverPercent
         uvIndex = snapshot.uvIndex
+        dewPointC = snapshot.dewPointC
         usAQI = snapshot.usAQI
         europeanAQI = snapshot.europeanAQI
         pm25 = snapshot.pm25
@@ -396,7 +470,7 @@ final class HeadacheEvent {
     }
 }
 
-private extension HeadacheEvent {
+extension HeadacheEvent {
     /// M1: fixed to en_US_POSIX so `weekdayName` is stable per row across device-locale changes.
     /// The user-facing UI formats weekdays at render time from the locale; this field is the
     /// machine-readable column persisted for CSV export / downstream analysis.
@@ -406,4 +480,8 @@ private extension HeadacheEvent {
         formatter.dateFormat = "EEEE"
         return formatter
     }()
+
+    static func weekdayName(from date: Date) -> String {
+        weekdayFormatter.string(from: date)
+    }
 }

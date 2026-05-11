@@ -1,6 +1,8 @@
 import Charts
+import Charts
 import SwiftData
 import SwiftUI
+import RevenueCatUI
 
 struct InsightsView: View {
     @EnvironmentObject private var store: StoreService
@@ -28,7 +30,6 @@ struct InsightsView: View {
         .navigationTitle("Patterns")
         .sheet(isPresented: $showPaywall) {
             PaywallView()
-                .environmentObject(store)
         }
     }
 

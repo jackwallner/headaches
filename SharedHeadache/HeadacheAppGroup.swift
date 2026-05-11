@@ -34,6 +34,11 @@ enum HeadacheStorageKey: String {
     case lastKnownLatitude = "headacheLastKnownLatitude"
     case lastKnownLongitude = "headacheLastKnownLongitude"
     case lastKnownLocationCapturedAt = "headacheLastKnownLocationCapturedAt"
+
+    // MARK: - Pattern-based predictive alerts
+    case patternAlertsEnabled = "headachePatternAlertsEnabled"
+    /// 0 = high-chance only (conservative, fewer false alarms), 1 = any chance (more alerts)
+    case patternAlertSensitivity = "headachePatternAlertSensitivity"
 }
 
 enum HeadacheOnboardingStore {

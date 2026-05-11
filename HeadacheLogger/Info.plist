@@ -40,6 +40,8 @@
 	<array>
 		<string>fetch</string>
 	</array>
+	<key>NSMotionUsageDescription</key>
+	<string>One Tap Headache Tracker uses motion and activity data from Apple Health (such as step counts and activity levels) to provide insight into potential headache triggers.</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.jackwallner.headachelogger.weatherCheck</string>

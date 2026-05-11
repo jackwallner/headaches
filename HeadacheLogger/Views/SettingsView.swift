@@ -1,10 +1,11 @@
 import HealthKit
 import SwiftUI
 import UIKit
+import RevenueCatUI
 
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
-    @EnvironmentObject private var store: StoreKitService
+    @EnvironmentObject private var store: StoreService
     @AppStorage("appearance") private var appearanceRaw = AppAppearance.system.rawValue
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
@@ -40,6 +41,18 @@ struct SettingsView: View {
                 Text("When on, each tap logs immediately, then shows an optional quick sheet for severity and notes.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+
+            if HeadacheQuizStore.hasCompletedQuiz {
+                Section {
+                    NavigationLink {
+                        HeadacheQuizRetakeView()
+                    } label: {
+                        Label("Headache Pattern Quiz", systemImage: "questionmark.circle")
+                    }
+                } footer: {
+                    Text("Update your answers to refine which patterns are highlighted in your insights.")
+                }
             }
 
             Section {

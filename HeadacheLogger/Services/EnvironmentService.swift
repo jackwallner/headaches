@@ -130,7 +130,7 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             let openMeteo = try await weatherTask
             let airQuality = await airQualityTask
 
-            let snapshot = makeSnapshot(placemark: placemark, openMeteo: openMeteo, airQuality: airQuality)
+            let snapshot = makeSnapshot(placemark: placemark, altitude: location.altitude, openMeteo: openMeteo, airQuality: airQuality)
 
             let meaningful =
                 snapshot.locality != nil
@@ -154,13 +154,14 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    private func makeSnapshot(placemark: CLPlacemark?, openMeteo: OpenMeteoClient.CurrentWeather, airQuality: OpenMeteoClient.AirQualityData?) -> EnvironmentSnapshot {
+    private func makeSnapshot(placemark: CLPlacemark?, altitude: Double, openMeteo: OpenMeteoClient.CurrentWeather, airQuality: OpenMeteoClient.AirQualityData?) -> EnvironmentSnapshot {
         let locality = placemark?.locality
         let region = placemark?.administrativeArea
 
         return EnvironmentSnapshot(
             locality: locality,
             region: region,
+            altitudeM: altitude,
             weatherSummary: openMeteo.conditionSummary,
             weatherCode: openMeteo.weatherCode,
             temperatureC: openMeteo.temperatureC,
@@ -173,6 +174,7 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             windDirectionDegrees: openMeteo.windDirectionDegrees,
             cloudCoverPercent: openMeteo.cloudCoverPercent,
             uvIndex: openMeteo.uvIndex,
+            dewPointC: openMeteo.dewPointC,
             usAQI: airQuality?.usAQI,
             europeanAQI: airQuality?.europeanAQI,
             pm25: airQuality?.pm25,
@@ -249,6 +251,7 @@ private enum OpenMeteoClient {
         let windDirectionDegrees: Double?
         let cloudCoverPercent: Double?
         let uvIndex: Double?
+        let dewPointC: Double?
     }
 
     private struct CurrentWithHourlyResponse: Decodable {
@@ -268,6 +271,7 @@ private enum OpenMeteoClient {
             let windSpeed10m: Double?
             let windDirection10m: Double?
             let uvIndex: Double?
+            let dewPoint2m: Double?
 
             enum CodingKeys: String, CodingKey {
                 case time
@@ -281,6 +285,7 @@ private enum OpenMeteoClient {
                 case windSpeed10m = "wind_speed_10m"
                 case windDirection10m = "wind_direction_10m"
                 case uvIndex = "uv_index"
+                case dewPoint2m = "dew_point_2m"
             }
         }
 
@@ -306,7 +311,7 @@ private enum OpenMeteoClient {
                 // C7: `pressure_msl` (mean sea level) so users at altitude see meteorologically
                 // comparable values (Denver's station pressure ~830 hPa would otherwise confuse).
                 // Matches how migraine-pressure studies report values.
-                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index"
+                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index,dew_point_2m"
             ),
             URLQueryItem(name: "hourly", value: "pressure_msl"),
             URLQueryItem(name: "past_hours", value: "6"),
@@ -364,7 +369,8 @@ private enum OpenMeteoClient {
             windSpeedKph: c.windSpeed10m,
             windDirectionDegrees: c.windDirection10m,
             cloudCoverPercent: c.cloudCover,
-            uvIndex: c.uvIndex
+            uvIndex: c.uvIndex,
+            dewPointC: c.dewPoint2m
         )
     }
 
@@ -415,6 +421,7 @@ private enum OpenMeteoClient {
             let windSpeed10m: [Double?]
             let windDirection10m: [Double?]
             let uvIndex: [Double?]
+            let dewPoint2m: [Double?]
 
             enum CodingKeys: String, CodingKey {
                 case time
@@ -428,6 +435,7 @@ private enum OpenMeteoClient {
                 case windSpeed10m = "wind_speed_10m"
                 case windDirection10m = "wind_direction_10m"
                 case uvIndex = "uv_index"
+                case dewPoint2m = "dew_point_2m"
             }
         }
     }
@@ -463,7 +471,7 @@ private enum OpenMeteoClient {
             URLQueryItem(
                 name: "hourly",
                 // C7: use `pressure_msl` to match current-weather query; comparable across altitudes.
-                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index"
+                value: "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,uv_index,dew_point_2m"
             ),
             URLQueryItem(name: "wind_speed_unit", value: "kmh"),
         ]
@@ -524,7 +532,8 @@ private enum OpenMeteoClient {
             windSpeedKph: at(h.windSpeed10m, idx).flatMap { $0 },
             windDirectionDegrees: at(h.windDirection10m, idx).flatMap { $0 },
             cloudCoverPercent: at(h.cloudCover, idx).flatMap { $0 },
-            uvIndex: at(h.uvIndex, idx).flatMap { $0 }
+            uvIndex: at(h.uvIndex, idx).flatMap { $0 },
+            dewPointC: at(h.dewPoint2m, idx).flatMap { $0 }
         )
     }
 

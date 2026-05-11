@@ -18,6 +18,8 @@ struct OnboardingView: View {
                     locationPage
                 case 3:
                     severityNotesPage
+                case 4:
+                    quizPage
                 default:
                     welcomePage
                 }
@@ -120,7 +122,7 @@ struct OnboardingView: View {
             VStack(spacing: 12) {
                 Button {
                     HeadacheOnboardingStore.promptForSeverityNotes = true
-                    finishOnboarding()
+                    step = 4
                 } label: {
                     Text("Enable")
                 }
@@ -130,7 +132,7 @@ struct OnboardingView: View {
 
                 Button("Skip") {
                     HeadacheOnboardingStore.promptForSeverityNotes = false
-                    finishOnboarding()
+                    step = 4
                 }
                 .foregroundStyle(.secondary)
             }
@@ -156,6 +158,13 @@ struct OnboardingView: View {
         defer { isWorking = false }
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
         await MainActor.run { step = 3 }
+    }
+
+    private var quizPage: some View {
+        HeadacheQuizView(hasCompleted: Binding(
+            get: { false },
+            set: { if $0 { finishOnboarding() } }
+        ))
     }
 
     private func finishOnboarding() {
