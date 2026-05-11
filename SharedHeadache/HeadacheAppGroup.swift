@@ -19,6 +19,8 @@ enum HeadacheStorageKey: String {
     case widgetLastLoggedAt = "headacheWidgetLastLoggedAt"
     /// When true, the app prompts for severity and notes after each one-tap log.
     case promptForSeverityNotes = "headachePromptForSeverityNotes"
+    /// True after the existing-user Pro intro sheet has been shown (or dismissed) once.
+    case hasSeenProIntro = "headacheHasSeenProIntro"
 
     // MARK: - Pro / Proactive Alerts
     case proAlertsEnabled = "headacheProAlertsEnabled"
@@ -60,6 +62,11 @@ enum HeadacheOnboardingStore {
     static var promptForSeverityNotes: Bool {
         get { HeadacheAppGroup.userDefaults.bool(forKey: HeadacheStorageKey.promptForSeverityNotes.rawValue) }
         set { HeadacheAppGroup.userDefaults.set(newValue, forKey: HeadacheStorageKey.promptForSeverityNotes.rawValue) }
+    }
+
+    static var hasSeenProIntro: Bool {
+        get { HeadacheAppGroup.userDefaults.bool(forKey: HeadacheStorageKey.hasSeenProIntro.rawValue) }
+        set { HeadacheAppGroup.userDefaults.set(newValue, forKey: HeadacheStorageKey.hasSeenProIntro.rawValue) }
     }
 
     /// Reset for UI tests / previews only.

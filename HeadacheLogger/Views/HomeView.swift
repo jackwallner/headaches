@@ -124,8 +124,14 @@ struct HomeView: View {
 
                 if !recentEvents.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Recent Logs")
-                            .font(.headline)
+                        HStack {
+                            Text("Previous entries")
+                                .font(.headline)
+                            Spacer()
+                            Text("See all in History")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
 
                         ForEach(recentEvents, id: \.id) { event in
                             RecentEventRow(event: event)

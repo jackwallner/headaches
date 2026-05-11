@@ -20,41 +20,6 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section("Appearance") {
-                Picker("Color scheme", selection: $appearanceRaw) {
-                    ForEach(AppAppearance.allCases) { mode in
-                        Text(mode.title).tag(mode.rawValue)
-                    }
-                }
-                .pickerStyle(.inline)
-            }
-
-            Section("Temperature") {
-                Toggle("Show Celsius", isOn: $useCelsius)
-                Text("Off (default): Fahrenheit (°F). On: Celsius (°C). Exported CSV always includes both °C and °F columns.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-
-            Section("Logging") {
-                Toggle("Prompt for severity and notes", isOn: $promptForSeverityNotes)
-                Text("When on, each tap logs immediately, then shows an optional quick sheet for severity and notes.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-
-            if HeadacheQuizStore.hasCompletedQuiz {
-                Section {
-                    NavigationLink {
-                        HeadacheQuizRetakeView()
-                    } label: {
-                        Label("Headache Pattern Quiz", systemImage: "questionmark.circle")
-                    }
-                } footer: {
-                    Text("Update your answers to refine which patterns are highlighted in your insights.")
-                }
-            }
-
             Section {
                 if store.isProUnlocked {
                     NavigationLink {
@@ -68,16 +33,6 @@ struct SettingsView: View {
                             openURL(url)
                         }
                     }
-                    Button {
-                        Task { await restorePurchases() }
-                    } label: {
-                        if isRestoring {
-                            ProgressView()
-                        } else {
-                            Text("Restore Purchases")
-                        }
-                    }
-                    .disabled(isRestoring)
                 } else {
                     Button {
                         showPaywall = true
@@ -85,29 +40,44 @@ struct SettingsView: View {
                         proRowLabel(unlocked: false)
                     }
                     .buttonStyle(.plain)
-                    Button {
-                        Task { await restorePurchases() }
-                    } label: {
-                        if isRestoring {
-                            ProgressView()
-                        } else {
-                            Text("Restore Purchases")
-                        }
-                    }
-                    .disabled(isRestoring)
                 }
+                Button {
+                    Task { await restorePurchases() }
+                } label: {
+                    if isRestoring {
+                        ProgressView()
+                    } else {
+                        Text("Restore Purchases")
+                    }
+                }
+                .disabled(isRestoring)
             } header: {
-                Text("Pro")
+                Text("Headache Pro")
             } footer: {
-                Text("Pro adds a daily background forecast check and personalized pattern insights. The app pings you when a sharp barometric pressure drop or air-quality spike is on the way.")
+                Text("Pro runs a daily forecast check and pings you 12–24 hours before a barometric drop or AQI spike — plus surfaces personalized patterns from your logs.")
             }
 
-            Section("How Logging Works") {
-                Text("The main screen is intentionally a one-tap logger. When you press Headache, the app saves the event immediately and then enriches it with whatever context it can collect.")
-                Text("Nothing about the headache itself is typed in during logging. The goal is to make capture fast enough that you actually use it.")
+            Section("Logging") {
+                Toggle("Prompt for severity and notes", isOn: $promptForSeverityNotes)
+                if HeadacheQuizStore.hasCompletedQuiz {
+                    NavigationLink {
+                        HeadacheQuizRetakeView()
+                    } label: {
+                        Label("Headache Pattern Quiz", systemImage: "questionmark.circle")
+                    }
+                }
             }
 
-            Section("Permissions") {
+            Section("Display") {
+                Picker("Color scheme", selection: $appearanceRaw) {
+                    ForEach(AppAppearance.allCases) { mode in
+                        Text(mode.title).tag(mode.rawValue)
+                    }
+                }
+                Toggle("Use Celsius", isOn: $useCelsius)
+            }
+
+            Section {
                 PermissionRow(
                     label: "Apple Health",
                     value: HKHealthStore.isHealthDataAvailable() ? "Available on this device" : "Unavailable",
@@ -122,19 +92,13 @@ struct SettingsView: View {
                     guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                     openURL(url)
                 }
+            } header: {
+                Text("Permissions")
+            } footer: {
+                Text("Health and location are read-only and only used to enrich logs with context.")
             }
 
-            Section("Captured Context") {
-                Text("Time: weekday, hour, minute, timezone, part of day.")
-                Text("Health: steps, active energy, walking distance, exercise minutes, sleep, heart data, breathing, recent workouts.")
-                Text("Environment: local weather, humidity, pressure, precipitation, wind, cloud cover, UV, air quality, and pollen-style signals when available.")
-            }
-
-            Section("Sharing") {
-                Text("The History tab can export all logged events as a CSV so you can email it, AirDrop it, or share it directly with your doctor.")
-            }
-
-            Section("Privacy and Support") {
+            Section("About & Support") {
                 Button("Privacy Policy") {
                     guard let privacyPolicyURL else { return }
                     openURL(privacyPolicyURL)

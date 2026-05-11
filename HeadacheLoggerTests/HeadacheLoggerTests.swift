@@ -605,4 +605,131 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(imported.severity, original.severity, file: file, line: line)
         XCTAssertEqual(imported.userNotes, original.userNotes, file: file, line: line)
     }
+
+    // MARK: - InsightsEngine (pattern recognition)
+
+    func testInsightsReturnsEmptyBelowMinimumSampleSize() {
+        let events = (0..<(InsightsEngine.minimumSampleSize - 1)).map { i in
+            makeEvent(daysAgo: i, hour: 19) // all evening
+        }
+        let summary = InsightsEngine.summarize(events)
+        XCTAssertEqual(summary.totalEvents, events.count)
+        XCTAssertTrue(summary.insights.isEmpty, "Insights must not surface below the minimum sample size")
+    }
+
+    func testInsightsDateRangeReflectsLoggedSpan() {
+        let events = (0..<6).map { i in makeEvent(daysAgo: i, hour: 12) }
+        let summary = InsightsEngine.summarize(events)
+        XCTAssertNotNil(summary.dateRange)
+        XCTAssertEqual(summary.totalEvents, 6)
+    }
+
+    func testPartOfDayInsightFiresOnEveningCluster() {
+        // 7 evenings + 1 morning + 1 afternoon = 9 total, evening share ≈ 0.78 → above 0.30 floor.
+        var events = (0..<7).map { i in makeEvent(daysAgo: i, hour: 19) }
+        events.append(makeEvent(daysAgo: 8, hour: 7))
+        events.append(makeEvent(daysAgo: 9, hour: 14))
+
+        let summary = InsightsEngine.summarize(events)
+        let pod = summary.insights.first(where: { $0.id == "part-of-day" })
+        XCTAssertNotNil(pod, "Evening cluster should produce a part-of-day insight")
+        XCTAssertEqual(pod?.category, .time)
+        XCTAssertTrue((pod?.detail ?? "").lowercased().contains("evening"))
+        XCTAssertEqual(pod?.breakdown.buckets.count, 4)
+        let peak = pod?.breakdown.buckets.first(where: { $0.isPeak })
+        XCTAssertEqual(peak?.label, "Evening")
+        let totalShare = (pod?.breakdown.buckets.map(\.share).reduce(0, +)) ?? 0
+        XCTAssertEqual(totalShare, 1.0, accuracy: 0.001, "Bucket shares must sum to 1")
+    }
+
+    func testPartOfDayInsightSuppressedWhenNoCluster() {
+        // 2 in each bucket → top share = 0.25 < 0.30 floor.
+        let hours = [7, 7, 14, 14, 19, 19, 2, 2]
+        let events = hours.enumerated().map { (i, h) in makeEvent(daysAgo: i, hour: h) }
+        let summary = InsightsEngine.summarize(events)
+        XCTAssertNil(summary.insights.first(where: { $0.id == "part-of-day" }),
+                     "No insight should fire when no part-of-day exceeds the 30% floor")
+    }
+
+    func testSleepInsightFiresOnLowSleepCluster() {
+        let sleeps: [Double] = [4.5, 4.8, 5.2, 5.6, 7.5, 7.9, 8.1] // 4 of 7 < 6h → 57%
+        let events = sleeps.enumerated().map { (i, h) in
+            let e = makeEvent(daysAgo: i, hour: 12)
+            e.sleepHoursLastNight = h
+            return e
+        }
+        let summary = InsightsEngine.summarize(events)
+        let sleep = summary.insights.first(where: { $0.id == "sleep" })
+        XCTAssertNotNil(sleep)
+        XCTAssertTrue((sleep?.detail ?? "").contains("under 6 hours"),
+                      "Detail should call out the low-sleep concentration")
+        XCTAssertGreaterThan(sleep?.strength ?? 0, 0.5)
+    }
+
+    func testPressureTrendInsightFiresOnFallingCluster() {
+        // 5 falling, 1 steady, 1 rising → falling 71% > 45% floor.
+        let trends: [PressureTrend] = [.falling, .falling, .falling, .falling, .falling, .steady, .rising]
+        let events = trends.enumerated().map { (i, t) in
+            let e = makeEvent(daysAgo: i, hour: 14)
+            e.pressureTrend = t
+            return e
+        }
+        let summary = InsightsEngine.summarize(events)
+        let pressure = summary.insights.first(where: { $0.id == "pressure-trend" })
+        XCTAssertNotNil(pressure)
+        XCTAssertEqual(pressure?.category, .pressure)
+        XCTAssertTrue((pressure?.title ?? "").lowercased().contains("falling"))
+    }
+
+    func testPressureTrendIgnoresUnavailable() {
+        // Only 4 events have pressure data. Engine min sample size = 5 so the insight should NOT fire.
+        let events = (0..<6).enumerated().map { (_, idx) -> HeadacheEvent in
+            let e = makeEvent(daysAgo: idx, hour: 14)
+            if idx < 4 { e.pressureTrend = .falling } // others stay .unavailable
+            return e
+        }
+        let summary = InsightsEngine.summarize(events)
+        XCTAssertNil(summary.insights.first(where: { $0.id == "pressure-trend" }),
+                     "Pressure-trend insight should require at least minimumSampleSize events with pressure data")
+    }
+
+    func testAirQualityInsightFiresOnElevatedExposure() {
+        let aqis: [Double] = [80, 95, 110, 60, 40, 75] // 4 of 6 ≥ 75 → 67%
+        let events = aqis.enumerated().map { (i, q) in
+            let e = makeEvent(daysAgo: i, hour: 14)
+            e.usAQI = q
+            return e
+        }
+        let summary = InsightsEngine.summarize(events)
+        let aqi = summary.insights.first(where: { $0.id == "aqi" })
+        XCTAssertNotNil(aqi)
+        XCTAssertEqual(aqi?.category, .airQuality)
+    }
+
+    func testInsightsRankByStrength() {
+        // Pile up an evening + low-sleep cluster so we get multiple insights, ensure ordering.
+        let events = (0..<8).map { i -> HeadacheEvent in
+            let e = makeEvent(daysAgo: i, hour: 19) // strong evening cluster
+            e.sleepHoursLastNight = 4.5             // strong low-sleep cluster
+            return e
+        }
+        let summary = InsightsEngine.summarize(events)
+        XCTAssertGreaterThanOrEqual(summary.insights.count, 2)
+        for i in 0..<(summary.insights.count - 1) {
+            XCTAssertGreaterThanOrEqual(summary.insights[i].strength,
+                                        summary.insights[i + 1].strength,
+                                        "Insights should be sorted strongest first")
+        }
+    }
+
+    // MARK: - test helpers
+
+    private func makeEvent(daysAgo: Int, hour: Int) -> HeadacheEvent {
+        var components = DateComponents()
+        components.day = -daysAgo
+        components.hour = -((Calendar.current.component(.hour, from: .now)) - hour)
+        let base = Calendar.current.date(byAdding: .day, value: -daysAgo, to: .now) ?? .now
+        let withHour = Calendar.current.date(bySettingHour: hour, minute: 0, second: 0, of: base) ?? base
+        return HeadacheEvent(timestamp: withHour)
+    }
 }

@@ -229,6 +229,7 @@ enum InsightsEngine {
         guard trends.count >= minimumSampleSize else { return nil }
         let order: [PressureTrend] = [.falling, .steady, .rising]
         let total = trends.count
+        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
         var counts: [PressureTrend: Int] = [:]
         for t in trends { counts[t, default: 0] += 1 }
         guard let (top, topCount) = counts.max(by: { $0.value < $1.value }) else { return nil }
@@ -266,10 +267,10 @@ enum InsightsEngine {
             category: .pressure,
             icon: icon,
             title: title,
-            detail: "\(percent(topShare)) of your headaches happened during \(topLabel.lowercased()) barometric pressure.",
+            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened during \(topLabel.lowercased()) barometric pressure.",
             strength: topShare,
             whyItMatters: why,
-            yourPattern: "\(percent(topShare)) of your headaches occurred during \(topLabel.lowercased()) pressure — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
+            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred during \(topLabel.lowercased()) pressure — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -326,6 +327,7 @@ enum InsightsEngine {
         guard aqi.count >= minimumSampleSize else { return nil }
         let elevated = Double(aqi.filter { $0 >= 75 }.count) / Double(aqi.count)
         guard elevated >= 0.30 else { return nil }
+        let coveragePhrase = coverageQualifier(subset: aqi.count, of: events.count)
         let bins: [(label: String, range: Range<Double>)] = [
             ("Good\n0–50", 0..<51),
             ("Moderate\n51–100", 51..<101),
@@ -348,10 +350,10 @@ enum InsightsEngine {
             category: .airQuality,
             icon: "aqi.medium",
             title: "Elevated air quality",
-            detail: "\(percent(elevated)) of your headaches happened with US AQI ≥ 75.",
+            detail: "\(percent(elevated)) of your headaches\(coveragePhrase) happened with US AQI ≥ 75.",
             strength: elevated,
             whyItMatters: "Particulate matter and ozone can trigger or amplify headaches via inflammatory pathways. AQI of 75–100 is where sensitive groups typically start to feel effects; 150+ is unhealthy for everyone. On bad-air days, indoor mitigations (HEPA filters, closed windows, masks outdoors) can meaningfully reduce exposure.",
-            yourPattern: "\(percent(elevated)) of your headaches occurred with US AQI at or above 75 — the threshold where sensitive groups commonly start to feel effects.",
+            yourPattern: "\(percent(elevated)) of your headaches\(coveragePhrase) occurred with US AQI at or above 75 — the threshold where sensitive groups commonly start to feel effects.",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
@@ -488,6 +490,14 @@ enum InsightsEngine {
 
     private static func percent(_ value: Double) -> String {
         "\(Int((value * 100).rounded()))%"
+    }
+
+    /// Returns " (of the N with weather/health data)" when we're computing a percentage over a
+    /// strict subset of events, so users don't read the headline as "X% of every headache I've logged".
+    /// Empty string when coverage is full.
+    private static func coverageQualifier(subset: Int, of total: Int) -> String {
+        guard subset > 0, subset < total else { return "" }
+        return " (of the \(subset) with available data)"
     }
 
     private static func formatHours(_ hours: Double) -> String {

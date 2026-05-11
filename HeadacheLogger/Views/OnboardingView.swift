@@ -1,10 +1,12 @@
 import SwiftUI
+import RevenueCatUI
 
 struct OnboardingView: View {
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
 
     @State private var step = 0
     @State private var isWorking = false
+    @State private var showPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -19,6 +21,8 @@ struct OnboardingView: View {
                 case 3:
                     severityNotesPage
                 case 4:
+                    proPitchPage
+                case 5:
                     quizPage
                 default:
                     welcomePage
@@ -26,6 +30,9 @@ struct OnboardingView: View {
             }
             .navigationTitle("Welcome")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showPaywall, onDismiss: { step = 5 }) {
+                PaywallView()
+            }
         }
     }
 
@@ -122,7 +129,7 @@ struct OnboardingView: View {
             VStack(spacing: 12) {
                 Button {
                     HeadacheOnboardingStore.promptForSeverityNotes = true
-                    step = 4
+                    step = 4 // Pro pitch
                 } label: {
                     Text("Enable")
                 }
@@ -132,7 +139,7 @@ struct OnboardingView: View {
 
                 Button("Skip") {
                     HeadacheOnboardingStore.promptForSeverityNotes = false
-                    step = 4
+                    step = 4 // Pro pitch
                 }
                 .foregroundStyle(.secondary)
             }
@@ -160,6 +167,69 @@ struct OnboardingView: View {
         await MainActor.run { step = 3 }
     }
 
+    private var proPitchPage: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Label("Headache Pro", systemImage: "sparkles")
+                    .font(.title2.bold())
+                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+
+                Text("Find what's actually triggering your headaches")
+                    .font(.title3.bold())
+
+                Text("Pro analyses every headache you log against the time, sleep, weather, pressure and air-quality context already attached to it — and surfaces the patterns hiding in your data.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+
+                VStack(alignment: .leading, spacing: 14) {
+                    ProPitchBullet(
+                        icon: "chart.bar.xaxis",
+                        title: "Personalized pattern recognition",
+                        detail: "After ~5 logs, Pro starts highlighting things like \"40% of your headaches happen in the evening\" or \"62% follow a barometric pressure drop\" — with a chart for each one."
+                    )
+                    ProPitchBullet(
+                        icon: "barometer",
+                        title: "Weather & pressure triggers",
+                        detail: "Identifies whether falling pressure, high humidity, or AQI spikes line up with your attacks — backed by a 6-hour pressure-shift histogram."
+                    )
+                    ProPitchBullet(
+                        icon: "bell.badge.fill",
+                        title: "Heads-up alerts",
+                        detail: "Once a pattern is found, get notified 12–24h before forecast conditions match it."
+                    )
+                    ProPitchBullet(
+                        icon: "lock.shield",
+                        title: "On-device only",
+                        detail: "Pattern analysis runs locally. Your headache data never leaves your phone."
+                    )
+                }
+            }
+            .padding(24)
+        }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 10) {
+                Button {
+                    showPaywall = true
+                } label: {
+                    Text("See Pro plans")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .controlSize(.large)
+
+                Button("Maybe later") {
+                    step = 5
+                }
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(.regularMaterial)
+        }
+    }
+
     private var quizPage: some View {
         HeadacheQuizView(hasCompleted: Binding(
             get: { false },
@@ -168,6 +238,28 @@ struct OnboardingView: View {
     }
 
     private func finishOnboarding() {
+        // Net-new users see the Pro pitch as part of onboarding/Patterns; suppress the one-shot
+        // intro sheet so they don't get prompted twice in the first session.
+        HeadacheOnboardingStore.hasSeenProIntro = true
         hasCompletedOnboarding = true
+    }
+}
+
+private struct ProPitchBullet: View {
+    let icon: String
+    let title: String
+    let detail: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .frame(width: 26)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.subheadline.weight(.semibold))
+                Text(detail).font(.footnote).foregroundStyle(.secondary)
+            }
+        }
     }
 }

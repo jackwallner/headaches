@@ -19,12 +19,6 @@ struct InsightsView: View {
                 proContent
             } else {
                 lockedTeaser
-                    .onAppear {
-                        Task {
-                            try? await Task.sleep(nanoseconds: 600_000_000)
-                            showPaywall = true
-                        }
-                    }
             }
         }
         .navigationTitle("Patterns")
@@ -168,17 +162,14 @@ struct InsightsView: View {
             .padding(.bottom, 24)
         }
         .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 6) {
+            VStack(spacing: 8) {
                 Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
-                Text(paywallPriceLine)
-                    .font(.caption)
                     .foregroundStyle(.secondary)
                 Button {
                     showPaywall = true
                 } label: {
-                    Text("Unlock Headache Pro")
+                    Text("See Pro plans")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
@@ -192,22 +183,6 @@ struct InsightsView: View {
     }
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
-
-    private var paywallPriceLine: String {
-        if let yearly = store.yearlyPackage, let lifetime = store.lifetimePackage {
-            return "\(yearly.storeProduct.localizedPriceString)/year or \(lifetime.storeProduct.localizedPriceString) lifetime"
-        }
-        if let yearly = store.yearlyPackage {
-            return "\(yearly.storeProduct.localizedPriceString)/year"
-        }
-        if let monthly = store.monthlyPackage {
-            return "Plans from \(monthly.storeProduct.localizedPriceString)/month"
-        }
-        if store.isLoadingProducts {
-            return "Loading prices…"
-        }
-        return "Pricing shown before purchase"
-    }
 }
 
 private struct InsightsHeader: View {

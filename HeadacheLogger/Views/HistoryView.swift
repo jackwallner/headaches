@@ -17,6 +17,7 @@ struct HistoryView: View {
     @State private var showImportConfirmation = false
     @State private var showImportError = false
     @State private var importErrorMessage: String?
+    @State private var importResultMessage: String?
     @State private var pendingImportRows: [[String: String]] = []
     @State private var importStrategy: ImportStrategy = .skipExisting
 
@@ -95,6 +96,7 @@ struct HistoryView: View {
                 showConfirmation: $showImportConfirmation,
                 showError: $showImportError,
                 errorMessage: $importErrorMessage,
+                resultMessage: $importResultMessage,
                 pendingRows: $pendingImportRows,
                 importStrategy: $importStrategy,
                 onSkip: { performImport(strategy: .skipExisting) },
@@ -283,8 +285,7 @@ struct HistoryView: View {
             strategy: strategy
         )
         pendingImportRows = []
-        importErrorMessage = summaryMessage(from: result)
-        showImportError = true
+        importResultMessage = summaryMessage(from: result)
     }
 
     private func summaryMessage(from result: ImportResult) -> String {
@@ -486,10 +487,15 @@ private struct ImportAlertModifier: ViewModifier {
     @Binding var showConfirmation: Bool
     @Binding var showError: Bool
     @Binding var errorMessage: String?
+    @Binding var resultMessage: String?
     @Binding var pendingRows: [[String: String]]
     @Binding var importStrategy: ImportStrategy
     var onSkip: () -> Void
     var onOverwrite: () -> Void
+
+    private var resultBinding: Binding<Bool> {
+        Binding(get: { resultMessage != nil }, set: { if !$0 { resultMessage = nil } })
+    }
 
     func body(content: Content) -> some View {
         content
@@ -510,6 +516,11 @@ private struct ImportAlertModifier: ViewModifier {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(errorMessage ?? "The import could not be completed.")
+            }
+            .alert("Import Complete", isPresented: resultBinding) {
+                Button("OK", role: .cancel) { resultMessage = nil }
+            } message: {
+                Text(resultMessage ?? "")
             }
     }
 }
