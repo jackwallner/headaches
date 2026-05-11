@@ -6,13 +6,17 @@ import UIKit
 struct HeadacheLoggerApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var captureCoordinator = CaptureCoordinator()
-    @StateObject private var storeKitService = StoreKitService()
+    @StateObject private var storeService = StoreService.shared
+
+    init() {
+        StoreService.shared.start()
+    }
 
     var body: some Scene {
         WindowGroup {
             HeadacheLoggerRootContent()
                 .environmentObject(captureCoordinator)
-                .environmentObject(storeKitService)
+                .environmentObject(storeService)
         }
         .modelContainer(HeadacheModelStore.sharedModelContainer)
     }
@@ -33,7 +37,7 @@ private struct HeadacheLoggerRootContent: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
-    @EnvironmentObject private var storeKitService: StoreKitService
+    @EnvironmentObject private var storeService: StoreService
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
 
     var body: some View {
@@ -63,11 +67,12 @@ private struct HeadacheLoggerRootContent: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 runWidgetEnrichmentIfReady()
+                schedulePatterns()
             } else if phase == .background {
                 scheduleBackgroundIfNeeded()
             }
         }
-        .onChange(of: storeKitService.isProUnlocked) { _, _ in
+        .onChange(of: storeService.isProUnlocked) { _, _ in
             scheduleBackgroundIfNeeded()
         }
     }
@@ -78,9 +83,13 @@ private struct HeadacheLoggerRootContent: View {
     }
 
     private func scheduleBackgroundIfNeeded() {
-        guard storeKitService.isProUnlocked else { return }
+        guard storeService.isProUnlocked else { return }
         let prefs = ProAlertPreferenceValues.current()
         guard prefs.alertsEnabled else { return }
         BackgroundRefreshService.shared.scheduleNextCheck()
+    }
+
+    @MainActor private func schedulePatterns() {
+        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
     }
 }

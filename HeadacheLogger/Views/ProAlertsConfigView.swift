@@ -1,8 +1,10 @@
 import CoreLocation
+import SwiftData
 import SwiftUI
 import UserNotifications
 
 struct ProAlertsConfigView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
     @StateObject private var prefs = ProAlertPreferences.shared
     @State private var notificationStatus: UNAuthorizationStatus = .notDetermined
@@ -122,6 +124,30 @@ struct ProAlertsConfigView: View {
                 Text("Alerts use Open-Meteo's free public forecast and your most recent location. Location is stored only on your device and never uploaded.")
                     .font(.footnote)
             }
+
+            Section {
+                Toggle("Predict from your patterns", isOn: $prefs.patternAlertsEnabled)
+                    .onChange(of: prefs.patternAlertsEnabled) { _, _ in
+                        schedulePatterns()
+                    }
+                if prefs.patternAlertsEnabled {
+                    Picker("Sensitivity", selection: $prefs.patternAlertSensitivity) {
+                        Text("High chance only").tag(0.0)
+                        Text("Any chance").tag(1.0)
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: prefs.patternAlertSensitivity) { _, _ in
+                        schedulePatterns()
+                    }
+                }
+            } header: {
+                Text("Prediction")
+            } footer: {
+                Text(prefs.patternAlertsEnabled
+                    ? "Analyzes your headache history on-device for recurring time patterns, then notifies you ~1 hour before a headache is likely. All analysis runs locally — nothing leaves your phone."
+                    : "When enabled, the app analyzes your personal headache patterns and sends a heads-up about an hour before you'd typically get one."
+                )
+            }
         }
         .navigationTitle("Proactive Alerts")
         .task {
@@ -132,6 +158,10 @@ struct ProAlertsConfigView: View {
         } message: {
             Text(testAlertMessage ?? "")
         }
+    }
+
+    @MainActor private func schedulePatterns() {
+        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
     }
 
     private var testAlertBinding: Binding<Bool> {

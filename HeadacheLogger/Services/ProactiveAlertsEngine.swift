@@ -1,5 +1,5 @@
 import Foundation
-import StoreKit
+import SwiftData
 import UserNotifications
 
 /// Pulls a 24-hour forecast from Open-Meteo (and the air-quality endpoint) and decides whether
@@ -20,20 +20,9 @@ enum ProactiveAlertsEngine {
     /// Minimum gap between two notifications so the user doesn't get spammed.
     static let minNotificationGap: TimeInterval = 6 * 60 * 60
 
-    private static let proProductIds = StoreKitService.allProProductIds
-
     static func runIfEligible() async -> Bool {
-        // Re-verify entitlement in background — a refund, revocation or expired subscription
-        // should immediately stop alerts from firing.
-        var hasEntitlement = false
-        for await result in Transaction.currentEntitlements {
-            if case .verified(let transaction) = result,
-               proProductIds.contains(transaction.productID),
-               transaction.revocationDate == nil {
-                hasEntitlement = true
-            }
-        }
-        guard hasEntitlement else { return false }
+        await StoreService.shared.updateCustomerProductStatus(fetchPolicy: .fetchCurrent)
+        guard await StoreService.shared.isProUnlocked else { return false }
 
         let prefs = ProAlertPreferenceValues.current()
         guard prefs.alertsEnabled else { return false }
@@ -292,5 +281,173 @@ enum ForecastClient {
             return nil
         }
         return AirWindow(times: decoded.hourly.time, values: decoded.hourly.usAqi)
+    }
+}
+
+// MARK: - Pattern-based predictive alerts
+
+extension ProactiveAlertsEngine {
+
+    struct PatternCluster: Sendable {
+        let weekdayIndex: Int
+        let weekdayName: String
+        let startHour: Int
+        let endHour: Int
+        let headacheCount: Int
+        let totalHeadaches: Int
+        var share: Double { totalHeadaches > 0 ? Double(headacheCount) / Double(totalHeadaches) : 0 }
+    }
+
+    /// Minimum events needed before pattern-prediction alerts are meaningful.
+    static let patternMinimumEvents: Int = 7
+
+    /// Analyzes headache history for recurring time patterns (weekday × hour) and returns clusters
+    /// that meet the sensitivity threshold. All computation is local — no data leaves the device.
+    static func analyzeTimePatterns(events: [HeadacheEvent], sensitivity: Double) -> [PatternCluster] {
+        guard events.count >= patternMinimumEvents else { return [] }
+
+        // Threshold curve: sensitivity 0 (high-chance only) → 0.30 share + 5 count
+        //                 sensitivity 1 (any chance)    → 0.15 share + 3 count
+        let minShare = 0.30 - (0.15 * sensitivity)
+        let minCount = max(3, Int(Double(5) - (2.0 * sensitivity)))
+
+        let total = events.count
+        let calendar = Calendar.current
+        let symbols = calendar.standaloneWeekdaySymbols
+
+        var buckets: [Int: [Int: Int]] = [:] // [weekdayIndex: [hour: count]]
+        for event in events {
+            let wd = event.weekdayIndex
+            let hour = event.hourOfDay
+            buckets[wd, default: [:]][hour, default: 0] += 1
+        }
+
+        var clusters: [PatternCluster] = []
+        for wd in 1...7 {
+            guard let hours = buckets[wd] else { continue }
+            // Find hours that individually meet threshold
+            let qualifying = hours.filter { hour, count in
+                Double(count) / Double(total) >= minShare && count >= minCount
+            }
+            guard !qualifying.isEmpty else { continue }
+
+            // Merge adjacent qualifying hours into contiguous windows
+            let sorted = qualifying.keys.sorted()
+            var windowStart = sorted[0]
+            var windowEnd = sorted[0]
+            var windowCount = qualifying[sorted[0]]!
+
+            for i in 1..<sorted.count {
+                let h = sorted[i]
+                if h == windowEnd + 1 || (windowEnd == 23 && h == 0) {
+                    windowEnd = h
+                    windowCount += qualifying[h]!
+                } else {
+                    clusters.append(makeCluster(wd: wd, start: windowStart, end: windowEnd, count: windowCount, total: total, symbols: symbols))
+                    windowStart = h
+                    windowEnd = h
+                    windowCount = qualifying[h]!
+                }
+            }
+            clusters.append(makeCluster(wd: wd, start: windowStart, end: windowEnd, count: windowCount, total: total, symbols: symbols))
+        }
+
+        return clusters.sorted { $0.share > $1.share }
+    }
+
+    private static func makeCluster(wd: Int, start: Int, end: Int, count: Int, total: Int, symbols: [String]) -> PatternCluster {
+        let name: String = {
+            let i = wd - 1
+            return (i >= 0 && i < symbols.count) ? symbols[i] : "?"
+        }()
+        return PatternCluster(
+            weekdayIndex: wd,
+            weekdayName: name,
+            startHour: start,
+            endHour: end,
+            headacheCount: count,
+            totalHeadaches: total
+        )
+    }
+
+    /// Cancels all previously scheduled pattern-based notifications, then schedules new ones
+    /// for each cluster. Notifications fire 1 hour before the predicted headache window.
+    static func reschedulePatternNotifications(clusters: [PatternCluster]) async {
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        let patternIDs = pending.filter { $0.identifier.hasPrefix("pattern-alert-") }.map(\.identifier)
+        center.removePendingNotificationRequests(withIdentifiers: patternIDs)
+
+        for cluster in clusters {
+            let triggerHour = cluster.startHour > 0 ? cluster.startHour - 1 : 23
+            var components = DateComponents()
+            components.weekday = cluster.weekdayIndex
+            components.hour = triggerHour
+            components.minute = 0
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+
+            let content = UNMutableNotificationContent()
+            content.title = "Headache pattern ahead"
+            content.body = notificationBody(for: cluster)
+            content.sound = .default
+            content.threadIdentifier = "pro-alerts"
+
+            let id = "pattern-alert-\(cluster.weekdayIndex)-\(cluster.startHour)"
+            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+            try? await center.add(request)
+        }
+    }
+
+    /// Cancels all pattern-based notifications (called when the user disables the feature).
+    static func cancelAllPatternNotifications() async {
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        let patternIDs = pending.filter { $0.identifier.hasPrefix("pattern-alert-") }.map(\.identifier)
+        center.removePendingNotificationRequests(withIdentifiers: patternIDs)
+    }
+
+    private static func notificationBody(for cluster: PatternCluster) -> String {
+        let timeRange = formatHourRange(start: cluster.startHour, end: cluster.endHour)
+        let day = cluster.weekdayName
+        let share = Int((cluster.share * 100).rounded())
+        return "\(share)% of your headaches fall on \(day)s around \(timeRange). Consider pre-medicating or stepping away from triggers."
+    }
+
+    private static func formatHourRange(start: Int, end: Int) -> String {
+        let fmt: (Int) -> String = { hour in
+            var dc = DateComponents()
+            dc.hour = hour
+            guard let date = Calendar.current.date(from: dc) else { return "\(hour):00" }
+            let f = DateFormatter()
+            f.dateFormat = "h a"
+            return f.string(from: date).lowercased()
+        }
+        if start == end { return fmt(start) }
+        return "\(fmt(start))–\(fmt(end))"
+    }
+
+    /// Runs pattern analysis from a ModelContext and schedules notifications if enabled.
+    @MainActor
+    static func schedulePatternAlertsIfEnabled(in context: ModelContext) async {
+        let prefs = ProAlertPreferenceValues.current()
+        guard prefs.patternAlertsEnabled else {
+            await cancelAllPatternNotifications()
+            return
+        }
+        guard await StoreService.shared.isProUnlocked else {
+            await cancelAllPatternNotifications()
+            return
+        }
+
+        let allEvents = allHeadacheEvents(in: context)
+        let clusters = analyzeTimePatterns(events: allEvents, sensitivity: prefs.patternAlertSensitivity)
+        await reschedulePatternNotifications(clusters: clusters)
+    }
+
+    private static func allHeadacheEvents(in context: ModelContext) -> [HeadacheEvent] {
+        var descriptor = FetchDescriptor<HeadacheEvent>(sortBy: [SortDescriptor(\.timestamp, order: .forward)])
+        descriptor.fetchLimit = 2000
+        return (try? context.fetch(descriptor)) ?? []
     }
 }

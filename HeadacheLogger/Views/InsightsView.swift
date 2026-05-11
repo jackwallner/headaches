@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct InsightsView: View {
-    @EnvironmentObject private var store: StoreKitService
+    @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @State private var showPaywall = false
 
@@ -17,6 +17,12 @@ struct InsightsView: View {
                 proContent
             } else {
                 lockedTeaser
+                    .onAppear {
+                        Task {
+                            try? await Task.sleep(nanoseconds: 600_000_000)
+                            showPaywall = true
+                        }
+                    }
             }
         }
         .navigationTitle("Patterns")
@@ -146,6 +152,11 @@ struct InsightsView: View {
                 .padding(.horizontal, 20)
 
                 VStack(spacing: 10) {
+                    Text("Example insights you'll see")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 4)
                     SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches — 1.6× the even baseline.")
                     SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m — 47% under 6 hours.")
                     SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
@@ -182,14 +193,14 @@ struct InsightsView: View {
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
 
     private var paywallPriceLine: String {
-        if let yearly = store.yearlyProduct, let lifetime = store.lifetimeProduct {
-            return "\(yearly.displayPrice)/year or \(lifetime.displayPrice) lifetime"
+        if let yearly = store.yearlyPackage, let lifetime = store.lifetimePackage {
+            return "\(yearly.storeProduct.localizedPriceString)/year or \(lifetime.storeProduct.localizedPriceString) lifetime"
         }
-        if let yearly = store.yearlyProduct {
-            return "\(yearly.displayPrice)/year"
+        if let yearly = store.yearlyPackage {
+            return "\(yearly.storeProduct.localizedPriceString)/year"
         }
-        if let monthly = store.monthlyProduct {
-            return "Plans from \(monthly.displayPrice)/month"
+        if let monthly = store.monthlyPackage {
+            return "Plans from \(monthly.storeProduct.localizedPriceString)/month"
         }
         if store.isLoadingProducts {
             return "Loading prices…"

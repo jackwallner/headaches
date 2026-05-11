@@ -13,15 +13,21 @@ struct HistoryView: View {
     /// Tracked separately from `activeSheet` because SwiftUI nils the binding before `onDismiss` fires,
     /// and we still need the temp file URL to clean it up.
     @State private var pendingExportURL: URL?
+    @State private var showFileImporter = false
+    @State private var showImportConfirmation = false
+    @State private var showImportError = false
+    @State private var importErrorMessage: String?
+    @State private var pendingImportRows: [[String: String]] = []
+    @State private var importStrategy: ImportStrategy = .skipExisting
 
     private enum ActiveSheet: Identifiable {
         case export(URL)
-        case notes(UUID)
+        case edit(UUID)
 
         var id: String {
             switch self {
             case .export(let url): return "export:\(url.path)"
-            case .notes(let uuid): return "notes:\(uuid.uuidString)"
+            case .edit(let uuid): return "edit:\(uuid.uuidString)"
             }
         }
     }
@@ -38,19 +44,80 @@ struct HistoryView: View {
         return events.filter { Calendar.current.component(.year, from: $0.timestamp) == selectedYear }
     }
 
+    private var emptyStateView: some View {
+        let title = events.isEmpty
+            ? "No Headaches Logged Yet"
+            : "No Entries for \(selectedYear ?? 0)"
+        let descriptionText = events.isEmpty
+            ? "Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor."
+            : "Try selecting a different year or tap All Years."
+        return ContentUnavailableView(
+            title,
+            systemImage: "waveform.path.ecg",
+            description: Text(descriptionText)
+        )
+        .accessibilityIdentifier("historyEmptyState")
+        .listRowBackground(Color.clear)
+    }
+
     var body: some View {
+        decoratedList
+    }
+
+    private var decoratedList: some View {
+        historyList
+            .listStyle(.plain)
+            .background(Color(.systemGroupedBackground))
+            .navigationTitle("History")
+            .accessibilityIdentifier("historyView")
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    try? modelContext.save()
+                }
+            }
+            .toolbar { historyToolbar }
+            .sheet(item: $activeSheet, onDismiss: handleSheetDismiss) { sheet in
+                sheetContent(for: sheet)
+            }
+            .alert("Export Failed", isPresented: $showExportError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("The CSV export could not be created. Please try again.")
+            }
+            .fileImporter(
+                isPresented: $showFileImporter,
+                allowedContentTypes: [.commaSeparatedText, .plainText],
+                allowsMultipleSelection: false
+            ) { result in
+                handleImportResult(result)
+            }
+            .modifier(ImportAlertModifier(
+                showConfirmation: $showImportConfirmation,
+                showError: $showImportError,
+                errorMessage: $importErrorMessage,
+                pendingRows: $pendingImportRows,
+                importStrategy: $importStrategy,
+                onSkip: { performImport(strategy: .skipExisting) },
+                onOverwrite: { performImport(strategy: .overwriteExisting) }
+            ))
+    }
+
+    @ViewBuilder
+    private func sheetContent(for sheet: ActiveSheet) -> some View {
+        switch sheet {
+        case .export(let url):
+            ShareSheet(items: [url])
+        case .edit(let targetID):
+            if let event = events.first(where: { $0.id == targetID }) {
+                EditEventSheet(event: event)
+            }
+        }
+    }
+
+    private var historyList: some View {
         List {
             if filteredEvents.isEmpty {
-                ContentUnavailableView(
-                    events.isEmpty ? "No Headaches Logged Yet" : "No Entries for \(String(selectedYear ?? 0))",
-                    systemImage: "waveform.path.ecg",
-                    description: Text(events.isEmpty
-                        ? "Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor."
-                        : "Try selecting a different year or tap All Years."
-                    )
-                )
-                .accessibilityIdentifier("historyEmptyState")
-                .listRowBackground(Color.clear)
+                emptyStateView
             } else {
                 Section {
                     SummaryGrid(events: filteredEvents, useCelsius: useCelsius)
@@ -58,10 +125,30 @@ struct HistoryView: View {
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
 
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Export creates a standard CSV file", systemImage: "square.and.arrow.up")
+                            .font(.subheadline.weight(.semibold))
+                        Text("One row per headache with 60+ columns — timestamp, location, weather, Health app data, severity, and notes. Opens in Numbers, Excel, or Google Sheets. Share with your doctor or keep as a backup.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        Label("Import reads back an exported CSV", systemImage: "square.and.arrow.down")
+                            .font(.subheadline.weight(.semibold))
+                            .padding(.top, 4)
+                        Text("Restore your data or merge events from another device. You'll be asked to skip or overwrite duplicates.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text("Import & Export")
+                }
+                .listRowBackground(Color.clear)
+
                 Section("Entries") {
                     ForEach(filteredEvents, id: \.id) { event in
                         DetailedEventRow(event: event, useCelsius: useCelsius) {
-                            activeSheet = .notes(event.id)
+                            activeSheet = .edit(event.id)
                         }
                         .id("history-\(event.id)-\(event.captureStatus.rawValue)")
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
@@ -71,39 +158,22 @@ struct HistoryView: View {
                 }
             }
         }
-        .listStyle(.plain)
-        .background(Color(.systemGroupedBackground))
-        .navigationTitle("History")
-        .accessibilityIdentifier("historyView")
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
-                try? modelContext.save()
+    }
+
+    @ToolbarContentBuilder
+    private var historyToolbar: some ToolbarContent {
+        if !events.isEmpty {
+            ToolbarItem(placement: .topBarLeading) {
+                yearFilterMenu
             }
-        }
-        .toolbar {
-            if !events.isEmpty {
-                ToolbarItem(placement: .topBarLeading) {
-                    Menu {
-                        Button("All Years") {
-                            selectedYear = nil
-                        }
-                        .disabled(selectedYear == nil)
-                        Divider()
-                        ForEach(availableYears, id: \.self) { year in
-                            Button(String(year)) {
-                                selectedYear = year
-                            }
-                            .disabled(selectedYear == year)
-                        }
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack(spacing: 16) {
+                    Button {
+                        showFileImporter = true
                     } label: {
-                        Label(
-                            selectedYear.map(String.init) ?? "All Years",
-                            systemImage: "calendar"
-                        )
-                        .labelStyle(.titleAndIcon)
+                        Label("Import", systemImage: "square.and.arrow.down")
                     }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
+                    .accessibilityIdentifier("importHistoryButton")
                     Button {
                         export()
                     } label: {
@@ -113,20 +183,27 @@ struct HistoryView: View {
                 }
             }
         }
-        .sheet(item: $activeSheet, onDismiss: handleSheetDismiss) { sheet in
-            switch sheet {
-            case .export(let url):
-                ShareSheet(items: [url])
-            case .notes(let targetID):
-                if let event = events.first(where: { $0.id == targetID }) {
-                    EventNotesSheet(event: event)
-                }
+    }
+
+    private var yearFilterMenu: some View {
+        Menu {
+            Button("All Years") {
+                selectedYear = nil
             }
-        }
-        .alert("Export Failed", isPresented: $showExportError) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("The CSV export could not be created. Please try again.")
+            .disabled(selectedYear == nil)
+            Divider()
+            ForEach(availableYears, id: \.self) { year in
+                Button(String(year)) {
+                    selectedYear = year
+                }
+                .disabled(selectedYear == year)
+            }
+        } label: {
+            Label(
+                selectedYear.map(String.init) ?? "All Years",
+                systemImage: "calendar"
+            )
+            .labelStyle(.titleAndIcon)
         }
     }
 
@@ -163,6 +240,60 @@ struct HistoryView: View {
             try? FileManager.default.removeItem(at: url)
             pendingExportURL = nil
         }
+    }
+
+    private func handleImportResult(_ result: Result<[URL], any Error>) {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else {
+                importErrorMessage = "No file was selected."
+                showImportError = true
+                return
+            }
+            guard url.startAccessingSecurityScopedResource() else {
+                importErrorMessage = "Cannot access the selected file."
+                showImportError = true
+                return
+            }
+            defer { url.stopAccessingSecurityScopedResource() }
+
+            do {
+                let rows = try ImportService.parseCSV(from: url)
+                guard !rows.isEmpty else {
+                    importErrorMessage = "No valid headache events found in the file."
+                    showImportError = true
+                    return
+                }
+                pendingImportRows = rows
+                showImportConfirmation = true
+            } catch {
+                importErrorMessage = error.localizedDescription
+                showImportError = true
+            }
+        case .failure(let error):
+            importErrorMessage = error.localizedDescription
+            showImportError = true
+        }
+    }
+
+    private func performImport(strategy: ImportStrategy) {
+        let result = ImportService.importEvents(
+            from: pendingImportRows,
+            into: modelContext,
+            strategy: strategy
+        )
+        pendingImportRows = []
+        importErrorMessage = summaryMessage(from: result)
+        showImportError = true
+    }
+
+    private func summaryMessage(from result: ImportResult) -> String {
+        var parts: [String] = []
+        if result.imported > 0 { parts.append("\(result.imported) imported") }
+        if result.overwritten > 0 { parts.append("\(result.overwritten) overwritten") }
+        if result.skipped > 0 { parts.append("\(result.skipped) skipped") }
+        if result.errors > 0 { parts.append("\(result.errors) errors") }
+        return parts.isEmpty ? "No events were imported." : parts.joined(separator: ", ") + "."
     }
 }
 
@@ -333,62 +464,6 @@ private struct DetailedEventRow: View {
     }
 }
 
-private struct EventNotesSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    // C11: SwiftData autosave can miss a background/kill immediately after dismiss; call save() explicitly.
-    @Environment(\.modelContext) private var modelContext
-    let event: HeadacheEvent
-    @State private var text: String
-
-    init(event: HeadacheEvent) {
-        self.event = event
-        _text = State(initialValue: event.userNotes ?? "")
-    }
-
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Optional context for you or your clinician (triggers, meds, sleep, stress).")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 4)
-
-                TextEditor(text: $text)
-                    .frame(minHeight: 220)
-                    .padding(8)
-                    .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            }
-            .padding()
-            .navigationTitle("Notes")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-                        event.userNotes = trimmed.isEmpty ? nil : trimmed
-                        // C11: guard against lost edits if the app is killed after dismiss before autosave runs.
-                        do {
-                            try modelContext.save()
-                        } catch {
-                            #if DEBUG
-                            print("EventNotesSheet: save failed | \(error)")
-                            #endif
-                        }
-                        dismiss()
-                    }
-                    .fontWeight(.semibold)
-                }
-            }
-        }
-        .accessibilityIdentifier("eventNotesSheet")
-    }
-}
-
 private struct DataPill: View {
     let title: String
     let value: String
@@ -404,5 +479,37 @@ private struct DataPill: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+private struct ImportAlertModifier: ViewModifier {
+    @Binding var showConfirmation: Bool
+    @Binding var showError: Bool
+    @Binding var errorMessage: String?
+    @Binding var pendingRows: [[String: String]]
+    @Binding var importStrategy: ImportStrategy
+    var onSkip: () -> Void
+    var onOverwrite: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .alert("Import Data", isPresented: $showConfirmation) {
+                Button("Skip Existing") {
+                    onSkip()
+                }
+                Button("Overwrite Existing") {
+                    onOverwrite()
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingRows = []
+                }
+            } message: {
+                Text("Found \(pendingRows.count) event\(pendingRows.count == 1 ? "" : "s") in the file. How would you like to handle events that already exist?")
+            }
+            .alert("Import Failed", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "The import could not be completed.")
+            }
     }
 }

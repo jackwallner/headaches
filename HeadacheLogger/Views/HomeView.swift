@@ -10,6 +10,7 @@ struct HomeView: View {
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @State private var severityNotesEventID: UUID?
     @State private var showSeverityNotesSheet = false
+    @State private var showCheckmark = false
 
     private var latestEvent: HeadacheEvent? { events.first }
     // C18: skip the latest event so it doesn't duplicate between LatestEventCard and Recent Logs.
@@ -68,9 +69,25 @@ struct HomeView: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .disabled(captureCoordinator.isCapturing)
+                    .disabled(captureCoordinator.isCapturing || showCheckmark)
                     .accessibilityLabel("Log headache")
                     .accessibilityIdentifier("logHeadacheButton")
+                    .overlay {
+                        if showCheckmark {
+                            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                                .fill(.ultraThinMaterial)
+                            VStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 32))
+                                    .foregroundStyle(.green)
+                                Text("Logged")
+                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+                            }
+                            .transition(.opacity.animation(.easeInOut(duration: 0.25)))
+                        }
+                    }
+                    .animation(.easeInOut(duration: 0.25), value: showCheckmark)
 
                     if captureCoordinator.lastCapturedEventID != nil {
                         Button("Add Details") {
@@ -144,6 +161,17 @@ struct HomeView: View {
         .navigationTitle("One Tap Headache Tracker")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")
+        .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
+            if !isCapturing, captureCoordinator.lastCapturedEventID != nil {
+                showCheckmark = true
+                Task {
+                    try? await Task.sleep(nanoseconds: 3_500_000_000)
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        showCheckmark = false
+                    }
+                }
+            }
+        }
         .sheet(isPresented: $showSeverityNotesSheet, onDismiss: { severityNotesEventID = nil }) {
             if let eventID = severityNotesEventID {
                 SeverityNotesSheet(eventID: eventID)
