@@ -1,8 +1,10 @@
 import SwiftData
 import SwiftUI
+import RevenueCatUI
 
 struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     // C9: a single source of truth avoids the sibling `.sheet(isPresented:)` race that
@@ -21,6 +23,7 @@ struct HistoryView: View {
     @State private var pendingImportRows: [[String: String]] = []
     @State private var importStrategy: ImportStrategy = .skipExisting
     @State private var showImportIntro = false
+    @State private var showPaywall = false
 
     private enum ActiveSheet: Identifiable {
         case export(URL)
@@ -114,6 +117,10 @@ struct HistoryView: View {
                     onCancel: { showImportIntro = false }
                 )
             }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+                    .environmentObject(store)
+            }
     }
 
     @ViewBuilder
@@ -138,6 +145,12 @@ struct HistoryView: View {
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
+
+                if !store.isProUnlocked, filteredEvents.count >= InsightsEngine.minimumSampleSize {
+                    proUpsellRow
+                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
 
                 Section {
                     ImportExportActionCard(
@@ -312,6 +325,43 @@ struct HistoryView: View {
         if result.errors > 0 { parts.append("\(result.errors) errors") }
         return parts.isEmpty ? "No events were imported." : parts.joined(separator: ", ") + "."
     }
+
+    private var proUpsellRow: some View {
+        Button {
+            showPaywall = true
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "chart.bar.xaxis")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(brandColor)
+                    .frame(width: 28)
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 6) {
+                        Text("Personalized patterns")
+                            .font(.headline)
+                        Text("Pro")
+                            .font(.caption2.bold())
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(brandColor.opacity(0.15), in: Capsule())
+                            .foregroundStyle(brandColor)
+                    }
+                    Text("See what time, sleep, and weather patterns emerge from your \(filteredEvents.count) logged headache\(filteredEvents.count == 1 ? "" : "s").")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.footnote.bold())
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(16)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
 }
 
 private struct SummaryGrid: View {

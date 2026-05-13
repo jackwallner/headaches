@@ -11,6 +11,7 @@ struct ProAlertsConfigView: View {
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
     @State private var permissionsBanner: String?
     @State private var testAlertMessage: String?
+    @State private var personalProfile = ProactiveAlertsEngine.PersonalAlertProfile.current()
 
     var body: some View {
         Form {
@@ -23,7 +24,7 @@ struct ProAlertsConfigView: View {
                         }
                     }
             } footer: {
-                Text("When enabled, the app checks your local forecast every few hours and notifies you if a pressure drop or air-quality spike is coming.")
+                Text("When enabled, the app checks your local forecast every few hours and only notifies you when your own daily history shows a clear link between headaches and pressure drops or air quality.")
             }
 
             if let permissionsBanner {
@@ -64,6 +65,25 @@ struct ProAlertsConfigView: View {
                 Text("Status")
             } footer: {
                 Text(prefs.alertsEnabled ? "Use a test alert to confirm notifications are working before waiting for real headache weather." : "Enable Proactive Alerts first, then send a test notification.")
+            }
+
+            Section {
+                ProAlertStatusRow(
+                    icon: "barometer",
+                    title: "Pressure signal",
+                    value: signalStatus(personalProfile.pressure)
+                )
+                ProAlertStatusRow(
+                    icon: "aqi.medium",
+                    title: "Air-quality signal",
+                    value: prefs.airQualityEnabled ? signalStatus(personalProfile.airQuality) : "Off"
+                )
+            } header: {
+                Text("Personalization")
+            } footer: {
+                Text(personalProfile.pressure.isSupported || (prefs.airQualityEnabled && personalProfile.airQuality.isSupported)
+                     ? "Alert text includes the probability lift and breakdown so you know why it fired."
+                     : "Keep logging. Forecast alerts stay quiet until your daily history shows a clear weather-pattern link across at least \(ProactiveAlertsEngine.personalSignalMinimumSampleSize) days.")
             }
 
             Section("Pressure drop") {
@@ -121,7 +141,7 @@ struct ProAlertsConfigView: View {
             }
 
             Section("How this works") {
-                Text("Alerts use Open-Meteo's free public forecast and your most recent location. Location is stored only on your device and never uploaded.")
+                Text("Alerts use Open-Meteo's free public forecast, your most recent location, and your local headache history. Location and pattern analysis stay on your device.")
                     .font(.footnote)
             }
 
@@ -151,6 +171,8 @@ struct ProAlertsConfigView: View {
         }
         .navigationTitle("Proactive Alerts")
         .task {
+            ProactiveAlertsEngine.refreshPersonalAlertProfile(in: modelContext)
+            personalProfile = ProactiveAlertsEngine.PersonalAlertProfile.current()
             await refreshPermissionStatuses()
         }
         .alert("Test Alert", isPresented: testAlertBinding) {
@@ -209,6 +231,17 @@ struct ProAlertsConfigView: View {
         return "\(prefix) • \(date.formatted(date: .abbreviated, time: .shortened))"
     }
 
+    private func signalStatus(_ signal: ProactiveAlertsEngine.PersonalSignalProfile) -> String {
+        if signal.isSupported {
+            let risk = Int((signal.relativeRisk * 100).rounded())
+            return "\(risk)% risk • \(signal.headacheConditionDays)/\(signal.conditionDays)"
+        }
+        if signal.totalDays < ProactiveAlertsEngine.personalSignalMinimumSampleSize {
+            return "Learning \(signal.totalDays)/\(ProactiveAlertsEngine.personalSignalMinimumSampleSize)"
+        }
+        return "No clear pattern"
+    }
+
     private func refreshPermissionStatuses() async {
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         notificationStatus = settings.authorizationStatus
@@ -263,7 +296,7 @@ struct ProAlertsConfigView: View {
 
         let content = UNMutableNotificationContent()
         content.title = "Test Headache Pro Alert"
-        content.body = "Notifications are working. Real alerts fire when a pressure drop or AQI spike is forecast near you."
+        content.body = "Notifications are working. Real alerts fire only when a forecast matches a supported personal trigger from your logs."
         content.sound = .default
         content.threadIdentifier = "pro-alerts"
         let request = UNNotificationRequest(identifier: "pro-alert-test-\(UUID().uuidString)", content: content, trigger: nil)

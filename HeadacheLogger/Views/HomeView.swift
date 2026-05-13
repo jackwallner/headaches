@@ -1,16 +1,21 @@
 import SwiftData
 import SwiftUI
 import UIKit
+import RevenueCatUI
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
+    @AppStorage(HeadacheStorageKey.milestonePrompt3Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone3PromptShown = false
+    @AppStorage(HeadacheStorageKey.milestonePrompt5Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone5PromptShown = false
+    @AppStorage(HeadacheStorageKey.milestonePrompt10Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone10PromptShown = false
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @State private var severityNotesEventID: UUID?
     @State private var showSeverityNotesSheet = false
     @State private var showCheckmark = false
+    @State private var showPaywall = false
 
     private var latestEvent: HeadacheEvent? { events.first }
     // C18: skip the latest event so it doesn't duplicate between LatestEventCard and Recent Logs.
@@ -124,6 +129,10 @@ struct HomeView: View {
                     }
                 }
 
+                if let milestone = activeMilestone {
+                    MilestoneProPrompt(milestone: milestone, showPaywall: $showPaywall, onDismiss: markMilestoneShown)
+                }
+
                 if !recentEvents.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
@@ -188,11 +197,60 @@ struct HomeView: View {
                 SeverityNotesSheet(eventID: eventID)
             }
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
     }
 
     private func showDetails(for eventID: UUID) {
         severityNotesEventID = eventID
         showSeverityNotesSheet = true
+    }
+
+    fileprivate enum ProMilestone: Int, Equatable {
+        case threeLogs = 3
+        case fiveLogs = 5
+        case tenLogs = 10
+
+        var title: String {
+            switch self {
+            case .threeLogs: return "You've logged \(rawValue) headaches"
+            case .fiveLogs: return "\(rawValue) headaches logged — enough for patterns"
+            case .tenLogs: return "\(rawValue) headaches — meaningful data"
+            }
+        }
+
+        var detail: String {
+            switch self {
+            case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs — time, sleep, weather, and more."
+            case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches."
+            case .tenLogs: return "You've built enough history for meaningful insight. Unlock Pro to see your personalized patterns and get proactive alerts."
+            }
+        }
+
+        var icon: String {
+            switch self {
+            case .threeLogs: return "chart.bar"
+            case .fiveLogs: return "sparkles"
+            case .tenLogs: return "bolt.fill"
+            }
+        }
+    }
+
+    private var activeMilestone: ProMilestone? {
+        let count = events.count
+        if count >= 10, !milestone10PromptShown { return .tenLogs }
+        if count >= 5, !milestone5PromptShown { return .fiveLogs }
+        if count >= 3, !milestone3PromptShown { return .threeLogs }
+        return nil
+    }
+
+    private func markMilestoneShown(_ milestone: ProMilestone) {
+        switch milestone {
+        case .threeLogs: milestone3PromptShown = true
+        case .fiveLogs: milestone5PromptShown = true
+        case .tenLogs: milestone10PromptShown = true
+        }
     }
 }
 
@@ -531,6 +589,68 @@ private struct SeverityNotesSheet: View {
             #if DEBUG
             print("SeverityNotesSheet: save failed | \(error)")
             #endif
+        }
+    }
+}
+
+private struct MilestoneProPrompt: View {
+    let milestone: HomeView.ProMilestone
+    @Binding var showPaywall: Bool
+    var onDismiss: (HomeView.ProMilestone) -> Void
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    @State private var dismissed = false
+
+    var body: some View {
+        if !dismissed {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: milestone.icon)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(brandColor)
+                    .frame(width: 28)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(milestone.title)
+                        .font(.subheadline.weight(.semibold))
+                    Text(milestone.detail)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+
+                    HStack(spacing: 10) {
+                        Button {
+                            showPaywall = true
+                        } label: {
+                            Text("Show me")
+                                .font(.caption.bold())
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 7)
+                                .background(brandColor, in: Capsule())
+                                .foregroundStyle(.white)
+                        }
+
+                        Button {
+                            withAnimation {
+                                dismissed = true
+                                onDismiss(milestone)
+                            }
+                        } label: {
+                            Text("Not now")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(brandColor.opacity(0.25), lineWidth: 1)
+            )
+            .transition(.opacity.combined(with: .move(edge: .top)))
         }
     }
 }

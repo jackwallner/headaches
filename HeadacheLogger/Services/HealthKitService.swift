@@ -126,6 +126,13 @@ actor HealthKitService {
         return HealthCaptureResult(status: status, message: message, snapshot: snapshot)
     }
 
+    /// Query sleep hours for the night before the given date. Returns nil if no sleep data is available.
+    /// Uses the same window as the per-headache capture: yesterday 18:00 → min(date, today 12:00).
+    func fetchSleepHoursForNightBefore(_ date: Date) async -> Double? {
+        let result = await optionalSleepContextBefore(date: date)
+        return result.hours
+    }
+
     /// Aligns with Vitals: `authorizationStatus(for:)` does not reflect read access. Use request-status, re-prompt
     /// when `.shouldRequest`, and always query after `.unnecessary` (reads may still populate late).
     ///

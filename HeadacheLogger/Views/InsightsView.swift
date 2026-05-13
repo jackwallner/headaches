@@ -8,9 +8,10 @@ struct InsightsView: View {
     @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @State private var showPaywall = false
+    @State private var dailyRecords: [DailyRecord] = []
 
     private var summary: InsightsEngine.Summary {
-        InsightsEngine.summarize(events)
+        InsightsEngine.summarize(events, dailyRecords: dailyRecords)
     }
 
     var body: some View {
@@ -24,6 +25,12 @@ struct InsightsView: View {
         .navigationTitle("Patterns")
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+        }
+        .task {
+            await loadAndBackfillDailyRecords()
+        }
+        .onChange(of: events.count) { _, _ in
+            Task { await loadAndBackfillDailyRecords() }
         }
     }
 
@@ -74,6 +81,16 @@ struct InsightsView: View {
                 }
             }
         }
+    }
+
+    private func loadAndBackfillDailyRecords() async {
+        var records = DailyRecordStore.load()
+        let needsSleepBackfill = records.contains { !$0.sleepFetched && $0.weatherFetched }
+        if needsSleepBackfill {
+            records = await DailyRecordStore.backfillSleep(records: records, healthKit: HealthKitService.shared)
+            DailyRecordStore.save(records)
+        }
+        dailyRecords = records
     }
 
     private var emptyState: some View {
@@ -146,18 +163,11 @@ struct InsightsView: View {
                 .padding(.top, 24)
                 .padding(.horizontal, 20)
 
-                VStack(spacing: 10) {
-                    Text("Example insights you'll see")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 4)
-                    SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches — 1.6× the even baseline.")
-                    SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m — 47% under 6 hours.")
-                    SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
-                    SampleInsightRow(icon: "bell.badge.fill", title: "Proactive Alerts", detail: "Get notified 12–24h before risky weather.")
+                if events.count >= InsightsEngine.minimumSampleSize, !summary.insights.isEmpty {
+                    realInsightPreview
+                } else {
+                    sampleInsightPreview
                 }
-                .padding(.horizontal, 16)
             }
             .padding(.bottom, 24)
         }
@@ -180,6 +190,54 @@ struct InsightsView: View {
             .padding(.vertical, 12)
             .background(.regularMaterial)
         }
+    }
+
+    private var realInsightPreview: some View {
+        VStack(spacing: 10) {
+            Text("Your patterns so far")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 4)
+
+            ForEach(Array(summary.insights.prefix(2))) { insight in
+                LockedInsightPreviewRow(insight: insight, showPaywall: $showPaywall)
+            }
+
+            if summary.insights.count > 2 {
+                HStack(spacing: 8) {
+                    Image(systemName: "lock.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    Text("+ \(summary.insights.count - 2) more pattern\(summary.insights.count - 2 == 1 ? "" : "s")")
+                        .font(.subheadline)
+                        .foregroundStyle(.tertiary)
+                    Spacer()
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.secondary.opacity(0.05))
+                )
+            }
+        }
+        .padding(.horizontal, 16)
+    }
+
+    private var sampleInsightPreview: some View {
+        VStack(spacing: 10) {
+            Text("Example insights you'll see")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 4)
+            SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches — 1.6× the even baseline.")
+            SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m — 47% under 6 hours.")
+            SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
+            SampleInsightRow(icon: "bell.badge.fill", title: "Proactive Alerts", detail: "Get notified 12–24h before risky weather.")
+        }
+        .padding(.horizontal, 16)
     }
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
@@ -225,6 +283,54 @@ private struct InsightRow: View {
             }
         }
         .padding(.vertical, 4)
+    }
+}
+
+private struct LockedInsightPreviewRow: View {
+    let insight: InsightsEngine.Insight
+    @Binding var showPaywall: Bool
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        Button {
+            showPaywall = true
+        } label: {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: insight.icon)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(brandColor)
+                    .frame(width: 30)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Text(insight.title)
+                            .font(.headline)
+                        ProBadge()
+                    }
+                    Text(insight.detail)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "lock.fill")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.vertical, 4)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct ProBadge: View {
+    var body: some View {
+        Text("Pro")
+            .font(.caption2.bold())
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.15), in: Capsule())
+            .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
     }
 }
 
@@ -287,8 +393,8 @@ private struct ProactiveAlertsCard: View {
                         }
                     }
                     Text(prefs.alertsEnabled
-                         ? "You'll be notified when a pressure drop or AQI spike is forecast. Tap to tune thresholds and quiet hours."
-                         : "Turn on a daily background forecast check — get a notification 12–24 hours before a barometric drop or AQI spike.")
+                         ? "You'll be notified when the forecast matches a supported personal trigger. Tap to tune thresholds and quiet hours."
+                         : "Turn on background forecast checks that stay quiet until your logs support a pressure or AQI trigger.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)

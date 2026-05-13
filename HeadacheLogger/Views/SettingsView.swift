@@ -54,7 +54,7 @@ struct SettingsView: View {
             } header: {
                 Text("Headache Pro")
             } footer: {
-                Text("Pro runs a daily forecast check and pings you 12–24 hours before a barometric drop or AQI spike — plus surfaces personalized patterns from your logs.")
+                Text("Pro checks your local forecast and only pings when your logs support the pressure, AQI, or timing pattern behind the alert.")
             }
 
             Section("Logging") {
@@ -160,7 +160,7 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Proactive Alerts")
                     .foregroundStyle(.primary)
-                Text(unlocked ? "Configure thresholds and quiet hours" : "Unlock Pro to get headache-weather warnings")
+                Text(unlocked ? "Configure personal triggers, thresholds, and quiet hours" : "Unlock Pro to get personalized headache-weather warnings")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

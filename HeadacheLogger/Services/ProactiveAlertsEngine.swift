@@ -20,6 +20,54 @@ enum ProactiveAlertsEngine {
     /// Minimum gap between two notifications so the user doesn't get spammed.
     static let minNotificationGap: TimeInterval = 6 * 60 * 60
 
+    struct PersonalSignalProfile: Codable, Sendable {
+        let totalDays: Int
+        let conditionDays: Int
+        let headacheConditionDays: Int
+        let pHeadacheGivenCondition: Double
+        let pHeadacheGivenNoCondition: Double
+        let relativeRisk: Double
+        let lift: Double
+        let isSupported: Bool
+
+        static let empty = PersonalSignalProfile(
+            totalDays: 0,
+            conditionDays: 0,
+            headacheConditionDays: 0,
+            pHeadacheGivenCondition: 0,
+            pHeadacheGivenNoCondition: 0,
+            relativeRisk: 0,
+            lift: 0,
+            isSupported: false
+        )
+    }
+
+    struct PersonalAlertProfile: Codable, Sendable {
+        let updatedAt: Date
+        let pressure: PersonalSignalProfile
+        let airQuality: PersonalSignalProfile
+
+        static let empty = PersonalAlertProfile(
+            updatedAt: .distantPast,
+            pressure: .empty,
+            airQuality: .empty
+        )
+
+        static func current() -> PersonalAlertProfile {
+            let defaults = HeadacheAppGroup.userDefaults
+            guard let data = defaults.data(forKey: HeadacheStorageKey.proAlertPersonalProfile.rawValue),
+                  let decoded = try? JSONDecoder().decode(PersonalAlertProfile.self, from: data) else {
+                return .empty
+            }
+            return decoded
+        }
+
+        func save() {
+            let data = try? JSONEncoder().encode(self)
+            HeadacheAppGroup.userDefaults.set(data, forKey: HeadacheStorageKey.proAlertPersonalProfile.rawValue)
+        }
+    }
+
     static func runIfEligible() async -> Bool {
         await StoreService.shared.updateCustomerProductStatus(fetchPolicy: .fetchCurrent)
         guard await StoreService.shared.isProUnlocked else { return false }
@@ -43,7 +91,7 @@ enum ProactiveAlertsEngine {
             return false
         }
 
-        guard let decision = evaluate(forecast: forecast, prefs: prefs) else {
+        guard let decision = evaluate(forecast: forecast, prefs: prefs, profile: PersonalAlertProfile.current()) else {
             return false
         }
 
@@ -58,20 +106,25 @@ enum ProactiveAlertsEngine {
 
     /// Pure function used by both runtime and tests.
     static func evaluate(forecast: HourlyForecast, prefs: ProAlertPreferenceValues) -> AlertDecision? {
-        if let pressure = pressureDecision(forecast: forecast, threshold: prefs.pressureDropThresholdHpa) {
+        evaluate(forecast: forecast, prefs: prefs, profile: PersonalAlertProfile.current())
+    }
+
+    static func evaluate(forecast: HourlyForecast, prefs: ProAlertPreferenceValues, profile: PersonalAlertProfile) -> AlertDecision? {
+        if profile.pressure.isSupported,
+           let pressure = pressureDecision(forecast: forecast, threshold: prefs.pressureDropThresholdHpa, signal: profile.pressure) {
             return pressure
         }
         if prefs.airQualityEnabled,
-           let aq = airQualityDecision(forecast: forecast, threshold: prefs.airQualityThreshold) {
+           profile.airQuality.isSupported,
+           let aq = airQualityDecision(forecast: forecast, threshold: prefs.airQualityThreshold, signal: profile.airQuality) {
             return aq
         }
         return nil
     }
 
-    private static func pressureDecision(forecast: HourlyForecast, threshold: Double) -> AlertDecision? {
+    private static func pressureDecision(forecast: HourlyForecast, threshold: Double, signal: PersonalSignalProfile) -> AlertDecision? {
         let pressures = forecast.pressureMsl
         guard pressures.count >= 4 else { return nil }
-        // Find largest drop where the trough comes after the peak within the next 24h.
         var maxDrop: Double = 0
         var dropEndIndex: Int = 0
         for i in 0..<(pressures.count - 1) {
@@ -87,19 +140,25 @@ enum ProactiveAlertsEngine {
         }
         guard maxDrop >= threshold else { return nil }
         let hours = max(1, dropEndIndex)
-        let body = "Forecast shows a \(formatHpa(maxDrop)) drop in barometric pressure over the next \(hours)h — a common migraine trigger."
-        return AlertDecision(kind: .pressureDrop, title: "Pressure drop ahead", body: body)
+        let riskPercent = Int((signal.relativeRisk * 100).rounded())
+        let body = "Forecast: \(formatHpa(maxDrop)) drop in the next \(hours)h. Your history shows headaches are \(formatLift(signal.lift)) more likely during pressure drops (\(riskPercent)% risk vs. \(Int((signal.pHeadacheGivenNoCondition * 100).rounded()))% on non-drop days — \(signal.headacheConditionDays)/\(signal.conditionDays) drop days)."
+        return AlertDecision(kind: .pressureDrop, title: "Personal pressure trigger ahead", body: body)
     }
 
-    private static func airQualityDecision(forecast: HourlyForecast, threshold: Int) -> AlertDecision? {
+    private static func airQualityDecision(forecast: HourlyForecast, threshold: Int, signal: PersonalSignalProfile) -> AlertDecision? {
         guard let peak = forecast.usAqi.compactMap({ $0 }).max() else { return nil }
         guard Int(peak) >= threshold else { return nil }
-        let body = "Air quality is forecast to reach AQI \(Int(peak)) today. Plan indoor time if particulates are a trigger for you."
-        return AlertDecision(kind: .airQuality, title: "Poor air quality today", body: body)
+        let riskPercent = Int((signal.relativeRisk * 100).rounded())
+        let body = "AQI is forecast to reach \(Int(peak)) today. Your history shows headaches are \(formatLift(signal.lift)) more likely on elevated-AQI days (\(riskPercent)% risk vs. \(Int((signal.pHeadacheGivenNoCondition * 100).rounded()))% on clean-air days — \(signal.headacheConditionDays)/\(signal.conditionDays) elevated days)."
+        return AlertDecision(kind: .airQuality, title: "Personal air-quality trigger ahead", body: body)
     }
 
     private static func formatHpa(_ value: Double) -> String {
         String(format: "%.1f hPa", value)
+    }
+
+    private static func formatLift(_ value: Double) -> String {
+        "\(Int((max(0, value) * 100).rounded()))%"
     }
 
     private static func ensureNotificationAuthorization() async -> Bool {
@@ -288,6 +347,70 @@ enum ForecastClient {
 
 extension ProactiveAlertsEngine {
 
+    static let personalSignalMinimumSampleSize: Int = 5
+    static let personalSignalMinimumConditionDays: Int = 2
+    static let personalSignalMinimumRelativeRisk: Double = 1.5
+    static let personalSignalMinimumHeadacheConditionDays: Int = 2
+
+    @MainActor
+    static func refreshPersonalAlertProfile(in context: ModelContext) {
+        makePersonalAlertProfile(in: context).save()
+    }
+
+    static func makePersonalAlertProfile(in context: ModelContext) -> PersonalAlertProfile {
+        let records = DailyRecordStore.load()
+        guard !records.isEmpty else { return .empty }
+        let now = Date()
+        return PersonalAlertProfile(
+            updatedAt: now,
+            pressure: pressureSignalProfile(from: records),
+            airQuality: airQualitySignalProfile(from: records)
+        )
+    }
+
+    /// Used by tests with a provided event list (backward compatibility).
+    static func makePersonalAlertProfile(events: [HeadacheEvent], now: Date = Date()) -> PersonalAlertProfile {
+        let records = DailyRecordStore.rebuild(from: events)
+        let filled = DailyRecordStore.fillGapDays(
+            records,
+            from: records.first?.date ?? now,
+            to: records.last?.date ?? now
+        )
+        return PersonalAlertProfile(
+            updatedAt: now,
+            pressure: pressureSignalProfile(from: filled),
+            airQuality: airQualitySignalProfile(from: filled)
+        )
+    }
+
+    static func pressureSignalProfile(from records: [DailyRecord]) -> PersonalSignalProfile {
+        let counts = DailyRecordStore.pressureConditionCounts(from: records)
+        return signalProfile(from: counts, totalMin: personalSignalMinimumSampleSize)
+    }
+
+    private static func airQualitySignalProfile(from records: [DailyRecord]) -> PersonalSignalProfile {
+        let counts = DailyRecordStore.aqiConditionCounts(from: records)
+        return signalProfile(from: counts, totalMin: personalSignalMinimumSampleSize)
+    }
+
+    private static func signalProfile(from counts: DailyRecordStore.ConditionCounts, totalMin: Int) -> PersonalSignalProfile {
+        guard counts.totalDays >= totalMin else { return .empty }
+        let supported = counts.totalDays >= totalMin
+            && counts.conditionDays >= personalSignalMinimumConditionDays
+            && counts.headacheConditionDays >= personalSignalMinimumHeadacheConditionDays
+            && counts.relativeRisk >= personalSignalMinimumRelativeRisk
+        return PersonalSignalProfile(
+            totalDays: counts.totalDays,
+            conditionDays: counts.conditionDays,
+            headacheConditionDays: counts.headacheConditionDays,
+            pHeadacheGivenCondition: counts.pHeadacheGivenCondition,
+            pHeadacheGivenNoCondition: counts.pHeadacheGivenNoCondition,
+            relativeRisk: counts.relativeRisk,
+            lift: counts.lift,
+            isSupported: supported
+        )
+    }
+
     struct PatternCluster: Sendable {
         let weekdayIndex: Int
         let weekdayName: String
@@ -430,6 +553,8 @@ extension ProactiveAlertsEngine {
     /// Runs pattern analysis from a ModelContext and schedules notifications if enabled.
     @MainActor
     static func schedulePatternAlertsIfEnabled(in context: ModelContext) async {
+        refreshPersonalAlertProfile(in: context)
+
         let prefs = ProAlertPreferenceValues.current()
         guard prefs.patternAlertsEnabled else {
             await cancelAllPatternNotifications()

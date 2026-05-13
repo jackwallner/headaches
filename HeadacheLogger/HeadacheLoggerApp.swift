@@ -77,6 +77,7 @@ private struct HeadacheLoggerRootContent: View {
             if phase == .active {
                 runWidgetEnrichmentIfReady()
                 schedulePatterns()
+                maintainDailyRecordsIfNeeded()
             } else if phase == .background {
                 scheduleBackgroundIfNeeded()
             }
@@ -100,6 +101,28 @@ private struct HeadacheLoggerRootContent: View {
 
     @MainActor private func schedulePatterns() {
         Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
+    }
+
+    /// Ensure yesterday's record exists so the denominator stays accurate. Backfills
+    /// weather when location is available.
+    private func maintainDailyRecordsIfNeeded() {
+        guard hasCompletedOnboarding else { return }
+        DailyRecordStore.ensureYesterdayRecord()
+
+        let records = DailyRecordStore.load()
+        let missingWeather = records.filter { !$0.weatherFetched }
+        guard !missingWeather.isEmpty,
+              missingWeather.count >= 2,
+              let coord = CachedLocation.current() else { return }
+
+        Task.detached {
+            let updated = await DailyWeatherBackfillService.backfill(
+                for: records,
+                latitude: coord.latitude,
+                longitude: coord.longitude
+            )
+            DailyRecordStore.save(updated)
+        }
     }
 
     /// Catch the case where onboarding completed without recording a decision (skipped step,
@@ -145,12 +168,12 @@ private struct ProIntroSheet: View {
                     Text("Headache Pro is here")
                         .font(.title.bold())
 
-                    Text("A daily forecast check pings you 12–24 hours before a barometric drop or AQI spike. Pro also surfaces personalized patterns from the headaches you've already logged.")
+                    Text("Forecast checks stay quiet until your logs support a personal pressure, AQI, or timing pattern. When an alert fires, it explains the matching trigger and personal lift.")
                         .font(.body)
                         .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 14) {
-                        ProBullet(icon: "barometer", text: "Pressure-drop and AQI alerts ahead of risky weather")
+                        ProBullet(icon: "barometer", text: "Pressure-drop and AQI alerts based on your own logs")
                         ProBullet(icon: "chart.bar.xaxis", text: "Personalized patterns from your existing logs")
                         ProBullet(icon: "lock.shield", text: "All processing stays on-device")
                     }

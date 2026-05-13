@@ -32,6 +32,7 @@ enum HeadacheStorageKey: String {
     case proAlertQuietEndHour = "headacheProAlertQuietEndHour"
     case proAlertLastFiredAt = "headacheProAlertLastFiredAt"
     case proAlertLastFiredKind = "headacheProAlertLastFiredKind"
+    case proAlertPersonalProfile = "headacheProAlertPersonalProfile"
     /// Cached last-known coordinates so the background task can fetch a forecast without "Always" auth.
     case lastKnownLatitude = "headacheLastKnownLatitude"
     case lastKnownLongitude = "headacheLastKnownLongitude"
@@ -41,6 +42,14 @@ enum HeadacheStorageKey: String {
     case patternAlertsEnabled = "headachePatternAlertsEnabled"
     /// 0 = high-chance only (conservative, fewer false alarms), 1 = any chance (more alerts)
     case patternAlertSensitivity = "headachePatternAlertSensitivity"
+
+    // MARK: - Usage-based Pro prompts
+    /// True after the user has been prompted about Pro at the 3-log milestone.
+    case milestonePrompt3Shown = "headacheMilestonePrompt3Shown"
+    /// True after the user has been prompted about Pro at the 5-log milestone.
+    case milestonePrompt5Shown = "headacheMilestonePrompt5Shown"
+    /// True after the user has been prompted about Pro at the 10-log milestone.
+    case milestonePrompt10Shown = "headacheMilestonePrompt10Shown"
 }
 
 enum HeadacheOnboardingStore {

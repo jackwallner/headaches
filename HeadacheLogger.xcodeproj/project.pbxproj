@@ -13,6 +13,7 @@
 		12BE0B76D2C2536F0C478313 /* EditEventSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A62B2A353D366DCC908709D /* EditEventSheet.swift */; };
 		15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */; };
 		153E0F1E152BF88BEAF57604 /* HeadacheModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */; };
+		15A305300D800AFD954BEA05 /* DailyWeatherBackfillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */; };
 		15FAF490AD8702BC97EE2792 /* HeadacheLoggerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 929113AA327F62936E27766E /* HeadacheLoggerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1E56ADEAC00B7DBB071A2A24 /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BEE34A5F306D88A05422FF /* ImportService.swift */; };
 		1EE3B2967FF4A10BB0B96280 /* OpenMeteoTimeParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */; };
@@ -52,6 +53,7 @@
 		D2A25F0E0B62B270B3DB00B6 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
 		D9447241D9F98FDCBFED788D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334426D57EADD647A3B13738 /* HomeView.swift */; };
 		DFBE92F8E24C185CF581D00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92D22239C0ACC0D64E3DC4B0 /* Assets.xcassets */; };
+		E1E6406B0B06AEDE54C3E916 /* DailyRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */; };
 		E4275B5D1F56E5D57F9F89AC /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 4C633FCF2972E0322D1DAA13 /* RevenueCat */; };
 		E538D8F43DB4C45FE484D2B5 /* HeadacheEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */; };
 		E623D1C2F71F3796060EE253 /* WatchConnectivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE39D707E377269384673F20 /* WatchConnectivityController.swift */; };
@@ -128,6 +130,7 @@
 		48CE1BF4F327855139BB6EA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheAppGroup.swift; sourceTree = "<group>"; };
+		5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRecordStore.swift; sourceTree = "<group>"; };
 		5F86B975265B817C3153C40E /* HeadacheLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLogger.entitlements; sourceTree = "<group>"; };
 		5FBB32A1879C8B3C1A1FBAAA /* HeadacheLoggerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerApp.swift; sourceTree = "<group>"; };
 		6135BFE678ED652EFD5AD41E /* HeadacheQuizRetakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheQuizRetakeView.swift; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 		6A62B2A353D366DCC908709D /* EditEventSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEventSheet.swift; sourceTree = "<group>"; };
 		7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
 		8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerWatchApp.swift; sourceTree = "<group>"; };
+		86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherBackfillService.swift; sourceTree = "<group>"; };
 		87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepIntervalMerge.swift; sourceTree = "<group>"; };
 		9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureCoordinator.swift; sourceTree = "<group>"; };
 		91367B1F7BDF8F54249C011B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 			children = (
 				EB391699EDD40FD6CADD8D1E /* BackgroundRefreshService.swift */,
 				9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */,
+				5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */,
+				86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */,
 				7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */,
 				9559AD161DB11A658E6B00B1 /* ExportService.swift */,
 				E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */,
@@ -520,6 +526,8 @@
 				0A8924E6D51FD77217D15D72 /* AppEnvironment.swift in Sources */,
 				2751DCAD06E95DF91DE183FD /* BackgroundRefreshService.swift in Sources */,
 				0BDA0F43A3DBCF726D2808F0 /* CaptureCoordinator.swift in Sources */,
+				E1E6406B0B06AEDE54C3E916 /* DailyRecordStore.swift in Sources */,
+				15A305300D800AFD954BEA05 /* DailyWeatherBackfillService.swift in Sources */,
 				12BE0B76D2C2536F0C478313 /* EditEventSheet.swift in Sources */,
 				9464BD8B40A16D2F7896B2E4 /* EnvironmentService.swift in Sources */,
 				E938982AF2A9E8A440A41076 /* ExportService.swift in Sources */,
@@ -665,7 +673,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -780,7 +788,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_NS_ASSERTIONS = NO;

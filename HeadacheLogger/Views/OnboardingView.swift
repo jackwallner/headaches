@@ -1,7 +1,9 @@
+import SwiftData
 import SwiftUI
 import RevenueCatUI
 
 struct OnboardingView: View {
+    @Environment(\.modelContext) private var modelContext
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
 
     @State private var step = 0
@@ -177,7 +179,7 @@ struct OnboardingView: View {
                 Text("Find what's actually triggering your headaches")
                     .font(.title3.bold())
 
-                Text("Pro analyses every headache you log against the time, sleep, weather, pressure and air-quality context already attached to it — and surfaces the patterns hiding in your data.")
+                Text("Pro analyses every headache you log against the time, sleep, weather, pressure and air-quality context already attached to it — then keeps alerts quiet until your own data supports a trigger.")
                     .font(.body)
                     .foregroundStyle(.secondary)
 
@@ -195,7 +197,7 @@ struct OnboardingView: View {
                     ProPitchBullet(
                         icon: "bell.badge.fill",
                         title: "Heads-up alerts",
-                        detail: "Once a pattern is found, get notified 12–24h before forecast conditions match it."
+                        detail: "Once a pattern is supported, get notified before forecast conditions match it, with the personal lift shown in the alert."
                     )
                     ProPitchBullet(
                         icon: "lock.shield",
@@ -238,10 +240,29 @@ struct OnboardingView: View {
     }
 
     private func finishOnboarding() {
-        // Net-new users see the Pro pitch as part of onboarding/Patterns; suppress the one-shot
-        // intro sheet so they don't get prompted twice in the first session.
         HeadacheOnboardingStore.hasSeenProIntro = true
         hasCompletedOnboarding = true
+        Task { await initializeDailyRecords() }
+    }
+
+    private func initializeDailyRecords() async {
+        let allEvents = (try? modelContext.fetch(FetchDescriptor<HeadacheEvent>(sortBy: [SortDescriptor(\.timestamp)]))) ?? []
+        guard let firstEvent = allEvents.first else {
+            let today = DailyRecordStore.normalizeDate(Date())
+            let record = DailyRecord(date: today, hadHeadache: false, headacheCount: 0, pressureTrendRaw: PressureTrend.unavailable.rawValue, usAQI: nil, weatherFetched: false, sleepHoursLastNight: nil, sleepFetched: false)
+            DailyRecordStore.save([record])
+            return
+        }
+
+        var records = DailyRecordStore.rebuild(from: allEvents)
+        let startDate = DailyRecordStore.normalizeDate(firstEvent.timestamp)
+        records = DailyRecordStore.fillGapDays(records, from: startDate)
+
+        if let coord = CachedLocation.current() {
+            records = await DailyWeatherBackfillService.backfill(for: records, latitude: coord.latitude, longitude: coord.longitude)
+        }
+
+        DailyRecordStore.save(records)
     }
 }
 

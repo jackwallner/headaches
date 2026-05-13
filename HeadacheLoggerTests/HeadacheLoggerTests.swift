@@ -722,6 +722,144 @@ final class HeadacheLoggerTests: XCTestCase {
         }
     }
 
+    func testPersonalAlertProfileSupportsPressureOnlyWhenUserDataMatches() {
+        let supported = makeTestRecords(
+            totalDays: 14,
+            headacheDays: [0, 1, 2, 3, 4, 7, 8],
+            pressureTrends: [
+                0: .falling, 1: .falling, 2: .falling, 3: .falling, 4: .falling,
+                5: .steady, 6: .rising,
+                7: .steady, 8: .rising,
+                9: .steady, 10: .steady, 11: .rising, 12: .rising, 13: .steady
+            ]
+        )
+        let profile = ProactiveAlertsEngine.makePersonalAlertProfile(events: [])
+        let pressureProfile = profileForRecords(supported)
+        XCTAssertTrue(pressureProfile.isSupported)
+        XCTAssertEqual(pressureProfile.conditionDays, 5)
+        XCTAssertEqual(pressureProfile.headacheConditionDays, 5)
+        XCTAssertGreaterThan(pressureProfile.relativeRisk, 1.5)
+
+        let unsupported = makeTestRecords(
+            totalDays: 14,
+            headacheDays: [0, 1, 6, 7, 8, 9, 10],
+            pressureTrends: [
+                0: .falling, 1: .steady,
+                2: .steady, 3: .steady, 4: .steady, 5: .steady,
+                6: .steady, 7: .steady, 8: .steady, 9: .steady,
+                10: .steady, 11: .falling, 12: .steady, 13: .steady
+            ]
+        )
+        let unsupportedProfile = profileForRecords(unsupported)
+        XCTAssertFalse(unsupportedProfile.isSupported)
+    }
+
+    func testForecastAlertRequiresPersonalPressureSignal() {
+        let prefs = ProAlertPreferenceValues(
+            alertsEnabled: true,
+            pressureDropThresholdHpa: 4.0,
+            airQualityEnabled: true,
+            airQualityThreshold: 100,
+            quietHoursEnabled: false,
+            quietHoursStart: 22,
+            quietHoursEnd: 7,
+            patternAlertsEnabled: false,
+            patternAlertSensitivity: 0
+        )
+        let forecast = HourlyForecast(
+            times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1015, 1014, 1011, 1009, 1008, 1008],
+            usAqi: [nil, nil, nil, nil, nil, nil]
+        )
+
+        XCTAssertNil(ProactiveAlertsEngine.evaluate(forecast: forecast, prefs: prefs, profile: .empty))
+
+        let profile = ProactiveAlertsEngine.PersonalAlertProfile(
+            updatedAt: Date(timeIntervalSince1970: 0),
+            pressure: ProactiveAlertsEngine.PersonalSignalProfile(
+                totalDays: 14,
+                conditionDays: 5,
+                headacheConditionDays: 5,
+                pHeadacheGivenCondition: 5.0 / 6.0,
+                pHeadacheGivenNoCondition: 2.0 / 8.0,
+                relativeRisk: 3.33,
+                lift: 2.33,
+                isSupported: true
+            ),
+            airQuality: .empty
+        )
+        let decision = ProactiveAlertsEngine.evaluate(forecast: forecast, prefs: prefs, profile: profile)
+        XCTAssertEqual(decision?.kind, .pressureDrop)
+        XCTAssertTrue(decision?.body.contains("more likely") == true)
+        XCTAssertTrue(decision?.body.contains("risk") == true)
+    }
+
+    func testForecastAlertCanUsePersonalAirQualitySignal() {
+        let prefs = ProAlertPreferenceValues(
+            alertsEnabled: true,
+            pressureDropThresholdHpa: 4.0,
+            airQualityEnabled: true,
+            airQualityThreshold: 100,
+            quietHoursEnabled: false,
+            quietHoursStart: 22,
+            quietHoursEnd: 7,
+            patternAlertsEnabled: false,
+            patternAlertSensitivity: 0
+        )
+        let forecast = HourlyForecast(
+            times: (0..<4).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1012, 1012, 1012, 1012],
+            usAqi: [80, 95, 120, 110]
+        )
+        let profile = ProactiveAlertsEngine.PersonalAlertProfile(
+            updatedAt: Date(timeIntervalSince1970: 0),
+            pressure: .empty,
+            airQuality: ProactiveAlertsEngine.PersonalSignalProfile(
+                totalDays: 14,
+                conditionDays: 4,
+                headacheConditionDays: 4,
+                pHeadacheGivenCondition: 4.0 / 5.0,
+                pHeadacheGivenNoCondition: 3.0 / 9.0,
+                relativeRisk: 2.4,
+                lift: 1.4,
+                isSupported: true
+            )
+        )
+
+        let decision = ProactiveAlertsEngine.evaluate(forecast: forecast, prefs: prefs, profile: profile)
+        XCTAssertEqual(decision?.kind, .airQuality)
+        XCTAssertTrue(decision?.body.contains("more likely") == true)
+        XCTAssertTrue(decision?.body.contains("risk") == true)
+    }
+
+    // MARK: - daily record test helpers
+
+    private func makeTestRecords(totalDays: Int, headacheDays: [Int], pressureTrends: [Int: PressureTrend]) -> [DailyRecord] {
+        let today = DailyRecordStore.normalizeDate(Date())
+        let calendar = Calendar.current
+        var records: [DailyRecord] = []
+        for i in 0..<totalDays {
+            guard let date = calendar.date(byAdding: .day, value: -i, to: today) else { continue }
+            let hadHeadache = headacheDays.contains(i)
+            let trend = pressureTrends[i] ?? .steady
+            records.append(DailyRecord(
+                date: date,
+                hadHeadache: hadHeadache,
+                headacheCount: hadHeadache ? 1 : 0,
+                pressureTrendRaw: trend.rawValue,
+                usAQI: nil,
+                weatherFetched: true,
+                sleepHoursLastNight: nil,
+                sleepFetched: false
+            ))
+        }
+        return records.sorted { $0.date < $1.date }
+    }
+
+    private func profileForRecords(_ records: [DailyRecord]) -> ProactiveAlertsEngine.PersonalSignalProfile {
+        ProactiveAlertsEngine.pressureSignalProfile(from: records)
+    }
+
     // MARK: - test helpers
 
     private func makeEvent(daysAgo: Int, hour: Int) -> HeadacheEvent {
