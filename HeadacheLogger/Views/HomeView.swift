@@ -19,10 +19,6 @@ struct HomeView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
-                Text("Press once when a headache starts — the app records the moment and fills in as much health and environmental context as it can.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
                 if let bannerMessage = captureCoordinator.bannerMessage {
                     Text(bannerMessage)
                         .font(.subheadline.weight(.medium))
@@ -47,18 +43,18 @@ struct HomeView: View {
                             }
                         }
                     } label: {
-                        VStack(spacing: 12) {
+                        VStack(spacing: 14) {
                             Image(systemName: "brain.head.profile")
-                                .font(.system(size: 36, weight: .bold))
-                            Text("Headache")
-                                .font(.title2.bold())
-                            Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once to log right now")
+                                .font(.system(size: 56, weight: .bold))
+                            Text("Log Headache")
+                                .font(.system(size: 28, weight: .heavy))
+                            Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once — we'll record the moment")
                                 .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.85))
+                                .foregroundStyle(.white.opacity(0.9))
                         }
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 30)
+                        .padding(.vertical, 44)
                         .background(
                             LinearGradient(
                                 colors: [Color(red: 0.95, green: 0.25, blue: 0.36), Color(red: 0.86, green: 0.16, blue: 0.43)],
@@ -67,6 +63,7 @@ struct HomeView: View {
                             ),
                             in: RoundedRectangle(cornerRadius: 28, style: .continuous)
                         )
+                        .shadow(color: Color(red: 0.86, green: 0.16, blue: 0.43).opacity(0.30), radius: 18, x: 0, y: 10)
                     }
                     .buttonStyle(.plain)
                     .disabled(captureCoordinator.isCapturing || showCheckmark)
@@ -90,19 +87,24 @@ struct HomeView: View {
                     .animation(.easeInOut(duration: 0.25), value: showCheckmark)
 
                     if captureCoordinator.lastCapturedEventID != nil {
-                        Button("Add Details") {
-                            if let eventID = captureCoordinator.lastCapturedEventID {
-                                showDetails(for: eventID)
+                        HStack(spacing: 24) {
+                            Button {
+                                if let eventID = captureCoordinator.lastCapturedEventID {
+                                    showDetails(for: eventID)
+                                }
+                            } label: {
+                                Label("Add Details", systemImage: "square.and.pencil")
                             }
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .accessibilityIdentifier("addDetailsButton")
+                            .accessibilityIdentifier("addDetailsButton")
 
-                        Button("Undo Last Tap") {
-                            captureCoordinator.undoLastCapture(in: modelContext)
+                            Button(role: .destructive) {
+                                captureCoordinator.undoLastCapture(in: modelContext)
+                            } label: {
+                                Label("Undo", systemImage: "arrow.uturn.backward")
+                            }
+                            .accessibilityIdentifier("undoLastTapButton")
                         }
                         .font(.subheadline.weight(.semibold))
-                        .accessibilityIdentifier("undoLastTapButton")
                     }
                 }
 
@@ -143,6 +145,9 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("What Gets Captured")
                         .font(.headline)
+                    Text("Press once when a headache starts — the app records the moment and fills in as much health and environmental context as it can.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
 
                     CaptureItem(
                         icon: "clock",

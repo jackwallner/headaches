@@ -59,7 +59,7 @@ enum InsightsEngine {
         let insights: [Insight]
     }
 
-    static func summarize(_ events: [HeadacheEvent], calendar: Calendar = .current) -> Summary {
+    static func summarize(_ events: [HeadacheEvent], dailyRecords: [DailyRecord] = [], calendar: Calendar = .current) -> Summary {
         let total = events.count
         let range: ClosedRange<Date>? = {
             let sorted = events.map(\.timestamp).sorted()
@@ -74,7 +74,7 @@ enum InsightsEngine {
 
         if let item = partOfDayInsight(events) { insights.append(item) }
         if let item = weekdayInsight(events, calendar: calendar) { insights.append(item) }
-        if let item = sleepInsight(events) { insights.append(item) }
+        if let item = sleepInsight(events, dailyRecords: dailyRecords) { insights.append(item) }
         if let item = pressureTrendInsight(events) { insights.append(item) }
         if let item = pressureDeltaInsight(events) { insights.append(item) }
         if let item = airQualityInsight(events) { insights.append(item) }
@@ -136,8 +136,9 @@ enum InsightsEngine {
         guard let (topIndex, topCount) = counts.max(by: { $0.value < $1.value }), topCount > 0 else { return nil }
         let total = events.count
         let topShare = Double(topCount) / Double(total)
-        // Uniform across 7 days would be ~14%. Surface only when meaningfully concentrated.
-        guard topShare >= 0.20 else { return nil }
+        // Uniform across 7 days would be ~14%. Surface only when meaningfully concentrated —
+        // raised to 25% so a near-flat weekday distribution doesn't generate noise.
+        guard topShare >= 0.25 else { return nil }
         let symbols = calendar.shortStandaloneWeekdaySymbols
         let fullSymbols = calendar.standaloneWeekdaySymbols
         let topName: String = {
@@ -174,10 +175,11 @@ enum InsightsEngine {
         )
     }
 
-    private static func sleepInsight(_ events: [HeadacheEvent]) -> Insight? {
-        let values = events.compactMap(\.sleepHoursLastNight)
-        guard values.count >= minimumSampleSize else { return nil }
-        let med = median(values)
+    private static func sleepInsight(_ events: [HeadacheEvent], dailyRecords: [DailyRecord]) -> Insight? {
+        let headacheSleepValues = events.compactMap(\.sleepHoursLastNight)
+        guard headacheSleepValues.count >= minimumSampleSize else { return nil }
+        let med = median(headacheSleepValues)
+
         let bins: [(label: String, range: Range<Double>)] = [
             ("<5h", 0..<5),
             ("5–6h", 5..<6),
@@ -185,39 +187,101 @@ enum InsightsEngine {
             ("7–8h", 7..<8),
             ("8h+", 8..<48)
         ]
-        let total = values.count
-        var topShare = 0.0
-        var topLabel = ""
-        let buckets: [Bucket] = bins.map { bin in
-            let c = values.filter { bin.range.contains($0) }.count
-            let share = Double(c) / Double(total)
-            if share > topShare { topShare = share; topLabel = bin.label }
-            return Bucket(label: bin.label, share: share, count: c, isPeak: false)
-        }.map {
-            Bucket(label: $0.label, share: $0.share, count: $0.count, isPeak: $0.label == topLabel)
+
+        // --- Lift-based analysis when baseline sleep data is available ---
+        let sleepRecords = dailyRecords.filter { $0.sleepFetched }
+        let hasBaseline = sleepRecords.count >= minimumSampleSize
+
+        let headlineBucket: (label: String, bucketIndex: Int, lift: Double)?
+        let liftBuckets: [DailyRecordStore.SleepBucketCounts]
+        let overallRate: Double
+
+        if hasBaseline {
+            let allBuckets = DailyRecordStore.sleepConditionCounts(from: dailyRecords)
+            let totalSleepDays = sleepRecords.count
+            let totalHeadacheDays = sleepRecords.filter(\.hadHeadache).count
+            overallRate = totalSleepDays > 0 ? Double(totalHeadacheDays) / Double(totalSleepDays) : 0
+
+            // Compute lift for each bucket with meaningful sample size
+            var best: (label: String, bucketIndex: Int, lift: Double)? = nil
+            for (idx, bucket) in allBuckets.enumerated() {
+                guard bucket.totalDays >= 2 else { continue }
+                let rate = bucket.headacheRate
+                let lift = overallRate > 0 ? rate / overallRate : 0
+                if lift > (best?.lift ?? 1.0) && lift >= 1.3 {
+                    best = (bucket.label, idx, lift)
+                }
+            }
+
+            headlineBucket = best
+            liftBuckets = allBuckets
+        } else {
+            headlineBucket = nil
+            liftBuckets = []
+            overallRate = 0
         }
-        let lowSleepShare = Double(values.filter { $0 < 6 }.count) / Double(total)
+
+        // --- Build chart buckets (always from headache events for consistency) ---
+        let total = headacheSleepValues.count
+        let chartBuckets: [Bucket] = bins.enumerated().map { idx, bin in
+            let c = headacheSleepValues.filter { bin.range.contains($0) }.count
+            let share = Double(c) / Double(total)
+            // Highlight the lift-based bucket if available, else fall back to max share
+            let isPeak: Bool
+            if let headline = headlineBucket {
+                isPeak = idx == headline.bucketIndex
+            } else {
+                // Fallback: highlight the highest-share bucket
+                let maxShare = bins.enumerated().map { i, b in
+                    Double(headacheSleepValues.filter { b.range.contains($0) }.count) / Double(total)
+                }.max() ?? 0
+                isPeak = abs(share - maxShare) < 0.001
+            }
+            return Bucket(label: bin.label, share: share, count: c, isPeak: isPeak)
+        }
+
+        // --- Build detail text ---
         let detail: String
         let strength: Double
-        if lowSleepShare >= 0.4 {
-            detail = "\(percent(lowSleepShare)) of your headaches followed a night with under 6 hours of sleep. Median: \(formatHours(med))."
-            strength = 0.5 + lowSleepShare * 0.4
+        let yourPattern: String
+        let title: String
+
+        if let headline = headlineBucket, headline.lift >= 1.3 {
+            let pct = Int((headline.lift - 1.0) * 100)
+            let bucket = liftBuckets[headline.bucketIndex]
+            let ratePct = Int(bucket.headacheRate * 100)
+            let overallPct = Int(overallRate * 100)
+            let moreLikely = headline.lift >= 2.0
+                ? "\(String(format: "%.1f", headline.lift))×"
+                : "\(pct)%"
+            detail = "Headaches are \(moreLikely) more likely after \(headline.label) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med))."
+            strength = 0.5 + min((headline.lift - 1.0) / 2.0, 0.5)
+            title = "Low sleep: \(headline.label)"
+            yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)% — compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
         } else {
-            detail = "Median sleep the night before a headache: \(formatHours(med))."
-            strength = 0.35
+            let lowSleepShare = Double(headacheSleepValues.filter { $0 < 6 }.count) / Double(total)
+            if lowSleepShare >= 0.4 {
+                detail = "\(percent(lowSleepShare)) of your headaches followed a night with under 6 hours of sleep. Median: \(formatHours(med))."
+                strength = 0.5 + lowSleepShare * 0.4
+            } else {
+                detail = "Median sleep the night before a headache: \(formatHours(med))."
+                strength = 0.35
+            }
+            title = "Sleep before a headache"
+            yourPattern = "Median sleep the night before a headache: \(formatHours(med)). \(percent(lowSleepShare)) of your headaches followed a night under 6 hours."
         }
-        let yourPattern = "Median sleep the night before a headache: \(formatHours(med)). \(percent(lowSleepShare)) of your headaches followed a night under 6 hours."
+
         return Insight(
             id: "sleep",
             category: .sleep,
             icon: "bed.double.fill",
-            title: "Sleep before a headache",
+            title: title,
             detail: detail,
             strength: strength,
             whyItMatters: "Sleep deprivation is one of the most consistently documented headache triggers in the migraine literature. Both too little (<6h) and too much (>9h) sleep, and especially irregular timing, can precipitate attacks. Wake-time consistency — including weekends — is the single highest-leverage behavioural change for many people.",
             yourPattern: yourPattern,
             breakdown: Breakdown(
-                buckets: buckets,
+                buckets: chartBuckets,
                 evenBaseline: nil,
                 axisCaption: "Sleep duration the night before each headache"
             )
@@ -283,7 +347,9 @@ enum InsightsEngine {
         let deltas = events.compactMap(\.barometricPressureDeltaHpa6h)
         guard deltas.count >= minimumSampleSize else { return nil }
         let med = median(deltas)
-        guard abs(med) >= 1.5 else { return nil }
+        // Drops/rises under ~3 hPa over 6h are within typical daily noise — filter them out so
+        // the insight only surfaces when the user's pre-headache pressure shift is actually notable.
+        guard abs(med) >= 3.0 else { return nil }
         let direction = med < 0 ? "drop" : "rise"
         let bins: [(label: String, range: Range<Double>)] = [
             ("≤−6", -100..<(-6)),
@@ -366,6 +432,9 @@ enum InsightsEngine {
         let values = events.compactMap(\.hrvSDNNMs)
         guard values.count >= minimumSampleSize else { return nil }
         let med = median(values)
+        // Median HRV inside the typical adult range (35–80 ms SDNN) reads as a generic stat, not
+        // a pattern. Surface only when the user's pre-headache median is meaningfully low or high.
+        guard med < 35 || med > 80 else { return nil }
         let bins: [(label: String, range: Range<Double>)] = [
             ("<30", 0..<30),
             ("30–50", 30..<50),
@@ -451,7 +520,9 @@ enum InsightsEngine {
         guard total >= minimumSampleSize else { return nil }
         guard let (top, topCount) = counts.max(by: { $0.value < $1.value }) else { return nil }
         let topShare = Double(topCount) / Double(total)
-        guard topShare >= 0.40 else { return nil }
+        // With three buckets the even baseline is 33%. Surface only when one severity clearly
+        // dominates (>=50%) — at 40% the "pattern" is barely above chance.
+        guard topShare >= 0.50 else { return nil }
         let buckets: [Bucket] = order.map { sev in
             let c = counts[sev] ?? 0
             return Bucket(

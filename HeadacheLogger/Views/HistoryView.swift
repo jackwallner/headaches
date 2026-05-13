@@ -20,6 +20,7 @@ struct HistoryView: View {
     @State private var importResultMessage: String?
     @State private var pendingImportRows: [[String: String]] = []
     @State private var importStrategy: ImportStrategy = .skipExisting
+    @State private var showImportIntro = false
 
     private enum ActiveSheet: Identifiable {
         case export(URL)
@@ -102,6 +103,17 @@ struct HistoryView: View {
                 onSkip: { performImport(strategy: .skipExisting) },
                 onOverwrite: { performImport(strategy: .overwriteExisting) }
             ))
+            .sheet(isPresented: $showImportIntro) {
+                ImportIntroSheet(
+                    onContinue: {
+                        showImportIntro = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                            showFileImporter = true
+                        }
+                    },
+                    onCancel: { showImportIntro = false }
+                )
+            }
     }
 
     @ViewBuilder
@@ -128,23 +140,24 @@ struct HistoryView: View {
                 .listRowBackground(Color.clear)
 
                 Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("Export creates a standard CSV file", systemImage: "square.and.arrow.up")
-                            .font(.subheadline.weight(.semibold))
-                        Text("One row per headache with 60+ columns — timestamp, location, weather, Health app data, severity, and notes. Opens in Numbers, Excel, or Google Sheets. Share with your doctor or keep as a backup.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                        Label("Import reads back an exported CSV", systemImage: "square.and.arrow.down")
-                            .font(.subheadline.weight(.semibold))
-                            .padding(.top, 4)
-                        Text("Restore your data or merge events from another device. You'll be asked to skip or overwrite duplicates.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.vertical, 4)
+                    ImportExportActionCard(
+                        icon: "square.and.arrow.up.fill",
+                        title: "Export to CSV",
+                        subtitle: "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up.",
+                        actionLabel: "Export CSV",
+                        action: { export() }
+                    )
+                    ImportExportActionCard(
+                        icon: "square.and.arrow.down.fill",
+                        title: "Import from CSV",
+                        subtitle: "Restore a backup or merge events from another device. You'll see exactly what was found and choose how to handle duplicates.",
+                        actionLabel: "Start Import",
+                        action: { showImportIntro = true }
+                    )
                 } header: {
                     Text("Import & Export")
                 }
+                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 .listRowBackground(Color.clear)
 
                 Section("Entries") {
@@ -169,19 +182,22 @@ struct HistoryView: View {
                 yearFilterMenu
             }
             ToolbarItem(placement: .topBarTrailing) {
-                HStack(spacing: 16) {
-                    Button {
-                        showFileImporter = true
-                    } label: {
-                        Label("Import", systemImage: "square.and.arrow.down")
-                    }
-                    .accessibilityIdentifier("importHistoryButton")
+                Menu {
                     Button {
                         export()
                     } label: {
-                        Label("Export", systemImage: "square.and.arrow.up")
+                        Label("Export CSV", systemImage: "square.and.arrow.up")
                     }
                     .accessibilityIdentifier("exportHistoryButton")
+                    Button {
+                        showImportIntro = true
+                    } label: {
+                        Label("Import CSV…", systemImage: "square.and.arrow.down")
+                    }
+                    .accessibilityIdentifier("importHistoryButton")
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .accessibilityLabel("Import or Export")
                 }
             }
         }
@@ -480,6 +496,138 @@ private struct DataPill: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+private struct ImportExportActionCard: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    let actionLabel: String
+    let action: () -> Void
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(brandColor)
+                    .frame(width: 34)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.headline)
+                    Text(subtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            Button(action: action) {
+                Text(actionLabel)
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 38)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(brandColor)
+            .accessibilityIdentifier("importExportAction-\(actionLabel)")
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+}
+
+private struct ImportIntroSheet: View {
+    var onContinue: () -> Void
+    var onCancel: () -> Void
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "square.and.arrow.down.fill")
+                            .font(.system(size: 36, weight: .bold))
+                            .foregroundStyle(brandColor)
+                        Text("Import from CSV")
+                            .font(.title2.bold())
+                        Text("Bring entries in from a backup or another device — using a CSV file exported from this app.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text("How it works")
+                            .font(.headline)
+                        ImportStep(number: "1", title: "Pick a CSV file", detail: "On the next screen, choose a file from Files, iCloud Drive, or anywhere else you saved it.")
+                        ImportStep(number: "2", title: "Review what was found", detail: "We'll tell you how many entries are in the file before saving anything.")
+                        ImportStep(number: "3", title: "Choose how to handle duplicates", detail: "Skip entries that already exist, or overwrite them with values from the file.")
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Compatible files", systemImage: "doc.text")
+                            .font(.subheadline.weight(.semibold))
+                        Text("Use a CSV exported from this app. Other CSVs are not guaranteed to match the columns we expect.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Nothing happens until you confirm", systemImage: "checkmark.shield")
+                            .font(.subheadline.weight(.semibold))
+                        Text("You can cancel at any step before the final confirmation. Existing entries are never changed without your approval.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(20)
+            }
+            .navigationTitle("Import")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { onCancel() }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                Button(action: onContinue) {
+                    Text("Choose CSV File")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(.regularMaterial)
+            }
+        }
+    }
+}
+
+private struct ImportStep: View {
+    let number: String
+    let title: String
+    let detail: String
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Text(number)
+                .font(.headline.bold())
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(brandColor, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.subheadline.weight(.semibold))
+                Text(detail).font(.footnote).foregroundStyle(.secondary)
+            }
+        }
     }
 }
 
