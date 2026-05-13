@@ -706,9 +706,13 @@ enum InsightsEngine {
         let noneShare = Double(none) / Double(total)
         let highShare = Double(high) / Double(total)
         let veryHighShare = Double(veryHigh) / Double(total)
-        // Surface if either extreme is meaningful: very high caffeine, or zero caffeine cluster
+        // Surface if either extreme is meaningful: very high caffeine, or zero caffeine cluster.
+        // For the "none" pattern, require that the user actually varies their intake
+        // (at least some events with caffeine) so it's a withdrawal signal, not just
+        // "I don't drink coffee."
+        let hasCaffeineVariation = values.contains { $0 > 0 }
         let isHighPattern = highShare >= 0.30
-        let isNonePattern = noneShare >= 0.40
+        let isNonePattern = noneShare >= 0.40 && hasCaffeineVariation
         guard isHighPattern || isNonePattern else { return nil }
         let bins: [(label: String, range: Range<Double>)] = [
             ("None", 0..<0.5),
@@ -812,41 +816,6 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let coveragePhrase = coverageQualifier(subset: total, of: events.count)
-        let none = values.filter { $0 == 0 }.count
-        let noneShare = Double(none) / Double(total)
-        // Exercise can be a trigger (exertion) or protective — surface either extreme
-        if noneShare >= 0.50 {
-            let bins: [(label: String, range: Range<Double>)] = [
-                ("None", 0..<0.5),
-                ("Light\n1–15m", 0.5..<15),
-                ("Moderate\n15–45m", 15..<45),
-                ("Active\n45m+", 45..<1000)
-            ]
-            var topShare = 0.0
-            var topLabel = ""
-            let raw = bins.map { bin -> (label: String, count: Int, share: Double) in
-                let c = values.filter { bin.range.contains($0) }.count
-                let s = Double(c) / Double(total)
-                if s > topShare { topShare = s; topLabel = bin.label }
-                return (bin.label, c, s)
-            }
-            let buckets = raw.map { Bucket(label: $0.label, share: $0.share, count: $0.count, isPeak: $0.label == topLabel) }
-            return Insight(
-                id: "exercise-none",
-                category: .heart,
-                icon: "figure.sedentary",
-                title: "Sedentary days",
-                detail: "\(percent(noneShare)) of your headaches\(coveragePhrase) happened on days with zero exercise minutes.",
-                strength: noneShare,
-                whyItMatters: "Regular aerobic exercise is associated with reduced migraine frequency, likely through endorphin release, improved sleep, and stress reduction. Sedentary days may themselves be a marker for other triggers (stress, poor routine) rather than a direct cause.",
-                yourPattern: "\(percent(noneShare)) of your headaches occurred on days with no recorded exercise.",
-                breakdown: Breakdown(
-                    buckets: buckets,
-                    evenBaseline: nil,
-                    axisCaption: "Exercise minutes on headache days"
-                )
-            )
-        }
         // Check for exertion pattern — headaches after exercise
         let moderate = values.filter { $0 >= 15 }.count
         let moderateShare = Double(moderate) / Double(total)
@@ -997,7 +966,7 @@ enum InsightsEngine {
         let coveragePhrase = coverageQualifier(subset: total, of: events.count)
         let low = values.filter { $0 < 95 }.count
         let lowShare = Double(low) / Double(total)
-        guard lowShare >= 0.20 else { return nil }
+        guard lowShare >= 0.30 else { return nil }
         return Insight(
             id: "oxygen-saturation",
             category: .heart,
@@ -1220,6 +1189,9 @@ enum InsightsEngine {
         var counts: [MotionActivity: Int] = [:]
         for v in values { counts[v, default: 0] += 1 }
         guard let (top, topCount) = counts.max(by: { $0.value < $1.value }), topCount > 0 else { return nil }
+        // Don't surface "stationary" — people sit to log headaches, that's expected.
+        // Only surface when a non-stationary activity dominates.
+        guard top != .stationary, top != .unknown else { return nil }
         let topShare = Double(topCount) / Double(total)
         guard topShare >= 0.50 else { return nil }
         let buckets: [Bucket] = order.map { act in
@@ -1231,17 +1203,14 @@ enum InsightsEngine {
                 isPeak: act == top
             )
         }
-        let isSedentary = top == .stationary || top == .unknown
         return Insight(
             id: "motion-activity",
             category: .time,
-            icon: isSedentary ? "figure.sit" : "figure.walk",
-            title: isSedentary ? "Mostly stationary" : "Active when headaches hit",
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) were logged while \(isSedentary ? "sedentary" : label(for: top).lowercased()).",
+            icon: "figure.walk",
+            title: "Active when headaches hit",
+            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) were logged while \(label(for: top).lowercased()).",
             strength: topShare,
-            whyItMatters: isSedentary
-                ? "Being stationary at headache onset is expected — you pause to log the event. But a consistently stationary pattern may also reflect that tension from sustained posture (desk work, driving) is a contributing factor."
-                : "Some people experience exertion-triggered headaches from increased cranial pressure during activity. If this pattern is strong, consider whether onset consistently follows specific movements or postures.",
+            whyItMatters: "Some people experience exertion-triggered headaches from increased cranial pressure during activity. If this pattern is strong, consider whether onset consistently follows specific movements or postures.",
             yourPattern: "\(percent(topShare)) of your headaches were logged while \(label(for: top).lowercased()).",
             breakdown: Breakdown(
                 buckets: buckets,
