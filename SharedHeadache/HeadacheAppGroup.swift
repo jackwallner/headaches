@@ -21,6 +21,8 @@ enum HeadacheStorageKey: String {
     case promptForSeverityNotes = "headachePromptForSeverityNotes"
     /// True after the existing-user Pro intro sheet has been shown (or dismissed) once.
     case hasSeenProIntro = "headacheHasSeenProIntro"
+    /// True after the free-trial offer sheet has been shown (or dismissed) once.
+    case hasSeenTrialOffer = "headacheHasSeenTrialOffer"
 
     // MARK: - Pro / Proactive Alerts
     case proAlertsEnabled = "headacheProAlertsEnabled"

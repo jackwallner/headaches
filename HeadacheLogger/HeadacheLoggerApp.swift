@@ -2,6 +2,7 @@ import RevenueCatUI
 import SwiftData
 import SwiftUI
 import UIKit
+import UserNotifications
 
 @main
 struct HeadacheLoggerApp: App {
@@ -28,8 +29,19 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
         BackgroundRefreshService.shared.registerTasks()
         return true
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound])
     }
 }
 
@@ -41,7 +53,16 @@ private struct HeadacheLoggerRootContent: View {
     @EnvironmentObject private var storeService: StoreService
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
     @AppStorage(HeadacheStorageKey.hasSeenProIntro.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenProIntro = false
+    @AppStorage(HeadacheStorageKey.hasSeenTrialOffer.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenTrialOffer = false
     @State private var showProIntro = false
+    @State private var showTrialOffer = false
+    @State private var showTrialPaywall = false
+
+    private var trialOfferLabel: String? {
+        storeService.products.compactMap(\.headacheProIntroOfferLabel).first
+    }
+
+    private var hasTrialOffer: Bool { trialOfferLabel != nil }
 
     var body: some View {
         Group {
@@ -50,6 +71,27 @@ private struct HeadacheLoggerRootContent: View {
                     .sheet(isPresented: $showProIntro) {
                         ProIntroSheet(onDismiss: { hasSeenProIntro = true })
                             .environmentObject(storeService)
+                    }
+                    .sheet(isPresented: $showTrialOffer, onDismiss: {
+                        hasSeenTrialOffer = true
+                    }) {
+                        TrialOfferSheet(
+                            offerLabel: trialOfferLabel,
+                            onTry: {
+                                hasSeenTrialOffer = true
+                                showTrialOffer = false
+                                showTrialPaywall = true
+                            },
+                            onDismiss: {
+                                hasSeenTrialOffer = true
+                                showTrialOffer = false
+                            }
+                        )
+                        .presentationDetents([.height(420), .large])
+                        .presentationDragIndicator(.visible)
+                    }
+                    .sheet(isPresented: $showTrialPaywall) {
+                        PaywallView()
                     }
             } else {
                 OnboardingView()
@@ -60,7 +102,6 @@ private struct HeadacheLoggerRootContent: View {
             PhoneWatchSession.shared.onWatchRequestedCapture = { [captureCoordinator] tapDate in
                 captureCoordinator.captureHeadache(
                     in: modelContext,
-                    fromWatch: true,
                     watchTapDate: tapDate
                 )
             }
@@ -72,6 +113,7 @@ private struct HeadacheLoggerRootContent: View {
             scheduleBackgroundIfNeeded()
             ensureUndecidedPermissionsAreRequested()
             offerProIntroIfNeeded()
+            evaluateTrialOffer()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -82,8 +124,15 @@ private struct HeadacheLoggerRootContent: View {
                 scheduleBackgroundIfNeeded()
             }
         }
-        .onChange(of: storeService.isProUnlocked) { _, _ in
+        .onChange(of: storeService.isProUnlocked) { _, isPro in
             scheduleBackgroundIfNeeded()
+            if isPro {
+                showProIntro = false
+                showTrialOffer = false
+            }
+        }
+        .onChange(of: storeService.products.count) { _, _ in
+            evaluateTrialOffer()
         }
     }
 
@@ -138,13 +187,35 @@ private struct HeadacheLoggerRootContent: View {
     /// One-time intro for users who finished onboarding before Pro shipped.
     /// Net-new users have `hasSeenProIntro` set as the last step of onboarding, so they
     /// don't get hit twice. Also gated on Pro not being already unlocked.
+    /// Skipped when a free-trial offer is available — `evaluateTrialOffer` handles that path.
     private func offerProIntroIfNeeded() {
         guard hasCompletedOnboarding, !hasSeenProIntro, !storeService.isProUnlocked else { return }
-        // Defer slightly so the root tab is on screen before the sheet animates up.
+        if hasTrialOffer { return }
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 800_000_000)
-            guard !hasSeenProIntro, !storeService.isProUnlocked else { return }
+            guard !hasSeenProIntro, !storeService.isProUnlocked, !showTrialOffer else { return }
+            if hasTrialOffer { return }
             showProIntro = true
+        }
+    }
+
+    /// One-time free-trial nudge for non-Pro users when an intro offer is available.
+    private func evaluateTrialOffer() {
+        guard hasCompletedOnboarding,
+              !storeService.isProUnlocked,
+              !hasSeenTrialOffer,
+              hasTrialOffer
+        else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            guard !showTrialOffer,
+                  !showTrialPaywall,
+                  !hasSeenTrialOffer,
+                  !storeService.isProUnlocked,
+                  hasTrialOffer
+            else { return }
+            showProIntro = false
+            showTrialOffer = true
         }
     }
 }
@@ -236,6 +307,82 @@ private struct ProBullet: View {
             Text(text)
                 .font(.callout)
             Spacer(minLength: 0)
+        }
+    }
+}
+
+private struct TrialOfferSheet: View {
+    let offerLabel: String?
+    let onTry: () -> Void
+    let onDismiss: () -> Void
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    private var headline: String {
+        if let offerLabel {
+            let length = offerLabel.replacingOccurrences(of: " free trial", with: "")
+            return "Try Headache Pro free for \(length)"
+        }
+        return "Try Headache Pro free"
+    }
+
+    var body: some View {
+        ZStack {
+            Color(.systemGroupedBackground).ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [brandColor, Color(red: 0.86, green: 0.16, blue: 0.43)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 72, height: 72)
+                        .shadow(color: brandColor.opacity(0.35), radius: 14, x: 0, y: 6)
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+                .padding(.top, 18)
+
+                VStack(spacing: 8) {
+                    Text(headline)
+                        .font(.title2.bold())
+                        .multilineTextAlignment(.center)
+                    Text("Unlock proactive pressure and AQI alerts, personalized pattern insights, and richer history. No charge until your trial ends — cancel anytime in Settings.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 8)
+                }
+
+                VStack(spacing: 10) {
+                    Button(action: onTry) {
+                        Text("Start Free Trial")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(brandColor, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(action: onDismiss) {
+                        Text("Not now")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
         }
     }
 }

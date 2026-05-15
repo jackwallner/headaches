@@ -6,6 +6,7 @@ import RevenueCatUI
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
+    @EnvironmentObject private var store: StoreService
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @AppStorage(HeadacheStorageKey.milestonePrompt3Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone3PromptShown = false
@@ -238,6 +239,7 @@ struct HomeView: View {
     }
 
     private var activeMilestone: ProMilestone? {
+        guard !store.isProUnlocked else { return nil }
         let count = events.count
         if count >= 10, !milestone10PromptShown { return .tenLogs }
         if count >= 5, !milestone5PromptShown { return .fiveLogs }
