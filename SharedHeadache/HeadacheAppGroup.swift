@@ -23,6 +23,10 @@ enum HeadacheStorageKey: String {
     case hasSeenProIntro = "headacheHasSeenProIntro"
     /// True after the free-trial offer sheet has been shown (or dismissed) once.
     case hasSeenTrialOffer = "headacheHasSeenTrialOffer"
+    /// True after the Patterns-tab second-touch trial offer has been shown once.
+    /// Independent of `hasSeenTrialOffer` so users whose products failed to load
+    /// on first session still get a second pitch when Patterns later loads.
+    case hasSeenInsightsTrialOffer = "headacheHasSeenInsightsTrialOffer"
 
     // MARK: - Pro / Proactive Alerts
     case proAlertsEnabled = "headacheProAlertsEnabled"

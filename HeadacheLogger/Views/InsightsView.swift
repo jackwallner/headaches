@@ -32,6 +32,10 @@ struct InsightsView: View {
         .onChange(of: events.count) { _, _ in
             Task { await loadAndBackfillDailyRecords() }
         }
+        .onAppear {
+            // Second-touch trial offer hook — root content evaluates the gates.
+            NotificationCenter.default.post(name: .headachePatternsDidAppear, object: nil)
+        }
     }
 
     @ViewBuilder
@@ -312,11 +316,14 @@ private struct LockedInsightPreviewRow: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
-                Image(systemName: "lock.fill")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
             }
             .padding(.vertical, 4)
+            .blur(radius: 3)
+            .overlay(
+                Image(systemName: "lock.fill")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            )
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
