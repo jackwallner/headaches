@@ -140,25 +140,19 @@ enum ProactiveAlertsEngine {
         }
         guard maxDrop >= threshold else { return nil }
         let hours = max(1, dropEndIndex)
-        let riskPercent = Int((signal.relativeRisk * 100).rounded())
-        let body = "Forecast: \(formatHpa(maxDrop)) drop in the next \(hours)h. Your history shows headaches are \(formatLift(signal.lift)) more likely during pressure drops (\(riskPercent)% risk vs. \(Int((signal.pHeadacheGivenNoCondition * 100).rounded()))% on non-drop days — \(signal.headacheConditionDays)/\(signal.conditionDays) drop days)."
+        let body = "Forecast: \(formatHpa(maxDrop)) drop over the next \(hours)h. You've recorded headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days in your history."
         return AlertDecision(kind: .pressureDrop, title: "Personal pressure trigger ahead", body: body)
     }
 
     private static func airQualityDecision(forecast: HourlyForecast, threshold: Int, signal: PersonalSignalProfile) -> AlertDecision? {
         guard let peak = forecast.usAqi.compactMap({ $0 }).max() else { return nil }
         guard Int(peak) >= threshold else { return nil }
-        let riskPercent = Int((signal.relativeRisk * 100).rounded())
-        let body = "AQI is forecast to reach \(Int(peak)) today. Your history shows headaches are \(formatLift(signal.lift)) more likely on elevated-AQI days (\(riskPercent)% risk vs. \(Int((signal.pHeadacheGivenNoCondition * 100).rounded()))% on clean-air days — \(signal.headacheConditionDays)/\(signal.conditionDays) elevated days)."
+        let body = "AQI is forecast to reach \(Int(peak)) today. You've recorded headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days in your history."
         return AlertDecision(kind: .airQuality, title: "Personal air-quality trigger ahead", body: body)
     }
 
     private static func formatHpa(_ value: Double) -> String {
         String(format: "%.1f hPa", value)
-    }
-
-    private static func formatLift(_ value: Double) -> String {
-        "\(Int((max(0, value) * 100).rounded()))%"
     }
 
     private static func ensureNotificationAuthorization() async -> Bool {
@@ -348,9 +342,9 @@ enum ForecastClient {
 extension ProactiveAlertsEngine {
 
     static let personalSignalMinimumSampleSize: Int = 5
-    static let personalSignalMinimumConditionDays: Int = 2
+    static let personalSignalMinimumConditionDays: Int = 5
     static let personalSignalMinimumRelativeRisk: Double = 1.5
-    static let personalSignalMinimumHeadacheConditionDays: Int = 2
+    static let personalSignalMinimumHeadacheConditionDays: Int = 3
 
     @MainActor
     static func refreshPersonalAlertProfile(in context: ModelContext) {
@@ -462,7 +456,7 @@ extension ProactiveAlertsEngine {
 
             for i in 1..<sorted.count {
                 let h = sorted[i]
-                if h == windowEnd + 1 || (windowEnd == 23 && h == 0) {
+                if h == windowEnd + 1 {
                     windowEnd = h
                     windowCount += qualifying[h]!
                 } else {
@@ -508,7 +502,19 @@ extension ProactiveAlertsEngine {
             components.hour = triggerHour
             components.minute = 0
 
-            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            // Schedule for the next occurrence only — rescheduled on each capture/app-foreground.
+            // Using repeated weekly triggers would keep firing stale patterns if the user's
+            // schedule changes and they stop opening the app.
+            guard let nextDate = Calendar.current.nextDate(
+                after: Date(),
+                matching: components,
+                matchingPolicy: .nextTime
+            ) else { continue }
+            let fireComponents = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: nextDate
+            )
+            let trigger = UNCalendarNotificationTrigger(dateMatching: fireComponents, repeats: false)
 
             let content = UNMutableNotificationContent()
             content.title = "Headache pattern ahead"
@@ -534,7 +540,7 @@ extension ProactiveAlertsEngine {
         let timeRange = formatHourRange(start: cluster.startHour, end: cluster.endHour)
         let day = cluster.weekdayName
         let share = Int((cluster.share * 100).rounded())
-        return "\(share)% of your headaches fall on \(day)s around \(timeRange). Consider pre-medicating or stepping away from triggers."
+        return "\(share)% of your headaches fall on \(day)s around \(timeRange)."
     }
 
     private static func formatHourRange(start: Int, end: Int) -> String {

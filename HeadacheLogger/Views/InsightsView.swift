@@ -231,7 +231,7 @@ struct InsightsView: View {
 
     private var sampleInsightPreview: some View {
         VStack(spacing: 10) {
-            Text("Example insights you'll see")
+            Text("Example patterns you'll see")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -17,6 +17,15 @@ struct HomeView: View {
     @State private var showSeverityNotesSheet = false
     @State private var showCheckmark = false
     @State private var showPaywall = false
+    /// Drives the bottom Undo / Add Details snackbar. Set when a tap completes and
+    /// auto-clears after `undoSnackbarTTLSeconds` so the controls don't linger forever.
+    @State private var undoSnackbarVisible = false
+    @State private var undoDismissTask: Task<Void, Never>?
+
+    private static let undoSnackbarTTLSeconds: UInt64 = 15
+    /// Once the user has logged this many times, the long "What Gets Captured"
+    /// explainer collapses so Home stays focused on action + latest + recent.
+    private static let captureExplainerLogThreshold = 3
 
     private var latestEvent: HeadacheEvent? { events.first }
     // C18: skip the latest event so it doesn't duplicate between LatestEventCard and Recent Logs.
@@ -25,17 +34,6 @@ struct HomeView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
-                if let bannerMessage = captureCoordinator.bannerMessage {
-                    Text(bannerMessage)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.primary)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
-                        .accessibilityIdentifier("captureBanner")
-                }
-
                 VStack(spacing: 14) {
                     Button {
                         let success = captureCoordinator.captureHeadache(in: modelContext)
@@ -92,25 +90,11 @@ struct HomeView: View {
                     }
                     .animation(.easeInOut(duration: 0.25), value: showCheckmark)
 
-                    if captureCoordinator.lastCapturedEventID != nil {
-                        HStack(spacing: 24) {
-                            Button {
-                                if let eventID = captureCoordinator.lastCapturedEventID {
-                                    showDetails(for: eventID)
-                                }
-                            } label: {
-                                Label("Add Details", systemImage: "square.and.pencil")
-                            }
-                            .accessibilityIdentifier("addDetailsButton")
-
-                            Button(role: .destructive) {
-                                captureCoordinator.undoLastCapture(in: modelContext)
-                            } label: {
-                                Label("Undo", systemImage: "arrow.uturn.backward")
-                            }
-                            .accessibilityIdentifier("undoLastTapButton")
+                    if !captureCoordinator.isCapturing, let statusLine = captureCoordinator.bannerMessage {
+                        CaptureStatusLine(text: statusLine, isError: captureCoordinator.bannerIsError) {
+                            captureCoordinator.bannerMessage = nil
                         }
-                        .font(.subheadline.weight(.semibold))
+                        .id("status-\(statusLine)")
                     }
                 }
 
@@ -132,6 +116,7 @@ struct HomeView: View {
 
                 if let milestone = activeMilestone {
                     MilestoneProPrompt(milestone: milestone, showPaywall: $showPaywall, onDismiss: markMilestoneShown)
+                        .onAppear { captureCoordinator.proPromptShownThisSession = true }
                 }
 
                 if !recentEvents.isEmpty {
@@ -152,28 +137,30 @@ struct HomeView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("What Gets Captured")
-                        .font(.headline)
-                    Text("Press once when a headache starts — the app records the moment and fills in as much health and environmental context as it can.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                if events.count < Self.captureExplainerLogThreshold {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("What Gets Captured")
+                            .font(.headline)
+                        Text("Press once when a headache starts — the app records the moment and fills in as much health and environmental context as it can.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
 
-                    CaptureItem(
-                        icon: "clock",
-                        title: "Time context",
-                        subtitle: "Date, weekday, hour, minute, timezone, and part of day."
-                    )
-                    CaptureItem(
-                        icon: "heart.text.square",
-                        title: "Apple Health context",
-                        subtitle: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts — all without typing."
-                    )
-                    CaptureItem(
-                        icon: "cloud.sun",
-                        title: "Weather and environment",
-                        subtitle: "Location-based weather, pressure, air quality, UV, and pollen-style signals when available."
-                    )
+                        CaptureItem(
+                            icon: "clock",
+                            title: "Time context",
+                            subtitle: "Date, weekday, hour, minute, timezone, and part of day."
+                        )
+                        CaptureItem(
+                            icon: "heart.text.square",
+                            title: "Apple Health context",
+                            subtitle: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts — all without typing."
+                        )
+                        CaptureItem(
+                            icon: "cloud.sun",
+                            title: "Weather and environment",
+                            subtitle: "Location-based weather, pressure, air quality, UV, and pollen-style signals when available."
+                        )
+                    }
                 }
             }
             .padding(20)
@@ -182,6 +169,19 @@ struct HomeView: View {
         .navigationTitle("One Tap Headache Tracker")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")
+        .safeAreaInset(edge: .bottom) {
+            if undoSnackbarVisible, let eventID = captureCoordinator.lastCapturedEventID {
+                UndoSnackbar(
+                    onAddDetails: { showDetails(for: eventID) },
+                    onUndo: {
+                        captureCoordinator.undoLastCapture(in: modelContext)
+                        dismissUndoSnackbar()
+                    },
+                    onDismiss: { dismissUndoSnackbar() }
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
         .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
             if !isCapturing, captureCoordinator.lastCapturedEventID != nil {
                 showCheckmark = true
@@ -191,7 +191,11 @@ struct HomeView: View {
                         showCheckmark = false
                     }
                 }
+                showUndoSnackbar()
             }
+        }
+        .onChange(of: captureCoordinator.lastCapturedEventID) { _, newValue in
+            if newValue == nil { dismissUndoSnackbar() }
         }
         .sheet(isPresented: $showSeverityNotesSheet, onDismiss: { severityNotesEventID = nil }) {
             if let eventID = severityNotesEventID {
@@ -206,6 +210,28 @@ struct HomeView: View {
     private func showDetails(for eventID: UUID) {
         severityNotesEventID = eventID
         showSeverityNotesSheet = true
+    }
+
+    private func showUndoSnackbar() {
+        undoDismissTask?.cancel()
+        withAnimation(.easeInOut(duration: 0.25)) {
+            undoSnackbarVisible = true
+        }
+        undoDismissTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: Self.undoSnackbarTTLSeconds * 1_000_000_000)
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeInOut(duration: 0.25)) {
+                undoSnackbarVisible = false
+            }
+        }
+    }
+
+    private func dismissUndoSnackbar() {
+        undoDismissTask?.cancel()
+        undoDismissTask = nil
+        withAnimation(.easeInOut(duration: 0.25)) {
+            undoSnackbarVisible = false
+        }
     }
 
     fileprivate enum ProMilestone: Int, Equatable {
@@ -225,7 +251,7 @@ struct HomeView: View {
             switch self {
             case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs — time, sleep, weather, and more."
             case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches."
-            case .tenLogs: return "You've built enough history for meaningful insight. Unlock Pro to see your personalized patterns and get proactive alerts."
+            case .tenLogs: return "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
             }
         }
 
@@ -240,6 +266,8 @@ struct HomeView: View {
 
     private var activeMilestone: ProMilestone? {
         guard !store.isProUnlocked else { return nil }
+        // One Pro moment per session: if a trial offer already fired, skip the milestone.
+        guard !captureCoordinator.proPromptShownThisSession else { return nil }
         let count = events.count
         if count >= 10, !milestone10PromptShown { return .tenLogs }
         if count >= 5, !milestone5PromptShown { return .fiveLogs }
@@ -259,38 +287,24 @@ struct HomeView: View {
 private struct LatestEventCard: View {
     let event: HeadacheEvent
     var useCelsius: Bool
+    @State private var showDetails = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Latest Event")
-                        .font(.headline)
-                    Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
+                Text("Latest Event")
+                    .font(.headline)
                 Spacer()
-
-                StatusBadge(label: event.captureStatus.rawValue.capitalized, tint: statusColor)
-            }
-
-            HStack(spacing: 8) {
-                StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? .green : .orange)
-                StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? .blue : .orange)
                 if let severity = event.severity {
                     StatusBadge(label: severity.rawValue.capitalized, tint: severityColor(severity))
                 }
             }
 
-            if !event.locationLabel.isEmpty || event.weatherSummary != nil {
-                Text([event.locationLabel.isEmpty ? nil : event.locationLabel, weatherHeadline]
-                    .compactMap { $0 }
-                    .joined(separator: " • "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+            Text(plainSummary)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("latestEventSummary")
 
             HStack(spacing: 12) {
                 MetricChip(
@@ -309,11 +323,43 @@ private struct LatestEventCard: View {
                     tint: .mint
                 )
             }
+
+            if hasMissingContext {
+                DisclosureGroup(isExpanded: $showDetails) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? .green : .orange)
+                        StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? .blue : .orange)
+                    }
+                    .padding(.top, 8)
+                } label: {
+                    Text("Why is something missing?")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("latestEventDetailsDisclosure")
+            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
         .accessibilityIdentifier("latestEventCard")
+    }
+
+    private var plainSummary: String {
+        var parts: [String] = []
+
+        let weekday = event.weekdayName
+        let timeString = event.timestamp.formatted(date: .omitted, time: .shortened)
+        parts.append("\(weekday) \(timeString) · \(event.partOfDay.rawValue.capitalized)")
+
+        if let weather = weatherHeadline { parts.append(weather) }
+        else if !event.locationLabel.isEmpty { parts.append(event.locationLabel) }
+
+        if let pressureWord = pressureSummary { parts.append(pressureWord) }
+        if let sleep = event.sleepHoursLastNight {
+            parts.append("slept \(String(format: "%.1f", sleep))h")
+        }
+        return parts.joined(separator: " · ")
     }
 
     private var weatherHeadline: String? {
@@ -324,13 +370,16 @@ private struct LatestEventCard: View {
         )
     }
 
-    private var statusColor: Color {
-        switch event.captureStatus {
-        case .complete: .green
-        case .partial: .orange
-        case .failed: .red
-        case .pending: .blue
+    private var pressureSummary: String? {
+        switch event.pressureTrend {
+        case .falling: return "pressure falling"
+        case .rising: return "pressure rising"
+        case .steady, .unavailable: return nil
         }
+    }
+
+    private var hasMissingContext: Bool {
+        event.healthStatus != .captured || event.environmentStatus != .captured
     }
 
     private func severityColor(_ severity: HeadacheSeverity) -> Color {
@@ -450,23 +499,23 @@ private struct CaptureRecoveryCard: View {
             .font(.footnote)
             .foregroundStyle(.secondary)
 
-            HStack(spacing: 10) {
-                Button {
-                    onRetry()
-                } label: {
-                    if isRetrying {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                    } else {
-                        Text("Try Again")
-                            .frame(maxWidth: .infinity)
-                    }
+            Button {
+                onRetry()
+            } label: {
+                if isRetrying {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text("Try Again")
+                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.orange)
-                .disabled(isRetrying)
-                .accessibilityIdentifier("captureRetryButton")
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+            .disabled(isRetrying)
+            .accessibilityIdentifier("captureRetryButton")
 
+            DisclosureGroup("Still stuck?") {
                 Button {
                     if let url = mailURL() {
                         openURL(url)
@@ -476,8 +525,11 @@ private struct CaptureRecoveryCard: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
+                .padding(.top, 8)
                 .accessibilityIdentifier("captureReportButton")
             }
+            .font(.footnote)
+            .tint(.secondary)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -668,5 +720,80 @@ private struct StatusBadge: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(tint.opacity(0.12), in: Capsule())
+    }
+}
+
+private struct CaptureStatusLine: View {
+    let text: String
+    var isError: Bool = false
+    var onDismiss: () -> Void
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                .foregroundStyle(isError ? .orange : .green)
+            Text(text)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.primary)
+            Spacer(minLength: 0)
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(6)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
+        .accessibilityIdentifier("captureStatusLine")
+    }
+}
+
+private struct UndoSnackbar: View {
+    var onAddDetails: () -> Void
+    var onUndo: () -> Void
+    var onDismiss: () -> Void
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Button(action: onAddDetails) {
+                Label("Add Details", systemImage: "square.and.pencil")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .accessibilityIdentifier("addDetailsButton")
+
+            Spacer(minLength: 8)
+
+            Button(role: .destructive, action: onUndo) {
+                Label("Undo", systemImage: "arrow.uturn.backward")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .accessibilityIdentifier("undoLastTapButton")
+
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(6)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
+        .accessibilityIdentifier("undoSnackbar")
     }
 }

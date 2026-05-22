@@ -5,8 +5,15 @@ import CoreMotion
 @MainActor
 final class CaptureCoordinator: ObservableObject {
     @Published var bannerMessage: String?
+    /// True when `bannerMessage` describes a failure, so the UI can show a warning
+    /// rather than a success affordance.
+    @Published var bannerIsError = false
     @Published var isCapturing = false
     @Published var lastCapturedEventID: UUID?
+    /// True once any monetization surface (trial offer, Pro intro, or milestone card) has
+    /// appeared in *this* app session. Both the Home milestone card and the root-level trial
+    /// offer read this so only one Pro moment shows per session. Reset on cold launch.
+    @Published var proPromptShownThisSession = false
     /// Prevents overlapping widget-enrichment passes (e.g. `onAppear` + scene `active` firing together).
     private var isEnrichingWidgetLogs = false
 
@@ -19,7 +26,6 @@ final class CaptureCoordinator: ObservableObject {
     /// Enrichment uses the **event's own timestamp**, never `now`, so HealthKit / weather context reflects the tap time.
     /// Oldest first so a backlog of widget taps resolves in order.
     func enrichPendingCapturesIfNeeded(in context: ModelContext) {
-        guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else { return }
         guard !isCapturing else { return }
         guard !isEnrichingWidgetLogs else { return }
 
@@ -46,6 +52,7 @@ final class CaptureCoordinator: ObservableObject {
             }
             if updated > 0 {
                 bannerMessage = updated == 1 ? "Updated context for a pending log." : "Updated context for \(updated) pending logs."
+                bannerIsError = false
                 await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
             }
         }
@@ -70,20 +77,11 @@ final class CaptureCoordinator: ObservableObject {
         (try? context.fetch(Self.pendingCaptureFetchDescriptor())) ?? []
     }
 
-    /// - Parameter fromWatch: Watch requests bypass the iPhone onboarding gate so logging works from the watch immediately.
     @discardableResult
     func captureHeadache(
         in context: ModelContext,
-        fromWatch: Bool = false,
         watchTapDate: Date? = nil
     ) -> Bool {
-        if !fromWatch {
-            guard HeadacheOnboardingStore.hasCompletedOnboarding || AppEnvironment.bypassOnboarding else {
-                bannerMessage = "Finish setup on your iPhone first."
-                return false
-            }
-        }
-
         let event = HeadacheEvent(timestamp: watchTapDate ?? .now)
         context.insert(event)
 
@@ -105,11 +103,13 @@ final class CaptureCoordinator: ObservableObject {
             consoleError("CaptureCoordinator: initial save failed", error: error, trace: [:])
             lastCapturedEventID = nil
             bannerMessage = "Could not save event. Try again."
+            bannerIsError = true
             return false
         }
 
         isCapturing = true
         bannerMessage = "Saving and collecting context…"
+        bannerIsError = false
 
         let eventID = event.id
         let timestamp = event.timestamp
@@ -127,6 +127,7 @@ final class CaptureCoordinator: ObservableObject {
             guard let found = try? context.fetch(descriptor).first else {
                 isCapturing = false
                 bannerMessage = "Could not update event."
+                bannerIsError = true
                 consoleError("CaptureCoordinator: fetch after capture failed", error: nil, trace: ["eventID": "\(eventID)"])
                 return
             }
@@ -141,11 +142,13 @@ final class CaptureCoordinator: ObservableObject {
                 consoleError("CaptureCoordinator: finalize save failed", error: error, trace: ["eventID": "\(eventID)"])
                 isCapturing = false
                 bannerMessage = "Context captured but save failed. Reopen to retry."
+                bannerIsError = true
                 return
             }
 
             isCapturing = false
 
+            bannerIsError = false
             switch found.captureStatus {
             case .complete:
                 bannerMessage = "Context saved."
@@ -178,6 +181,7 @@ final class CaptureCoordinator: ObservableObject {
 
         isCapturing = true
         bannerMessage = "Retrying context capture…"
+        bannerIsError = false
         let timestamp = event.timestamp
 
         Task { @MainActor in
@@ -189,6 +193,7 @@ final class CaptureCoordinator: ObservableObject {
             guard let found = try? context.fetch(refetch).first else {
                 isCapturing = false
                 bannerMessage = "Retry failed — event missing."
+                bannerIsError = true
                 return
             }
 
@@ -202,6 +207,7 @@ final class CaptureCoordinator: ObservableObject {
                 consoleError("CaptureCoordinator: retry save failed", error: error, trace: ["eventID": "\(eventID)"])
                 isCapturing = false
                 bannerMessage = "Retry captured context but save failed."
+                bannerIsError = true
                 return
             }
 
@@ -210,12 +216,16 @@ final class CaptureCoordinator: ObservableObject {
             switch found.captureStatus {
             case .complete:
                 bannerMessage = "Context saved."
+                bannerIsError = false
             case .partial:
                 bannerMessage = "Still partial. You can email the developer from the event card."
+                bannerIsError = true
             case .failed:
                 bannerMessage = "Retry still failed. Email the developer from the event card."
+                bannerIsError = true
             case .pending:
                 bannerMessage = nil
+                bannerIsError = false
             }
 
             await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
@@ -234,9 +244,11 @@ final class CaptureCoordinator: ObservableObject {
                 try context.save()
                 lastCapturedEventID = nil
                 bannerMessage = "Last entry undone."
+                bannerIsError = false
             } catch {
                 consoleError("CaptureCoordinator: undo save failed", error: error, trace: ["eventID": "\(eventID)"])
                 bannerMessage = "Undo failed. Try again."
+                bannerIsError = true
             }
         } else {
             lastCapturedEventID = nil
