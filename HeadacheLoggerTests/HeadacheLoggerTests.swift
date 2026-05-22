@@ -790,8 +790,8 @@ final class HeadacheLoggerTests: XCTestCase {
         )
         let decision = ProactiveAlertsEngine.evaluate(forecast: forecast, prefs: prefs, profile: profile)
         XCTAssertEqual(decision?.kind, .pressureDrop)
-        XCTAssertTrue(decision?.body.contains("more likely") == true)
-        XCTAssertTrue(decision?.body.contains("risk") == true)
+        XCTAssertTrue(decision?.body.contains("recorded headaches on") == true)
+        XCTAssertTrue(decision?.body.contains("similar days") == true)
     }
 
     func testForecastAlertCanUsePersonalAirQualitySignal() {
@@ -828,8 +828,8 @@ final class HeadacheLoggerTests: XCTestCase {
 
         let decision = ProactiveAlertsEngine.evaluate(forecast: forecast, prefs: prefs, profile: profile)
         XCTAssertEqual(decision?.kind, .airQuality)
-        XCTAssertTrue(decision?.body.contains("more likely") == true)
-        XCTAssertTrue(decision?.body.contains("risk") == true)
+        XCTAssertTrue(decision?.body.contains("recorded headaches on") == true)
+        XCTAssertTrue(decision?.body.contains("similar days") == true)
     }
 
     // MARK: - daily record test helpers

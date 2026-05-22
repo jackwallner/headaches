@@ -10,6 +10,7 @@ struct SettingsView: View {
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
+    @State private var healthStatus = HKHealthStore.isHealthDataAvailable() ? "Checking…" : "Unavailable on this device"
     @State private var showPaywall = false
     @State private var isRestoring = false
     @State private var restoreMessage: String?
@@ -26,12 +27,6 @@ struct SettingsView: View {
                         ProAlertsConfigView()
                     } label: {
                         proRowLabel(unlocked: true)
-                    }
-                    if store.hasSubscription {
-                        Button("Manage Subscription") {
-                            guard let url = URL(string: "https://apps.apple.com/account/subscriptions") else { return }
-                            openURL(url)
-                        }
                     }
                 } else {
                     Button {
@@ -80,7 +75,7 @@ struct SettingsView: View {
             Section {
                 PermissionRow(
                     label: "Apple Health",
-                    value: HKHealthStore.isHealthDataAvailable() ? "Available on this device" : "Unavailable",
+                    value: healthStatus,
                     valueIdentifier: "healthPermissionValue"
                 )
                 PermissionRow(
@@ -116,9 +111,11 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .onAppear {
             refreshLocationStatus()
+            refreshHealthStatus()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             refreshLocationStatus()
+            refreshHealthStatus()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
@@ -140,6 +137,10 @@ struct SettingsView: View {
 
     private func refreshLocationStatus() {
         locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
+    }
+
+    private func refreshHealthStatus() {
+        Task { healthStatus = await HealthKitService.shared.connectionSummary() }
     }
 
     private func restorePurchases() async {

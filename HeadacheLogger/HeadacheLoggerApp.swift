@@ -265,6 +265,8 @@ private struct HeadacheLoggerRootContent: View {
             try? await Task.sleep(nanoseconds: 800_000_000)
             guard !hasSeenProIntro, !storeService.isProUnlocked, !showTrialOffer else { return }
             if hasTrialOffer { return }
+            if captureCoordinator.proPromptShownThisSession { return }
+            captureCoordinator.proPromptShownThisSession = true
             showProIntro = true
         }
     }
@@ -322,6 +324,8 @@ private struct HeadacheLoggerRootContent: View {
               !storeService.isProUnlocked,
               hasTrialOffer
         else { return }
+        // If the Home milestone card already claimed this session's Pro moment, don't stack.
+        if captureCoordinator.proPromptShownThisSession { return }
         // Gate on the source-specific flag (Insights has its own seen-flag).
         switch source {
         case .firstLog, .existingUser:
@@ -336,6 +340,8 @@ private struct HeadacheLoggerRootContent: View {
         if source != .insights {
             firstLogOfferShownThisSession = true
         }
+        // Cap to one Pro moment per session — suppresses the Home milestone card.
+        captureCoordinator.proPromptShownThisSession = true
         showTrialOffer = true
     }
 

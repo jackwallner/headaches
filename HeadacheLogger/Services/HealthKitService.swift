@@ -386,6 +386,26 @@ actor HealthKitService {
         hasRequestedAuthorization = true
     }
 
+    /// Plain-language Health connection state for Settings.
+    ///
+    /// HealthKit deliberately never reports *read* authorization (to avoid leaking which data a user has),
+    /// so true "Denied" is undetectable. We report what we honestly can: whether the device supports
+    /// Health and whether we've already presented the read-permission sheet.
+    func connectionSummary() async -> String {
+        guard HKHealthStore.isHealthDataAvailable() else { return "Unavailable on this device" }
+        let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
+            store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, _ in
+                continuation.resume(returning: status)
+            }
+        }
+        switch status {
+        case .shouldRequest: return "Not connected"
+        case .unnecessary: return "Connected"
+        case .unknown: return "Not connected"
+        @unknown default: return "Not connected"
+        }
+    }
+
     /// Returns the cumulative sum of a sample type, or `nil` when HealthKit has no samples in the window
     /// (which includes the "authorization denied" case — read denials silently yield zero samples, never an error).
     /// Treating "no samples" as `nil` lets downstream code distinguish genuine activity from absence of data.

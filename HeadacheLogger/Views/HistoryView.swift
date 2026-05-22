@@ -24,6 +24,14 @@ struct HistoryView: View {
     @State private var importStrategy: ImportStrategy = .skipExisting
     @State private var showImportIntro = false
     @State private var showPaywall = false
+    @State private var showQuiz = false
+    @State private var quizCompleted = HeadacheQuizStore.hasCompletedQuiz
+    /// Holds events pending a confirmed delete (entries older than the grace window),
+    /// so an accidental swipe on a long-scrolled list can't silently drop history.
+    @State private var pendingDeleteEvents: [HeadacheEvent] = []
+    @State private var showDeleteConfirmation = false
+
+    private static let deleteConfirmGraceDays = 7
 
     private enum ActiveSheet: Identifiable {
         case export(URL)
@@ -89,6 +97,21 @@ struct HistoryView: View {
             } message: {
                 Text("The CSV export could not be created. Please try again.")
             }
+            .confirmationDialog(
+                deleteConfirmationTitle,
+                isPresented: $showDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    commitDelete(pendingDeleteEvents)
+                    pendingDeleteEvents = []
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingDeleteEvents = []
+                }
+            } message: {
+                Text("This permanently removes the entr\(pendingDeleteEvents.count == 1 ? "y" : "ies") from your history. Export a CSV first if you need a backup.")
+            }
             .fileImporter(
                 isPresented: $showFileImporter,
                 allowedContentTypes: [.commaSeparatedText, .plainText],
@@ -121,6 +144,24 @@ struct HistoryView: View {
                 PaywallView()
                     .environmentObject(store)
             }
+            .sheet(isPresented: $showQuiz, onDismiss: {
+                quizCompleted = HeadacheQuizStore.hasCompletedQuiz
+            }) {
+                NavigationStack {
+                    HeadacheQuizView(hasCompleted: Binding(
+                        get: { quizCompleted },
+                        set: { completed in
+                            quizCompleted = completed
+                            if completed { showQuiz = false }
+                        }
+                    ))
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Close") { showQuiz = false }
+                        }
+                    }
+                }
+            }
     }
 
     @ViewBuilder
@@ -139,6 +180,11 @@ struct HistoryView: View {
         List {
             if filteredEvents.isEmpty {
                 emptyStateView
+                if !quizCompleted {
+                    quizPromptCard(prominent: true)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
             } else {
                 Section {
                     SummaryGrid(events: filteredEvents, useCelsius: useCelsius)
@@ -146,32 +192,17 @@ struct HistoryView: View {
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
 
+                if !quizCompleted {
+                    quizPromptCard(prominent: false)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                }
+
                 if !store.isProUnlocked, filteredEvents.count >= InsightsEngine.minimumSampleSize {
                     proUpsellRow
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                         .listRowBackground(Color.clear)
                 }
-
-                Section {
-                    ImportExportActionCard(
-                        icon: "square.and.arrow.up.fill",
-                        title: "Export to CSV",
-                        subtitle: "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up.",
-                        actionLabel: "Export CSV",
-                        action: { export() }
-                    )
-                    ImportExportActionCard(
-                        icon: "square.and.arrow.down.fill",
-                        title: "Import from CSV",
-                        subtitle: "Restore a backup or merge events from another device. You'll see exactly what was found and choose how to handle duplicates.",
-                        actionLabel: "Start Import",
-                        action: { showImportIntro = true }
-                    )
-                } header: {
-                    Text("Import & Export")
-                }
-                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                .listRowBackground(Color.clear)
 
                 Section("Entries") {
                     ForEach(filteredEvents, id: \.id) { event in
@@ -185,6 +216,29 @@ struct HistoryView: View {
                     .onDelete(perform: deleteEvents)
                 }
             }
+
+            Section {
+                ImportExportActionCard(
+                    icon: "square.and.arrow.up.fill",
+                    title: "Export to CSV",
+                    subtitle: exportSubtitle,
+                    actionLabel: exportActionLabel,
+                    action: { export() },
+                    secondaryLabel: selectedYear != nil ? "Export all years" : nil,
+                    secondaryAction: selectedYear != nil ? { exportAllYears() } : nil
+                )
+                ImportExportActionCard(
+                    icon: "square.and.arrow.down.fill",
+                    title: "Import from CSV",
+                    subtitle: "Restore a backup or merge events from another device. You'll see exactly what was found and choose how to handle duplicates.",
+                    actionLabel: "Start Import",
+                    action: { showImportIntro = true }
+                )
+            } header: {
+                Text("Import & Export")
+            }
+            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+            .listRowBackground(Color.clear)
         }
     }
 
@@ -194,24 +248,24 @@ struct HistoryView: View {
             ToolbarItem(placement: .topBarLeading) {
                 yearFilterMenu
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button {
-                        export()
-                    } label: {
-                        Label("Export CSV", systemImage: "square.and.arrow.up")
-                    }
-                    .accessibilityIdentifier("exportHistoryButton")
-                    Button {
-                        showImportIntro = true
-                    } label: {
-                        Label("Import CSV…", systemImage: "square.and.arrow.down")
-                    }
-                    .accessibilityIdentifier("importHistoryButton")
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+                Button {
+                    export()
                 } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .accessibilityLabel("Import or Export")
+                    Label("Export CSV", systemImage: "square.and.arrow.up")
                 }
+                .accessibilityIdentifier("exportHistoryButton")
+                Button {
+                    showImportIntro = true
+                } label: {
+                    Label("Import CSV…", systemImage: "square.and.arrow.down")
+                }
+                .accessibilityIdentifier("importHistoryButton")
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .accessibilityLabel("Import or Export")
             }
         }
     }
@@ -242,9 +296,34 @@ struct HistoryView: View {
         removeTemporaryExport()
     }
 
+    private var exportSubtitle: String {
+        if events.isEmpty {
+            return "Export your headache history to a CSV file you can share with a doctor or open in Numbers."
+        }
+        if let selectedYear {
+            return "Exports \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") from \(selectedYear) — or export all years below. The CSV opens in Numbers and works for your doctor."
+        }
+        return "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up."
+    }
+
+    private var exportActionLabel: String {
+        if let selectedYear {
+            return "Export \(filteredEvents.count) (\(selectedYear))"
+        }
+        return "Export CSV"
+    }
+
     private func export() {
+        exportEvents(filteredEvents)
+    }
+
+    private func exportAllYears() {
+        exportEvents(events)
+    }
+
+    private func exportEvents(_ toExport: [HeadacheEvent]) {
         do {
-            let url = try ExportService.exportCSV(events: filteredEvents)
+            let url = try ExportService.exportCSV(events: toExport)
             pendingExportURL = url
             activeSheet = .export(url)
         } catch {
@@ -253,8 +332,29 @@ struct HistoryView: View {
     }
 
     private func deleteEvents(at offsets: IndexSet) {
-        for index in offsets {
-            let eventToDelete = filteredEvents[index]
+        let targets = offsets.map { filteredEvents[$0] }
+        let cutoff = Calendar.current.date(
+            byAdding: .day,
+            value: -Self.deleteConfirmGraceDays,
+            to: Date()
+        ) ?? Date()
+        let hasOldEntry = targets.contains { $0.timestamp < cutoff }
+        if hasOldEntry {
+            pendingDeleteEvents = targets
+            showDeleteConfirmation = true
+        } else {
+            commitDelete(targets)
+        }
+    }
+
+    private var deleteConfirmationTitle: String {
+        pendingDeleteEvents.count == 1
+            ? "Delete this entry?"
+            : "Delete \(pendingDeleteEvents.count) entries?"
+    }
+
+    private func commitDelete(_ targets: [HeadacheEvent]) {
+        for eventToDelete in targets {
             if let originalIndex = events.firstIndex(where: { $0.id == eventToDelete.id }) {
                 modelContext.delete(events[originalIndex])
             }
@@ -324,6 +424,71 @@ struct HistoryView: View {
         if result.skipped > 0 { parts.append("\(result.skipped) skipped") }
         if result.errors > 0 { parts.append("\(result.errors) errors") }
         return parts.isEmpty ? "No events were imported." : parts.joined(separator: ", ") + "."
+    }
+
+    @ViewBuilder
+    private func quizPromptCard(prominent: Bool) -> some View {
+        Button {
+            showQuiz = true
+        } label: {
+            if prominent {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "questionmark.bubble.fill")
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundStyle(brandColor)
+                            .frame(width: 30)
+                        Text("Tell us about your headaches")
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                    }
+                    Text("A short, optional quiz that helps us improve future versions of Patterns. Take it anytime.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                    Text("Start quiz")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(brandColor, in: Capsule())
+                }
+                .padding(18)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(brandColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 18))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(brandColor.opacity(0.25), lineWidth: 1)
+                )
+            } else {
+                HStack(spacing: 14) {
+                    Image(systemName: "questionmark.bubble.fill")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(brandColor)
+                        .frame(width: 28)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Take the headache quiz")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
+                        Text("Optional — helps us improve future versions of Patterns.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.bold())
+                        .foregroundStyle(.tertiary)
+                }
+                .padding(14)
+                .background(brandColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(brandColor.opacity(0.25), lineWidth: 1)
+                )
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("historyQuizPrompt")
     }
 
     private var proUpsellRow: some View {
@@ -555,37 +720,45 @@ private struct ImportExportActionCard: View {
     let subtitle: String
     let actionLabel: String
     let action: () -> Void
-
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    var secondaryLabel: String? = nil
+    var secondaryAction: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 12) {
                 Image(systemName: icon)
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(brandColor)
-                    .frame(width: 34)
-                VStack(alignment: .leading, spacing: 4) {
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .frame(width: 24)
+                VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.headline)
+                        .font(.subheadline.weight(.semibold))
                     Text(subtitle)
-                        .font(.footnote)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
+                Spacer(minLength: 0)
+                Button(action: action) {
+                    Text(actionLabel)
+                        .font(.caption.weight(.semibold))
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .controlSize(.small)
+                .accessibilityIdentifier("importExportAction-\(actionLabel)")
             }
-            Button(action: action) {
-                Text(actionLabel)
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 38)
+            if let secondaryLabel, let secondaryAction {
+                Button(action: secondaryAction) {
+                    Text(secondaryLabel)
+                        .font(.caption.weight(.semibold))
+                }
+                .buttonStyle(.borderless)
+                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .padding(.leading, 36)
+                .accessibilityIdentifier("importExportAction-\(secondaryLabel)")
             }
-            .buttonStyle(.borderedProminent)
-            .tint(brandColor)
-            .accessibilityIdentifier("importExportAction-\(actionLabel)")
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.vertical, 8)
     }
 }
 
