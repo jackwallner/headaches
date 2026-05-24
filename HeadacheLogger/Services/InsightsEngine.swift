@@ -570,14 +570,8 @@ enum InsightsEngine {
     private static func temperatureInsight(_ events: [HeadacheEvent]) -> Insight? {
         let values = events.compactMap(\.apparentTemperatureC)
         guard values.count >= minimumSampleSize else { return nil }
-        let bins: [(label: String, range: Range<Double>)] = [
-            ("Very cold\n<0°C", -100..<0),
-            ("Cold\n0–10°C", 0..<10),
-            ("Cool\n10–18°C", 10..<18),
-            ("Mild\n18–25°C", 18..<25),
-            ("Warm\n25–32°C", 25..<32),
-            ("Hot\n32°C+", 32..<100)
-        ]
+        let useCelsius = HeadacheAppGroup.userDefaults.bool(forKey: HeadacheStorageKey.useCelsiusTemperature.rawValue)
+        let bins: [(label: String, range: Range<Double>)] = temperatureBins(useCelsius: useCelsius)
         let total = values.count
         let coveragePhrase = coverageQualifier(subset: total, of: events.count)
         var topShare = 0.0
@@ -594,22 +588,47 @@ enum InsightsEngine {
         let buckets = raw.map { Bucket(label: $0.label, share: $0.share, count: $0.count, isPeak: $0.label == topLabel) }
         let isExtreme = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Hot")
         let icon = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Cold") ? "thermometer.snowflake" : "thermometer.sun.fill"
-        let title = isExtreme ? "\(topLabel) weather cluster" : "Temperature cluster: \(topLabel)"
+        let inlineTop = topLabel.replacingOccurrences(of: "\n", with: " ")
+        let title = isExtreme ? "\(inlineTop) weather cluster" : "Temperature cluster: \(inlineTop)"
         return Insight(
             id: "temperature",
             category: .weather,
             icon: icon,
             title: title,
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened when it felt \(topLabel.lowercased()).",
+            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened when it felt \(inlineTop.lowercased()).",
             strength: topShare,
             whyItMatters: "Extreme temperatures — both hot and cold — are well-documented migraine triggers. Heat causes vasodilation and dehydration; cold triggers vasoconstriction and muscle tension. The apparent temperature (feels-like) accounts for wind chill and humidity, making it more relevant than raw air temperature.",
-            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred in \(topLabel.lowercased()) conditions — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)). " + othersSummary(buckets, excluding: topLabel, label: \.label),
+            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred in \(inlineTop.lowercased()) conditions — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)). " + othersSummary(buckets, excluding: topLabel, label: { $0.label.replacingOccurrences(of: "\n", with: " ") }),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
                 axisCaption: "Apparent temperature at headache onset"
             )
         )
+    }
+
+    /// Bucket boundaries match the Fahrenheit ranges users will recognize (freezing, sub-freezing, room temp, hot)
+    /// while the underlying values stay in Celsius for the comparison.
+    private static func temperatureBins(useCelsius: Bool) -> [(label: String, range: Range<Double>)] {
+        if useCelsius {
+            return [
+                ("Very cold\n<0°C", -100..<0),
+                ("Cold\n0–10°C", 0..<10),
+                ("Cool\n10–18°C", 10..<18),
+                ("Mild\n18–25°C", 18..<25),
+                ("Warm\n25–32°C", 25..<32),
+                ("Hot\n32°C+", 32..<100)
+            ]
+        }
+        // Fahrenheit boundaries map to: 0, 10, 18, 25, 32 °C → 32, 50, 65, 77, 90 °F
+        return [
+            ("Very cold\n<32°F", -100..<0),
+            ("Cold\n32–50°F", 0..<10),
+            ("Cool\n50–65°F", 10..<18),
+            ("Mild\n65–77°F", 18..<25),
+            ("Warm\n77–90°F", 25..<32),
+            ("Hot\n90°F+", 32..<100)
+        ]
     }
 
     // MARK: - Precipitation
@@ -1363,5 +1382,58 @@ enum InsightsEngine {
         case .cycling: return "Cycling"
         case .unknown: return "Unknown"
         }
+    }
+}
+
+// MARK: - Calendar heatmap
+
+/// One row per calendar day in a fixed lookback window. Used by the in-app heatmap and by
+/// the doctor-facing PDF so both renderings see the same severity colouring.
+struct HeatmapDay: Identifiable, Sendable {
+    let date: Date
+    let count: Int
+    let peakSeverity: HeadacheSeverity?
+
+    var id: Date { date }
+}
+
+enum HeatmapData {
+    static func build(from events: [HeadacheEvent], days: Int = 90, endingAt end: Date = .now, calendar: Calendar = .current) -> [HeatmapDay] {
+        let today = calendar.startOfDay(for: end)
+        guard let start = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
+        var byDay: [Date: (count: Int, peak: HeadacheSeverity?)] = [:]
+        for event in events {
+            let day = calendar.startOfDay(for: event.timestamp)
+            guard day >= start, day <= today else { continue }
+            var entry = byDay[day] ?? (count: 0, peak: nil)
+            entry.count += 1
+            if let severity = event.severity {
+                entry.peak = HeadacheSeverity.peak(entry.peak, severity)
+            }
+            byDay[day] = entry
+        }
+        var out: [HeatmapDay] = []
+        var cursor = start
+        while cursor <= today {
+            let entry = byDay[cursor]
+            out.append(HeatmapDay(date: cursor, count: entry?.count ?? 0, peakSeverity: entry?.peak))
+            cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+        }
+        return out
+    }
+}
+
+extension HeadacheSeverity {
+    var rank: Int {
+        switch self {
+        case .slight: 1
+        case .medium: 2
+        case .extreme: 3
+        }
+    }
+
+    static func peak(_ a: HeadacheSeverity?, _ b: HeadacheSeverity) -> HeadacheSeverity {
+        guard let a else { return b }
+        return a.rank >= b.rank ? a : b
     }
 }

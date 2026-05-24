@@ -9,9 +9,16 @@ struct InsightsView: View {
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
     @State private var showPaywall = false
     @State private var dailyRecords: [DailyRecord] = []
+    @State private var riskForecast: ProactiveAlertsEngine.RiskForecast?
+    @State private var riskLoading = false
+    @State private var riskLocationMissing = false
 
     private var summary: InsightsEngine.Summary {
         InsightsEngine.summarize(events, dailyRecords: dailyRecords)
+    }
+
+    private var heatmapDays: [HeatmapDay] {
+        HeatmapData.build(from: events)
     }
 
     var body: some View {
@@ -28,6 +35,7 @@ struct InsightsView: View {
         }
         .task {
             await loadAndBackfillDailyRecords()
+            await refreshRiskForecast()
         }
         .onChange(of: events.count) { _, _ in
             Task { await loadAndBackfillDailyRecords() }
@@ -40,35 +48,72 @@ struct InsightsView: View {
 
     @ViewBuilder
     private var proContent: some View {
-        if events.count < InsightsEngine.minimumSampleSize {
-            proLearningState(
-                title: "Headache Pro is active",
-                detail: "Proactive Alerts are ready now. Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs — you have \(events.count).",
-                progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
-            )
-        } else if summary.insights.isEmpty {
-            proLearningState(
-                title: "Still watching for a clear pattern",
-                detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
-                progress: nil
-            )
-        } else {
-            List {
+        List {
+            Section {
+                InsightsHeader(summary: summary)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4))
+            }
+
+            Section {
+                CalendarHeatmapCard(days: heatmapDays)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
+                    .listRowBackground(Color.clear)
+            } header: {
+                Text("Last 90 days")
+            } footer: {
+                Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
+                    .font(.footnote)
+            }
+
+            Section {
+                DailyRiskForecastCard(
+                    forecast: riskForecast,
+                    isLoading: riskLoading,
+                    locationMissing: riskLocationMissing,
+                    onRetry: { Task { await refreshRiskForecast(forceRefresh: true) } }
+                )
+                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
+                .listRowBackground(Color.clear)
+            } header: {
+                Text("Today")
+            } footer: {
+                Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
+                    .font(.footnote)
+            }
+
+            Section {
+                ProactiveAlertsCard()
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
+                    .listRowBackground(Color.clear)
+            } header: {
+                Text("Get ahead of triggers")
+            } footer: {
+                Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
+                    .font(.footnote)
+            }
+
+            if events.count < InsightsEngine.minimumSampleSize {
                 Section {
-                    InsightsHeader(summary: summary)
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                }
-                Section {
-                    ProactiveAlertsCard()
-                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
-                        .listRowBackground(Color.clear)
+                    LearningStateRow(
+                        title: "Personalized patterns warming up",
+                        detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs — you have \(events.count).",
+                        progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
+                    )
                 } header: {
-                    Text("Get ahead of triggers")
-                } footer: {
-                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
-                        .font(.footnote)
+                    Text("Your patterns")
                 }
+            } else if summary.insights.isEmpty {
+                Section {
+                    LearningStateRow(
+                        title: "Still watching for a clear pattern",
+                        detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
+                        progress: nil
+                    )
+                } header: {
+                    Text("Your patterns")
+                }
+            } else {
                 Section {
                     ForEach(summary.insights) { insight in
                         NavigationLink {
@@ -87,6 +132,27 @@ struct InsightsView: View {
         }
     }
 
+    private func refreshRiskForecast(forceRefresh: Bool = false) async {
+        guard store.isProUnlocked else { return }
+        if !forceRefresh, let forecast = riskForecast, Date().timeIntervalSince(forecast.evaluatedAt) < 30 * 60 {
+            return
+        }
+        riskLocationMissing = false
+        riskLoading = true
+        defer { riskLoading = false }
+        guard let coord = CachedLocation.current() else {
+            riskLocationMissing = true
+            riskForecast = nil
+            return
+        }
+        let forecast = await ForecastClient.fetch24Hour(latitude: coord.latitude, longitude: coord.longitude)
+        let sleep = await HealthKitService.shared.fetchSleepHoursForNightBefore(Date())
+        riskForecast = ProactiveAlertsEngine.dailyRiskForecast(
+            forecast: forecast,
+            sleepLastNightHours: sleep
+        )
+    }
+
     private func loadAndBackfillDailyRecords() async {
         var records = DailyRecordStore.load()
         let needsSleepBackfill = records.contains { !$0.sleepFetched && $0.weatherFetched }
@@ -95,58 +161,6 @@ struct InsightsView: View {
             DailyRecordStore.save(records)
         }
         dailyRecords = records
-    }
-
-    private var emptyState: some View {
-        ContentUnavailableView {
-            Label("Not enough data yet", systemImage: "chart.bar.xaxis")
-        } description: {
-            Text("Log at least \(InsightsEngine.minimumSampleSize) headaches and we'll start surfacing patterns from the time, sleep, weather, and Health context already attached to each entry.")
-        }
-    }
-
-    private func proLearningState(title: String, detail: String, progress: Double?) -> some View {
-        List {
-            Section {
-                ProactiveAlertsCard()
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    .listRowBackground(Color.clear)
-            } header: {
-                Text("Headache Pro")
-            } footer: {
-                Text("Proactive Alerts are the main premium feature and do not require a minimum number of logged headaches.")
-                    .font(.footnote)
-            }
-
-            Section {
-                VStack(alignment: .leading, spacing: 12) {
-                    Label(title, systemImage: "sparkles")
-                        .font(.headline)
-                        .foregroundStyle(brandColor)
-                    Text(detail)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    if let progress {
-                        ProgressView(value: min(progress, 1))
-                        Text("\(events.count) of \(InsightsEngine.minimumSampleSize) logs for personalized patterns")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    SampleInsightRow(icon: "barometer", title: "Example: Falling pressure pattern", detail: "Once enough logs exist, Pro can show whether headaches cluster after pressure drops.")
-                }
-                .padding(.vertical, 4)
-            } header: {
-                Text("Personalized patterns")
-            }
-        }
-    }
-
-    private var notEnoughSignal: some View {
-        ContentUnavailableView {
-            Label("No clear patterns yet", systemImage: "chart.line.flattrend.xyaxis")
-        } description: {
-            Text("\(events.count) headaches logged so far — not enough variation in any one factor to call out yet. Keep logging and we'll surface patterns as they emerge.")
-        }
     }
 
     private var lockedTeaser: some View {
@@ -618,5 +632,244 @@ private struct BreakdownChart: View {
 
     private func percentLabel(_ value: Double) -> String {
         "\(Int((value * 100).rounded()))%"
+    }
+}
+
+// MARK: - Calendar heatmap
+
+struct CalendarHeatmapCard: View {
+    let days: [HeatmapDay]
+
+    private var headacheDayCount: Int { days.filter { $0.count > 0 }.count }
+    private var freeDayCount: Int { days.count - headacheDayCount }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HeatmapGrid(days: days)
+
+            HStack(spacing: 14) {
+                summaryChip(value: headacheDayCount, label: "headache days")
+                summaryChip(value: freeDayCount, label: "headache-free")
+                Spacer(minLength: 0)
+            }
+            .font(.caption.monospacedDigit())
+            .foregroundStyle(.secondary)
+
+            HeatmapLegend()
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    private func summaryChip(value: Int, label: String) -> some View {
+        HStack(spacing: 4) {
+            Text("\(value)").fontWeight(.semibold).foregroundStyle(.primary)
+            Text(label)
+        }
+    }
+}
+
+/// Pure visual grid — also used inside the PDF renderer so it has no SwiftData dependencies.
+struct HeatmapGrid: View {
+    let days: [HeatmapDay]
+    var cellSize: CGFloat = 14
+    var cellSpacing: CGFloat = 3
+
+    private var columns: [[HeatmapDay]] {
+        guard let first = days.first else { return [] }
+        let weekday = Calendar.current.component(.weekday, from: first.date) // 1 = Sunday
+        let leadingPad = weekday - 1
+        var cells: [HeatmapDay?] = Array(repeating: nil, count: leadingPad)
+        cells.append(contentsOf: days.map { Optional($0) })
+        var out: [[HeatmapDay]] = []
+        var current: [HeatmapDay] = []
+        for (i, day) in cells.enumerated() {
+            if let day { current.append(day) } else { current.append(HeatmapDay(date: .distantPast, count: 0, peakSeverity: nil)) }
+            if (i + 1) % 7 == 0 {
+                out.append(current)
+                current = []
+            }
+        }
+        if !current.isEmpty { out.append(current) }
+        return out
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: cellSpacing) {
+                ForEach(Array(columns.enumerated()), id: \.offset) { _, col in
+                    VStack(spacing: cellSpacing) {
+                        ForEach(Array(col.enumerated()), id: \.offset) { _, day in
+                            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                                .fill(heatmapColor(for: day))
+                                .frame(width: cellSize, height: cellSize)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct HeatmapLegend: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Text("Less").font(.caption2).foregroundStyle(.secondary)
+            ForEach(0..<5) { i in
+                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                    .fill(legendSwatch(at: i))
+                    .frame(width: 12, height: 12)
+            }
+            Text("More").font(.caption2).foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func legendSwatch(at index: Int) -> Color {
+        switch index {
+        case 0: Color.secondary.opacity(0.15)
+        case 1: heatmapColor(for: HeatmapDay(date: .now, count: 1, peakSeverity: .slight))
+        case 2: heatmapColor(for: HeatmapDay(date: .now, count: 1, peakSeverity: .medium))
+        case 3: heatmapColor(for: HeatmapDay(date: .now, count: 1, peakSeverity: .extreme))
+        default: heatmapColor(for: HeatmapDay(date: .now, count: 3, peakSeverity: .extreme))
+        }
+    }
+}
+
+func heatmapColor(for day: HeatmapDay) -> Color {
+    let placeholder = day.date == .distantPast
+    if placeholder { return Color.clear }
+    if day.count == 0 { return Color.secondary.opacity(0.15) }
+    let brand = Color(red: 0.95, green: 0.25, blue: 0.36)
+    if let severity = day.peakSeverity {
+        switch severity {
+        case .slight: return brand.opacity(0.35)
+        case .medium: return brand.opacity(0.65)
+        case .extreme: return brand.opacity(0.95)
+        }
+    }
+    return brand.opacity(day.count >= 2 ? 0.75 : 0.50)
+}
+
+// MARK: - Daily risk forecast
+
+struct DailyRiskForecastCard: View {
+    let forecast: ProactiveAlertsEngine.RiskForecast?
+    let isLoading: Bool
+    let locationMissing: Bool
+    let onRetry: () -> Void
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if let forecast {
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Text(forecast.level.displayName)
+                        .font(.title2.bold())
+                        .foregroundStyle(forecast.level.tint)
+                    Text("risk today")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+                    Button(action: onRetry) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.footnote.bold())
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Refresh risk forecast")
+                }
+                if forecast.factors.isEmpty {
+                    Text("No elevated signals in the next 24 hours.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                } else {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(forecast.factors) { factor in
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: factor.icon)
+                                    .font(.subheadline)
+                                    .foregroundStyle(brandColor)
+                                    .frame(width: 22)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(factor.title).font(.subheadline.weight(.semibold))
+                                    Text(factor.detail).font(.footnote).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if isLoading {
+                HStack(spacing: 10) {
+                    ProgressView()
+                    Text("Checking forecast…").font(.subheadline).foregroundStyle(.secondary)
+                }
+            } else if locationMissing {
+                VStack(alignment: .leading, spacing: 6) {
+                    Label("Location unavailable", systemImage: "location.slash")
+                        .font(.subheadline.weight(.semibold))
+                    Text("Log a headache once to capture your location, then come back here for forecast-based risk.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                HStack(spacing: 10) {
+                    Image(systemName: "wifi.exclamationmark")
+                        .foregroundStyle(.secondary)
+                    Text("Forecast unavailable — tap to retry.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+                    Button("Retry", action: onRetry)
+                        .font(.footnote.bold())
+                }
+            }
+        }
+        .padding(14)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+private extension ProactiveAlertsEngine.RiskLevel {
+    var displayName: String {
+        switch self {
+        case .low: "Low"
+        case .moderate: "Moderate"
+        case .high: "High"
+        }
+    }
+
+    var tint: Color {
+        switch self {
+        case .low: .green
+        case .moderate: .orange
+        case .high: .red
+        }
+    }
+}
+
+// MARK: - Learning state row (used when patterns aren't ready yet)
+
+private struct LearningStateRow: View {
+    let title: String
+    let detail: String
+    let progress: Double?
+
+    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label(title, systemImage: "sparkles")
+                .font(.headline)
+                .foregroundStyle(brandColor)
+            Text(detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            if let progress {
+                ProgressView(value: min(progress, 1))
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
