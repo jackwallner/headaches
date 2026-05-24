@@ -2,8 +2,6 @@ import Charts
 import Charts
 import SwiftData
 import SwiftUI
-import RevenueCatUI
-
 struct InsightsView: View {
     @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
@@ -32,6 +30,8 @@ struct InsightsView: View {
         .navigationTitle("Patterns")
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+                .environmentObject(store)
+                .task { store.trackPaywallImpression(id: "headache_insights_sheet") }
         }
         .task {
             await loadAndBackfillDailyRecords()
@@ -55,15 +55,17 @@ struct InsightsView: View {
                     .listRowInsets(EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4))
             }
 
-            Section {
-                CalendarHeatmapCard(days: heatmapDays)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
-                    .listRowBackground(Color.clear)
-            } header: {
-                Text("Last 90 days")
-            } footer: {
-                Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
-                    .font(.footnote)
+            if !heatmapDays.isEmpty {
+                Section {
+                    CalendarHeatmapCard(days: heatmapDays)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
+                        .listRowBackground(Color.clear)
+                } header: {
+                    Text("Headache calendar")
+                } footer: {
+                    Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
+                        .font(.footnote)
+                }
             }
 
             Section {
@@ -97,7 +99,7 @@ struct InsightsView: View {
                 Section {
                     LearningStateRow(
                         title: "Personalized patterns warming up",
-                        detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs — you have \(events.count).",
+                        detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs. You have \(events.count).",
                         progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
                     )
                 } header: {
@@ -125,7 +127,7 @@ struct InsightsView: View {
                 } header: {
                     Text("Your patterns")
                 } footer: {
-                    Text("Patterns are computed locally from your logged events. They describe your data — not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
+                    Text("Patterns are computed locally from your logged events. They describe your data, not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
                         .font(.footnote)
                 }
             }
@@ -173,7 +175,7 @@ struct InsightsView: View {
                     Text("See what triggers your headaches")
                         .font(.title2.bold())
                         .multilineTextAlignment(.center)
-                    Text("Pro analyzes your logged events and surfaces the patterns hiding in the data — sleep, pressure, time of day, weather — with a chart and explanation for each one.")
+                    Text("Pro analyzes your logged events and surfaces the patterns hiding in the data (sleep, pressure, time of day, weather) with a chart and explanation for each one.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -250,8 +252,8 @@ struct InsightsView: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 4)
-            SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches — 1.6× the even baseline.")
-            SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m — 47% under 6 hours.")
+            SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches, 1.6× the even baseline.")
+            SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m, 47% under 6 hours.")
             SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
             SampleInsightRow(icon: "bell.badge.fill", title: "Proactive Alerts", detail: "Get notified 12–24h before risky weather.")
         }
@@ -279,7 +281,7 @@ private struct InsightsHeader: View {
     private func rangeLabel(_ range: ClosedRange<Date>) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        return "\(formatter.string(from: range.lowerBound)) — \(formatter.string(from: range.upperBound))"
+        return "\(formatter.string(from: range.lowerBound)) to \(formatter.string(from: range.upperBound))"
     }
 }
 
@@ -509,7 +511,7 @@ struct InsightDetailView: View {
                     Rectangle()
                         .frame(width: 18, height: 2)
                         .foregroundStyle(.secondary)
-                    Text("Even baseline (\(percentString(baseline))) — what you'd see if headaches were spread evenly across these buckets.")
+                    Text("Even baseline (\(percentString(baseline))): what you'd see if headaches were spread evenly across these buckets.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -567,7 +569,7 @@ struct InsightDetailView: View {
     }
 
     private var disclaimer: some View {
-        Text("Computed locally from your logged events. Descriptive only — not a clinical diagnosis.")
+        Text("Computed locally from your logged events. Descriptive only, not a clinical diagnosis.")
             .font(.footnote)
             .foregroundStyle(.tertiary)
             .padding(.top, 4)
@@ -817,7 +819,7 @@ struct DailyRiskForecastCard: View {
                 HStack(spacing: 10) {
                     Image(systemName: "wifi.exclamationmark")
                         .foregroundStyle(.secondary)
-                    Text("Forecast unavailable — tap to retry.")
+                    Text("Forecast unavailable. Tap to retry.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                     Spacer(minLength: 0)

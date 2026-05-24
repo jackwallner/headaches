@@ -1,6 +1,6 @@
 import XCTest
 import SwiftData
-@testable import HeadacheLogger
+@testable import OneTapHeadacheTracker
 
 final class HeadacheLoggerTests: XCTestCase {
     override class func setUp() {
@@ -861,6 +861,78 @@ final class HeadacheLoggerTests: XCTestCase {
     }
 
     // MARK: - test helpers
+
+    // MARK: - Calendar heatmap
+
+    func testHeatmapIsEmptyWithNoEvents() {
+        // With no logged headaches there is no data to render, so the grid is empty
+        // rather than a wall of 90 zero-cells that implies tracking we never had.
+        XCTAssertTrue(HeatmapData.build(from: [], days: 90).isEmpty)
+    }
+
+    func testHeatmapStartsAtFirstLoggedHeadache() {
+        let first = makeEvent(daysAgo: 10, hour: 9)
+        let days = HeatmapData.build(from: [first], days: 90)
+        XCTAssertEqual(days.first?.date,
+                       Calendar.current.date(byAdding: .day, value: -10, to: Calendar.current.startOfDay(for: .now)))
+        XCTAssertEqual(days.last?.date, Calendar.current.startOfDay(for: .now))
+        XCTAssertEqual(days.count, 11)
+    }
+
+    func testHeatmapCountsAndPeakSeverityPerDay() {
+        let slight = makeEvent(daysAgo: 1, hour: 9)
+        slight.severity = .slight
+        let extreme = makeEvent(daysAgo: 1, hour: 18)
+        extreme.severity = .extreme
+        let other = makeEvent(daysAgo: 3, hour: 12) // no severity
+
+        let days = HeatmapData.build(from: [slight, extreme, other], days: 90)
+        let target = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: .now))!
+        let cell = days.first { $0.date == target }
+        XCTAssertEqual(cell?.count, 2)
+        XCTAssertEqual(cell?.peakSeverity, .extreme, "Peak severity should take the most severe of the day")
+
+        let otherDay = Calendar.current.date(byAdding: .day, value: -3, to: Calendar.current.startOfDay(for: .now))!
+        XCTAssertEqual(days.first { $0.date == otherDay }?.peakSeverity, nil)
+    }
+
+    func testHeatmapExcludesEventsOutsideWindow() {
+        let old = makeEvent(daysAgo: 200, hour: 9)
+        let days = HeatmapData.build(from: [old], days: 90)
+        XCTAssertTrue(days.allSatisfy { $0.count == 0 })
+    }
+
+    // MARK: - Daily risk forecast
+
+    func testDailyRiskLowWhenNoSignals() {
+        let forecast = HourlyForecast(
+            times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015],
+            usAqi: [20, 25, 30, 20, 15, 10]
+        )
+        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 8, profile: .empty)
+        XCTAssertEqual(risk.level, .low)
+        XCTAssertTrue(risk.factors.isEmpty)
+    }
+
+    func testDailyRiskHighOnPressureDropAirQualityAndShortSleep() {
+        let forecast = HourlyForecast(
+            times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1018, 1016, 1013, 1011, 1010, 1010], // 8 hPa drop
+            usAqi: [60, 90, 120, 160, 140, 100] // peak 160 → unhealthy
+        )
+        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 4.5, profile: .empty)
+        XCTAssertEqual(risk.level, .high)
+        XCTAssertTrue(risk.factors.contains { $0.id == "pressure" })
+        XCTAssertTrue(risk.factors.contains { $0.id == "aqi-high" })
+        XCTAssertTrue(risk.factors.contains { $0.id == "sleep-very-low" })
+    }
+
+    func testDailyRiskHandlesMissingForecast() {
+        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: nil, sleepLastNightHours: 5.5, profile: .empty)
+        XCTAssertEqual(risk.level, .moderate)
+        XCTAssertEqual(risk.factors.map(\.id), ["sleep-low"])
+    }
 
     private func makeEvent(daysAgo: Int, hour: Int) -> HeadacheEvent {
         var components = DateComponents()

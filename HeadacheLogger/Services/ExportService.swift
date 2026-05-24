@@ -1,4 +1,6 @@
 import Foundation
+import SwiftUI
+import UIKit
 
 enum ExportService {
     static func exportCSV(events: [HeadacheEvent]) throws -> URL {
@@ -161,7 +163,7 @@ enum ExportService {
     /// Lines prefixed with `#` so spreadsheet tools and simple parsers can treat them as comments; tabular CSV starts after the preamble.
     private static func csvPreamble(eventCount: Int, generatedAtISO8601: String) -> [String] {
         [
-            "# One Tap Headache Tracker — exported headache event log",
+            "# One Tap Headache Tracker: exported headache event log",
             "# What this file is: one row per time you tapped Headache in the app; each row is a timestamped snapshot of optional context (not a diagnosis).",
             "# Time: timestamp (UTC ISO8601 with fractional seconds), timezone ID, weekday name, hour/minute, part_of_day (overnight/morning/afternoon/evening).",
             "# Health (Apple Health when permitted): activity (steps, active/basal energy, distance, exercise, stand, flights), sleep (hours in window, inferred main-sleep wake time, hours since wake), heart (resting, recent avg, HRV, SpO₂, VO₂ max, walking speed), breathing rate, environmental audio (6h avg dB), mindful minutes today, barometric pressure change over 6h (device samples), workouts in last 24h.",
@@ -205,5 +207,267 @@ enum ExportService {
         formatter.minimumFractionDigits = 0
         formatter.minimumIntegerDigits = 1
         return formatter
+    }
+
+    // MARK: - Doctor PDF
+
+    /// Renders a one-page clinical-style report covering the trailing 90 days.
+    @MainActor
+    static func exportDoctorPDF(events: [HeadacheEvent], now: Date = .now) throws -> URL {
+        let calendar = Calendar.current
+        let windowDays = 90
+        let windowEnd = now
+        let windowStart = calendar.date(byAdding: .day, value: -(windowDays - 1), to: calendar.startOfDay(for: now)) ?? now
+        let inWindow = events.filter { $0.timestamp >= windowStart && $0.timestamp <= windowEnd }
+        let heatmap = HeatmapData.build(from: events, days: windowDays, endingAt: now)
+        let summary = InsightsEngine.summarize(events)
+
+        // US Letter portrait.
+        let pageRect = CGRect(x: 0, y: 0, width: 612, height: 792)
+        let renderer = UIGraphicsPDFRenderer(bounds: pageRect, format: UIGraphicsPDFRendererFormat())
+
+        let filename = "headache-report-\(Int(now.timeIntervalSince1970)).pdf"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+
+        try renderer.writePDF(to: url) { ctx in
+            ctx.beginPage()
+            var y: CGFloat = 36
+            let leftMargin: CGFloat = 36
+            let rightMargin: CGFloat = 36
+            let contentWidth = pageRect.width - leftMargin - rightMargin
+
+            y = drawHeader(at: y, leftMargin: leftMargin, contentWidth: contentWidth, windowStart: windowStart, windowEnd: windowEnd, generatedAt: now)
+            y += 16
+
+            y = drawSummaryStats(at: y, leftMargin: leftMargin, contentWidth: contentWidth, events: inWindow, calendar: calendar)
+            y += 18
+
+            y = drawHeatmap(at: y, leftMargin: leftMargin, contentWidth: contentWidth, days: heatmap)
+            y += 18
+
+            y = drawTopPatterns(at: y, leftMargin: leftMargin, contentWidth: contentWidth, summary: summary)
+            y += 18
+
+            drawFooter(in: pageRect, leftMargin: leftMargin)
+        }
+
+        return url
+    }
+
+    private static func drawHeader(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, windowStart: Date, windowEnd: Date, generatedAt: Date) -> CGFloat {
+        let title = "Headache Report"
+        let titleAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 26, weight: .heavy),
+            .foregroundColor: UIColor.label,
+        ]
+        (title as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: titleAttrs)
+
+        let dateFmt = DateFormatter()
+        dateFmt.dateStyle = .medium
+        let subtitle = "\(dateFmt.string(from: windowStart)) to \(dateFmt.string(from: windowEnd))"
+        let subtitleAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 12, weight: .regular),
+            .foregroundColor: UIColor.secondaryLabel,
+        ]
+        (subtitle as NSString).draw(at: CGPoint(x: leftMargin, y: y + 32), withAttributes: subtitleAttrs)
+
+        let generated = "Generated \(dateFmt.string(from: generatedAt))"
+        let genSize = (generated as NSString).size(withAttributes: subtitleAttrs)
+        (generated as NSString).draw(
+            at: CGPoint(x: leftMargin + contentWidth - genSize.width, y: y + 32),
+            withAttributes: subtitleAttrs
+        )
+
+        let separatorY = y + 54
+        UIColor.separator.setStroke()
+        let path = UIBezierPath()
+        path.lineWidth = 0.5
+        path.move(to: CGPoint(x: leftMargin, y: separatorY))
+        path.addLine(to: CGPoint(x: leftMargin + contentWidth, y: separatorY))
+        path.stroke()
+
+        return separatorY + 8
+    }
+
+    private static func drawSummaryStats(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, events: [HeadacheEvent], calendar: Calendar) -> CGFloat {
+        let total = events.count
+        let attackDays = Set(events.map { calendar.startOfDay(for: $0.timestamp) }).count
+        let severities = events.compactMap(\.severity)
+        let extreme = severities.filter { $0 == .extreme }.count
+
+        var dayCounts: [Int: Int] = [:]
+        var partCounts: [PartOfDay: Int] = [:]
+        for event in events {
+            dayCounts[event.weekdayIndex, default: 0] += 1
+            partCounts[event.partOfDay, default: 0] += 1
+        }
+        let topWeekday: String = {
+            guard let top = dayCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
+            let symbols = calendar.standaloneWeekdaySymbols
+            let i = top - 1
+            return (i >= 0 && i < symbols.count) ? symbols[i] : "—"
+        }()
+        let topPart: String = {
+            guard let top = partCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
+            return top.rawValue.capitalized
+        }()
+
+        let stats: [(String, String)] = [
+            ("Attacks", String(total)),
+            ("Days affected", String(attackDays)),
+            ("Severe rated", String(extreme)),
+            ("Peak weekday", topWeekday),
+            ("Peak time", topPart),
+        ]
+
+        let headerAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
+            .foregroundColor: UIColor.label,
+        ]
+        ("Summary" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+
+        let rowY = y + 24
+        let cellWidth = contentWidth / CGFloat(stats.count)
+        let labelAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 9, weight: .semibold),
+            .foregroundColor: UIColor.secondaryLabel,
+        ]
+        let valueAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 20, weight: .bold),
+            .foregroundColor: UIColor.label,
+        ]
+        for (index, stat) in stats.enumerated() {
+            let originX = leftMargin + cellWidth * CGFloat(index)
+            (stat.0.uppercased() as NSString).draw(at: CGPoint(x: originX, y: rowY), withAttributes: labelAttrs)
+            (stat.1 as NSString).draw(at: CGPoint(x: originX, y: rowY + 12), withAttributes: valueAttrs)
+        }
+
+        return rowY + 40
+    }
+
+    private static func drawHeatmap(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, days: [HeatmapDay]) -> CGFloat {
+        let headerAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
+            .foregroundColor: UIColor.label,
+        ]
+        ("Last 90 days" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+
+        let gridTop = y + 22
+        let cellSize: CGFloat = 14
+        let cellSpacing: CGFloat = 3
+
+        guard let first = days.first else { return gridTop + cellSize }
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: first.date) // 1 = Sunday
+        let leadingPad = weekday - 1
+
+        var column = 0
+        var row = leadingPad
+
+        let brand = UIColor(red: 0.95, green: 0.25, blue: 0.36, alpha: 1.0)
+        for day in days {
+            let originX = leftMargin + CGFloat(column) * (cellSize + cellSpacing)
+            let originY = gridTop + CGFloat(row) * (cellSize + cellSpacing)
+            let rect = CGRect(x: originX, y: originY, width: cellSize, height: cellSize)
+            let path = UIBezierPath(roundedRect: rect, cornerRadius: 2.5)
+            heatmapPDFColor(for: day, brand: brand).setFill()
+            path.fill()
+            row += 1
+            if row >= 7 {
+                row = 0
+                column += 1
+            }
+        }
+
+        let gridBottom = gridTop + 7 * (cellSize + cellSpacing)
+
+        // Legend.
+        let legendY = gridBottom + 6
+        let legendAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 9, weight: .regular),
+            .foregroundColor: UIColor.secondaryLabel,
+        ]
+        ("Less" as NSString).draw(at: CGPoint(x: leftMargin, y: legendY + 2), withAttributes: legendAttrs)
+        let swatches: [HeatmapDay] = [
+            HeatmapDay(date: .now, count: 0, peakSeverity: nil),
+            HeatmapDay(date: .now, count: 1, peakSeverity: .slight),
+            HeatmapDay(date: .now, count: 1, peakSeverity: .medium),
+            HeatmapDay(date: .now, count: 1, peakSeverity: .extreme),
+        ]
+        var swatchX = leftMargin + 32
+        for swatch in swatches {
+            let rect = CGRect(x: swatchX, y: legendY, width: 12, height: 12)
+            let path = UIBezierPath(roundedRect: rect, cornerRadius: 2)
+            heatmapPDFColor(for: swatch, brand: brand).setFill()
+            path.fill()
+            swatchX += 16
+        }
+        ("More" as NSString).draw(at: CGPoint(x: swatchX, y: legendY + 2), withAttributes: legendAttrs)
+
+        return legendY + 18
+    }
+
+    private static func heatmapPDFColor(for day: HeatmapDay, brand: UIColor) -> UIColor {
+        if day.count == 0 { return UIColor.tertiaryLabel.withAlphaComponent(0.25) }
+        if let severity = day.peakSeverity {
+            switch severity {
+            case .slight: return brand.withAlphaComponent(0.35)
+            case .medium: return brand.withAlphaComponent(0.65)
+            case .extreme: return brand.withAlphaComponent(0.95)
+            }
+        }
+        return brand.withAlphaComponent(day.count >= 2 ? 0.75 : 0.50)
+    }
+
+    private static func drawTopPatterns(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, summary: InsightsEngine.Summary) -> CGFloat {
+        let headerAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
+            .foregroundColor: UIColor.label,
+        ]
+        ("Top patterns" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+
+        var cursorY = y + 22
+        let titleAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 12, weight: .semibold),
+            .foregroundColor: UIColor.label,
+        ]
+        let detailAttrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 10, weight: .regular),
+            .foregroundColor: UIColor.secondaryLabel,
+        ]
+
+        let topInsights = Array(summary.insights.prefix(3))
+        if topInsights.isEmpty {
+            let body = summary.totalEvents < InsightsEngine.minimumSampleSize
+                ? "Not enough logged headaches yet for pattern detection (need at least \(InsightsEngine.minimumSampleSize))."
+                : "No single signal yet stands out at the confidence threshold. Continued logging will surface patterns as they emerge."
+            cursorY = drawWrappedText(body, at: CGPoint(x: leftMargin, y: cursorY), width: contentWidth, attributes: detailAttrs) + 4
+            return cursorY
+        }
+
+        for insight in topInsights {
+            (insight.title as NSString).draw(at: CGPoint(x: leftMargin, y: cursorY), withAttributes: titleAttrs)
+            cursorY += 16
+            cursorY = drawWrappedText(insight.detail, at: CGPoint(x: leftMargin, y: cursorY), width: contentWidth, attributes: detailAttrs) + 8
+        }
+        return cursorY
+    }
+
+    private static func drawWrappedText(_ text: String, at origin: CGPoint, width: CGFloat, attributes: [NSAttributedString.Key: Any]) -> CGFloat {
+        let attributed = NSAttributedString(string: text, attributes: attributes)
+        let constraint = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let bounds = attributed.boundingRect(with: constraint, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
+        attributed.draw(with: CGRect(origin: origin, size: CGSize(width: width, height: ceil(bounds.height))), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
+        return origin.y + ceil(bounds.height)
+    }
+
+    private static func drawFooter(in pageRect: CGRect, leftMargin: CGFloat) {
+        let footerY = pageRect.height - 40
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 8, weight: .regular),
+            .foregroundColor: UIColor.tertiaryLabel,
+        ]
+        let line = "Generated by One Tap Headache Tracker. Descriptive only, not a clinical diagnosis. Discuss with a qualified clinician."
+        (line as NSString).draw(at: CGPoint(x: leftMargin, y: footerY), withAttributes: attrs)
     }
 }

@@ -192,7 +192,7 @@ final class CaptureCoordinator: ObservableObject {
             refetch.fetchLimit = 1
             guard let found = try? context.fetch(refetch).first else {
                 isCapturing = false
-                bannerMessage = "Retry failed — event missing."
+                bannerMessage = "Retry failed. Event missing."
                 bannerIsError = true
                 return
             }

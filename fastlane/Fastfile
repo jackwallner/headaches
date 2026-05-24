@@ -27,4 +27,25 @@ platform :ios do
       }
     )
   end
+
+  desc "Build and upload to TestFlight"
+  lane :deploy_testflight do
+    api_key = app_store_connect_api_key(
+      key_id: "9T82M4AZQ2",
+      issuer_id: "331fd693-6cf0-4ea7-9a9f-ee03b01b3f6d",
+      key_filepath: "/Users/jackwallner/.appstoreconnect/AuthKey_9T82M4AZQ2.p8"
+    )
+
+    build_app(
+      scheme: "HeadacheLogger",
+      project: "HeadacheLogger.xcodeproj",
+      export_method: "app-store",
+      clean: true
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
 end

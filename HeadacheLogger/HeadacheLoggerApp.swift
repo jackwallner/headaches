@@ -1,5 +1,4 @@
 @preconcurrency import RevenueCat
-import RevenueCatUI
 import SwiftData
 import SwiftUI
 import UIKit
@@ -77,7 +76,7 @@ private struct HeadacheLoggerRootContent: View {
     @State private var firstLogOfferShownThisSession = false
     /// Which trigger opened the current offer, so dismissal sets the right flag.
     @State private var trialOfferSource: TrialOfferSource = .firstLog
-    /// Set when the user opts into the hosted paywall from inside the trial-offer
+    /// Set when the user opts into the full plan picker from inside the trial-offer
     /// sheet. The `.sheet(onDismiss:)` reads this and presents the paywall *after*
     /// the trial sheet has fully dismissed — presenting both sheets in the same
     /// runloop tick is racy in SwiftUI and frequently drops the second sheet.
@@ -94,12 +93,12 @@ private struct HeadacheLoggerRootContent: View {
             ?? storeService.products.compactMap(\.headacheProIntroOfferLabel).first
     }
 
-    private var hasTrialOffer: Bool { trialOfferLabel != nil }
+    private var hasTrialOffer: Bool { directTrialPackage != nil }
 
-    /// The package the direct trial purchase buys: prefer the yearly plan that
-    /// carries a free-trial intro offer, else any trial-bearing package.
+    /// The package the direct trial purchase buys: prefer eligible yearly trial,
+    /// else any eligible trial-bearing package.
     private var directTrialPackage: Package? {
-        let trialPackages = storeService.products.filter { $0.headacheProIntroOfferLabel != nil }
+        let trialPackages = storeService.products.filter { storeService.isEligibleForIntroOffer($0) }
         return trialPackages.first { $0.headacheProPackageKind == .yearly } ?? trialPackages.first
     }
 
@@ -148,6 +147,8 @@ private struct HeadacheLoggerRootContent: View {
                     }
                     .sheet(isPresented: $showTrialPaywall) {
                         PaywallView()
+                            .environmentObject(storeService)
+                            .task { storeService.trackPaywallImpression(id: "headache_trial_sheet") }
                     }
             } else {
                 OnboardingView()
@@ -451,6 +452,8 @@ private struct ProIntroSheet: View {
                 dismiss()
             }) {
                 PaywallView()
+                    .environmentObject(store)
+                    .task { store.trackPaywallImpression(id: "headache_pro_intro_sheet") }
             }
         }
     }
@@ -480,7 +483,7 @@ private struct TrialOfferSheet: View {
     let priceLabel: String?
     /// When true the primary button buys the trial product directly via StoreKit
     /// and the sheet shows compliant billing disclosure + a "See all plans" link.
-    /// When false it opens the RevenueCat-hosted paywall fallback.
+    /// When false it chains to the full native paywall via `onSeeAllPlans`.
     let directPurchase: Bool
     let isPurchasing: Bool
     let errorMessage: String?
@@ -523,9 +526,9 @@ private struct TrialOfferSheet: View {
 
     private var subheadline: String {
         if trialPeriodPhrase != nil {
-            return "Personalized patterns, proactive alerts, full exports — no charge until your trial ends."
+            return "Personalized patterns, proactive alerts, full exports, no charge until your trial ends."
         }
-        return "Personalized patterns, proactive alerts, full exports — free for eligible new subscribers."
+        return "Personalized patterns, proactive alerts, full exports, free for eligible new subscribers."
     }
 
     private var trialBullets: [TrialBullet] {
@@ -540,7 +543,7 @@ private struct TrialOfferSheet: View {
                 icon: "chart.bar.xaxis",
                 tint: .indigo,
                 title: "Personalized patterns",
-                detail: "Sleep, time of day, pressure, weather — surfaced from your own logs."
+                detail: "Sleep, time of day, pressure, weather, surfaced from your own logs."
             ),
             TrialBullet(
                 icon: "lock.shield",
@@ -627,7 +630,7 @@ private struct TrialOfferSheet: View {
                 .padding(.horizontal, 4)
 
                 if directPurchase, let priceLabel {
-                    Text("Free during your trial, then \(priceLabel). Cancel anytime in Settings — at least 24h before the trial ends to avoid the charge.")
+                    Text("Free during your trial, then \(priceLabel). Cancel anytime in Settings, at least 24h before the trial ends to avoid the charge.")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -693,16 +696,13 @@ private struct TrialOfferSheet: View {
                     .disabled(isPurchasing)
                 }
 
-                if let terms = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"),
-                   let privacy = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html") {
-                    HStack(spacing: 4) {
-                        Link("Terms", destination: terms)
-                        Text("·")
-                        Link("Privacy Policy", destination: privacy)
-                    }
-                    .font(.system(.caption2, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                HStack(spacing: 4) {
+                    Link("Terms", destination: PaywallLinks.standardEULA)
+                    Text("·")
+                    Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
                 }
+                .font(.system(.caption2, design: .rounded))
+                .foregroundStyle(.tertiary)
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 24)

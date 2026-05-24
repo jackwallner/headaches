@@ -109,6 +109,119 @@ enum ProactiveAlertsEngine {
         evaluate(forecast: forecast, prefs: prefs, profile: PersonalAlertProfile.current())
     }
 
+    // MARK: - Daily risk forecast
+
+    enum RiskLevel: String, Sendable {
+        case low
+        case moderate
+        case high
+    }
+
+    struct RiskFactor: Sendable, Identifiable {
+        let id: String
+        let icon: String
+        let title: String
+        let detail: String
+    }
+
+    struct RiskForecast: Sendable {
+        let level: RiskLevel
+        let score: Int
+        let factors: [RiskFactor]
+        let evaluatedAt: Date
+    }
+
+    /// Pure scoring used by both the live view and the unit tests.
+    static func dailyRiskForecast(
+        forecast: HourlyForecast?,
+        sleepLastNightHours: Double?,
+        profile: PersonalAlertProfile = .current(),
+        now: Date = .now
+    ) -> RiskForecast {
+        var score = 0
+        var factors: [RiskFactor] = []
+
+        if let forecast {
+            var maxDrop: Double = 0
+            for i in 0..<forecast.pressureMsl.count {
+                guard let peak = forecast.pressureMsl[i] else { continue }
+                for j in (i + 1)..<forecast.pressureMsl.count {
+                    guard let trough = forecast.pressureMsl[j] else { continue }
+                    let delta = peak - trough
+                    if delta > maxDrop { maxDrop = delta }
+                }
+            }
+            if maxDrop >= 6 {
+                let bump = profile.pressure.isSupported ? 3 : 2
+                score += bump
+                factors.append(RiskFactor(
+                    id: "pressure",
+                    icon: "barometer",
+                    title: "Pressure dropping",
+                    detail: String(format: "%.1f hPa drop forecast in the next 24h.", maxDrop)
+                ))
+            } else if maxDrop >= 3 {
+                score += 1
+                factors.append(RiskFactor(
+                    id: "pressure-mild",
+                    icon: "barometer",
+                    title: "Mild pressure shift",
+                    detail: String(format: "%.1f hPa drop forecast.", maxDrop)
+                ))
+            }
+
+            let aqiPeak = forecast.usAqi.compactMap { $0 }.max() ?? 0
+            if aqiPeak >= 150 {
+                score += 3
+                factors.append(RiskFactor(
+                    id: "aqi-high",
+                    icon: "aqi.high",
+                    title: "Unhealthy air",
+                    detail: "AQI is forecast to reach \(Int(aqiPeak))."
+                ))
+            } else if aqiPeak >= 100 {
+                let bump = profile.airQuality.isSupported ? 2 : 1
+                score += bump
+                factors.append(RiskFactor(
+                    id: "aqi-moderate",
+                    icon: "aqi.medium",
+                    title: "Elevated air quality",
+                    detail: "AQI forecast peak: \(Int(aqiPeak))."
+                ))
+            }
+        }
+
+        if let sleep = sleepLastNightHours {
+            if sleep < 5 {
+                score += 3
+                factors.append(RiskFactor(
+                    id: "sleep-very-low",
+                    icon: "bed.double.fill",
+                    title: "Very short sleep",
+                    detail: String(format: "%.1fh last night, well under your usual window.", sleep)
+                ))
+            } else if sleep < 6 {
+                score += 2
+                factors.append(RiskFactor(
+                    id: "sleep-low",
+                    icon: "bed.double.fill",
+                    title: "Short sleep",
+                    detail: String(format: "%.1fh last night.", sleep)
+                ))
+            }
+        }
+
+        let level: RiskLevel = {
+            switch score {
+            case 0...1: return .low
+            case 2...3: return .moderate
+            default: return .high
+            }
+        }()
+
+        return RiskForecast(level: level, score: score, factors: factors, evaluatedAt: now)
+    }
+
     static func evaluate(forecast: HourlyForecast, prefs: ProAlertPreferenceValues, profile: PersonalAlertProfile) -> AlertDecision? {
         if profile.pressure.isSupported,
            let pressure = pressureDecision(forecast: forecast, threshold: prefs.pressureDropThresholdHpa, signal: profile.pressure) {

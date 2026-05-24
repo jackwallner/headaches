@@ -125,7 +125,7 @@ enum InsightsEngine {
         }
         let baseline = 1.0 / Double(order.count)
         let multiple = topShare / baseline
-        let yourPattern = "\(percent(topShare)) of your headaches happen in the \(label(for: top).lowercased()) — about \(String(format: "%.1fx", multiple)) what you'd expect if they were evenly spread across the day (\(percent(baseline)) per period). " + othersSummary(buckets, excluding: top.rawValue, label: { $0.label })
+        let yourPattern = "\(percent(topShare)) of your headaches happen in the \(label(for: top).lowercased()), about \(String(format: "%.1fx", multiple)) what you'd expect if they were evenly spread across the day (\(percent(baseline)) per period). " + othersSummary(buckets, excluding: top.rawValue, label: { $0.label })
         return Insight(
             id: "part-of-day",
             category: .time,
@@ -133,7 +133,7 @@ enum InsightsEngine {
             title: "Most common time: \(label(for: top))",
             detail: "\(percent(topShare)) of your logged headaches happened in the \(label(for: top).lowercased()).",
             strength: topShare,
-            whyItMatters: "Headaches that cluster at a specific time of day often point to circadian or behavioural triggers — caffeine timing, screen exposure, dehydration, posture, or letdown after stress. Knowing your peak window lets you preload water, breaks, or rescue meds before you'd normally feel it coming.",
+            whyItMatters: "Headaches that cluster at a specific time of day often point to circadian or behavioural triggers: caffeine timing, screen exposure, dehydration, posture, or letdown after stress. Knowing your peak window lets you preload water, breaks, or rescue meds before you'd normally feel it coming.",
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: buckets,
@@ -172,7 +172,7 @@ enum InsightsEngine {
         }
         let baseline = 1.0 / 7.0
         let multiple = topShare / baseline
-        let yourPattern = "\(percent(topShare)) of your headaches fall on \(topName) — about \(String(format: "%.1fx", multiple)) the even baseline of \(percent(baseline)) per day."
+        let yourPattern = "\(percent(topShare)) of your headaches fall on \(topName), about \(String(format: "%.1fx", multiple)) the even baseline of \(percent(baseline)) per day."
         return Insight(
             id: "weekday",
             category: .time,
@@ -180,7 +180,7 @@ enum InsightsEngine {
             title: "Headache day: \(topName)",
             detail: "\(percent(topShare)) of your headaches fall on \(topName).",
             strength: topShare - baseline,
-            whyItMatters: "Weekday clusters often signal a routine trigger — stress build-up, irregular sleep on transition days, alcohol after work, or letdown on a recurring rest day. Spotting the pattern points to behavioural changes (steady sleep windows, caffeine timing, scheduled breaks) rather than medication-only fixes.",
+            whyItMatters: "Weekday clusters often signal a routine trigger: stress build-up, irregular sleep on transition days, alcohol after work, or letdown on a recurring rest day. Spotting the pattern points to behavioural changes (steady sleep windows, caffeine timing, scheduled breaks) rather than medication-only fixes.",
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: buckets,
@@ -272,7 +272,7 @@ enum InsightsEngine {
             detail = "Headaches are \(moreLikely) more likely after \(headline.label) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med))."
             strength = 0.5 + min((headline.lift - 1.0) / 2.0, 0.5)
             title = "Low sleep: \(headline.label)"
-            yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)% — compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
+            yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)%, compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
         } else {
             let lowSleepShare = Double(headacheSleepValues.filter { $0 < 6 }.count) / Double(total)
             if lowSleepShare >= 0.4 {
@@ -293,7 +293,7 @@ enum InsightsEngine {
             title: title,
             detail: detail,
             strength: strength,
-            whyItMatters: "Sleep deprivation is one of the most consistently documented headache triggers in the migraine literature. Both too little (<6h) and too much (>9h) sleep, and especially irregular timing, can precipitate attacks. Wake-time consistency — including weekends — is the single highest-leverage behavioural change for many people.",
+            whyItMatters: "Sleep deprivation is one of the most consistently documented headache triggers in the migraine literature. Both too little (<6h) and too much (>9h) sleep, and especially irregular timing, can precipitate attacks. Wake-time consistency, including weekends, is the single highest-leverage behavioural change for many people.",
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: chartBuckets,
@@ -335,11 +335,11 @@ enum InsightsEngine {
         let why: String
         switch top {
         case .falling:
-            why = "Falling barometric pressure is the most replicated weather trigger in the migraine literature — drops typically arrive 6–24 hours before a storm and correlate with attack onset. Because it's forecastable, this is a signal you can prepare for."
+            why = "Falling barometric pressure is the most replicated weather trigger in the migraine literature; drops typically arrive 6–24 hours before a storm and correlate with attack onset. Because it's forecastable, this is a signal you can prepare for."
         case .rising:
-            why = "Pressure rises (high-pressure systems building in) trigger fewer people than drops, but a clear cluster on rises still represents a forecastable signal — meaning hydration, caffeine, or rescue meds can be timed."
+            why = "Pressure rises (high-pressure systems building in) trigger fewer people than drops, but a clear cluster on rises still represents a forecastable signal, meaning hydration, caffeine, or rescue meds can be timed."
         default:
-            why = "A 'steady' cluster suggests pressure isn't your dominant weather trigger. Other environmental signals (humidity, AQI) or non-weather factors are likelier drivers — worth checking those screens."
+            why = "A 'steady' cluster suggests pressure isn't your dominant weather trigger. Other environmental signals (humidity, AQI) or non-weather factors are likelier drivers, worth checking those screens."
         }
         return Insight(
             id: "pressure-trend",
@@ -349,7 +349,7 @@ enum InsightsEngine {
             detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened during \(topLabel.lowercased()) barometric pressure.",
             strength: topShare,
             whyItMatters: why,
-            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred during \(topLabel.lowercased()) pressure — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
+            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred during \(topLabel.lowercased()) pressure, \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -391,7 +391,7 @@ enum InsightsEngine {
             category: .pressure,
             icon: "barometer",
             title: "Typical 6h pressure shift",
-            detail: "Median pressure change in the 6 hours before your headaches: \(String(format: "%+.1f hPa", med)) — a typical \(direction).",
+            detail: "Median pressure change in the 6 hours before your headaches: \(String(format: "%+.1f hPa", med)), a typical \(direction).",
             strength: min(1.0, abs(med) / 6),
             whyItMatters: "The size of pressure swings tends to matter more than the absolute level. Drops of 5+ hPa within 24 hours are commonly cited thresholds for triggering migraine in sensitive people. The bigger your typical pre-headache shift, the more useful Proactive Alerts will be at giving you a heads-up.",
             yourPattern: "Median 6-hour pressure change before your headaches: \(String(format: "%+.1f hPa", med)). The histogram on the right shows the full distribution.",
@@ -434,7 +434,7 @@ enum InsightsEngine {
             detail: "\(percent(elevated)) of your headaches\(coveragePhrase) happened with US AQI ≥ 75.",
             strength: elevated,
             whyItMatters: "Particulate matter and ozone can trigger or amplify headaches via inflammatory pathways. AQI of 75–100 is where sensitive groups typically start to feel effects; 150+ is unhealthy for everyone. On bad-air days, indoor mitigations (HEPA filters, closed windows, masks outdoors) can meaningfully reduce exposure.",
-            yourPattern: "\(percent(elevated)) of your headaches\(coveragePhrase) occurred with US AQI at or above 75 — the threshold where sensitive groups commonly start to feel effects.",
+            yourPattern: "\(percent(elevated)) of your headaches\(coveragePhrase) occurred with US AQI at or above 75, the threshold where sensitive groups commonly start to feel effects.",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
@@ -474,7 +474,7 @@ enum InsightsEngine {
             title: "HRV around your headaches",
             detail: "Median HRV (SDNN) when you've logged a headache: \(String(format: "%.0f ms", med)).",
             strength: 0.30,
-            whyItMatters: "Heart-rate variability tracks autonomic nervous-system balance. Lower HRV is associated with stress, poor recovery, and — for many migraine sufferers — the prodrome window 12–24 hours before an attack. Watching multi-day HRV trends can give an early warning that your threshold is dropping.",
+            whyItMatters: "Heart-rate variability tracks autonomic nervous-system balance. Lower HRV is associated with stress, poor recovery, and, for many migraine sufferers, the prodrome window 12–24 hours before an attack. Watching multi-day HRV trends can give an early warning that your threshold is dropping.",
             yourPattern: "Your median pre-headache HRV (SDNN) is \(String(format: "%.0f ms", med)). The chart shows where your HRV typically sat at the moment you logged.",
             breakdown: Breakdown(
                 buckets: buckets,
@@ -512,7 +512,7 @@ enum InsightsEngine {
             title: "High humidity pattern",
             detail: "\(percent(high)) of your headaches happened with humidity at or above 70%.",
             strength: high * 0.7,
-            whyItMatters: "High humidity reduces evaporative cooling and often co-occurs with the pressure drops that precede storms — a one-two punch flagged in many migraine-trigger studies. Air conditioning, hydration, and electrolyte salts are commonly suggested mitigations on muggy days.",
+            whyItMatters: "High humidity reduces evaporative cooling and often co-occurs with the pressure drops that precede storms, a one-two punch flagged in many migraine-trigger studies. Air conditioning, hydration, and electrolyte salts are commonly suggested mitigations on muggy days.",
             yourPattern: "\(percent(high)) of your headaches occurred with humidity ≥ 70%. The chart shows the full breakdown.",
             breakdown: Breakdown(
                 buckets: buckets,
@@ -555,8 +555,8 @@ enum InsightsEngine {
             title: "Most often: \(label(for: top))",
             detail: "\(percent(topShare)) of headaches you've rated were \(label(for: top).lowercased()).",
             strength: topShare - baseline,
-            whyItMatters: "Knowing your typical severity distribution helps frame conversations with a clinician. Frequent extreme attacks — even if they're not your most common bucket — often justify a preventive treatment plan rather than rescue meds alone.",
-            yourPattern: "\(percent(topShare)) of your rated headaches were \(label(for: top).lowercased()) — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
+            whyItMatters: "Knowing your typical severity distribution helps frame conversations with a clinician. Frequent extreme attacks, even if they're not your most common bucket, often justify a preventive treatment plan rather than rescue meds alone.",
+            yourPattern: "\(percent(topShare)) of your rated headaches were \(label(for: top).lowercased()), \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -597,8 +597,8 @@ enum InsightsEngine {
             title: title,
             detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened when it felt \(inlineTop.lowercased()).",
             strength: topShare,
-            whyItMatters: "Extreme temperatures — both hot and cold — are well-documented migraine triggers. Heat causes vasodilation and dehydration; cold triggers vasoconstriction and muscle tension. The apparent temperature (feels-like) accounts for wind chill and humidity, making it more relevant than raw air temperature.",
-            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred in \(inlineTop.lowercased()) conditions — \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)). " + othersSummary(buckets, excluding: topLabel, label: { $0.label.replacingOccurrences(of: "\n", with: " ") }),
+            whyItMatters: "Extreme temperatures, both hot and cold, are well-documented migraine triggers. Heat causes vasodilation and dehydration; cold triggers vasoconstriction and muscle tension. The apparent temperature (feels-like) accounts for wind chill and humidity, making it more relevant than raw air temperature.",
+            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred in \(inlineTop.lowercased()) conditions, \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)). " + othersSummary(buckets, excluding: topLabel, label: { $0.label.replacingOccurrences(of: "\n", with: " ") }),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -660,7 +660,7 @@ enum InsightsEngine {
             title: "Rainy-day cluster",
             detail: "\(percent(rainShare)) of your headaches\(coveragePhrase) happened during rain (\(percent(topBucket.share)) in the \(topBucket.label.lowercased()) band).",
             strength: rainShare,
-            whyItMatters: "Rainy weather often co-occurs with falling barometric pressure, high humidity, and reduced light — a multi-factor trigger cocktail. The relationship may be indirect: people tend to stay indoors, sleep differently, or alter caffeine habits on rainy days.",
+            whyItMatters: "Rainy weather often co-occurs with falling barometric pressure, high humidity, and reduced light, a multi-factor trigger cocktail. The relationship may be indirect: people tend to stay indoors, sleep differently, or alter caffeine habits on rainy days.",
             yourPattern: "\(percent(rainShare)) of your headaches\(coveragePhrase) occurred during active precipitation, with the most common intensity being \(topBucket.label.lowercased()).",
             breakdown: Breakdown(
                 buckets: peaked,
@@ -757,7 +757,7 @@ enum InsightsEngine {
                 title: "Low-caffeine days",
                 detail: "\(percent(noneShare)) of your headaches\(coveragePhrase) happened on days with zero caffeine (\(percent(highShare)) high-caffeine days). Median: \(String(format: "%.0f mg", med)).",
                 strength: noneShare,
-                whyItMatters: "Caffeine withdrawal is a well-recognized headache trigger — even skipping your usual morning coffee can precipitate a headache within hours. The relationship is U-shaped: both zero and excess caffeine can trigger attacks. Tracking your individual threshold is key.",
+                whyItMatters: "Caffeine withdrawal is a well-recognized headache trigger; even skipping your usual morning coffee can precipitate a headache within hours. The relationship is U-shaped: both zero and excess caffeine can trigger attacks. Tracking your individual threshold is key.",
                 yourPattern: "\(percent(noneShare)) of your headaches occurred on zero-caffeine days, with only \(percent(highShare)) on high-caffeine days (≥200mg).",
                 breakdown: Breakdown(
                     buckets: buckets,
@@ -818,7 +818,7 @@ enum InsightsEngine {
             title: "Low hydration pattern",
             detail: "\(percent(lowShare)) of your headaches\(coveragePhrase) happened with under 1L of water that day (\(percent(Double(veryLow) / Double(total))) under 500mL). Median: \(String(format: "%.0f mL", med)).",
             strength: lowShare,
-            whyItMatters: "Even mild dehydration (1–2% body water loss) can trigger headaches and impair concentration — one of the most easily preventable triggers. The brain is highly sensitive to fluid balance; reduced blood volume can lower oxygen delivery and trigger pain pathways.",
+            whyItMatters: "Even mild dehydration (1–2% body water loss) can trigger headaches and impair concentration, one of the most easily preventable triggers. The brain is highly sensitive to fluid balance; reduced blood volume can lower oxygen delivery and trigger pain pathways.",
             yourPattern: "\(percent(lowShare)) of your headaches occurred on days with below 1,000 mL water intake, including \(percent(Double(veryLow) / Double(total))) under 500 mL. Your median intake on headache days was \(String(format: "%.0f mL", med)).",
             breakdown: Breakdown(
                 buckets: buckets,
@@ -918,7 +918,7 @@ enum InsightsEngine {
             title: title,
             detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) occurred when at least one pollen type was elevated. Most common: \(topTypePhrase).",
             strength: elevatedShare,
-            whyItMatters: "Pollen triggers allergic rhinitis, which causes sinus congestion and inflammation — a known headache precipitant. The relationship may be seasonal: tree pollen in spring, grass in summer, ragweed in autumn. Indoor air filtration can help during high-pollen periods.",
+            whyItMatters: "Pollen triggers allergic rhinitis, which causes sinus congestion and inflammation, a known headache precipitant. The relationship may be seasonal: tree pollen in spring, grass in summer, ragweed in autumn. Indoor air filtration can help during high-pollen periods.",
             yourPattern: "\(percent(elevatedShare)) of your headaches with pollen data occurred on days with elevated pollen levels, most commonly \(topTypePhrase).",
             breakdown: Breakdown(
                 buckets: [
@@ -966,7 +966,7 @@ enum InsightsEngine {
             title: "Elevated blood pressure",
             detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) showed systolic BP ≥130 (\(percent(highShare)) ≥140). Median: \(String(format: "%.0f mmHg", med)).",
             strength: elevatedShare,
-            whyItMatters: "Hypertension is a known headache risk factor, particularly for morning headaches and posterior-head pain. The relationship may be bidirectional — pain elevates BP, and elevated BP can trigger headache. Sustained readings ≥130/80 warrant clinical evaluation.",
+            whyItMatters: "Hypertension is a known headache risk factor, particularly for morning headaches and posterior-head pain. The relationship may be bidirectional: pain elevates BP, and elevated BP can trigger headache. Sustained readings ≥130/80 warrant clinical evaluation.",
             yourPattern: "\(percent(elevatedShare)) of your headaches with BP data occurred with elevated systolic readings (≥130), including \(percent(highShare)) at hypertensive levels (≥140).",
             breakdown: Breakdown(
                 buckets: buckets,
@@ -993,7 +993,7 @@ enum InsightsEngine {
             title: "Lower oxygen saturation",
             detail: "\(percent(lowShare)) of your headaches\(coveragePhrase) showed SpO₂ below 95%.",
             strength: lowShare * 0.8,
-            whyItMatters: "Low blood oxygen can trigger headaches through cerebral vasodilation — the brain increases blood flow to compensate for reduced oxygen delivery. Sustained readings below 92% are clinically significant and may warrant discussing sleep apnea screening with a doctor.",
+            whyItMatters: "Low blood oxygen can trigger headaches through cerebral vasodilation, as the brain increases blood flow to compensate for reduced oxygen delivery. Sustained readings below 92% are clinically significant and may warrant discussing sleep apnea screening with a doctor.",
             yourPattern: "\(percent(lowShare)) of your headaches with oxygen data occurred with SpO₂ below 95%.",
             breakdown: Breakdown(
                 buckets: [
@@ -1044,7 +1044,7 @@ enum InsightsEngine {
                 title: "Low daylight exposure",
                 detail: "\(percent(veryLowShare)) of your headaches\(coveragePhrase) happened on days with under 15 minutes of daylight exposure.",
                 strength: veryLowShare,
-                whyItMatters: "Low daylight exposure may reflect more time indoors, which correlates with screen use, artificial lighting, reduced movement, and irregular sleep-wake cycles — all potential headache contributors. It can also disrupt circadian rhythm via reduced morning light.",
+                whyItMatters: "Low daylight exposure may reflect more time indoors, which correlates with screen use, artificial lighting, reduced movement, and irregular sleep-wake cycles, all potential headache contributors. It can also disrupt circadian rhythm via reduced morning light.",
                 yourPattern: "\(percent(veryLowShare)) of your headaches occurred on days with under 15 minutes of daylight, median \(String(format: "%.0f min", med)).",
                 breakdown: Breakdown(
                     buckets: buckets,
@@ -1060,7 +1060,7 @@ enum InsightsEngine {
                 title: "High daylight exposure",
                 detail: "\(percent(highShare)) of your headaches\(coveragePhrase) happened on days with 2+ hours of daylight exposure.",
                 strength: highShare,
-                whyItMatters: "Bright sunlight is a well-known migraine trigger, likely through the trigeminal-autonomic reflex and glare sensitivity. Photophobia is one of the diagnostic criteria for migraine — many sufferers are more sensitive to light between attacks, not just during them.",
+                whyItMatters: "Bright sunlight is a well-known migraine trigger, likely through the trigeminal-autonomic reflex and glare sensitivity. Photophobia is one of the diagnostic criteria for migraine; many sufferers are more sensitive to light between attacks, not just during them.",
                 yourPattern: "\(percent(highShare)) of your headaches occurred on days with 2+ hours of daylight exposure.",
                 breakdown: Breakdown(
                     buckets: buckets,
@@ -1103,7 +1103,7 @@ enum InsightsEngine {
             title: "Elevated noise environment",
             detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) happened in noisy environments (≥70 dBA).",
             strength: elevatedShare * 0.7,
-            whyItMatters: "Sustained noise exposure is both a trigger (sensory overload) and a consequence (phonophobia during prodrome) of migraine. Levels above 70 dBA are comparable to busy street traffic — enough to raise stress hormones and muscle tension even if you're not consciously aware of it.",
+            whyItMatters: "Sustained noise exposure is both a trigger (sensory overload) and a consequence (phonophobia during prodrome) of migraine. Levels above 70 dBA are comparable to busy street traffic, enough to raise stress hormones and muscle tension even if you're not consciously aware of it.",
             yourPattern: "\(percent(elevatedShare)) of your headaches with audio data occurred in environments at or above 70 decibels.",
             breakdown: Breakdown(
                 buckets: buckets,
@@ -1149,8 +1149,8 @@ enum InsightsEngine {
             title: earlyCluster ? "Early post-wake cluster" : "Hours since waking",
             detail: "\(percent(topShare)) of your headaches\(coveragePhrase) hit \(topLabel.lowercased()) after waking (median: \(formatHours(med))).",
             strength: topShare,
-            whyItMatters: "The time between waking and headache onset can help identify specific triggers: early-morning headaches may relate to sleep quality, caffeine withdrawal, or blood pressure morning surge; late-day headaches often track accumulated triggers — screen time, skipped meals, stress build-up, or eye strain.",
-            yourPattern: "\(percent(topShare)) of your headaches occur \(topLabel.lowercased()) after waking — \(String(format: "%.1fx", multiple)) the even baseline. Median: \(formatHours(med)).",
+            whyItMatters: "The time between waking and headache onset can help identify specific triggers: early-morning headaches may relate to sleep quality, caffeine withdrawal, or blood pressure morning surge; late-day headaches often track accumulated triggers: screen time, skipped meals, stress build-up, or eye strain.",
+            yourPattern: "\(percent(topShare)) of your headaches occur \(topLabel.lowercased()) after waking, \(String(format: "%.1fx", multiple)) the even baseline. Median: \(formatHours(med)).",
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -1286,10 +1286,10 @@ enum InsightsEngine {
             category: .severity,
             icon: "link.circle.fill",
             title: "Trigger combination: \(cond1.label) & \(cond2.label.lowercased())",
-            detail: "\(percent(coShare)) of your headaches hit when both occurred together — \(String(format: "%.1fx", lift)) more often than if they were independent.",
+            detail: "\(percent(coShare)) of your headaches hit when both occurred together, \(String(format: "%.1fx", lift)) more often than if they were independent.",
             strength: min(1.0, coShare * (1.0 + lift / 3.0)),
-            whyItMatters: "Migraine triggers rarely act in isolation — most attacks result from a cumulative threshold being crossed ('bucket theory'). Identifying the specific combinations that precede your worst headache days is more actionable than looking at single factors alone, because it points to which protective measures matter most on a given day.",
-            yourPattern: "\(percent(coShare)) of your headaches occurred when \(cond1.label.lowercased()) and \(cond2.label.lowercased()) coincided — \(String(format: "%.1fx", lift)) the rate expected by chance (\(percent(expectedShare))).",
+            whyItMatters: "Migraine triggers rarely act in isolation; most attacks result from a cumulative threshold being crossed ('bucket theory'). Identifying the specific combinations that precede your worst headache days is more actionable than looking at single factors alone, because it points to which protective measures matter most on a given day.",
+            yourPattern: "\(percent(coShare)) of your headaches occurred when \(cond1.label.lowercased()) and \(cond2.label.lowercased()) coincided, \(String(format: "%.1fx", lift)) the rate expected by chance (\(percent(expectedShare))).",
             breakdown: Breakdown(
                 buckets: [
                     Bucket(label: "Neither", share: 1.0 - (Double(c1Count) + Double(c2Count) - Double(coCount)) / Double(total), count: total - c1Count - c2Count + coCount, isPeak: false),
@@ -1335,7 +1335,7 @@ enum InsightsEngine {
     private static func othersSummary(_ buckets: [Bucket], excluding peakLabel: String, label: (Bucket) -> String) -> String {
         let rest = buckets.filter { $0.label != peakLabel }
         let parts = rest.map { "\(label($0)) \(Int(($0.share * 100).rounded()))%" }
-        return "Others — " + parts.joined(separator: ", ") + "."
+        return "Others: " + parts.joined(separator: ", ") + "."
     }
 
     private static func label(for part: PartOfDay) -> String {
@@ -1400,7 +1400,11 @@ struct HeatmapDay: Identifiable, Sendable {
 enum HeatmapData {
     static func build(from events: [HeadacheEvent], days: Int = 90, endingAt end: Date = .now, calendar: Calendar = .current) -> [HeatmapDay] {
         let today = calendar.startOfDay(for: end)
-        guard let start = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
+        guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
+        // Don't render days before the first logged headache; that would imply data we don't have.
+        guard let firstEvent = events.map({ $0.timestamp }).min() else { return [] }
+        let firstDay = calendar.startOfDay(for: firstEvent)
+        let start = max(windowStart, min(firstDay, today))
         var byDay: [Date: (count: Int, peak: HeadacheSeverity?)] = [:]
         for event in events {
             let day = calendar.startOfDay(for: event.timestamp)

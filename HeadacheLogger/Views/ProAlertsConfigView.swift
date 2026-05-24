@@ -164,7 +164,7 @@ struct ProAlertsConfigView: View {
                 Text("Prediction")
             } footer: {
                 Text(prefs.patternAlertsEnabled
-                    ? "Analyzes your headache history on-device for recurring time patterns, then notifies you ~1 hour before a headache is likely. All analysis runs locally — nothing leaves your phone."
+                    ? "Analyzes your headache history on-device for recurring time patterns, then notifies you ~1 hour before a headache is likely. All analysis runs locally; nothing leaves your phone."
                     : "When enabled, the app analyzes your personal headache patterns and sends a heads-up about an hour before you'd typically get one."
                 )
             }
@@ -257,14 +257,14 @@ struct ProAlertsConfigView: View {
         var issues: [String] = []
         switch notificationStatus {
         case .denied:
-            issues.append("Notifications are off — alerts can't be delivered until you enable them in Settings.")
+            issues.append("Notifications are off. Alerts can't be delivered until you enable them in Settings.")
         case .notDetermined:
             issues.append("Notification permission hasn't been granted yet.")
         default:
             break
         }
         if locationStatus == "Denied" || locationStatus == "Off" {
-            issues.append("Location is off — without it the app can't fetch your local forecast.")
+            issues.append("Location is off. Without it the app can't fetch your local forecast.")
         }
         permissionsBanner = issues.isEmpty ? nil : issues.joined(separator: " ")
     }
