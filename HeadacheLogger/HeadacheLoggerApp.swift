@@ -497,17 +497,35 @@ private struct TrialOfferSheet: View {
         LinearGradient(colors: [brandPrimary, brandSecondary], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
+    /// Extract a clean period phrase from an intro label like `"7-day free trial"` → `"7 days"`.
+    /// Falls back to nil when the label doesn't match the expected shape.
+    private var trialPeriodPhrase: String? {
+        guard let offerLabel else { return nil }
+        // Match the leading "N-unit" segment.
+        let scanner = Scanner(string: offerLabel)
+        var value: Int = 0
+        guard scanner.scanInt(&value) else { return nil }
+        _ = scanner.scanString("-")
+        var unit = ""
+        let unitChars = CharacterSet.letters
+        guard let scanned = scanner.scanCharacters(from: unitChars) else { return nil }
+        unit = scanned
+        let plural = value == 1 ? unit : "\(unit)s"
+        return "\(value) \(plural)"
+    }
+
     private var headline: String {
-        if let offerLabel {
-            return "\(offerLabel.capitalized), on us."
+        if let period = trialPeriodPhrase {
+            return "\(period) of Pro, free."
         }
         return "Try Headache Pro free."
     }
 
     private var subheadline: String {
-        offerLabel != nil
-            ? "Unlock the full Headache Pro toolkit free. No charge until your trial ends."
-            : "Unlock the full Headache Pro toolkit free for eligible new subscribers."
+        if trialPeriodPhrase != nil {
+            return "Personalized patterns, proactive alerts, full exports — no charge until your trial ends."
+        }
+        return "Personalized patterns, proactive alerts, full exports — free for eligible new subscribers."
     }
 
     private var trialBullets: [TrialBullet] {
@@ -609,7 +627,7 @@ private struct TrialOfferSheet: View {
                 .padding(.horizontal, 4)
 
                 if directPurchase, let priceLabel {
-                    Text("Free during your trial, then \(priceLabel). Auto-renews unless cancelled at least 24 hours before the trial ends.")
+                    Text("Free during your trial, then \(priceLabel). Cancel anytime in Settings — at least 24h before the trial ends to avoid the charge.")
                         .font(.system(.footnote, design: .rounded))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -647,7 +665,7 @@ private struct TrialOfferSheet: View {
                     .buttonStyle(.plain)
                     .disabled(isPurchasing)
 
-                    Text("Apple-managed subscription. Cancel anytime.")
+                    Text("Billed through Apple. No charge during the trial.")
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.tertiary)
                         .multilineTextAlignment(.center)
