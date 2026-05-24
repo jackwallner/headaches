@@ -1,8 +1,6 @@
 import SwiftData
 import SwiftUI
 import UIKit
-import RevenueCatUI
-
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
@@ -52,7 +50,7 @@ struct HomeView: View {
                                 .font(.system(size: 56, weight: .bold))
                             Text("Log Headache")
                                 .font(.system(size: 28, weight: .heavy))
-                            Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once — we'll record the moment")
+                            Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once, we'll record the moment")
                                 .font(.subheadline)
                                 .foregroundStyle(.white.opacity(0.9))
                         }
@@ -141,7 +139,7 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("What Gets Captured")
                             .font(.headline)
-                        Text("Press once when a headache starts — the app records the moment and fills in as much health and environmental context as it can.")
+                        Text("Press once when a headache starts; the app records the moment and fills in as much health and environmental context as it can.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
 
@@ -153,7 +151,7 @@ struct HomeView: View {
                         CaptureItem(
                             icon: "heart.text.square",
                             title: "Apple Health context",
-                            subtitle: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts — all without typing."
+                            subtitle: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts, all without typing."
                         )
                         CaptureItem(
                             icon: "cloud.sun",
@@ -204,6 +202,8 @@ struct HomeView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+                .environmentObject(store)
+                .task { store.trackPaywallImpression(id: "headache_home_sheet") }
         }
     }
 
@@ -242,14 +242,14 @@ struct HomeView: View {
         var title: String {
             switch self {
             case .threeLogs: return "You've logged \(rawValue) headaches"
-            case .fiveLogs: return "\(rawValue) headaches logged — enough for patterns"
-            case .tenLogs: return "\(rawValue) headaches — meaningful data"
+            case .fiveLogs: return "\(rawValue) headaches logged, enough for patterns"
+            case .tenLogs: return "\(rawValue) headaches, meaningful data"
             }
         }
 
         var detail: String {
             switch self {
-            case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs — time, sleep, weather, and more."
+            case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more."
             case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches."
             case .tenLogs: return "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
             }
@@ -473,13 +473,13 @@ private struct CaptureRecoveryCard: View {
     private var healthIssue: String? {
         guard event.healthStatus != .captured else { return nil }
         let detail = event.healthStatusMessage ?? "no detail"
-        return "Health \(event.healthStatus.rawValue) — \(detail)"
+        return "Health \(event.healthStatus.rawValue): \(detail)"
     }
 
     private var environmentIssue: String? {
         guard event.environmentStatus != .captured else { return nil }
         let detail = event.environmentStatusMessage ?? "no detail"
-        return "Environment \(event.environmentStatus.rawValue) — \(detail)"
+        return "Environment \(event.environmentStatus.rawValue): \(detail)"
     }
 
     var body: some View {
@@ -554,13 +554,13 @@ private struct CaptureRecoveryCard: View {
             "",
             "Context capture hit an issue after logging a headache. Details below.",
             "",
-            "— App version: \(version) (\(build))",
-            "— iOS: \(iosVersion) on \(deviceModel)",
-            "— Event ID: \(event.id.uuidString)",
-            "— Event time: \(tsFormatter.string(from: event.timestamp))",
-            "— Capture status: \(event.captureStatus.rawValue)",
-            "— Health status: \(event.healthStatus.rawValue)\(event.healthStatusMessage.map { " — \($0)" } ?? "")",
-            "— Environment status: \(event.environmentStatus.rawValue)\(event.environmentStatusMessage.map { " — \($0)" } ?? "")",
+            "- App version: \(version) (\(build))",
+            "- iOS: \(iosVersion) on \(deviceModel)",
+            "- Event ID: \(event.id.uuidString)",
+            "- Event time: \(tsFormatter.string(from: event.timestamp))",
+            "- Capture status: \(event.captureStatus.rawValue)",
+            "- Health status: \(event.healthStatus.rawValue)\(event.healthStatusMessage.map { ": \($0)" } ?? "")",
+            "- Environment status: \(event.environmentStatus.rawValue)\(event.environmentStatusMessage.map { ": \($0)" } ?? "")",
             "",
             "Anything else you want to add:",
             "",

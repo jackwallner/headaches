@@ -1,7 +1,5 @@
 import SwiftData
 import SwiftUI
-import RevenueCatUI
-
 struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var store: StoreService
@@ -143,6 +141,7 @@ struct HistoryView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
                     .environmentObject(store)
+                    .task { store.trackPaywallImpression(id: "headache_history_sheet") }
             }
             .sheet(isPresented: $showQuiz, onDismiss: {
                 quizCompleted = HeadacheQuizStore.hasCompletedQuiz
@@ -219,6 +218,13 @@ struct HistoryView: View {
 
             Section {
                 ImportExportActionCard(
+                    icon: "doc.richtext.fill",
+                    title: store.isProUnlocked ? "Doctor PDF report" : "Doctor PDF report (Pro)",
+                    subtitle: "One-page report covering the last 90 days: attack count, severity mix, calendar heatmap, and your top patterns.",
+                    actionLabel: store.isProUnlocked ? "Export PDF" : "Unlock Pro",
+                    action: { exportDoctorPDF() }
+                )
+                ImportExportActionCard(
                     icon: "square.and.arrow.up.fill",
                     title: "Export to CSV",
                     subtitle: exportSubtitle,
@@ -251,6 +257,12 @@ struct HistoryView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
+                Button {
+                    exportDoctorPDF()
+                } label: {
+                    Label(store.isProUnlocked ? "Doctor PDF…" : "Doctor PDF… (Pro)", systemImage: "doc.richtext")
+                }
+                .accessibilityIdentifier("exportPDFButton")
                 Button {
                     export()
                 } label: {
@@ -301,7 +313,7 @@ struct HistoryView: View {
             return "Export your headache history to a CSV file you can share with a doctor or open in Numbers."
         }
         if let selectedYear {
-            return "Exports \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") from \(selectedYear) — or export all years below. The CSV opens in Numbers and works for your doctor."
+            return "Exports \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") from \(selectedYear), or export all years below. The CSV opens in Numbers and works for your doctor."
         }
         return "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up."
     }
@@ -324,6 +336,20 @@ struct HistoryView: View {
     private func exportEvents(_ toExport: [HeadacheEvent]) {
         do {
             let url = try ExportService.exportCSV(events: toExport)
+            pendingExportURL = url
+            activeSheet = .export(url)
+        } catch {
+            showExportError = true
+        }
+    }
+
+    private func exportDoctorPDF() {
+        guard store.isProUnlocked else {
+            showPaywall = true
+            return
+        }
+        do {
+            let url = try ExportService.exportDoctorPDF(events: events)
             pendingExportURL = url
             activeSheet = .export(url)
         } catch {
@@ -470,7 +496,7 @@ struct HistoryView: View {
                         Text("Take the headache quiz")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.primary)
-                        Text("Optional — helps us improve future versions of Patterns.")
+                        Text("Optional. Helps us improve future versions of Patterns.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -778,7 +804,7 @@ private struct ImportIntroSheet: View {
                             .foregroundStyle(brandColor)
                         Text("Import from CSV")
                             .font(.title2.bold())
-                        Text("Bring entries in from a backup or another device — using a CSV file exported from this app.")
+                        Text("Bring entries in from a backup or another device, using a CSV file exported from this app.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

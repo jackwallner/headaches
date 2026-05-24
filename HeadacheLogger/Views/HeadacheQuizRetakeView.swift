@@ -89,7 +89,7 @@ struct HeadacheQuizRetakeView: View {
                 .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
             Text("Answers Updated")
                 .font(.title2.bold())
-            Text("Thanks — your answers help us improve future versions of Patterns.")
+            Text("Thanks! Your answers help us improve future versions of Patterns.")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

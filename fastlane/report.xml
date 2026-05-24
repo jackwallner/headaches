@@ -5,22 +5,29 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: opt_out_usage" time="0.000186">
+      <testcase classname="fastlane.lanes" name="0: opt_out_usage" time="0.000443">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="6.8e-05">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000175">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: app_store_connect_api_key" time="0.001538">
+      <testcase classname="fastlane.lanes" name="2: app_store_connect_api_key" time="0.002022">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: deliver" time="25.814412">
+      <testcase classname="fastlane.lanes" name="3: build_app" time="151.32201">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: upload_to_testflight" time="692.565894">
+        
+          <failure message="/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/actions/actions_helper.rb:67:in `execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:255:in `block in execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:229:in `chdir'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:229:in `execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/fast_file.rb:159:in `method_missing'&#10;Fastfile:46:in `block (2 levels) in parsing_binding'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/lane.rb:41:in `call'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/lane_manager.rb:46:in `cruise_lane'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/command_line_handler.rb:34:in `handle'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/commands_generator.rb:110:in `block (2 levels) in run'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/command.rb:187:in `call'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/command.rb:157:in `run'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/runner.rb:444:in `run_active_command'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:124:in `run!'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/delegates.rb:18:in `run!'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/commands_generator.rb:363:in `run'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/commands_generator.rb:43:in `start'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/fastlane/lib/fastlane/cli_tools_distributor.rb:123:in `take_off'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.230.0/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/usr/local/bin/fastlane:23:in `load'&#10;/usr/local/bin/fastlane:23:in `&lt;main&gt;'&#10;&#10;Error uploading ipa file: &#10; [Application Loader Error Output]: [ContentDelivery.Uploader.87B2824C0] Download task 15 failed with error: The network connection was lost. (-1005)&#10;[Application Loader Error Output]: [ContentDelivery.Uploader.10152EE50] CHANGE UPLOAD STATE TO COMPLETE (ASSET_UPLOAD): error: Error Domain=NSURLErrorDomain Code=-1005 &quot;The network connection was lost.&quot; UserInfo={NSUnderlyingError=0x87aecd680 {Error Domain=kCFErrorDomainCFNetwork Code=-1005 &quot;(null)&quot; UserInfo={_kCFStreamErrorCodeKey=54, _kCFStreamErrorDomainKey=1}}, NSErrorFailingURLStringKey=https://contentdelivery.itunes.apple.com/MZContentDeliveryService/iris/v1/buildDeliveryFiles/fbcc52fe-1096-4723-a9ad-ff22cc82b054, NSErrorFailingURLKey=https://contentdelivery.itunes.apple.com/MZContentDeliveryService/iris/v1/buildDeliveryFiles/fbcc52fe-1096-4723-a9ad-ff22cc82b054, _kCFStreamErrorDomainKey=1, _kCFStreamErrorCodeKey=54, NSLocalizedDescription=The network connection was lost.}[0m&#10;[Application Loader Error Output]: [ContentDelivery.Uploader.10152EE50] The network connection was lost for CHANGE UPLOAD STATE TO COMPLETE (ASSET_UPLOAD). Retrying request (4 attempts remaining).[0m" />
         
       </testcase>
     

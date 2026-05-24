@@ -1,8 +1,6 @@
 import HealthKit
 import SwiftUI
 import UIKit
-import RevenueCatUI
-
 struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @EnvironmentObject private var store: StoreService
@@ -120,6 +118,7 @@ struct SettingsView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallView()
                 .environmentObject(store)
+                .task { store.trackPaywallImpression(id: "headache_settings_sheet") }
         }
         .alert("Restore Purchases", isPresented: restoreBinding) {
             Button("OK", role: .cancel) { restoreMessage = nil }

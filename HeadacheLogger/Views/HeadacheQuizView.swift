@@ -143,7 +143,7 @@ struct HeadacheQuizView: View {
                     .font(.system(size: 52, weight: .bold))
                     .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
 
-                Text("That's All — Thank You!")
+                Text("That's All. Thank You!")
                     .font(.title2.bold())
 
                 Text("Your answers will help us highlight the headache patterns most relevant to you. You can update them anytime in Settings.")

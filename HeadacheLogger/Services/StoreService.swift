@@ -145,6 +145,10 @@ final class StoreService: NSObject, ObservableObject {
     @Published private(set) var isLoadingProducts: Bool = false
     @Published var lastError: String?
 
+    /// Per-product intro-offer eligibility. Populated with `fetchProducts` so the
+    /// native paywall only advertises trials users will actually receive (Apple 3.1.2).
+    @Published private(set) var introEligibility: [String: Bool] = [:]
+
     var activeProductId: String? {
         customerInfo?.entitlements.active.first?.key
     }
@@ -170,6 +174,7 @@ final class StoreService: NSObject, ObservableObject {
 
     private let logger = Logger(subsystem: "com.jackwallner.headachelogger", category: "Store")
     private var isConfigured = false
+    private var paywallImpressionsThisSession: Set<String> = []
 
     private override init() {}
 
@@ -189,6 +194,7 @@ final class StoreService: NSObject, ObservableObject {
             currentOffering = offering
             products = offering?.headacheProSortedPackages ?? []
             lastError = nil
+            await refreshIntroEligibility()
         } catch {
             logger.error("Product fetch failed: \(String(describing: error), privacy: .public)")
             lastError = "Couldn't load purchase options. Check your connection and try again."
@@ -222,6 +228,37 @@ final class StoreService: NSObject, ObservableObject {
             logger.error("Customer info refresh failed: \(String(describing: error), privacy: .public)")
             lastError = "Couldn't refresh your subscription status. Check your connection and try again."
         }
+    }
+
+    private func refreshIntroEligibility() async {
+        let identifiers = products
+            .filter { $0.storeProduct.introductoryDiscount != nil }
+            .map(\.storeProduct.productIdentifier)
+        guard !identifiers.isEmpty else {
+            introEligibility = [:]
+            return
+        }
+        let result = await Purchases.shared.checkTrialOrIntroDiscountEligibility(productIdentifiers: identifiers)
+        introEligibility = result.mapValues { $0.status == .eligible }
+    }
+
+    /// True when this package has a free-trial intro offer and the user is eligible.
+    func isEligibleForIntroOffer(_ package: Package) -> Bool {
+        guard package.headacheProIntroOfferLabel != nil else { return false }
+        return introEligibility[package.storeProduct.productIdentifier] ?? true
+    }
+
+    /// Reports a custom paywall impression to RevenueCat (required for native paywalls).
+    func trackPaywallImpression(id: String, oncePerSession: Bool = false) {
+        configureIfNeeded()
+        if AppEnvironment.isUITesting { return }
+        if oncePerSession {
+            guard !paywallImpressionsThisSession.contains(id) else { return }
+            paywallImpressionsThisSession.insert(id)
+        }
+        Purchases.shared.trackCustomPaywallImpression(
+            CustomPaywallImpressionParams(paywallId: id)
+        )
     }
 
     func restorePurchases() async {
