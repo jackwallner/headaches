@@ -23,12 +23,23 @@ struct PaywallView: View {
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
 
-    private var features: [(icon: String, title: String)] {
+    private var features: [(icon: String, title: String, detail: String)] {
         [
-            ("bell.badge.fill", "Proactive headache-weather alerts before pressure drops or AQI spikes"),
-            ("slider.horizontal.3", "Tune alert sensitivity and quiet hours"),
-            ("chart.bar.xaxis", "Personalized patterns from your logged headaches"),
-            ("lock.shield", "All processing stays on your device")
+            ("bell.badge.fill",
+             "12–24h headache warnings",
+             "Heads-up before pressure drops, AQI spikes, and weather you tend to feel."),
+            ("chart.bar.xaxis",
+             "Your personal triggers",
+             "Patterns in your sleep, weather, and time-of-day — from your own logs."),
+            ("waveform.path.ecg",
+             "Daily risk forecast",
+             "Tomorrow's risk score combining forecast pressure, air quality, and sleep."),
+            ("doc.richtext",
+             "Doctor-ready PDF",
+             "Share a clean report of your episodes, triggers, and trends with your provider."),
+            ("lock.shield",
+             "Stays on your device",
+             "No accounts. No tracking. All processing happens locally.")
         ]
     }
 
@@ -92,13 +103,16 @@ struct PaywallView: View {
 
     private var content: some View {
         ScrollView(showsIndicators: false) {
-            VStack(spacing: 22) {
+            VStack(spacing: 24) {
                 header
-                featureList
+                if hasAnyEligibleTrial {
+                    trialBanner
+                }
                 planCards
+                featureList
                 purchaseSection
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 22)
             .padding(.top, displayCloseButton ? 56 : 32)
             .padding(.bottom, 32)
         }
@@ -107,33 +121,66 @@ struct PaywallView: View {
     private var header: some View {
         VStack(spacing: 10) {
             Image(systemName: "bell.badge.fill")
-                .font(.system(size: 44, weight: .bold))
+                .font(.system(size: 42, weight: .bold))
                 .foregroundStyle(brandColor)
-            Text("Headache Pro")
-                .font(.title.bold())
-            Text("Get a heads-up before headache weather, plus patterns from the logs you already keep.")
+            Text("Know before the headache hits")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("Get a heads-up before pressure drops and AQI spikes — plus the personal triggers hiding in your own logs.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
-    private var featureList: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ForEach(features, id: \.title) { feature in
-                HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: feature.icon)
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(brandColor)
-                        .frame(width: 24)
-                    Text(feature.title)
-                        .font(.callout)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                }
+    /// Eye-catching trial pitch shown only when the user is actually eligible for
+    /// a free trial. Mirrors the language Apple expects on subscription paywalls
+    /// (period + auto-renew implied + clear "no charge today" framing).
+    private var trialBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "gift.fill")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(brandColor)
+                .frame(width: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(trialBannerTitle)
+                    .font(.subheadline.weight(.semibold))
+                Text("No charge today. Cancel anytime in Settings.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(brandColor.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(brandColor.opacity(0.25), lineWidth: 1)
+        }
+    }
+
+    private var trialBannerTitle: String {
+        if let label = trialLabelForBanner {
+            return "Start with a \(label.lowercased())"
+        }
+        return "Start with a free trial"
+    }
+
+    private var trialLabelForBanner: String? {
+        eligibleTrialPackages
+            .first(where: { $0.headacheProPackageKind == .yearly })?.headacheProIntroOfferLabel
+        ?? eligibleTrialPackages.first?.headacheProIntroOfferLabel
+    }
+
+    private var eligibleTrialPackages: [Package] {
+        store.products.filter { store.isEligibleForIntroOffer($0) }
+    }
+
+    private var hasAnyEligibleTrial: Bool {
+        !eligibleTrialPackages.isEmpty
     }
 
     private var planCards: some View {
@@ -143,13 +190,48 @@ struct PaywallView: View {
                     package: package,
                     isSelected: selectedPackage?.identifier == package.identifier,
                     showsTrialBadge: store.isEligibleForIntroOffer(package),
-                    isBestValue: package.headacheProPackageKind == .yearly,
+                    isRecommended: package.headacheProPackageKind == .yearly,
+                    monthlyEquivalent: package.headacheProMonthlyEquivalentLabel,
+                    savingsPercent: package.headacheProPackageKind == .yearly ? store.yearlySavingsPercent : nil,
                     accent: brandColor
                 ) {
                     selectedPackage = package
                 }
             }
         }
+    }
+
+    private var featureList: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Everything in Pro")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .tracking(0.4)
+
+            ForEach(features, id: \.title) { feature in
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: feature.icon)
+                        .font(.callout.weight(.semibold))
+                        .foregroundStyle(brandColor)
+                        .frame(width: 26, height: 26)
+                        .background(brandColor.opacity(0.12), in: Circle())
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(feature.title)
+                            .font(.subheadline.weight(.semibold))
+                        Text(feature.detail)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer(minLength: 0)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var purchaseSection: some View {
@@ -165,11 +247,19 @@ struct PaywallView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 15)
+                .padding(.vertical, 16)
                 .background(brandColor, in: Capsule())
+                .shadow(color: brandColor.opacity(0.25), radius: 12, x: 0, y: 6)
             }
             .buttonStyle(.plain)
             .disabled(isPurchasing || selectedPackage == nil)
+
+            if let trustLine {
+                Text(trustLine)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
             if let disclosure = disclosureText {
                 Text(disclosure)
@@ -230,7 +320,22 @@ struct PaywallView: View {
         guard let package = selectedPackage else { return "Continue" }
         if package.headacheProPackageKind == .lifetime { return "Unlock Lifetime" }
         if store.isEligibleForIntroOffer(package) { return "Start Free Trial" }
-        return "Subscribe"
+        return "Subscribe Now"
+    }
+
+    /// Short, high-trust microcopy directly under the CTA. Distinct from the
+    /// Apple-required disclosure (which still appears below).
+    private var trustLine: String? {
+        guard let package = selectedPackage else { return nil }
+        switch package.headacheProPackageKind {
+        case .lifetime:
+            return "One-time payment. No subscription."
+        case .yearly, .monthly, .other:
+            if store.isEligibleForIntroOffer(package) {
+                return "No charge today. Cancel anytime."
+            }
+            return "Cancel anytime in Settings."
+        }
     }
 
     private var disclosureText: String? {
@@ -290,7 +395,9 @@ private struct PaywallPlanCard: View {
     let package: Package
     let isSelected: Bool
     let showsTrialBadge: Bool
-    let isBestValue: Bool
+    let isRecommended: Bool
+    let monthlyEquivalent: String?
+    let savingsPercent: Int?
     let accent: Color
     let onTap: () -> Void
 
@@ -299,7 +406,7 @@ private struct PaywallPlanCard: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .stroke(isSelected ? accent : Color.secondary.opacity(0.4), lineWidth: 2)
+                        .stroke(isSelected ? accent : Color.secondary.opacity(0.35), lineWidth: 2)
                         .frame(width: 22, height: 22)
                     if isSelected {
                         Circle()
@@ -308,35 +415,57 @@ private struct PaywallPlanCard: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
                         Text(package.headacheProDisplayName)
                             .font(.subheadline.bold())
-                        if isBestValue {
+                        if isRecommended {
                             Text("BEST VALUE")
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.system(size: 9, weight: .heavy))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(accent, in: Capsule())
+                        }
+                        if let savingsPercent {
+                            Text("SAVE \(savingsPercent)%")
+                                .font(.system(size: 9, weight: .heavy))
+                                .foregroundStyle(accent)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(accent.opacity(0.14), in: Capsule())
                         }
                     }
                     if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
                         Text(trial.capitalized)
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(accent)
+                    } else if package.headacheProPackageKind == .lifetime {
+                        Text("One-time purchase")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.secondary)
                     }
                 }
 
                 Spacer(minLength: 8)
 
-                Text(package.headacheProPriceLabel)
-                    .font(.subheadline.weight(.semibold).monospacedDigit())
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(package.headacheProPriceLabel)
+                        .font(.subheadline.weight(.semibold).monospacedDigit())
+                        .foregroundStyle(.primary)
+                    if let monthlyEquivalent {
+                        Text("\(monthlyEquivalent) / month")
+                            .font(.caption2.weight(.medium).monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(
+                Color(.secondarySystemGroupedBackground),
+                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+            )
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .stroke(isSelected ? accent : Color.clear, lineWidth: 2)

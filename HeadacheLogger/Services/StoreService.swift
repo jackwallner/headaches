@@ -70,6 +70,35 @@ extension Package {
         }
     }
 
+    /// Display order for the paywall: yearly first (default + trial), then monthly,
+    /// then lifetime. Conversion-optimized — the trial path is what most users buy,
+    /// monthly is the "I want to think about it" option, lifetime is the alternative
+    /// for people who refuse subscriptions outright.
+    var headacheProPaywallSortIndex: Int {
+        switch headacheProPackageKind {
+        case .yearly:   return 0
+        case .monthly:  return 1
+        case .lifetime: return 2
+        case .other:    return 3
+        }
+    }
+
+    /// Per-month price for the yearly plan, formatted in the product's locale/currency.
+    /// Returns nil for non-yearly packages.
+    var headacheProMonthlyEquivalentLabel: String? {
+        guard headacheProPackageKind == .yearly else { return nil }
+        let monthly = (storeProduct.price as NSDecimalNumber)
+            .dividing(by: NSDecimalNumber(value: 12))
+        if let formatter = storeProduct.priceFormatter,
+           let formatted = formatter.string(from: monthly) {
+            return formatted
+        }
+        let fallback = NumberFormatter()
+        fallback.numberStyle = .currency
+        fallback.currencyCode = storeProduct.currencyCode
+        return fallback.string(from: monthly)
+    }
+
     var headacheProPriceLabel: String {
         guard let period = storeProduct.subscriptionPeriod else { return storeProduct.localizedPriceString }
         let unit: String
@@ -114,13 +143,27 @@ extension CustomerInfo {
     }
 }
 
+extension StoreService {
+    /// Percent savings of the yearly plan compared to 12× the monthly plan. Returns
+    /// nil unless both packages are available and yearly is actually cheaper.
+    var yearlySavingsPercent: Int? {
+        guard let yearly = yearlyPackage, let monthly = monthlyPackage else { return nil }
+        let yearlyPrice = yearly.storeProduct.price as NSDecimalNumber
+        let monthlyAnnualized = (monthly.storeProduct.price as NSDecimalNumber)
+            .multiplying(by: NSDecimalNumber(value: 12))
+        guard monthlyAnnualized.doubleValue > 0 else { return nil }
+        let savings = monthlyAnnualized.subtracting(yearlyPrice).doubleValue
+            / monthlyAnnualized.doubleValue
+        let percent = Int((savings * 100).rounded())
+        return percent > 0 ? percent : nil
+    }
+}
+
 extension Offering {
     var headacheProSortedPackages: [Package] {
         availablePackages.sorted {
-            let lhsKind = $0.headacheProPackageKind
-            let rhsKind = $1.headacheProPackageKind
-            if lhsKind.rawValue != rhsKind.rawValue {
-                return lhsKind.rawValue < rhsKind.rawValue
+            if $0.headacheProPaywallSortIndex != $1.headacheProPaywallSortIndex {
+                return $0.headacheProPaywallSortIndex < $1.headacheProPaywallSortIndex
             }
             return $0.storeProduct.productIdentifier < $1.storeProduct.productIdentifier
         }
