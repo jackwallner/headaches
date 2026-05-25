@@ -34,47 +34,6 @@ enum HeadacheQuizStore {
     static func answer(for questionID: String) -> String? {
         answers.first { $0.questionID == questionID }?.answer
     }
-
-    /// Which insight categories the user should see prioritized based on their answers.
-    static var prioritizedInsightKinds: [HeadacheInsightKind] {
-        var kinds: [HeadacheInsightKind] = []
-
-        if answer(for: "trigger_sleep") == "Yes" {
-            kinds.append(.sleep)
-        }
-        if let weatherAnswer = answer(for: "trigger_weather"),
-           weatherAnswer == "Pressure drops" || weatherAnswer == "Heat" {
-            kinds.append(.pressure)
-            if weatherAnswer == "Heat" { kinds.append(.temperature) }
-        }
-        if let timeAnswer = answer(for: "time_of_day"),
-           timeAnswer != "No pattern" && timeAnswer != "N/A" {
-            kinds.append(.timeOfDay)
-        }
-        if answer(for: "trigger_food") == "Yes" {
-            kinds.append(.hrv)
-        }
-        if let severityAnswer = answer(for: "severity"),
-           severityAnswer == "Extreme" || severityAnswer == "Medium" {
-            kinds.append(.severity)
-        }
-
-        if kinds.isEmpty {
-            kinds = [.timeOfDay, .pressure, .sleep]
-        }
-        return Array(Set(kinds))
-    }
-}
-
-enum HeadacheInsightKind: String, Codable, Sendable, CaseIterable {
-    case timeOfDay
-    case sleep
-    case pressure
-    case temperature
-    case humidity
-    case hrv
-    case severity
-    case aqi
 }
 
 struct HeadacheQuizQuestion: Codable, Sendable {
@@ -88,32 +47,32 @@ enum HeadacheQuizQuestions {
         HeadacheQuizQuestion(
             id: "time_of_day",
             question: "What time of day do you most often get headaches?",
-            options: ["Morning", "Afternoon", "Evening", "Overnight", "No pattern", "N/A"]
+            options: ["Morning", "Afternoon", "Evening", "Overnight", "No pattern"]
         ),
         HeadacheQuizQuestion(
             id: "trigger_sleep",
             question: "Do you notice headaches after poor or too little sleep?",
-            options: ["Yes", "No", "Not sure", "N/A"]
+            options: ["Yes", "No", "Not sure"]
         ),
         HeadacheQuizQuestion(
             id: "trigger_weather",
             question: "Have you noticed weather changes triggering your headaches?",
-            options: ["Pressure drops", "Heat", "Cold", "No", "Not sure", "N/A"]
+            options: ["Pressure drops", "Heat", "Cold", "No", "Not sure"]
         ),
         HeadacheQuizQuestion(
             id: "trigger_food",
             question: "Do certain foods or drinks seem to trigger your headaches?",
-            options: ["Yes", "No", "Not sure", "N/A"]
+            options: ["Yes", "No", "Not sure"]
         ),
         HeadacheQuizQuestion(
             id: "side",
             question: "Are your headaches typically on one side of your head?",
-            options: ["Yes, usually right", "Yes, usually left", "No, both sides", "It varies", "N/A"]
+            options: ["Yes, usually right", "Yes, usually left", "No, both sides", "It varies"]
         ),
         HeadacheQuizQuestion(
             id: "severity",
             question: "How severe are your headaches on a typical day?",
-            options: ["Slight — can ignore it", "Medium — noticeable but functional", "Extreme — hard to function", "It varies a lot", "N/A"]
+            options: ["Slight (can ignore it)", "Medium (noticeable but functional)", "Extreme (hard to function)", "It varies a lot"]
         ),
     ]
 }

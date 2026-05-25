@@ -12,6 +12,7 @@ struct InsightsView: View {
 
     private var summary: InsightsEngine.Summary {
         InsightsEngine.summarize(events, dailyRecords: dailyRecords)
+            .prioritized(by: QuizInsightPriority.categories)
     }
 
     var body: some View {
@@ -36,7 +37,7 @@ struct InsightsView: View {
             Task { await loadAndBackfillDailyRecords() }
         }
         .onAppear {
-            // Second-touch trial offer hook — root content evaluates the gates.
+            // Second-touch trial offer hook. Root content evaluates the gates.
             NotificationCenter.default.post(name: .headachePatternsDidAppear, object: nil)
         }
     }
@@ -207,26 +208,8 @@ struct InsightsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 4)
 
-            ForEach(Array(summary.insights.prefix(2))) { insight in
+            ForEach(summary.insights) { insight in
                 LockedInsightPreviewRow(insight: insight, showPaywall: $showPaywall)
-            }
-
-            if summary.insights.count > 2 {
-                HStack(spacing: 8) {
-                    Image(systemName: "lock.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                    Text("+ \(summary.insights.count - 2) more pattern\(summary.insights.count - 2 == 1 ? "" : "s")")
-                        .font(.subheadline)
-                        .foregroundStyle(.tertiary)
-                    Spacer()
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.secondary.opacity(0.05))
-                )
             }
         }
         .padding(.horizontal, 16)
@@ -248,6 +231,52 @@ struct InsightsView: View {
     }
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+}
+
+/// Translates the user's quiz answers into an ordered list of insight categories
+/// to float to the top of the Patterns list. Categories the user flagged as
+/// triggers come first; everything else keeps its strength-based order.
+enum QuizInsightPriority {
+    static var categories: [InsightsEngine.InsightCategory] {
+        var result: [InsightsEngine.InsightCategory] = []
+        func add(_ category: InsightsEngine.InsightCategory) {
+            if !result.contains(category) { result.append(category) }
+        }
+
+        switch HeadacheQuizStore.answer(for: "trigger_weather") {
+        case "Pressure drops": add(.pressure)
+        case "Heat", "Cold": add(.weather)
+        default: break
+        }
+        if HeadacheQuizStore.answer(for: "trigger_sleep") == "Yes" {
+            add(.sleep)
+        }
+        if let time = HeadacheQuizStore.answer(for: "time_of_day"), time != "No pattern" {
+            add(.time)
+        }
+        if let severity = HeadacheQuizStore.answer(for: "severity"),
+           severity.hasPrefix("Extreme") || severity.hasPrefix("Medium") {
+            add(.severity)
+        }
+        return result
+    }
+}
+
+extension InsightsEngine.Summary {
+    /// Stable reorder that moves insights in `categories` to the front (in the
+    /// given priority order) while preserving the original strength order within
+    /// each tier.
+    func prioritized(by categories: [InsightsEngine.InsightCategory]) -> InsightsEngine.Summary {
+        guard !categories.isEmpty else { return self }
+        let rank = Dictionary(uniqueKeysWithValues: categories.enumerated().map { ($1, $0) })
+        let sorted = insights.enumerated().sorted { lhs, rhs in
+            let lrank = rank[lhs.element.category] ?? Int.max
+            let rrank = rank[rhs.element.category] ?? Int.max
+            if lrank != rrank { return lrank < rrank }
+            return lhs.offset < rhs.offset
+        }.map(\.element)
+        return InsightsEngine.Summary(totalEvents: totalEvents, dateRange: dateRange, insights: sorted)
+    }
 }
 
 private struct InsightsHeader: View {
@@ -321,11 +350,11 @@ private struct LockedInsightPreviewRow: View {
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 4)
-            .blur(radius: 3)
+            .blur(radius: 7)
             .overlay(
                 Image(systemName: "lock.fill")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
             )
             .contentShape(Rectangle())
         }
