@@ -348,9 +348,10 @@ private struct LatestEventCard: View {
     private var plainSummary: String {
         var parts: [String] = []
 
-        let weekday = event.weekdayName
-        let timeString = event.timestamp.formatted(date: .omitted, time: .shortened)
-        parts.append("\(weekday) \(timeString) · \(event.partOfDay.rawValue.capitalized)")
+        let dateTime = event.timestamp.formatted(
+            .dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute()
+        )
+        parts.append("\(dateTime) · \(event.partOfDay.rawValue.capitalized)")
 
         if let weather = weatherHeadline { parts.append(weather) }
         else if !event.locationLabel.isEmpty { parts.append(event.locationLabel) }

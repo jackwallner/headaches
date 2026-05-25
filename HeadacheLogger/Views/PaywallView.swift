@@ -26,20 +26,17 @@ struct PaywallView: View {
     private var features: [(icon: String, title: String, detail: String)] {
         [
             ("bell.badge.fill",
-             "12–24h headache warnings",
-             "Heads-up before pressure drops, AQI spikes, and weather you tend to feel."),
+             "12-24h headache warnings",
+             "A heads-up before pressure drops and AQI spikes."),
             ("chart.bar.xaxis",
              "Your personal triggers",
-             "Patterns in your sleep, weather, and time-of-day — from your own logs."),
+             "Patterns from your own sleep, weather, and timing."),
             ("waveform.path.ecg",
              "Daily risk forecast",
-             "Tomorrow's risk score combining forecast pressure, air quality, and sleep."),
-            ("doc.richtext",
-             "Doctor-ready PDF",
-             "Share a clean report of your episodes, triggers, and trends with your provider."),
+             "Tomorrow's risk from pressure, air quality, and sleep."),
             ("lock.shield",
              "Stays on your device",
-             "No accounts. No tracking. All processing happens locally.")
+             "No accounts, no tracking, all processing is local.")
         ]
     }
 
@@ -103,18 +100,15 @@ struct PaywallView: View {
 
     private var content: some View {
         ScrollView(showsIndicators: false) {
-            VStack(spacing: 24) {
+            VStack(spacing: 16) {
                 header
-                if hasAnyEligibleTrial {
-                    trialBanner
-                }
-                planCards
                 featureList
+                planCards
                 purchaseSection
             }
             .padding(.horizontal, 22)
-            .padding(.top, displayCloseButton ? 56 : 32)
-            .padding(.bottom, 32)
+            .padding(.top, displayCloseButton ? 48 : 24)
+            .padding(.bottom, 20)
         }
     }
 
@@ -127,60 +121,12 @@ struct PaywallView: View {
                 .font(.system(.title2, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Get a heads-up before pressure drops and AQI spikes — plus the personal triggers hiding in your own logs.")
+            Text("Get a heads-up before pressure drops and AQI spikes, plus the personal triggers hiding in your own logs.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
-    }
-
-    /// Eye-catching trial pitch shown only when the user is actually eligible for
-    /// a free trial. Mirrors the language Apple expects on subscription paywalls
-    /// (period + auto-renew implied + clear "no charge today" framing).
-    private var trialBanner: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "gift.fill")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(brandColor)
-                .frame(width: 28)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(trialBannerTitle)
-                    .font(.subheadline.weight(.semibold))
-                Text("No charge today. Cancel anytime in Settings.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(brandColor.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .stroke(brandColor.opacity(0.25), lineWidth: 1)
-        }
-    }
-
-    private var trialBannerTitle: String {
-        if let label = trialLabelForBanner {
-            return "Start with a \(label.lowercased())"
-        }
-        return "Start with a free trial"
-    }
-
-    private var trialLabelForBanner: String? {
-        eligibleTrialPackages
-            .first(where: { $0.headacheProPackageKind == .yearly })?.headacheProIntroOfferLabel
-        ?? eligibleTrialPackages.first?.headacheProIntroOfferLabel
-    }
-
-    private var eligibleTrialPackages: [Package] {
-        store.products.filter { store.isEligibleForIntroOffer($0) }
-    }
-
-    private var hasAnyEligibleTrial: Bool {
-        !eligibleTrialPackages.isEmpty
     }
 
     private var planCards: some View {
@@ -202,13 +148,7 @@ struct PaywallView: View {
     }
 
     private var featureList: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Everything in Pro")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-                .tracking(0.4)
-
+        VStack(alignment: .leading, spacing: 12) {
             ForEach(features, id: \.title) { feature in
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: feature.icon)
@@ -216,11 +156,11 @@ struct PaywallView: View {
                         .foregroundStyle(brandColor)
                         .frame(width: 26, height: 26)
                         .background(brandColor.opacity(0.12), in: Circle())
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(feature.title)
                             .font(.subheadline.weight(.semibold))
                         Text(feature.detail)
-                            .font(.footnote)
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -230,7 +170,7 @@ struct PaywallView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
-        .padding(.vertical, 16)
+        .padding(.vertical, 14)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
@@ -332,9 +272,9 @@ struct PaywallView: View {
             return "One-time payment. No subscription."
         case .yearly, .monthly, .other:
             if store.isEligibleForIntroOffer(package) {
-                return "No charge today. Cancel anytime."
+                return "No charge today."
             }
-            return "Cancel anytime in Settings."
+            return nil
         }
     }
 
@@ -344,7 +284,7 @@ struct PaywallView: View {
         if package.headacheProPackageKind == .lifetime {
             return "\(price). One-time purchase. Lifetime access, no subscription."
         }
-        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings → Apple ID → Subscriptions."
+        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period."
         if store.isEligibleForIntroOffer(package), let trial = package.headacheProIntroOfferLabel {
             return "\(trial.capitalized), then \(price). \(renew)"
         }

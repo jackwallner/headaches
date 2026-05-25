@@ -109,7 +109,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         }
 
         session.transferUserInfo(payload)
-        confirmLogged(message: "Queued — will sync when iPhone is nearby.", showsConfirmation: false)
+        confirmLogged(message: "Queued, will sync when iPhone is nearby.", showsConfirmation: false)
     }
 
     private func confirmLogged(message: String, showsConfirmation: Bool) {

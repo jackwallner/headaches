@@ -107,7 +107,7 @@ struct HeadacheQuizView: View {
                 Text("Skip the Quiz?")
                     .font(.title2.bold())
 
-                Text("Answering these HeadacheQuizQuestions.all helps us highlight the patterns most relevant to your headaches. You can always come back later from Settings.")
+                Text("Answering these helps Patterns highlight the triggers most relevant to your headaches. You can always come back later from Settings.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

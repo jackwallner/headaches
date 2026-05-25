@@ -485,7 +485,7 @@ struct HistoryView: View {
                             .font(.headline)
                             .foregroundStyle(.primary)
                     }
-                    Text("A short, optional quiz that helps us improve future versions of Patterns. Take it anytime.")
+                    Text("A few quick questions so Patterns can surface the triggers most relevant to you. Take it anytime.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
@@ -511,9 +511,9 @@ struct HistoryView: View {
                         .frame(width: 28)
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Take the headache quiz")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.headline)
                             .foregroundStyle(.primary)
-                        Text("Optional. Helps us improve future versions of Patterns.")
+                        Text("Optional. Helps Patterns surface the triggers most relevant to you.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -522,12 +522,8 @@ struct HistoryView: View {
                         .font(.footnote.bold())
                         .foregroundStyle(.tertiary)
                 }
-                .padding(14)
-                .background(brandColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(brandColor.opacity(0.25), lineWidth: 1)
-                )
+                .padding(16)
+                .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             }
         }
         .buttonStyle(.plain)
