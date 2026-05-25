@@ -18,6 +18,7 @@ struct HeadacheLoggerApp: App {
 
     init() {
         StoreService.shared.start()
+        ReviewPromptTracker.recordAppLaunch()
     }
 
     var body: some Scene {
@@ -81,6 +82,12 @@ private struct HeadacheLoggerRootContent: View {
     /// the trial sheet has fully dismissed — presenting both sheets in the same
     /// runloop tick is racy in SwiftUI and frequently drops the second sheet.
     @State private var pendingPaywallAfterTrialDismiss = false
+    @StateObject private var reviewPromptCoordinator = ReviewPromptCoordinator.shared
+    @State private var showReviewPrompt = false
+    @State private var reviewPromptInitialStep: ReviewPromptSheet.Step = .enjoyment
+    @State private var reviewPromptShownThisSession = false
+    @State private var pendingNativeReviewAfterDismiss = false
+    @Environment(\.requestReview) private var requestReview
 
     private enum TrialOfferSource {
         case firstLog
@@ -150,6 +157,14 @@ private struct HeadacheLoggerRootContent: View {
                             .environmentObject(storeService)
                             .task { storeService.trackPaywallImpression(id: "headache_trial_sheet") }
                     }
+                    .sheet(isPresented: $showReviewPrompt, onDismiss: {
+                        if pendingNativeReviewAfterDismiss {
+                            pendingNativeReviewAfterDismiss = false
+                            requestReview()
+                        }
+                    }) {
+                        ReviewPromptSheet(initialStep: reviewPromptInitialStep, onFinish: handleReviewPromptFinish)
+                    }
             } else {
                 OnboardingView()
             }
@@ -205,6 +220,63 @@ private struct HeadacheLoggerRootContent: View {
         .onReceive(NotificationCenter.default.publisher(for: .headachePatternsDidAppear)) { _ in
             evaluateInsightsTrialOffer()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .headachePositiveMomentForReview)) { _ in
+            scheduleReviewPromptAfterPositiveMoment()
+        }
+        .onChange(of: reviewPromptCoordinator.pendingPresentation) { _, presentation in
+            guard let presentation else { return }
+            defer { reviewPromptCoordinator.clear() }
+            guard !showTrialOffer, !showTrialPaywall, !showProIntro else { return }
+            switch presentation {
+            case .enjoymentPrompt:
+                presentReviewPrompt(step: .enjoyment)
+            case .feedbackOnly:
+                presentReviewPrompt(step: .feedback)
+            }
+        }
+    }
+
+    /// Passive review ask after a successful log. Waits for the checkmark / snackbar to clear;
+    /// never fires on cold launch or alongside trial / Pro intro sheets.
+    private func scheduleReviewPromptAfterPositiveMoment() {
+        guard hasCompletedOnboarding,
+              ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true),
+              !reviewPromptShownThisSession,
+              reviewPromptCoordinator.isOnHomeTab,
+              !showTrialOffer,
+              !showTrialPaywall,
+              !showProIntro,
+              !showReviewPrompt,
+              !captureCoordinator.proPromptShownThisSession
+        else { return }
+
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 3_500_000_000)
+            guard hasCompletedOnboarding,
+                  reviewPromptCoordinator.isOnHomeTab,
+                  !showTrialOffer,
+                  !showTrialPaywall,
+                  !showProIntro,
+                  !showReviewPrompt,
+                  !captureCoordinator.proPromptShownThisSession,
+                  ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true)
+            else { return }
+            ReviewPromptTracker.consumePendingPositiveMoment()
+            presentReviewPrompt(step: .enjoyment)
+        }
+    }
+
+    private func handleReviewPromptFinish(_ outcome: ReviewPromptDismissOutcome) {
+        showReviewPrompt = false
+        if outcome == .enjoyedMaybeLater {
+            pendingNativeReviewAfterDismiss = true
+        }
+    }
+
+    private func presentReviewPrompt(step: ReviewPromptSheet.Step) {
+        reviewPromptInitialStep = step
+        reviewPromptShownThisSession = true
+        showReviewPrompt = true
     }
 
     private func runWidgetEnrichmentIfReady() {
