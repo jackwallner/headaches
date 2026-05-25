@@ -1,5 +1,4 @@
 import Charts
-import Charts
 import SwiftData
 import SwiftUI
 struct InsightsView: View {
@@ -68,6 +67,8 @@ struct InsightsView: View {
                 }
             }
 
+            patternsSection
+
             Section {
                 DailyRiskForecastCard(
                     forecast: riskForecast,
@@ -78,7 +79,7 @@ struct InsightsView: View {
                 .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
             } header: {
-                Text("Today")
+                Text("Today's risk")
             } footer: {
                 Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
                     .font(.footnote)
@@ -94,42 +95,45 @@ struct InsightsView: View {
                 Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
                     .font(.footnote)
             }
+        }
+    }
 
-            if events.count < InsightsEngine.minimumSampleSize {
-                Section {
-                    LearningStateRow(
-                        title: "Personalized patterns warming up",
-                        detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs. You have \(events.count).",
-                        progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
-                    )
-                } header: {
-                    Text("Your patterns")
-                }
-            } else if summary.insights.isEmpty {
-                Section {
-                    LearningStateRow(
-                        title: "Still watching for a clear pattern",
-                        detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
-                        progress: nil
-                    )
-                } header: {
-                    Text("Your patterns")
-                }
-            } else {
-                Section {
-                    ForEach(summary.insights) { insight in
-                        NavigationLink {
-                            InsightDetailView(insight: insight, totalEvents: summary.totalEvents)
-                        } label: {
-                            InsightRow(insight: insight)
-                        }
+    @ViewBuilder
+    private var patternsSection: some View {
+        if events.count < InsightsEngine.minimumSampleSize {
+            Section {
+                LearningStateRow(
+                    title: "Personalized patterns warming up",
+                    detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs. You have \(events.count).",
+                    progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
+                )
+            } header: {
+                Text("Your patterns")
+            }
+        } else if summary.insights.isEmpty {
+            Section {
+                LearningStateRow(
+                    title: "Still watching for a clear pattern",
+                    detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
+                    progress: nil
+                )
+            } header: {
+                Text("Your patterns")
+            }
+        } else {
+            Section {
+                ForEach(summary.insights) { insight in
+                    NavigationLink {
+                        InsightDetailView(insight: insight, totalEvents: summary.totalEvents)
+                    } label: {
+                        InsightRow(insight: insight)
                     }
-                } header: {
-                    Text("Your patterns")
-                } footer: {
-                    Text("Patterns are computed locally from your logged events. They describe your data, not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
-                        .font(.footnote)
                 }
+            } header: {
+                Text("Your patterns")
+            } footer: {
+                Text("Patterns are computed locally from your logged events. They describe your data, not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
+                    .font(.footnote)
             }
         }
     }
