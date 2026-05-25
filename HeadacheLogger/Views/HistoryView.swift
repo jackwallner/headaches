@@ -55,6 +55,10 @@ struct HistoryView: View {
         return events.filter { Calendar.current.component(.year, from: $0.timestamp) == selectedYear }
     }
 
+    private var heatmapDays: [HeatmapDay] {
+        HeatmapData.build(from: events)
+    }
+
     private var emptyStateView: some View {
         let title = events.isEmpty
             ? "No Headaches Logged Yet"
@@ -190,6 +194,19 @@ struct HistoryView: View {
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
+
+                if !heatmapDays.isEmpty {
+                    Section {
+                        CalendarHeatmapCard(days: heatmapDays)
+                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                            .listRowBackground(Color.clear)
+                    } header: {
+                        Text("Last 90 days")
+                    } footer: {
+                        Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
+                            .font(.footnote)
+                    }
+                }
 
                 if !quizCompleted {
                     quizPromptCard(prominent: false)
