@@ -104,9 +104,8 @@ Gate trial badge + “Start Free Trial” CTA:
 ```swift
 func isEligibleForIntroOffer(_ package: Package) -> Bool {
     guard packageHasFreeTrialIntro(package) else { return false }
-    return introEligibility[package.storeProduct.productIdentifier] ?? true
-    // ↑ unknown → true: avoid hiding trial on transient failure (Vitals choice).
-    // For fail-closed: use `?? false`.
+    return introEligibility[package.storeProduct.productIdentifier] ?? false
+    // ↑ fail-closed: hide trial UI until eligibility is known (App Review 3.1.2).
 }
 ```
 

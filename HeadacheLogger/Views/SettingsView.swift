@@ -1,4 +1,5 @@
 import HealthKit
+import StoreKit
 import SwiftUI
 import UIKit
 struct SettingsView: View {
@@ -33,6 +34,11 @@ struct SettingsView: View {
                         proRowLabel(unlocked: false)
                     }
                     .buttonStyle(.plain)
+                }
+                if store.isProUnlocked && store.hasSubscription {
+                    Button("Manage Subscription") {
+                        Task { await openManageSubscriptions() }
+                    }
                 }
                 Button {
                     Task { await restorePurchases() }
@@ -143,6 +149,16 @@ struct SettingsView: View {
 
     private func refreshHealthStatus() {
         Task { healthStatus = await HealthKitService.shared.connectionSummary() }
+    }
+
+    @MainActor
+    private func openManageSubscriptions() async {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive })
+            ?? UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first
+        else { return }
+        try? await AppStore.showManageSubscriptions(in: scene)
     }
 
     private func restorePurchases() async {

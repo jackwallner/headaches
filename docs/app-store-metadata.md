@@ -13,8 +13,9 @@
 - Subtitle: `One-tap headache tracking`
 - Promotional Text (170 char max):
   `Log a headache in one tap and capture surrounding Health, time, and weather context. Pro tracks your patterns and alerts you before risky weather arrives.`
-- Keywords (100 char max):
-  `headache,migraine,tracker,log,journal,diary,weather,barometric,pressure,trigger,doctor,export,csv,watch,health,symptoms`
+- Keywords (100 char max) — **use verified list in `docs/astro-aso-metadata-proposal.md`** (98 chars). Old draft below was 119 chars (over limit):
+  ~~`headache,migraine,tracker,log,journal,diary,weather,barometric,pressure,trigger,doctor,export,csv,watch,health,symptoms`~~
+  `headache,migraine,tracker,watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,log`
 
 ## Description Draft
 
@@ -70,28 +71,30 @@ Below is the complete text for App Store Connect → App Review → App Review I
 
 4. **History Tab** — Lists all logged headaches in reverse chronological order. Each entry shows the timestamp, captured context, and any note. Tap on any entry to see full detail. The `Export` button (share icon, top right) opens the standard iOS share sheet with a CSV file containing all entries and their full context. Test: share to Files, Mail, or any share target — the CSV includes columns for date, weekday, hour, HealthKit values, weather values, and notes.
 
-5. **Insights Tab (Free/Pro)** — Free users see a teaser screen with static sample data ("40% of your headaches...") and a "Get Pro" button. Pro users see real personalized insights computed from their logged events — distributions by weekday, hour, pressure trend, temperature bracket, etc. This is gated behind the Pro entitlement.
+5. **Patterns Tab (Free/Pro)** — Free users see a teaser with sample or blurred real patterns and **See Pro plans**. Pro users see personalized insights from their logs.
 
 6. **Settings Tab** — Contains:
-   - **Proactive Alerts row** — If not Pro, it's locked with a lock icon and tapping it opens the paywall. If Pro, it navigates to the alerts configuration screen where the user can toggle alerts on/off and set quiet hours.
-   - **Restore Purchases** — Always visible. Calls StoreKit restore.
-   - **Manage Subscription** — Visible only when a subscription is active. Opens the system subscription management sheet.
-   - **Rate the App** — Opens standard SKStoreReviewController prompt.
-
-7. **About Tab** — Links to privacy policy (https://jackwallner.github.io/headaches/privacy-policy.html) and support page (https://jackwallner.github.io/headaches/support.html). These are standard WKWebView or Safari links.
+   - **Proactive Alerts row** — If not Pro, tapping opens the paywall. If Pro, navigates to alert configuration.
+   - **Manage Subscription** — Visible only when the user has an active monthly or yearly subscription (not lifetime). Opens Apple's system subscription management sheet.
+   - **Restore Purchases** — Always visible.
+   - **About & Support** — Privacy Policy, Terms, Support, and feedback.
 
 **Pro / In-App Purchase Testing:**
 
-The app sells two IAP products, both unlocking the same on-device entitlement:
+Three IAP products unlock the same on-device Pro entitlement:
 
-- **Pro Yearly** (com.jackwallner.headachelogger.pro.yearly) — $9.99/year auto-renewable subscription with a 7-day free introductory offer for new subscribers.
-- **Pro Lifetime** (com.jackwallner.headachelogger.pro.lifetime) — $24.99 one-time non-consumable purchase.
+- **Pro Yearly** (`com.jackwallner.headachelogger.pro.yearly`) — auto-renewable yearly subscription with a 7-day free trial for eligible new subscribers.
+- **Pro Monthly** (`com.jackwallner.headachelogger.pro.monthly`) — auto-renewable monthly subscription (no introductory offer).
+- **Pro Lifetime** (`com.jackwallner.headachelogger.pro.lifetime`) — one-time non-consumable purchase.
 
-Both are available from the Paywall screen. To reach the paywall:
-- Tap the locked "Proactive Alerts" row in Settings, OR
-- Tap "Get Pro" on the Insights tab teaser.
+**Reach the paywall:**
+- Settings → locked Proactive Alerts row, OR
+- Patterns tab → **See Pro plans**, OR
+- After the optional trial-offer sheet → **See all plans** (or dismiss trial and open paywall from Settings/Patterns).
 
-The paywall shows both options side by side with a "Start 7-Day Free Trial" button for yearly (when eligible) and a "Buy Lifetime" button. A "Restore Purchases" link is at the bottom. After purchasing, the paywall dismisses automatically and Pro features are unlocked.
+**Trial-offer sheet** (eligible new subscribers only): may appear after the first headache log, for returning users with existing logs, or on Patterns (second touch). Primary button starts the yearly free trial; **See all plans** opens the full paywall with all three options. **Restore Purchases** is on both the trial sheet and full paywall.
+
+**Full paywall:** yearly (default), monthly, and lifetime plan cards; CTA reflects selection (e.g. **Start Free Trial** when eligible on yearly). Disclosure text under the button includes price, auto-renew, and subscription management in Settings. **Restore Purchases** and Terms/Privacy links at the bottom. Dismiss with the × button. Purchases dismiss the sheet automatically when Pro unlocks.
 
 Once Pro is active:
 - The "Proactive Alerts" row in Settings navigates to the alert config screen.

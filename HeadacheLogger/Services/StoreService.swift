@@ -208,11 +208,13 @@ final class StoreService: NSObject, ObservableObject {
         products.first { $0.headacheProPackageKind == .lifetime }
     }
 
-    /// True when the active entitlement comes from an auto-renewable subscription.
+    /// True when Pro is unlocked via an auto-renewable subscription (not lifetime).
     var hasSubscription: Bool {
-        guard let pkg = products.first(where: { $0.headacheProPackageKind != .lifetime }),
-              let active = activeProductId else { return false }
-        return active != HeadacheProProduct.lifetime
+        guard let info = customerInfo else { return false }
+        return info.entitlements.active.values.contains { entitlement in
+            let id = entitlement.productIdentifier
+            return id == HeadacheProProduct.yearly || id == HeadacheProProduct.monthly
+        }
     }
 
     private let logger = Logger(subsystem: "com.jackwallner.headachelogger", category: "Store")
@@ -288,7 +290,7 @@ final class StoreService: NSObject, ObservableObject {
     /// True when this package has a free-trial intro offer and the user is eligible.
     func isEligibleForIntroOffer(_ package: Package) -> Bool {
         guard package.headacheProIntroOfferLabel != nil else { return false }
-        return introEligibility[package.storeProduct.productIdentifier] ?? true
+        return introEligibility[package.storeProduct.productIdentifier] ?? false
     }
 
     /// Reports a custom paywall impression to RevenueCat (required for native paywalls).
