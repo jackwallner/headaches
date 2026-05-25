@@ -562,9 +562,12 @@ private struct TrialOfferSheet: View {
     let onStartTrial: () -> Void
     let onSeeAllPlans: () -> Void
     let onDismiss: () -> Void
+    @EnvironmentObject private var store: StoreService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var animateGlow = false
     @State private var shimmerPhase: CGFloat = -1
+    @State private var isRestoring = false
+    @State private var restoreMessage: String?
 
     private var brandPrimary: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
     private var brandSecondary: Color { Color(red: 0.86, green: 0.16, blue: 0.43) }
@@ -766,6 +769,21 @@ private struct TrialOfferSheet: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(isPurchasing)
+
+                    Button(action: startRestore) {
+                        Text(isRestoring ? "Restoring…" : "Restore Purchases")
+                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(isRestoring || isPurchasing)
+
+                    if let restoreMessage {
+                        Text(restoreMessage)
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
                 }
 
                 HStack(spacing: 4) {
@@ -783,6 +801,18 @@ private struct TrialOfferSheet: View {
             guard !reduceMotion else { return }
             animateGlow = true
             shimmerPhase = 1.4
+        }
+    }
+
+    private func startRestore() {
+        restoreMessage = nil
+        isRestoring = true
+        Task { @MainActor in
+            defer { isRestoring = false }
+            await store.restorePurchases()
+            if !store.isProUnlocked {
+                restoreMessage = store.lastError ?? "No previous Headache Pro purchase was found on this Apple ID."
+            }
         }
     }
 

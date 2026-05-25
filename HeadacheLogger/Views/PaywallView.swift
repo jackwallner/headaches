@@ -284,7 +284,7 @@ struct PaywallView: View {
         if package.headacheProPackageKind == .lifetime {
             return "\(price). One-time purchase. Lifetime access, no subscription."
         }
-        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period."
+        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings → Apple ID → Subscriptions."
         if store.isEligibleForIntroOffer(package), let trial = package.headacheProIntroOfferLabel {
             return "\(trial.capitalized), then \(price). \(renew)"
         }
