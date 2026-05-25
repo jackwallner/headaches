@@ -152,6 +152,8 @@ final class CaptureCoordinator: ObservableObject {
             switch found.captureStatus {
             case .complete:
                 bannerMessage = "Context saved."
+                ReviewPromptTracker.recordPositiveMoment()
+                NotificationCenter.default.post(name: .headachePositiveMomentForReview, object: nil)
             case .partial:
                 bannerMessage = "Saved with partial context."
             case .failed:

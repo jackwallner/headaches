@@ -92,6 +92,9 @@ struct SettingsView: View {
             }
 
             Section("About & Support") {
+                Button("Rate or Send Feedback") {
+                    ReviewPromptCoordinator.shared.requestEnjoymentPrompt()
+                }
                 Button("Privacy Policy") {
                     guard let privacyPolicyURL else { return }
                     openURL(privacyPolicyURL)

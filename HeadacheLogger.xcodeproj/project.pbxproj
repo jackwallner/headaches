@@ -9,9 +9,11 @@
 /* Begin PBXBuildFile section */
 		054B184CD586A26F33E25C6D /* HeadacheQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457E7EF4F6C8085CCA932D7 /* HeadacheQuizView.swift */; };
 		0A8924E6D51FD77217D15D72 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91367B1F7BDF8F54249C011B /* AppEnvironment.swift */; };
+		0C1D2E3F405162738495A6B7 /* AppStoreReviewLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F708192A3B4C5D /* AppStoreReviewLinks.swift */; };
 		0BDA0F43A3DBCF726D2808F0 /* CaptureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */; };
 		12BE0B76D2C2536F0C478313 /* EditEventSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A62B2A353D366DCC908709D /* EditEventSheet.swift */; };
 		15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */; };
+		1B2C3D4E5F60718293A4B5C6D /* ReviewPromptTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F708192A3B4C5D6E /* ReviewPromptTracker.swift */; };
 		153E0F1E152BF88BEAF57604 /* HeadacheModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */; };
 		15A305300D800AFD954BEA05 /* DailyWeatherBackfillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */; };
 		15FAF490AD8702BC97EE2792 /* HeadacheLoggerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 929113AA327F62936E27766E /* HeadacheLoggerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -38,6 +40,7 @@
 		9BFB6F53C055BF3E8BCD2572 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8472C3F09A9A16899D362E3 /* HealthKitService.swift */; };
 		9D9AA6EE42868909A48B6A0C /* HeadacheLoggerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBB32A1879C8B3C1A1FBAAA /* HeadacheLoggerApp.swift */; };
 		A2D71CF1BFC7D3DAD716F624 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B769DAEFB80D24E6E5B23726 /* SettingsView.swift */; };
+		A3B4C5D6E7F8091A2B3C4D5E /* ReviewPromptSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D5E6F708192A3B4C5D6E7F /* ReviewPromptSheet.swift */; };
 		A38A9D330B36A9B77C41C052 /* HeadacheLoggerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD143915C7D5D51FD3601AFC /* HeadacheLoggerWidget.swift */; };
 		A92104199EF7F4F6F7C8D6B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FB29607DEA71CFFE592F3219 /* PrivacyInfo.xcprivacy */; };
 		A985C9AFC8D191117B378E26 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9C78392E24C65D489A0719 /* ShareSheet.swift */; };
@@ -142,6 +145,9 @@
 		86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherBackfillService.swift; sourceTree = "<group>"; };
 		87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepIntervalMerge.swift; sourceTree = "<group>"; };
 		9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureCoordinator.swift; sourceTree = "<group>"; };
+		1A2B3C4D5E6F708192A3B4C5D /* AppStoreReviewLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewLinks.swift; sourceTree = "<group>"; };
+		2B3C4D5E6F708192A3B4C5D6E /* ReviewPromptTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptTracker.swift; sourceTree = "<group>"; };
+		3C4D5E6F708192A3B4C5D6E7F /* ReviewPromptSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptSheet.swift; sourceTree = "<group>"; };
 		91367B1F7BDF8F54249C011B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		929113AA327F62936E27766E /* HeadacheLoggerWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadacheLoggerWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92D22239C0ACC0D64E3DC4B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -256,6 +262,7 @@
 		A660758C5C4FB2254EB12DEB /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				1A2B3C4D5E6F708192A3B4C5D /* AppStoreReviewLinks.swift */,
 				637BE807C4B06F925D4E872E /* AppAppearance.swift */,
 				91367B1F7BDF8F54249C011B /* AppEnvironment.swift */,
 				B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */,
@@ -288,6 +295,7 @@
 				228C7A2B35897EC80F7A321C /* InsightsEngine.swift */,
 				2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */,
 				0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */,
+				2B3C4D5E6F708192A3B4C5D6E /* ReviewPromptTracker.swift */,
 				DBE1C310F077996DFAD946E6 /* StoreService.swift */,
 			);
 			path = Services;
@@ -322,6 +330,7 @@
 				BE8412887F4E26C9B3CC85AC /* PaywallView.swift */,
 				93DCE63E131C76802F1F575B /* ProAlertsConfigView.swift */,
 				9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */,
+				3C4D5E6F708192A3B4C5D6E7F /* ReviewPromptSheet.swift */,
 				B769DAEFB80D24E6E5B23726 /* SettingsView.swift */,
 				9F9C78392E24C65D489A0719 /* ShareSheet.swift */,
 			);
@@ -524,6 +533,7 @@
 			files = (
 				241DD8715CD0129FEB0E4693 /* AppAppearance.swift in Sources */,
 				0A8924E6D51FD77217D15D72 /* AppEnvironment.swift in Sources */,
+				0C1D2E3F405162738495A6B7 /* AppStoreReviewLinks.swift in Sources */,
 				2751DCAD06E95DF91DE183FD /* BackgroundRefreshService.swift in Sources */,
 				0BDA0F43A3DBCF726D2808F0 /* CaptureCoordinator.swift in Sources */,
 				E1E6406B0B06AEDE54C3E916 /* DailyRecordStore.swift in Sources */,
@@ -553,6 +563,8 @@
 				3AD9AE844511D0CA7CCBD2B2 /* ProAlertsConfigView.swift in Sources */,
 				F4D36C76D423D4BEF2CA59FD /* ProactiveAlertsEngine.swift in Sources */,
 				15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */,
+				A3B4C5D6E7F8091A2B3C4D5E /* ReviewPromptSheet.swift in Sources */,
+				1B2C3D4E5F60718293A4B5C6D /* ReviewPromptTracker.swift in Sources */,
 				A2D71CF1BFC7D3DAD716F624 /* SettingsView.swift in Sources */,
 				A985C9AFC8D191117B378E26 /* ShareSheet.swift in Sources */,
 				3D42B6E3B8CE8428D6E4E2C1 /* SleepIntervalMerge.swift in Sources */,
@@ -674,7 +686,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 69;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -789,7 +801,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 69;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_NS_ASSERTIONS = NO;
