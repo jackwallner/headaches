@@ -14,10 +14,6 @@ struct InsightsView: View {
         InsightsEngine.summarize(events, dailyRecords: dailyRecords)
     }
 
-    private var heatmapDays: [HeatmapDay] {
-        HeatmapData.build(from: events)
-    }
-
     var body: some View {
         Group {
             if store.isProUnlocked {
@@ -52,19 +48,6 @@ struct InsightsView: View {
                 InsightsHeader(summary: summary)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4))
-            }
-
-            if !heatmapDays.isEmpty {
-                Section {
-                    CalendarHeatmapCard(days: heatmapDays)
-                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
-                        .listRowBackground(Color.clear)
-                } header: {
-                    Text("Headache calendar")
-                } footer: {
-                    Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
-                        .font(.footnote)
-                }
             }
 
             patternsSection
