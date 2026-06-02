@@ -29,6 +29,10 @@ enum ReviewPromptTracker {
     static let minimumLaunchCount = 5
     /// Minimum days since first open.
     static let minimumDaysSinceFirstOpen = 7
+    /// Minimum successful, fully-enriched logs before the passive enjoyment prompt
+    /// surfaces. Repeated value delivery is our proxy for "likes the app" — we only
+    /// ask people who keep getting something out of it, never a one-time logger.
+    static let minimumPositiveMoments = 3
     /// Days before "Not now" can surface the enjoyment prompt again.
     static let cooldownDays = 120
 
@@ -124,12 +128,14 @@ enum ReviewPromptTracker {
         return true
     }
 
-    /// Passive prompt: eligibility plus a recent positive moment.
+    /// Passive prompt: eligibility, a recent positive moment, and enough total
+    /// positive moments to signal the user actually likes the app.
     static func shouldShowAfterPositiveMoment(
         hasCompletedOnboarding: Bool,
         now: Date = .now
     ) -> Bool {
         guard hasPendingPositiveMoment else { return false }
+        guard positiveMomentCount >= minimumPositiveMoments else { return false }
         return canPresentEnjoymentPrompt(hasCompletedOnboarding: hasCompletedOnboarding, now: now)
     }
 
