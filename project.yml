@@ -17,8 +17,8 @@ settings:
     SWIFT_VERSION: "6.0"
     DEVELOPMENT_TEAM: YXG4MP6W39
     CODE_SIGN_STYLE: Automatic
-    MARKETING_VERSION: "1.4.0"
-    CURRENT_PROJECT_VERSION: "73"
+    MARKETING_VERSION: "1.4.1"
+    CURRENT_PROJECT_VERSION: "74"
     GENERATE_INFOPLIST_FILE: NO
 
 schemes:
@@ -115,5 +115,11 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jackwallner.headachelogger.tests
         GENERATE_INFOPLIST_FILE: YES
+        # The app target's PRODUCT_NAME is OneTapHeadacheTracker, so the built
+        # host is OneTapHeadacheTracker.app, not HeadacheLogger.app. xcodegen
+        # auto-derives TEST_HOST from the target name and gets this wrong, which
+        # breaks `xcodebuild test`. Pin it explicitly so every regen stays correct.
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OneTapHeadacheTracker.app/OneTapHeadacheTracker"
+        BUNDLE_LOADER: "$(TEST_HOST)"
     dependencies:
       - target: HeadacheLogger
