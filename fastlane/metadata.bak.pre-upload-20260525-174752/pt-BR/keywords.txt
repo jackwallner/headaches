@@ -1,1 +1,0 @@
-enxaqueca,dor,cabeça,tracker,relógio,widget,diário,cluster,exportar,gatilho,saúde,médico,sintoma,log

@@ -1,1 +1,0 @@
-zdraví,deník,export,lékař,příznak,hlava,epizoda,spouštěč,záznam,cluster,tenzní,chronická,bolest

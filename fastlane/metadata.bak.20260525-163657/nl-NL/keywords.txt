@@ -1,1 +1,0 @@
-gezondheid,dagboek,export,arts,symptoom,aanval,trigger,journaal,cluster,spanning,chronisch,pijn

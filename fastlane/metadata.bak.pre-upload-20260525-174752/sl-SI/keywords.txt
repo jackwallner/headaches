@@ -1,1 +1,0 @@
-glavobol,migrena,tracker,ura,widget,dnevnik,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik

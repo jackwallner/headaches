@@ -1,1 +1,0 @@
-hälsa,dagbok,export,läkare,symptom,huvud,episod,trigger,kluster,spänning,kronisk,smärta

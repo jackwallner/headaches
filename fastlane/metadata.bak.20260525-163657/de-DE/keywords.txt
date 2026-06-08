@@ -1,1 +1,0 @@
-Gesundheit,Tagebuch,Export,Arzt,Symptom,Kopf,Episode,Auslöser,Cluster,Spannung,chronisch,Schmerz

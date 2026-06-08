@@ -1,1 +1,0 @@
-sundhed,dagbog,eksport,læge,symptom,hoved,episode,trigger,log,cluster,spænding,kronisk,smerte

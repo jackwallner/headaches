@@ -1,6 +1,0 @@
-Pembaruan ini membuat mesin wawasan Headache Pro lebih cerdas dan lebih andal sehingga Anda dapat mempercayai pola yang Anda lihat.
-
-- 15 pendeteksi pola baru, termasuk deteksi pemicu gabungan yang dapat menyoroti kejadian bersamaan seperti penurunan tekanan ditambah kualitas tidur yang buruk
-- Ambang batas yang lebih ketat untuk menampilkan wawasan, guna mengurangi positif palsu dan berfokus pada pola yang benar-benar konsisten dalam data Anda
-- Tampilan riwayat yang lebih rapi dan proses onboarding yang lebih mulus untuk memudahkan meninjau riwayat sakit kepala dan melakukan pengaturan awal
-- Peningkatan kinerja dan stabilitas secara umum untuk menjaga pencatatan dan analisis tetap cepat dan andal

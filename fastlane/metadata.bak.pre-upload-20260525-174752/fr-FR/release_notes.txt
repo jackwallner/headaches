@@ -1,6 +1,0 @@
-Cette mise à jour rend le moteur d’analyse de Headache Pro plus intelligent et plus fiable, afin que vous puissiez faire confiance aux tendances que vous observez.
-
-- 15 nouveaux détecteurs de schémas, dont la détection de déclencheurs combinés qui peut mettre en évidence des cooccurrences comme les chutes de pression associées à un mauvais sommeil
-- Des seuils plus stricts pour faire remonter les informations, afin de réduire les faux positifs et de se concentrer sur les schémas qui se vérifient réellement dans vos données
-- Une vue de l’historique plus soignée et un parcours d’accueil plus fluide pour faciliter la consultation de vos maux de tête passés et la configuration de l’application
-- Des améliorations générales de performance et de stabilité pour que la saisie et l’analyse restent rapides et fiables

@@ -20,3 +20,7 @@ Package.resolved
 
 # Claude Code local runtime
 .claude/
+
+# Fastlane backups & run logs (throwaway, regenerated on each run)
+fastlane/metadata.bak.*/
+scripts/*.log

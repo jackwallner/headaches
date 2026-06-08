@@ -1,4 +1,0 @@
-- 15 new pattern detectors, including multivariate co-occurrence analysis to surface combined triggers (e.g. pressure drop + poor sleep)
-- Tighter insight thresholds to eliminate false positives so the patterns you see are real
-- Polished history view and onboarding
-- Performance and stability improvements
