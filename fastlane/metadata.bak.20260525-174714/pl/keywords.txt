@@ -1,1 +1,0 @@
-zdrowie,dziennik,eksport,lekarz,objaw,głowa,epizod,wyzwalacz,pamiętnik,klaster,napięciowy,przewlekły

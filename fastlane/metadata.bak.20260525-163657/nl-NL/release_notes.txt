@@ -1,6 +1,0 @@
-Deze update maakt de inzichtengine van Headache Pro slimmer en betrouwbaarder, zodat je de patronen die je ziet kunt vertrouwen.
-
-- 15 nieuwe patroondetectoren, waaronder gecombineerde-triggerdetectie die samenlopen kan uitlichten, zoals luchtdrukdalingen plus slechte slaap
-- Strakkere drempelwaarden voor het tonen van inzichten om fout-positieven te verminderen en de focus te leggen op patronen die in je gegevens daadwerkelijk standhouden
-- Een verfijndere geschiedenisweergave en een soepelere onboarding, zodat het eenvoudiger wordt om eerdere hoofdpijnen te bekijken en alles in te stellen
-- Algemene prestatie- en stabiliteitsverbeteringen om het loggen en analyseren snel en betrouwbaar te houden

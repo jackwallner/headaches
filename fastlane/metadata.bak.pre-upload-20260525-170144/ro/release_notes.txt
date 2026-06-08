@@ -1,6 +1,0 @@
-Această actualizare face motorul de analiză Headache Pro mai inteligent și mai fiabil, astfel încât să poți avea încredere în tiparele pe care le vezi.
-
-- 15 noi detectoare de tipare, inclusiv detecția declanșatorilor combinați, care poate evidenția co-apariții precum scăderi de presiune plus somn slab
-- Praguri mai stricte pentru afișarea informațiilor, pentru a reduce alarmele false și a te concentra pe tiparele care chiar se confirmă în datele tale
-- O vizualizare a istoricului mai finisată și un proces de început mai fluid, pentru a face mai ușoară revizuirea durerilor de cap trecute și configurarea inițială
-- Îmbunătățiri generale de performanță și stabilitate pentru ca înregistrarea și analiza să rămână rapide și de încredere

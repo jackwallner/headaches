@@ -1,6 +1,0 @@
-Denne oppdateringen gjør Headache Pros innsiktsmotor smartere og mer pålitelig, slik at du kan stole på mønstrene du ser.
-
-- 15 nye mønstergjenkjennere, inkludert kombinert-utløserdeteksjon som kan fremheve samforekomster som trykkfall pluss dårlig søvn
-- Strammere terskler for å vise innsikter, for å redusere falske positiver og fokusere på mønstre som faktisk holder i dataene dine
-- En mer polert historikkvisning og smidigere onboarding som gjør det enklere å gjennomgå tidligere hodepiner og komme i gang
-- Generelle ytelses- og stabilitetsforbedringer for å holde logging og analyse rask og pålitelig

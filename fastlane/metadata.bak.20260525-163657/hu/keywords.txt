@@ -1,1 +1,0 @@
-egészség,napló,export,orvos,tünet,fej,epizód,kiváltó,migrén,klaszteres,tenziós,krónikus,fájdalom
