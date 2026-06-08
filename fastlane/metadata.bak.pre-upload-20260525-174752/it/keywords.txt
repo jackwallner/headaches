@@ -1,0 +1,1 @@
+emicrania,cefalea,tracker,orologio,widget,diario,dolore,cluster,esporta,trigger,salute,medico

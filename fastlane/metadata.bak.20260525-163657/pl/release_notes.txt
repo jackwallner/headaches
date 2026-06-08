@@ -1,0 +1,6 @@
+Ta aktualizacja sprawia, że silnik wnioskowania Headache Pro jest inteligentniejszy i bardziej niezawodny, abyś mógł ufać wzorcom, które widzisz.
+
+- 15 nowych detektorów wzorców, w tym wykrywanie połączonych wyzwalaczy, które może podkreślać współwystępowanie takich czynników jak spadki ciśnienia oraz słaby sen
+- Bardziej rygorystyczne progi wyświetlania wniosków, aby ograniczyć fałszywe alarmy i skupić się na wzorcach, które faktycznie utrzymują się w Twoich danych
+- Bardziej dopracowany widok historii i płynniejszy onboarding, aby ułatwić przeglądanie wcześniejszych bólów głowy i konfigurację aplikacji
+- Ogólne poprawki wydajności i stabilności, aby rejestrowanie i analiza były szybkie i niezawodne

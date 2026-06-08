@@ -934,6 +934,72 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(risk.factors.map(\.id), ["sleep-low"])
     }
 
+    // MARK: - Headache-free (protective) patterns
+
+    /// Builds `count` daily records with the given sleep hours, marking `headaches` of them as headache days.
+    private func sleepRecords(count: Int, sleepHours: Double, headaches: Int, startDaysAgo: Int) -> [DailyRecord] {
+        let today = DailyRecordStore.normalizeDate(Date())
+        let calendar = Calendar.current
+        return (0..<count).map { i in
+            let date = calendar.date(byAdding: .day, value: -(startDaysAgo + i), to: today) ?? today
+            let hadHeadache = i < headaches
+            return DailyRecord(
+                date: date,
+                hadHeadache: hadHeadache,
+                headacheCount: hadHeadache ? 1 : 0,
+                pressureTrendRaw: PressureTrend.unavailable.rawValue,
+                usAQI: nil,
+                weatherFetched: false,
+                sleepHoursLastNight: sleepHours,
+                sleepFetched: true
+            )
+        }
+    }
+
+    func testHeadacheFreeDayInsightFiresOnProtectiveSleep() {
+        // 8h+ days rarely carry a headache (1/10); short-sleep days often do (7/10).
+        var records = sleepRecords(count: 10, sleepHours: 8.5, headaches: 1, startDaysAgo: 0)
+        records += sleepRecords(count: 10, sleepHours: 4.5, headaches: 7, startDaysAgo: 10)
+
+        let events = (0..<8).map { makeEvent(daysAgo: $0, hour: 12) }
+        let summary = InsightsEngine.summarize(events, dailyRecords: records)
+        let free = summary.insights.first { $0.id == "headache-free-days" }
+        XCTAssertNotNil(free, "A clear protective sleep band should surface a headache-free insight")
+        XCTAssertEqual(free?.category, .sleep)
+        let peak = free?.breakdown.buckets.first { $0.isPeak }
+        XCTAssertEqual(peak?.label, "8h+", "The lowest-headache sleep band should be highlighted")
+        XCTAssertFalse(free?.detail.contains("—") ?? true, "Copy must not use em dashes")
+    }
+
+    func testHeadacheFreeDayInsightSilentWithoutBaseline() {
+        let events = (0..<8).map { makeEvent(daysAgo: $0, hour: 12) }
+        let summary = InsightsEngine.summarize(events) // no daily records
+        XCTAssertNil(summary.insights.first { $0.id == "headache-free-days" },
+                     "Protective insight needs the daily baseline; event-only callers stay silent")
+    }
+
+    func testDailyRiskRecommendationIsTailored() {
+        let calm = HourlyForecast(
+            times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015],
+            usAqi: [20, 25, 30, 20, 15, 10]
+        )
+        let low = ProactiveAlertsEngine.dailyRiskForecast(forecast: calm, sleepLastNightHours: 8, profile: .empty)
+        XCTAssertFalse(low.recommendation.isEmpty)
+        XCTAssertTrue(low.recommendation.lowercased().contains("favor"),
+                      "Good sleep on a calm day should be reflected as protective")
+
+        let stormy = HourlyForecast(
+            times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
+            pressureMsl: [1018, 1016, 1013, 1011, 1010, 1010],
+            usAqi: [60, 90, 120, 160, 140, 100]
+        )
+        let high = ProactiveAlertsEngine.dailyRiskForecast(forecast: stormy, sleepLastNightHours: 4.5, profile: .empty)
+        XCTAssertEqual(high.level, .high)
+        XCTAssertTrue(high.recommendation.lowercased().contains("high-risk"))
+        XCTAssertFalse(high.recommendation.contains("—"), "Copy must not use em dashes")
+    }
+
     private func makeEvent(daysAgo: Int, hour: Int) -> HeadacheEvent {
         var components = DateComponents()
         components.day = -daysAgo

@@ -569,7 +569,7 @@ private struct CaptureRecoveryCard: View {
 
         var components = URLComponents()
         components.scheme = "mailto"
-        components.path = "jackwallner@gmail.com"
+        components.path = "jackwallner+ha@gmail.com"
         components.queryItems = [
             URLQueryItem(name: "subject", value: "One Tap Headache Tracker: capture failed"),
             URLQueryItem(name: "body", value: bodyLines.joined(separator: "\n")),

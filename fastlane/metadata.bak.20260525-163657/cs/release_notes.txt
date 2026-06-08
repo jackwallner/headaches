@@ -1,0 +1,6 @@
+Tato aktualizace dělá analytický modul Headache Pro chytřejším a spolehlivějším, takže se můžete více spolehnout na vzorce, které vidíte.
+
+- 15 nových detektorů vzorců, včetně detekce kombinovaných spouštěčů, která může zvýraznit souběh jevů, jako jsou poklesy tlaku spolu se špatným spánkem  
+- Přísnější prahové hodnoty pro zobrazování vhledů, které snižují počet falešně pozitivních výsledků a zaměřují se na vzorce, které ve vašich datech skutečně platí  
+- Vylepšené zobrazení historie a plynulejší úvodní průvodce, aby bylo snazší procházet minulé bolesti hlavy a nastavit si aplikaci  
+- Obecná vylepšení výkonu a stability, aby záznamy a analýzy zůstaly rychlé a spolehlivé

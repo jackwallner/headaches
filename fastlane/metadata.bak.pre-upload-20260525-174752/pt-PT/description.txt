@@ -1,0 +1,45 @@
+One Tap Headache Tracker é o diário de enxaquecas e dores de cabeça mais rápido no iPhone – registe uma dor com um único toque e deixe Headache Pro encontrar os padrões escondidos nos seus dados.
+
+No momento em que a dor de cabeça começa, toque uma vez no iPhone ou no Apple Watch. A app regista o evento de imediato e associa automaticamente o contexto em redor que os médicos e especialistas em enxaquecas realmente perguntam – sem escrever, sem formulários, sem fricção.
+
+CADA DOR DE CABEÇA É REGISTADA COM:
+
+- Hora e ritmo – dia da semana, hora, minuto, fuso horário e parte do dia
+- Sinais do Apple Health – passos, atividade, fases de sono, ritmo cardíaco, HRV, ritmo cardíaco em repouso, SpO₂, VO₂ max, frequência respiratória, exposição ao som, minutos de atenção plena e treinos recentes
+- Meteorologia e ambiente – temperatura, variações de pressão atmosférica, humidade, qualidade do ar (AQI), índice UV e sinais do tipo pólen há muito associados a crises de enxaqueca
+- Classificação opcional de intensidade (1–10) e notas pessoais sobre medicação, aura, localização da dor ou possíveis desencadeadores
+
+HEADACHE PRO – ENCONTRE OS SEUS DESENCADEADORES:
+
+Alguns toques de dados isolados não são úteis. Headache Pro lê todo o seu histórico e destaca os verdadeiros sinais por detrás das suas dores de cabeça.
+
+- Informações personalizadas sobre padrões – sono, quebras de pressão atmosférica, concentrações por hora do dia, padrões por dia da semana, descidas de HRV, mudanças de tempo e mais, cada um com gráfico e explicação em linguagem simples
+- Mais de 15 detetores de padrões, além de análise multivariada de coocorrência para apanhar desencadeadores combinados (por exemplo, queda de pressão + mau sono) que o registo de uma única variável não deteta
+- Alertas Proativos – Pro segue a previsão local em segundo plano e só o avisa quando as condições coincidem com um padrão de desencadeador no SEU histórico. Nada de avisos genéricos do tipo “tempestade a caminho”.
+- Limiares personalizados e horas de silêncio para que os alertas respeitem o seu dia
+- Filtros e repartições exclusivos Pro na vista de histórico
+
+FEITO PARA O DIA A DIA:
+
+- Registo com um toque no Apple Watch que sincroniza com o iPhone emparelhado
+- Widgets para o Ecrã Principal e Ecrã Bloqueado para registar uma dor sem abrir a app
+- Atalhos Siri e suporte a “Hey Siri, regista uma dor de cabeça”
+- Exportação em CSV para partilhar um histórico limpo de dores de cabeça com o seu neurologista, médico de família ou especialista em enxaquecas
+
+PRIVACIDADE EM PRIMEIRO LUGAR:
+
+One Tap Headache Tracker é um diário de dores de cabeça centrado no dispositivo.
+
+- Sem conta necessária
+- Sem anúncios
+- Sem SDKs de análise
+- Sem sincronização na nuvem
+- O seu registo de dores de cabeça fica no dispositivo – exportação manual apenas quando decidir partilhar
+
+Quer esteja a acompanhar enxaquecas crónicas, cefaleias em salvas, cefaleias de tensão, cefaleias hormonais ou apenas a tentar compreender um padrão ocasional de dor de cabeça, One Tap Headache Tracker transforma um único toque num registo completo, pronto para o médico – e Headache Pro transforma esse registo em respostas.
+
+Detalhes da subscrição
+Headache Pro está disponível como subscrição com renovação automática (Mensal 2,99 $ / Anual 9,99 $ com 7 dias de teste gratuito) ou compra vitalícia única (24,99 $). O pagamento é cobrado ao seu ID Apple na confirmação. As subscrições renovam automaticamente, a menos que sejam canceladas pelo menos 24 horas antes do fim do período. Pode gerir ou cancelar em Definições → ID Apple → Subscrições.
+
+Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

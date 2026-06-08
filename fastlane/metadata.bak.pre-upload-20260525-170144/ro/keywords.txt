@@ -1,0 +1,1 @@
+sănătate,jurnal,export,medic,simptom,cap,episod,declanșator,migrene,cluster,tensiune,cronic,durere

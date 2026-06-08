@@ -1,0 +1,6 @@
+Esta atualização torna o motor de análise do Headache Pro mais inteligente e fiável, para que possa confiar nos padrões que vê.
+
+- 15 novos detetores de padrões, incluindo deteção de gatilhos combinados que pode destacar coocorrências como quedas de pressão juntamente com sono de fraca qualidade
+- Limiares mais rigorosos para apresentar informações, reduzindo falsos positivos e focando nos padrões que se confirmam efetivamente nos seus dados
+- Uma vista de histórico mais refinada e um processo de introdução mais suave, facilitando a revisão de dores de cabeça anteriores e a configuração inicial
+- Melhorias gerais de desempenho e estabilidade para manter o registo e a análise rápidos e fiáveis

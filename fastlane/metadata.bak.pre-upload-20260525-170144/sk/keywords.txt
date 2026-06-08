@@ -1,0 +1,1 @@
+zdravie,denník,export,lekár,symptóm,hlava,epizóda,spúšťač,záznam,klastrová,tenzná,bolesť,vzor

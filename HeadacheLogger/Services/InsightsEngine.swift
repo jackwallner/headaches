@@ -96,6 +96,7 @@ enum InsightsEngine {
         if let item = menstrualCycleInsight(events) { insights.append(item) }
         if let item = motionActivityInsight(events) { insights.append(item) }
         if let item = multivariateInsight(events, dailyRecords: dailyRecords) { insights.append(item) }
+        if let item = headacheFreeDayInsight(dailyRecords) { insights.append(item) }
 
         // Strongest patterns first.
         insights.sort { $0.strength > $1.strength }
@@ -1300,6 +1301,172 @@ enum InsightsEngine {
                 evenBaseline: nil,
                 axisCaption: "Co-occurrence pattern"
             )
+        )
+    }
+
+    // MARK: - Headache-free days (protective patterns)
+
+    /// The flip side of trigger analysis: using the daily baseline (which records non-headache days
+    /// too), find the condition under which the user most often stays headache-free. Requires the
+    /// `DailyRecord` history, so it stays silent for event-only callers (and below sample size).
+    private struct ProtectiveCandidate {
+        let category: InsightCategory
+        let icon: String
+        let factorName: String
+        let conditionLabel: String
+        let conditionRate: Double
+        let overallRate: Double
+        let conditionDays: Int
+        let conditionHeadacheDays: Int
+        let buckets: [Bucket]
+        let axisCaption: String
+
+        var gap: Double { overallRate - conditionRate }
+    }
+
+    /// Minimum baseline days (with a usable signal) before a protective pattern is trustworthy.
+    private static let protectiveMinimumTotalDays = 10
+    /// A protective condition must carry headaches at most this fraction of the overall rate.
+    private static let protectiveRateCeilingFactor = 0.6
+    /// ...and the absolute drop in headache rate must clear this, so a tiny edge isn't dressed up.
+    private static let protectiveMinimumGap = 0.15
+
+    private static func headacheFreeDayInsight(_ dailyRecords: [DailyRecord]) -> Insight? {
+        guard !dailyRecords.isEmpty else { return nil }
+        let candidates = [
+            protectiveSleepCandidate(dailyRecords),
+            protectivePressureCandidate(dailyRecords),
+            protectiveAirQualityCandidate(dailyRecords),
+        ].compactMap { $0 }
+        guard let best = candidates.max(by: { $0.gap < $1.gap }) else { return nil }
+
+        let freePct = percent(1 - best.conditionRate)
+        let conditionHeadachePct = percent(best.conditionRate)
+        let overallHeadachePct = percent(best.overallRate)
+        return Insight(
+            id: "headache-free-days",
+            category: best.category,
+            icon: best.icon,
+            title: "Your headache-free days",
+            detail: "You stay headache-free on \(freePct) of days with \(best.conditionLabel), the best of any condition tracked. Overall you log a headache on \(overallHeadachePct) of days.",
+            strength: min(0.85, 0.4 + best.gap),
+            whyItMatters: "Knowing what your clear days have in common is as useful as knowing your triggers. It points to the habits and conditions worth protecting on a high-risk day. This is the flip side of your trigger patterns, not medical advice.",
+            yourPattern: "On the \(best.conditionDays) days with \(best.conditionLabel), you logged a headache \(best.conditionHeadacheDays) time\(best.conditionHeadacheDays == 1 ? "" : "s") (\(conditionHeadachePct)), well below your overall rate of \(overallHeadachePct). The chart shows how headache-free each band tends to be.",
+            breakdown: Breakdown(
+                buckets: best.buckets,
+                evenBaseline: nil,
+                axisCaption: best.axisCaption
+            )
+        )
+    }
+
+    private static func protectiveSleepCandidate(_ records: [DailyRecord]) -> ProtectiveCandidate? {
+        let counts = DailyRecordStore.sleepConditionCounts(from: records).filter { $0.totalDays > 0 }
+        let totalDays = counts.reduce(0) { $0 + $1.totalDays }
+        let headacheDays = counts.reduce(0) { $0 + $1.headacheDays }
+        guard totalDays >= protectiveMinimumTotalDays,
+              headacheDays >= 3,
+              totalDays - headacheDays >= 3 else { return nil }
+        let overall = Double(headacheDays) / Double(totalDays)
+        guard let best = counts.filter({ $0.totalDays >= 4 }).min(by: { $0.headacheRate < $1.headacheRate }) else { return nil }
+        guard best.headacheRate <= overall * protectiveRateCeilingFactor,
+              overall - best.headacheRate >= protectiveMinimumGap else { return nil }
+        let buckets = counts.map { bucket in
+            Bucket(
+                label: bucket.label,
+                share: max(0, 1 - bucket.headacheRate),
+                count: bucket.totalDays - bucket.headacheDays,
+                isPeak: bucket.label == best.label
+            )
+        }
+        return ProtectiveCandidate(
+            category: .sleep,
+            icon: "bed.double.fill",
+            factorName: "sleep",
+            conditionLabel: "\(best.label) of sleep",
+            conditionRate: best.headacheRate,
+            overallRate: overall,
+            conditionDays: best.totalDays,
+            conditionHeadacheDays: best.headacheDays,
+            buckets: buckets,
+            axisCaption: "Share of days that stayed headache-free, by sleep duration"
+        )
+    }
+
+    private static func protectivePressureCandidate(_ records: [DailyRecord]) -> ProtectiveCandidate? {
+        let known = records.filter { $0.weatherFetched && $0.pressureTrend != .unavailable }
+        guard known.count >= protectiveMinimumTotalDays else { return nil }
+        let headacheDays = known.filter(\.hadHeadache).count
+        guard headacheDays >= 3, known.count - headacheDays >= 3 else { return nil }
+        let overall = Double(headacheDays) / Double(known.count)
+        let order: [(label: String, trend: PressureTrend)] = [
+            ("Falling", .falling), ("Steady", .steady), ("Rising", .rising)
+        ]
+        let bins = order.map { entry -> (label: String, total: Int, headache: Int) in
+            let inBin = known.filter { $0.pressureTrend == entry.trend }
+            return (entry.label, inBin.count, inBin.filter(\.hadHeadache).count)
+        }
+        let rate: (Int, Int) -> Double = { headache, total in total > 0 ? Double(headache) / Double(total) : 1 }
+        guard let best = bins.filter({ $0.total >= 4 }).min(by: { rate($0.headache, $0.total) < rate($1.headache, $1.total) }) else { return nil }
+        let bestRate = rate(best.headache, best.total)
+        guard bestRate <= overall * protectiveRateCeilingFactor,
+              overall - bestRate >= protectiveMinimumGap else { return nil }
+        let buckets = bins.map { bin in
+            Bucket(
+                label: bin.label,
+                share: bin.total > 0 ? max(0, 1 - Double(bin.headache) / Double(bin.total)) : 0,
+                count: bin.total - bin.headache,
+                isPeak: bin.label == best.label
+            )
+        }
+        return ProtectiveCandidate(
+            category: .pressure,
+            icon: "barometer",
+            factorName: "barometric pressure",
+            conditionLabel: "\(best.label.lowercased()) pressure",
+            conditionRate: bestRate,
+            overallRate: overall,
+            conditionDays: best.total,
+            conditionHeadacheDays: best.headache,
+            buckets: buckets,
+            axisCaption: "Share of days that stayed headache-free, by pressure trend"
+        )
+    }
+
+    private static func protectiveAirQualityCandidate(_ records: [DailyRecord]) -> ProtectiveCandidate? {
+        let withAQI = records.filter { $0.weatherFetched && $0.usAQI != nil }
+        guard withAQI.count >= protectiveMinimumTotalDays else { return nil }
+        let headacheDays = withAQI.filter(\.hadHeadache).count
+        guard headacheDays >= 3, withAQI.count - headacheDays >= 3 else { return nil }
+        let overall = Double(headacheDays) / Double(withAQI.count)
+        let good = withAQI.filter { !$0.isElevatedAQI }
+        let elevated = withAQI.filter { $0.isElevatedAQI }
+        guard good.count >= 4 else { return nil }
+        let goodHeadache = good.filter(\.hadHeadache).count
+        let goodRate = Double(goodHeadache) / Double(good.count)
+        guard goodRate <= overall * protectiveRateCeilingFactor,
+              overall - goodRate >= protectiveMinimumGap else { return nil }
+        let elevatedHeadache = elevated.filter(\.hadHeadache).count
+        let buckets = [
+            Bucket(label: "Clean\n<75", share: max(0, 1 - goodRate), count: good.count - goodHeadache, isPeak: true),
+            Bucket(
+                label: "Elevated\n75+",
+                share: elevated.isEmpty ? 0 : max(0, 1 - Double(elevatedHeadache) / Double(elevated.count)),
+                count: elevated.count - elevatedHeadache,
+                isPeak: false
+            ),
+        ]
+        return ProtectiveCandidate(
+            category: .airQuality,
+            icon: "aqi.low",
+            factorName: "air quality",
+            conditionLabel: "clean air (US AQI under 75)",
+            conditionRate: goodRate,
+            overallRate: overall,
+            conditionDays: good.count,
+            conditionHeadacheDays: goodHeadache,
+            buckets: buckets,
+            axisCaption: "Share of days that stayed headache-free, by air quality"
         )
     }
 

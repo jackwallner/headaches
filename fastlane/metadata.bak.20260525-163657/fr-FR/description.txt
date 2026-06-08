@@ -1,0 +1,45 @@
+One Tap Headache Tracker est le journal de migraines et de maux de tête le plus rapide sur iPhone : enregistrez une céphalée en un seul tap, puis laissez Headache Pro trouver les schémas cachés dans vos données.
+
+Au moment précis où la douleur commence, touchez une fois sur iPhone ou Apple Watch. L’app horodate instantanément l’événement et ajoute automatiquement le contexte que les médecins et spécialistes de la migraine demandent réellement : aucun texte à saisir, aucun formulaire, aucun frein.
+
+CHAQUE CÉPHALÉE EST ENREGISTRÉE AVEC :
+
+- Temps et rythme : jour de la semaine, heure, minute, fuseau horaire et moment de la journée
+- Signaux Apple Health : pas, activité, phases de sommeil, fréquence cardiaque, VFC, fréquence cardiaque au repos, SpO₂, VO₂ max, fréquence respiratoire, exposition audio, minutes de pleine conscience et derniers entraînements
+- Météo et environnement : température, variations de pression barométrique, humidité, qualité de l’air (AQI), indice UV et signaux de type pollen depuis longtemps associés aux crises de migraine
+- Option de noter l’intensité (1–10) et d’ajouter des notes personnelles sur les médicaments, l’aura, la localisation de la douleur ou les déclencheurs présumés
+
+HEADACHE PRO – TROUVEZ VOS DÉCLENCHEURS :
+
+Quelques touches de données ne suffisent pas. Headache Pro lit tout votre historique et fait ressortir les vrais signaux derrière vos maux de tête.
+
+- Analyses de schémas personnalisées : sommeil, chutes de pression barométrique, regroupements par moment de la journée, habitudes selon le jour de la semaine, baisses de VFC, variations météo, et plus encore, chacune illustrée par un graphique et une explication claire
+- Plus de 15 détecteurs de schémas, plus une analyse de co‑occurrence multivariée pour repérer les déclencheurs combinés (par ex. chute de pression + mauvais sommeil) que le suivi d’un seul facteur ne voit pas
+- Alertes proactives : Pro surveille votre prévision locale en arrière‑plan et ne vous avertit que lorsque les conditions correspondent à un schéma déclencheur dans VOTRE historique
+- Seuils personnalisés et heures silencieuses pour que les alertes respectent votre journée
+- Filtres et répartitions réservés à Pro dans la vue d’historique
+
+CONÇU POUR LE QUOTIDIEN :
+
+- Enregistrement en un tap sur Apple Watch avec synchronisation vers votre iPhone jumelé
+- Widgets Écran d’accueil et Écran verrouillé pour consigner une céphalée sans ouvrir l’app
+- Raccourcis Siri et prise en charge de « Dis Siri, enregistre un mal de tête »
+- Export CSV pour partager un historique clair avec votre neurologue, médecin traitant ou spécialiste de la migraine
+
+CONFIDENTIALITÉ PAR CONCEPTION :
+
+One Tap Headache Tracker est un journal de céphalées d’abord local.
+
+- Aucun compte requis
+- Aucune publicité
+- Aucun SDK d’analytique
+- Aucune synchronisation cloud
+- Votre journal de céphalées reste sur votre appareil, avec export manuel uniquement lorsque vous choisissez de le partager
+
+Que vous suiviez une migraine chronique, des céphalées en grappe, des céphalées de tension, hormonales, ou que vous cherchiez simplement à comprendre un schéma de douleur occasionnelle, One Tap Headache Tracker transforme un tap en un compte rendu complet, prêt pour le médecin – et Headache Pro transforme ce compte rendu en réponses.
+
+Détails de l’abonnement
+Headache Pro est disponible sous forme d’abonnement avec renouvellement automatique (mensuel 2,99 $ / annuel 9,99 $ avec 7 jours d’essai gratuit) ou d’achat unique à vie (24,99 $). Le paiement est prélevé sur votre identifiant Apple lors de la confirmation. L’abonnement se renouvelle automatiquement sauf si vous l’annulez au moins 24 heures avant la fin de la période. Gérez ou annulez à tout moment dans Réglages → Identifiant Apple → Abonnements.
+
+Politique de confidentialité : https://jackwallner.github.io/headaches/privacy-policy.html
+Conditions d’utilisation (EULA) : https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

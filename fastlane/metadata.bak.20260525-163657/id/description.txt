@@ -1,0 +1,45 @@
+One Tap Headache Tracker adalah buku harian migrain dan sakit kepala tercepat di iPhone – catat sakit kepala dengan satu ketukan, lalu biarkan Headache Pro menemukan pola yang tersembunyi dalam data Anda.
+
+Saat sakit kepala muncul, ketuk sekali di iPhone atau Apple Watch. Aplikasi langsung memberi stempel waktu dan otomatis menambahkan konteks sekitar yang biasanya ditanyakan dokter dan spesialis migrain – tanpa mengetik, tanpa formulir, tanpa repot.
+
+SETIAP SAKIT KEPALA DICATAT DENGAN:
+
+- Waktu dan ritme – hari dalam minggu, jam, menit, zona waktu, dan bagian waktu
+- Sinyal Apple Health – langkah, aktivitas, tahapan tidur, detak jantung, HRV, detak jantung istirahat, SpO₂, VO₂ max, laju pernapasan, paparan audio, menit mindfulness, dan olahraga terbaru
+- Cuaca dan lingkungan – suhu, perubahan tekanan udara, kelembapan, kualitas udara (AQI), indeks UV, dan sinyal mirip serbuk sari yang lama dikaitkan dengan serangan migrain
+- Opsional: penilaian tingkat keparahan (1–10) dan catatan pribadi untuk obat, aura, lokasi nyeri, atau pemicu yang dicurigai
+
+HEADACHE PRO – TEMUKAN PEMICU ANDA:
+
+Beberapa ketukan data saja tidak terlalu berguna. Headache Pro membaca seluruh riwayat Anda dan menampilkan sinyal nyata di balik sakit kepala Anda.
+
+- Wawasan pola personal – tidur, penurunan tekanan udara, kluster waktu dalam hari, pola hari kerja, penurunan HRV, perubahan cuaca, dan lainnya, masing-masing dengan grafik dan penjelasan sederhana
+- Lebih dari 15 pendeteksi pola plus analisis ko-kejadian multivariat untuk menangkap pemicu gabungan (misalnya penurunan tekanan + tidur buruk) yang sering terlewat jika hanya melacak satu variabel
+- Peringatan Proaktif – Pro memantau prakiraan lokal Anda di latar belakang dan hanya memberi notifikasi ketika kondisi cocok dengan pola pemicu dalam riwayat ANDA. Bukan spam “badai datang” yang generik.
+- Ambang batas personal dan jam tenang sehingga peringatan tetap menghormati jadwal Anda
+- Filter dan pembagian riwayat khusus Pro di tampilan histori
+
+DIBUAT UNTUK KEHIDUPAN SEHARI-HARI:
+
+- Pencatatan satu ketukan di Apple Watch yang tersinkron ke iPhone pendamping Anda
+- Widget Layar Utama dan Layar Kunci untuk mencatat sakit kepala tanpa membuka aplikasi
+- Dukungan Siri Shortcuts dan perintah “Hey Siri, log a headache”
+- Ekspor CSV untuk membagikan riwayat sakit kepala yang rapi ke neurolog, dokter umum, atau spesialis migrain
+
+PRIVASI SEBAGAI DASAR DESAIN:
+
+One Tap Headache Tracker adalah jurnal sakit kepala yang mengutamakan penyimpanan lokal.
+
+- Tidak perlu akun
+- Tanpa iklan
+- Tanpa SDK analitik
+- Tanpa sinkronisasi cloud
+- Catatan sakit kepala Anda tetap di perangkat Anda – ekspor manual hanya ketika Anda memilih untuk membagikannya
+
+Baik Anda melacak migrain kronis, sakit kepala klaster, tegang, hormonal, atau hanya mencoba memahami pola nyeri kepala sesekali, One Tap Headache Tracker mengubah satu ketukan menjadi catatan lengkap siap-diperiksa dokter – dan Headache Pro mengubah catatan itu menjadi jawaban.
+
+Detail Langganan
+Headache Pro tersedia sebagai langganan perpanjangan otomatis (Bulanan $2,99 / Tahunan $9,99 dengan uji coba gratis 7 hari) atau pembelian Lifetime satu kali ($24,99). Pembayaran akan dibebankan ke Apple ID Anda saat konfirmasi. Langganan diperpanjang otomatis kecuali dibatalkan setidaknya 24 jam sebelum akhir periode. Kelola atau batalkan kapan saja di Pengaturan → Apple ID → Subscriptions.
+
+Kebijakan Privasi: https://jackwallner.github.io/headaches/privacy-policy.html
+Ketentuan Penggunaan (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

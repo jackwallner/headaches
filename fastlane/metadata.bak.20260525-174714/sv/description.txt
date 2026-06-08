@@ -1,0 +1,45 @@
+One Tap Headache Tracker är den snabbaste migrän- och huvudvärksdagboken på iPhone – logga en huvudvärk med ett enda tryck och låt Headache Pro hitta mönstren som döljer sig i dina data.
+
+När en huvudvärk slår till trycker du en gång på din iPhone eller Apple Watch. Appen tidsstämplar händelsen direkt och lägger automatiskt till den omgivande kontext som läkare och migränspecialister faktiskt frågar efter – ingen textinmatning, inga formulär, inget krångel.
+
+VARJE HUVUDVÄRK LOGGAS MED:
+
+- Tid och rytm – veckodag, timme, minut, tidszon och del av dygnet
+- Apple Health-signaler – steg, aktivitet, sömnstadier, puls, HRV, vilopuls, SpO₂, VO₂ max, andningsfrekvens, ljudexponering, mindful minutes och senaste träningspass
+- Väder och omgivning – temperatur, förändringar i lufttryck, luftfuktighet, luftkvalitet (AQI), UV-index och pollenliknande signaler som länge kopplats till migränanfall
+- Valfri svårighetsgrad (1–10) och egna anteckningar om mediciner, aura, smärtans placering eller misstänkta utlösande faktorer
+
+HEADACHE PRO – HITTA DINA TRIGGERS:
+
+Några enstaka tryck med data är inte användbara i sig. Headache Pro läser hela din historik och lyfter fram de verkliga signalerna bakom dina huvudvärkar.
+
+- Personliga mönsterinsikter – sömn, fall i lufttryck, kluster över tid på dygnet, veckodagsmönster, HRV-dippar, väderförändringar och mer, alla visade med diagram och en lättförståelig förklaring
+- 15+ mönsterdetektorer plus multivariat samsförekomstanalys för att fånga kombinerade triggers (t.ex. tryckfall + dålig sömn) som enkelspårig spårning missar
+- Proaktiva aviseringar – Pro bevakar din lokala väderprognos i bakgrunden och aviserar bara när förhållandena matchar ett triggermönster i JUST din historik. Inget generiskt ”storm på väg”-spam.
+- Personliga tröskelvärden och tysta timmar så att aviseringar respekterar din vardag
+- Pro-exklusiva filter och uppdelningar i din historikvy
+
+BYGGD FÖR VARDAGEN:
+
+- Ett-trycksloggning på Apple Watch som synkas tillbaka till din parkopplade iPhone
+- Hemskärms- och låsskärmswidgetar för att logga en huvudvärk utan att öppna appen
+- Siri-genvägar och stöd för ”Hej Siri, logga en huvudvärk”
+- CSV-export för att dela en tydlig huvudvärksöversikt med din neurolog, husläkare eller migränspecialist
+
+PRIVAT FRÅN GRUNDEN:
+
+One Tap Headache Tracker är en lokal-först-huvudvärksdagbok.
+
+- Inget konto krävs
+- Inga annonser
+- Inga analys-SDK:er
+- Ingen molnsynk
+- Din huvudvärkslogg stannar på din enhet – manuell export bara när du själv väljer att dela
+
+Oavsett om du följer kronisk migrän, klusterhuvudvärk, spänningshuvudvärk, hormonell huvudvärk eller bara vill förstå ett återkommande mönster av huvudsmärta, gör One Tap Headache Tracker ett enda tryck till en komplett journal redo för läkaren – och Headache Pro förvandlar den journalen till svar.
+
+Prenumerationsinformation
+Headache Pro finns som en automatiskt förnyad prenumeration (Månadsvis 2,99 USD / Årsvis 9,99 USD med sju dagars gratis provperiod) eller ett engångsköp Lifetime (24,99 USD). Betalning debiteras ditt Apple-ID vid bekräftelse. Prenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före periodens slut. Hantera eller avsluta när som helst i Inställningar → Apple-ID → Prenumerationer.
+
+Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

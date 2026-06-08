@@ -1,0 +1,369 @@
+{
+  "scannedAt": "2026-05-26T00:47:46Z",
+  "stores": {
+    "us": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ca": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "mx": {
+      "term": "diario migraña",
+      "competitors": []
+    },
+    "br": {
+      "term": "diário enxaqueca",
+      "competitors": []
+    },
+    "ar": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "bo": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "cl": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "co": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "cr": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "do": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ec": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "sv": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "gt": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "hn": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "pa": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "py": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "pe": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "gb": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "de": {
+      "term": "kopfschmerz tagebuch",
+      "competitors": []
+    },
+    "fr": {
+      "term": "journal migraine",
+      "competitors": []
+    },
+    "es": {
+      "term": "diario migraña",
+      "competitors": []
+    },
+    "it": {
+      "term": "diario emicrania",
+      "competitors": []
+    },
+    "nl": {
+      "term": "hoofdpijn dagboek",
+      "competitors": []
+    },
+    "at": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "be": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ch": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "se": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "no": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "dk": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "fi": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "pl": {
+      "term": "dziennik migreny",
+      "competitors": []
+    },
+    "pt": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ie": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ru": {
+      "term": "дневник мигрени",
+      "competitors": []
+    },
+    "ua": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "cz": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "sk": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "hu": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ro": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "gr": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "hr": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "bg": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "si": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ee": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "lv": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "lu": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "is": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "cy": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "tr": {
+      "term": "migren günlüğü",
+      "competitors": []
+    },
+    "az": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "kz": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "kg": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "uz": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "al": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "au": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "nz": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "jp": {
+      "term": "頭痛 記録",
+      "competitors": []
+    },
+    "kr": {
+      "term": "두통 일기",
+      "competitors": []
+    },
+    "cn": {
+      "term": "头痛 记录",
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    "hk": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "tw": {
+      "term": "頭痛 日記",
+      "competitors": []
+    },
+    "mo": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "sg": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "my": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "th": {
+      "term": "บันทึกปวดหัว",
+      "competitors": []
+    },
+    "vn": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "id": {
+      "term": "pelacak sakit kepala",
+      "competitors": []
+    },
+    "ph": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "in": {
+      "term": "headache diary",
+      "competitors": []
+    },
+    "kh": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "mn": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "np": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "lk": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "sa": {
+      "term": "متتبع الصداع",
+      "competitors": []
+    },
+    "ae": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "eg": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "il": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "jo": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "kw": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "lb": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "om": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "qa": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "bh": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "iq": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ma": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "dz": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "gh": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "ke": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "za": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "pk": {
+      "term": "headache tracker",
+      "competitors": []
+    },
+    "am": {
+      "term": "headache tracker",
+      "competitors": []
+    }
+  }
+}

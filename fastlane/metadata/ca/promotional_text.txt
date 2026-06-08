@@ -1,0 +1,1 @@
+Registra mals de cap amb un sol toc i captura automàticament salut, temps i context diari per detectar patrons de migranya abans.

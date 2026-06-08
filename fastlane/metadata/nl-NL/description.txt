@@ -1,0 +1,45 @@
+One Tap Headache Tracker is het snelste dagboek voor migraine en hoofdpijn op iPhone: registreer een aanval met één tik en laat Headache Pro de patronen in je gegevens vinden.
+
+Zodra een hoofdpijn begint, tik je één keer op je iPhone of Apple Watch. De app zet direct een tijdstempel en voegt automatisch de context toe waar artsen en migrainespecialisten echt naar vragen – geen typen, geen formulieren, geen gedoe.
+
+ELKE HOOFDPIJN WORDT GELLOGD MET:
+
+- Tijd en ritme – weekdag, uur, minuut, tijdzone en deel van de dag
+- Apple Health-signalen – stappen, activiteit, slaapfasen, hartslag, HRV, rusthartslag, SpO₂, VO₂ max, ademhalingsfrequentie, geluidsblootstelling, mindful minuten en recente workouts
+- Weer en omgeving – temperatuur, veranderingen in luchtdruk, luchtvochtigheid, luchtkwaliteit (AQI), UV-index en pollenachtige signalen die vaak met migraineaanvallen samenhangen
+- Optionele ernstscore (1–10) en persoonlijke notities over medicatie, aura, locatie van de pijn of vermoedelijke triggers
+
+HEADACHE PRO – VIND JE TRIGGERS:
+
+Een paar tikken aan data is op zichzelf niet nuttig. Headache Pro leest je volledige geschiedenis en haalt de echte signalen achter je hoofdpijn naar boven.
+
+- Gepersonaliseerde patrooninzichten – slaap, dalingen in luchtdruk, clusters op tijdstip van de dag, weekdagpatronen, HRV-dips, weersveranderingen en meer, elk met grafiek en heldere toelichting
+- Meer dan 15 patroondetectors plus multivariabele co‑occurrence-analyse om gecombineerde triggers (bijv. drukdaling + slechte slaap) te vinden die enkelvoudige tracking mist
+- Proactive Alerts – Pro volgt op de achtergrond je lokale weerbericht en meldt zich alleen wanneer omstandigheden een triggerpatroon in JOUW geschiedenis raken. Geen generieke “storm op komst”-meldingen.
+- Persoonlijke drempels en stille uren zodat meldingen je dag respecteren
+- Exclusieve Pro-filters en uitsplitsingen in je geschiedenisweergave
+
+GEMAAKT VOOR HET DAGELIJKSE LEVEN:
+
+- Registreren met één tik op Apple Watch die terug synchroniseert naar je gekoppelde iPhone
+- Widgets voor beginscherm en toegangsscherm om hoofdpijn te loggen zonder de app te openen
+- Siri-snelkoppelingen en ondersteuning voor “Hé Siri, log een hoofdpijn”
+- CSV-export om een duidelijk hoofdpijnoverzicht te delen met je neuroloog, huisarts of migrainespecialist
+
+PRIVACY ALS UITGANGSPUNT:
+
+One Tap Headache Tracker is een lokaal-eerst hoofdpijndagboek.
+
+- Geen account nodig
+- Geen advertenties
+- Geen analytics-SDK’s
+- Geen cloudsync
+- Je hoofdpijndagboek blijft op je toestel – alleen handmatige export wanneer jij besluit te delen
+
+Of je nu chronische migraine, clusterhoofdpijn, spanningshoofdpijn, hormonale hoofdpijn bijhoudt of gewoon een terugkerend hoofdpijnpatroon wilt begrijpen, One Tap Headache Tracker maakt van één tik een volledig, artsklaar verslag – en Headache Pro zet dat verslag om in antwoorden.
+
+Abonnement
+Headache Pro is beschikbaar als automatisch verlengend abonnement (Maandelijks $2,99 / Jaarlijks $9,99 met 7 dagen gratis proef) of als eenmalige Lifetime-aankoop ($24,99). De betaling wordt bij bevestiging in rekening gebracht op je Apple ID. Abonnementen worden automatisch verlengd tenzij je ze minstens 24 uur voor het einde van de periode opzegt. Beheer of annuleer op elk moment via Instellingen → Apple ID → Abonnementen.
+
+Privacybeleid: https://jackwallner.github.io/headaches/privacy-policy.html
+Gebruiksvoorwaarden (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

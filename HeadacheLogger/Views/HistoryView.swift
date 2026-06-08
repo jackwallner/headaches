@@ -355,6 +355,9 @@ struct HistoryView: View {
             let url = try ExportService.exportCSV(events: toExport)
             pendingExportURL = url
             activeSheet = .export(url)
+            // Exporting a doctor-ready history is a high-signal value moment — count it toward
+            // review eligibility. Count only; the prompt presents on Home after a log.
+            ReviewPromptTracker.recordPositiveMoment()
         } catch {
             showExportError = true
         }
@@ -369,6 +372,7 @@ struct HistoryView: View {
             let url = try ExportService.exportDoctorPDF(events: events)
             pendingExportURL = url
             activeSheet = .export(url)
+            ReviewPromptTracker.recordPositiveMoment()
         } catch {
             showExportError = true
         }

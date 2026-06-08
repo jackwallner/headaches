@@ -1,0 +1,1 @@
+Egy koppintással naplózd a fejfájást, és automatikusan rögzítsd az egészségi, időjárási és napi kontextust, hogy a csapatod gyorsabban felismerje a migrénmintákat.

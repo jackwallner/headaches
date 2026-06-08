@@ -35,8 +35,8 @@ enum ReviewPromptDismissOutcome: Sendable {
     case notNow
     case feedbackSubmitted
     case openedWriteReview
-    /// User chose "Yes" but dismissed the pitch without opening the store — host may call `requestReview()` once in `onDismiss`.
-    case enjoyedMaybeLater
+    /// User tapped the primary rate CTA. The host presents the native StoreKit review prompt once in `onDismiss`.
+    case requestedNativeReview
 }
 
 struct ReviewPromptSheet: View {
@@ -156,19 +156,23 @@ struct ReviewPromptSheet: View {
 
             VStack(spacing: 10) {
                 Button {
-                    ReviewPromptTracker.markOpenedWriteReview()
-                    UIApplication.shared.open(AppStoreReviewLinks.writeReviewURL)
-                    finish(.openedWriteReview)
+                    // The native StoreKit prompt is a one-tap, in-app star rating and converts far
+                    // better than the write-review web page. The host fires it in `onDismiss`. We mark
+                    // shown (120-day cooldown) but set no permanent outcome, since Apple may silently
+                    // throttle the prompt and we want a future chance to ask.
+                    ReviewPromptTracker.markShown()
+                    finish(.requestedNativeReview)
                 } label: {
-                    primaryButtonLabel("Rate on the App Store")
+                    primaryButtonLabel("Rate the app")
                 }
                 .buttonStyle(.plain)
 
                 Button {
-                    ReviewPromptTracker.markShown()
-                    finish(.enjoyedMaybeLater)
+                    ReviewPromptTracker.markOpenedWriteReview()
+                    UIApplication.shared.open(AppStoreReviewLinks.writeReviewURL)
+                    finish(.openedWriteReview)
                 } label: {
-                    secondaryButtonLabel("Maybe later")
+                    secondaryButtonLabel("Write a full review instead")
                 }
                 .buttonStyle(.plain)
             }
@@ -248,7 +252,7 @@ struct ReviewPromptSheet: View {
     static func feedbackMailURL(body: String) -> URL? {
         var components = URLComponents()
         components.scheme = "mailto"
-        components.path = "jackwallner@gmail.com"
+        components.path = "jackwallner+ha@gmail.com"
         components.queryItems = [
             URLQueryItem(name: "subject", value: "One Tap Headache Tracker feedback"),
             URLQueryItem(name: "body", value: body),

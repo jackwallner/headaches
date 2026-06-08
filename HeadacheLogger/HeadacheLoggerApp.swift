@@ -211,6 +211,13 @@ private struct HeadacheLoggerRootContent: View {
             // so a returning user with logs but no products yet still gets pitched.
             evaluateExistingUserTrialOffer()
         }
+        .onChange(of: storeService.hasResolvedEntitlements) { _, resolved in
+            // Entitlements often resolve a beat after the view appears. Re-run the promo paths
+            // once we actually know the user isn't Pro — and skip entirely if they are.
+            guard resolved else { return }
+            offerProIntroIfNeeded()
+            evaluateExistingUserTrialOffer()
+        }
         .onChange(of: events.count) { oldCount, newCount in
             // First-use trigger: just logged their first headache.
             if oldCount == 0, newCount >= 1 {
@@ -268,7 +275,7 @@ private struct HeadacheLoggerRootContent: View {
 
     private func handleReviewPromptFinish(_ outcome: ReviewPromptDismissOutcome) {
         showReviewPrompt = false
-        if outcome == .enjoyedMaybeLater {
+        if outcome == .requestedNativeReview {
             pendingNativeReviewAfterDismiss = true
         }
     }
@@ -336,7 +343,8 @@ private struct HeadacheLoggerRootContent: View {
         if hasTrialOffer { return }
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 800_000_000)
-            guard !hasSeenProIntro, !storeService.isProUnlocked, !showTrialOffer else { return }
+            // Wait until entitlements have resolved so a premium user is never shown the intro.
+            guard storeService.hasResolvedEntitlements, !hasSeenProIntro, !storeService.isProUnlocked, !showTrialOffer else { return }
             if hasTrialOffer { return }
             if captureCoordinator.proPromptShownThisSession { return }
             captureCoordinator.proPromptShownThisSession = true
@@ -392,7 +400,10 @@ private struct HeadacheLoggerRootContent: View {
     }
 
     private func presentTrialOfferIfReady(source: TrialOfferSource) {
-        guard !showTrialOffer,
+        // Never pitch before RevenueCat has told us whether the user is already Pro — otherwise a
+        // premium user gets a promo (and the sibling-sheet race a blank one) during the launch window.
+        guard storeService.hasResolvedEntitlements,
+              !showTrialOffer,
               !showTrialPaywall,
               !storeService.isProUnlocked,
               hasTrialOffer

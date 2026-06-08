@@ -1,0 +1,6 @@
+Tämä päivitys tekee Headache Pro ‑sovelluksen oivalluskoneesta aiempaa älykkäämmän ja luotettavamman, jotta voit luottaa havaitsemiisi kaavoihin.
+
+- 15 uutta kaavahavaitsinta, mukaan lukien yhdistettyjen laukaisimien tunnistus, joka voi korostaa samanaikaisia esiintymisiä, kuten ilmanpaineen lasku ja huono uni
+- Tiukemmat kynnysarvot oivallusten esiin tuomiselle vähentävät vääriä hälytyksiä ja keskittyvät kaavoihin, jotka todella pitävät paikkansa datassasi
+- Viimeistellympi historiannäkymä ja sujuvampi käyttöönotto helpottavat aiempien päänsärkyjen tarkastelua ja alkuasetusten tekemistä
+- Yleiset suorituskyky- ja vakausparannukset pitävät kirjaamisen ja analyysin nopeana ja luotettavana
