@@ -1,0 +1,1 @@
+zdravlje,dnevnik,izvoz,liječnik,simptom,glava,epizoda,okidač,cluster,tenzija,kronično,bol,obrazac

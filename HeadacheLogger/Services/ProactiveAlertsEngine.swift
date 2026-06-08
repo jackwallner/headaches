@@ -128,6 +128,8 @@ enum ProactiveAlertsEngine {
         let level: RiskLevel
         let score: Int
         let factors: [RiskFactor]
+        /// One actionable line tailored to today's level and which signals are present.
+        let recommendation: String
         let evaluatedAt: Date
     }
 
@@ -154,11 +156,12 @@ enum ProactiveAlertsEngine {
             if maxDrop >= 6 {
                 let bump = profile.pressure.isSupported ? 3 : 2
                 score += bump
+                let base = String(format: "%.1f hPa drop forecast in the next 24h.", maxDrop)
                 factors.append(RiskFactor(
                     id: "pressure",
                     icon: "barometer",
                     title: "Pressure dropping",
-                    detail: String(format: "%.1f hPa drop forecast in the next 24h.", maxDrop)
+                    detail: base + personalNote(profile.pressure)
                 ))
             } else if maxDrop >= 3 {
                 score += 1
@@ -186,7 +189,7 @@ enum ProactiveAlertsEngine {
                     id: "aqi-moderate",
                     icon: "aqi.medium",
                     title: "Elevated air quality",
-                    detail: "AQI forecast peak: \(Int(aqiPeak))."
+                    detail: "AQI forecast peak: \(Int(aqiPeak))." + personalNote(profile.airQuality)
                 ))
             }
         }
@@ -219,7 +222,61 @@ enum ProactiveAlertsEngine {
             }
         }()
 
-        return RiskForecast(level: level, score: score, factors: factors, evaluatedAt: now)
+        let recommendation = recommendationText(
+            level: level,
+            factors: factors,
+            sleepLastNightHours: sleepLastNightHours
+        )
+
+        return RiskForecast(level: level, score: score, factors: factors, recommendation: recommendation, evaluatedAt: now)
+    }
+
+    /// Appends the user's own history to a forecast factor when their daily logs support it, so the
+    /// risk reads as personal rather than a generic weather warning. Empty when the signal is unproven.
+    private static func personalNote(_ signal: PersonalSignalProfile) -> String {
+        guard signal.isSupported, signal.conditionDays > 0 else { return "" }
+        return " You've logged headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days."
+    }
+
+    /// One concrete next-step line tailored to the level and which signals fired. Keeps the card
+    /// from being a bare risk score the user has to interpret on their own.
+    private static func recommendationText(level: RiskLevel, factors: [RiskFactor], sleepLastNightHours: Double?) -> String {
+        let ids = Set(factors.map(\.id))
+        let hasPressure = ids.contains("pressure") || ids.contains("pressure-mild")
+        let hasAQI = ids.contains("aqi-high") || ids.contains("aqi-moderate")
+        let hasSleep = ids.contains("sleep-very-low") || ids.contains("sleep-low")
+
+        switch level {
+        case .low:
+            if let sleep = sleepLastNightHours, sleep >= 7 {
+                return "Nothing in today's forecast stands out, and last night's sleep is working in your favor. A normal day."
+            }
+            return "Nothing in today's forecast stands out. A good day to keep your usual routine."
+        case .moderate:
+            var tips: [String] = ["Hydrate early"]
+            if hasPressure { tips.append("keep rescue meds within reach") }
+            if hasAQI { tips.append("limit time outdoors and run an air filter if you have one") }
+            if hasSleep { tips.append("protect tonight's sleep window") }
+            return "A moderate day. " + sentence(from: tips) + " and watch for your usual early signs."
+        case .high:
+            var tips: [String] = ["Pre-hydrate now", "keep rescue meds handy"]
+            if hasAQI { tips.append("stay indoors with filtered air when you can") }
+            if hasSleep { tips.append("prioritize rest and ease off screens") }
+            if hasPressure && !hasAQI && !hasSleep { tips.append("plan lighter commitments if you can") }
+            return "Treat today as high-risk. " + sentence(from: tips) + "."
+        }
+    }
+
+    /// Joins tips into a single readable clause (comma-separated, "and" before the last).
+    private static func sentence(from tips: [String]) -> String {
+        switch tips.count {
+        case 0: return ""
+        case 1: return tips[0]
+        case 2: return "\(tips[0]) and \(tips[1])"
+        default:
+            let head = tips.dropLast().joined(separator: ", ")
+            return "\(head), and \(tips.last!)"
+        }
     }
 
     static func evaluate(forecast: HourlyForecast, prefs: ProAlertPreferenceValues, profile: PersonalAlertProfile) -> AlertDecision? {

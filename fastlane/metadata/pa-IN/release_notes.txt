@@ -1,0 +1,6 @@
+This update makes Headache Pro’s insight engine smarter and more reliable so you can trust the patterns you see.
+
+- 15 new pattern detectors, including combined-trigger detection that can highlight co-occurrences like pressure drops plus poor sleep
+- Tighter thresholds for surfacing insights to reduce false positives and focus on patterns that actually hold up in your data
+- A more polished history view and smoother onboarding to make it easier to review past headaches and get set up
+- General performance and stability improvements to keep logging and analysis fast and dependable

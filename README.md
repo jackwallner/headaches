@@ -76,4 +76,4 @@ See [LICENSE](LICENSE) for details.
 
 ## Author
 
-Jack Wallner — [jackwallner@gmail.com](mailto:jackwallner@gmail.com)
+Jack Wallner — [jackwallner+ha@gmail.com](mailto:jackwallner+ha@gmail.com)

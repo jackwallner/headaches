@@ -1,0 +1,45 @@
+One Tap Headache Tracker là nhật ký migraine và đau đầu nhanh nhất trên iPhone – ghi lại cơn đau chỉ với một lần chạm, rồi để Headache Pro tìm ra các mẫu ẩn trong dữ liệu của bạn.
+
+Ngay khi cơn đau đầu xuất hiện, chạm một lần trên iPhone hoặc Apple Watch. Ứng dụng tự động đóng dấu thời gian và tự gắn kèm bối cảnh xung quanh mà bác sĩ và chuyên gia migraine thực sự hỏi đến – không phải gõ, không biểu mẫu, không phiền toái.
+
+MỖI CƠN ĐAU ĐẦU ĐƯỢC GHI LẠI VỚI:
+
+- Thời gian và nhịp điệu – thứ trong tuần, giờ, phút, múi giờ và buổi trong ngày
+- Tín hiệu Apple Health – số bước, mức hoạt động, các giai đoạn giấc ngủ, nhịp tim, HRV, nhịp tim nghỉ, SpO₂, VO₂ max, nhịp thở, mức ồn âm thanh, phút chánh niệm và bài tập gần đây
+- Thời tiết và môi trường – nhiệt độ, thay đổi áp suất không khí, độ ẩm, chất lượng không khí (AQI), chỉ số UV và các tín hiệu kiểu phấn hoa vốn lâu nay liên quan đến cơn migraine
+- Tuỳ chọn chấm mức độ nặng (1–10) và ghi chú cá nhân về thuốc, hào quang, vị trí đau hoặc tác nhân nghi ngờ
+
+HEADACHE PRO - TÌM TÁC NHÂN GÂY ĐAU:
+
+Vài lần chạm dữ liệu riêng lẻ thì không hữu ích. Headache Pro đọc toàn bộ lịch sử và làm nổi bật các tín hiệu thực sự đứng sau cơn đau đầu của bạn.
+
+- Thông tin mẫu hoá cá nhân – giấc ngủ, tụt áp suất không khí, cụm thời điểm trong ngày, mẫu theo thứ trong tuần, tụt HRV, thay đổi thời tiết và hơn thế nữa, mỗi mục đều có biểu đồ và giải thích dễ hiểu
+- Hơn 15 bộ phát hiện mẫu cùng phân tích đồng xuất hiện đa biến để bắt các tác nhân kết hợp (ví dụ tụt áp suất + ngủ kém) mà theo dõi đơn lẻ không thấy được
+- Cảnh báo Chủ động – Pro theo dõi dự báo thời tiết địa phương của bạn ở chế độ nền và chỉ nhắc khi điều kiện trùng với mẫu tác nhân trong CHÍNH lịch sử của bạn. Không còn cảnh báo chung chung kiểu “bão sắp đến”.
+- Ngưỡng cá nhân hoá và khung giờ yên tĩnh để cảnh báo tôn trọng nhịp sinh hoạt của bạn
+- Bộ lọc và phân tách chỉ dành cho Pro trong màn hình lịch sử
+
+THIẾT KẾ CHO CUỘC SỐNG THỰC:
+
+- Ghi nhật ký bằng Apple Watch chỉ với một chạm và đồng bộ lại iPhone ghép đôi
+- Widget Màn hình chính và Màn hình khoá để ghi cơn đau đầu mà không cần mở app
+- Hỗ trợ Siri Shortcuts và câu lệnh “Hey Siri, log a headache”
+- Xuất CSV để chia sẻ lịch sử đau đầu rõ ràng với bác sĩ thần kinh, bác sĩ gia đình hoặc chuyên gia migraine
+
+RIÊNG TƯ NGAY TỪ THIẾT KẾ:
+
+One Tap Headache Tracker là nhật ký đau đầu ưu tiên lưu trữ cục bộ.
+
+- Không cần tài khoản
+- Không quảng cáo
+- Không bộ SDK phân tích
+- Không đồng bộ đám mây
+- Nhật ký đau đầu của bạn chỉ nằm trên thiết bị – chỉ xuất thủ công khi bạn chọn chia sẻ
+
+Dù bạn đang theo dõi migraine mạn tính, đau đầu chuỗi, đau đầu căng thẳng, đau đầu do nội tiết tố hay chỉ cố hiểu mẫu đau đầu thỉnh thoảng xuất hiện, One Tap Headache Tracker biến một lần chạm thành bản ghi đầy đủ sẵn sàng cho bác sĩ – và Headache Pro biến bản ghi đó thành câu trả lời.
+
+Chi tiết gói đăng ký
+Headache Pro có sẵn dưới dạng đăng ký tự gia hạn (Hàng tháng $2,99 / Hàng năm $9,99 với 7 ngày dùng thử miễn phí) hoặc mua trọn đời một lần ($24,99). Thanh toán sẽ được trừ vào Apple ID của bạn khi xác nhận. Gói đăng ký tự gia hạn trừ khi huỷ ít nhất 24 giờ trước khi kết thúc chu kỳ. Bạn có thể quản lý hoặc huỷ bất cứ lúc nào trong Cài đặt → Apple ID → Subscriptions.
+
+Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

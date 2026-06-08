@@ -1,0 +1,45 @@
+One Tap Headache Tracker este cel mai rapid jurnal de migrene și dureri de cap pe iPhone – înregistrezi o durere dintr-o singură atingere, apoi Headache Pro găsește tiparele ascunse în datele tale.
+
+În momentul în care apare o durere de cap, atinge o dată pe iPhone sau Apple Watch. Aplicația marchează instant evenimentul cu ora exactă și atașează automat contextul din jurul lui, adică informațiile pe care medicii și specialiștii în migrene le cer de obicei – fără tastare, fără formulare, fără fricțiune.
+
+FIECARE DURERE DE CAP ESTE ÎNREGISTRATĂ CU:
+
+- Timp și ritm – zi a săptămânii, oră, minut, fus orar și partea zilei
+- Semnale Apple Health – pași, activitate, etape ale somnului, ritm cardiac, HRV, ritm cardiac în repaus, SpO₂, VO₂ max, ritm respirator, expunere la zgomot, minute de mindfulness și antrenamente recente
+- Vreme și mediu – temperatură, variații ale presiunii barometrice, umiditate, calitatea aerului (AQI), indice UV și semnale de tip polen asociate de mult timp cu atacurile de migrenă
+- Opțional, un scor al severității (1–10) și note personale pentru medicamente, aură, localizarea durerii sau posibili factori declanșatori
+
+HEADACHE PRO – GĂSEȘTE DECLANȘATORII:
+
+Câteva atingeri de date nu sunt utile de unele singure. Headache Pro citește întregul tău istoric și scoate la suprafață semnalele reale din spatele durerilor de cap.
+
+- Informații personalizate despre tipare – somn, scăderi ale presiunii barometrice, grupări pe momente ale zilei, tipare pe zilele săptămânii, scăderi de HRV, schimbări meteo și altele, fiecare afișat cu un grafic și o explicație clară
+- Peste 15 detectoare de tipare plus analiză multivariată a co-aparițiilor pentru a surprinde declanșatori combinați (de ex. scădere de presiune + somn slab) pe care monitorizarea pe o singură variabilă îi ratează
+- Alerte proactive – Pro urmărește în fundal prognoza ta locală și te anunță doar când condițiile se potrivesc cu un tipar declanșator din ISTORICUL tău. Fără spam generic de tip „vine furtuna”.
+- Praguri personalizate și intervale silențioase, astfel încât alertele să respecte programul tău
+- Filtre și defalcări exclusive Pro în vizualizarea istoricului
+
+GÂNDITĂ PENTRU VIAȚA REALĂ:
+
+- Înregistrare dintr-o atingere pe Apple Watch care se sincronizează cu iPhone-ul asociat
+- Widgeturi pentru Ecran de pornire și Ecran de blocare ca să înregistrezi o durere de cap fără să deschizi aplicația
+- Siri Shortcuts și suport pentru „Hey Siri, log a headache”
+- Export CSV pentru a partaja un istoric clar al durerilor de cap cu neurologul, medicul de familie sau specialistul în migrene
+
+CONFIDENȚIALITATE DIN DESIGN:
+
+One Tap Headache Tracker este un jurnal local-first pentru durerile de cap.
+
+- Fără cont necesar
+- Fără reclame
+- Fără SDK-uri de analiză
+- Fără sincronizare în cloud
+- Jurnalul tău de dureri de cap rămâne pe dispozitiv – export manual doar când alegi să partajezi
+
+Fie că urmărești migrena cronică, cefaleele cluster, durerile de cap de tensiune, durerile de cap hormonale sau doar încerci să înțelegi un tipar ocazional al durerilor de cap, One Tap Headache Tracker transformă o singură atingere într-un istoric complet, gata pentru medic – iar Headache Pro transformă acest istoric în răspunsuri.
+
+Detalii abonament
+Headache Pro este disponibil ca abonament cu reînnoire automată (Lunar 2,99 USD / Anual 9,99 USD cu perioadă de probă gratuită de 7 zile) sau achiziție unică Lifetime (24,99 USD). Plata este debitată din ID-ul tău Apple la confirmare. Abonamentele se reînnoiesc automat dacă nu sunt anulate cu cel puțin 24 de ore înainte de sfârșitul perioadei. Le poți gestiona sau anula oricând în Configurări → Apple ID → Abonamente.
+
+Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

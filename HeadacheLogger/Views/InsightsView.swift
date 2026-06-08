@@ -9,6 +9,8 @@ struct InsightsView: View {
     @State private var riskForecast: ProactiveAlertsEngine.RiskForecast?
     @State private var riskLoading = false
     @State private var riskLocationMissing = false
+    /// Guards the insights value-moment so it counts at most once per view appearance.
+    @State private var notedInsightsMoment = false
 
     private var summary: InsightsEngine.Summary {
         InsightsEngine.summarize(events, dailyRecords: dailyRecords)
@@ -32,6 +34,7 @@ struct InsightsView: View {
         .task {
             await loadAndBackfillDailyRecords()
             await refreshRiskForecast()
+            noteInsightsPositiveMomentIfEarned()
         }
         .onChange(of: events.count) { _, _ in
             Task { await loadAndBackfillDailyRecords() }
@@ -120,6 +123,17 @@ struct InsightsView: View {
                     .font(.footnote)
             }
         }
+    }
+
+    /// Seeing real, unlocked patterns is a strong "the app delivered value" signal, so count it toward
+    /// review eligibility. Count only; the prompt itself still presents on the Home tab after a log.
+    private func noteInsightsPositiveMomentIfEarned() {
+        guard !notedInsightsMoment,
+              store.isProUnlocked,
+              events.count >= InsightsEngine.minimumSampleSize,
+              !summary.insights.isEmpty else { return }
+        notedInsightsMoment = true
+        ReviewPromptTracker.recordPositiveMoment()
     }
 
     private func refreshRiskForecast(forceRefresh: Bool = false) async {
@@ -818,6 +832,17 @@ struct DailyRiskForecastCard: View {
                         }
                     }
                 }
+
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.footnote)
+                        .foregroundStyle(forecast.level.tint)
+                    Text(forecast.recommendation)
+                        .font(.footnote)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.top, 2)
             } else if isLoading {
                 HStack(spacing: 10) {
                     ProgressView()

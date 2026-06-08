@@ -1,0 +1,459 @@
+{
+  "ar-SA": {
+    "keywords": {
+      "old": "صداع,شقيقة,متتبع,ساعة,ودجت,يوميات,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل",
+      "new": "صداع,شقيقة,متتبع,ساعة,ودجت,يوميات,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل",
+      "len": 72
+    },
+    "subtitle": {}
+  },
+  "bn-BD": {
+    "keywords": {
+      "old": "মাথাব্যথা,মাইগ্রেন,ট্র্যাকার,ঘড়ি,উইজেট,ডায়েরি,ব্যথা,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার",
+      "new": "মাথাব্যথা,মাইগ্রেন,ট্র্যাকার,ঘড়ি,উইজেট,ডায়েরি,ব্যথা,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার",
+      "len": 97
+    },
+    "subtitle": {}
+  },
+  "ca": {
+    "keywords": {
+      "old": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log",
+      "new": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log",
+      "len": 85
+    },
+    "subtitle": {
+      "old": "Diari migranya i cefalea",
+      "new": "Diari migranya i cefalea"
+    }
+  },
+  "cs": {
+    "keywords": {
+      "old": "tracker,hodinky,widget,deník,cluster,export,spouštěč,zdraví,lékař,příznak,log",
+      "new": "tracker,hodinky,widget,deník,cluster,export,spouštěč,zdraví,lékař,příznak,log",
+      "len": 77
+    },
+    "subtitle": {}
+  },
+  "da": {
+    "keywords": {
+      "old": "migræne,tracker,ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,symptom",
+      "new": "migræne,tracker,ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,symptom",
+      "len": 77
+    },
+    "subtitle": {}
+  },
+  "de-DE": {
+    "keywords": {
+      "old": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,symptom,log",
+      "new": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,symptom,log",
+      "len": 62
+    },
+    "subtitle": {
+      "old": "Migräne-Tagebuch & Tracker",
+      "new": "Migräne-Tagebuch & Tracker"
+    }
+  },
+  "el": {
+    "keywords": {
+      "old": "πονοκέφαλος,ημικρανία,tracker,ρολόι,widget,ημερολόγιο,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός",
+      "new": "πονοκέφαλος,ημικρανία,tracker,ρολόι,widget,ημερολόγιο,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός",
+      "len": 97
+    },
+    "subtitle": {}
+  },
+  "en-AU": {
+    "keywords": {
+      "old": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "new": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "len": 94
+    },
+    "subtitle": {
+      "old": "Migraine & Headache Log",
+      "new": "Migraine & Headache Log"
+    }
+  },
+  "en-CA": {
+    "keywords": {
+      "old": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "new": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "len": 94
+    },
+    "subtitle": {
+      "old": "Migraine & Headache Log",
+      "new": "Migraine & Headache Log"
+    }
+  },
+  "en-GB": {
+    "keywords": {
+      "old": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "new": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "len": 94
+    },
+    "subtitle": {
+      "old": "Migraine & Headache Log",
+      "new": "Migraine & Headache Log"
+    }
+  },
+  "en-US": {
+    "keywords": {
+      "old": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "new": "watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic",
+      "len": 94
+    },
+    "subtitle": {
+      "old": "Migraine & Headache Log",
+      "new": "Migraine & Headache Log"
+    }
+  },
+  "es-ES": {
+    "keywords": {
+      "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,síntoma,log",
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,síntoma,log",
+      "len": 83
+    },
+    "subtitle": {
+      "old": "Diario migraña y cefalea",
+      "new": "Diario migraña y cefalea"
+    }
+  },
+  "es-MX": {
+    "keywords": {
+      "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,síntoma,log",
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,síntoma,log",
+      "len": 83
+    },
+    "subtitle": {
+      "old": "Diario migraña y cefalea",
+      "new": "Diario migraña y cefalea"
+    }
+  },
+  "fi": {
+    "keywords": {
+      "old": "päänsärky,migreeni,tracker,kello,widget,päiväkirja,kipu,cluster,vienti,laukaisin,terveys,lääkäri",
+      "new": "päänsärky,migreeni,tracker,kello,widget,päiväkirja,kipu,cluster,vienti,laukaisin,terveys,lääkäri",
+      "len": 96
+    },
+    "subtitle": {}
+  },
+  "fr-CA": {
+    "keywords": {
+      "old": "mal,tête,tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,symptôme,log",
+      "new": "mal,tête,tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,symptôme,log",
+      "len": 92
+    },
+    "subtitle": {
+      "old": "Journal migraine & maux de têt",
+      "new": "Journal migraine & maux de têt"
+    }
+  },
+  "fr-FR": {
+    "keywords": {
+      "old": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,symptôme,log",
+      "new": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,symptôme,log",
+      "len": 83
+    },
+    "subtitle": {
+      "old": "Journal migraine & céphalée",
+      "new": "Journal migraine & céphalée"
+    }
+  },
+  "gu-IN": {
+    "keywords": {
+      "old": "માથાનો,dard,માઇગ્રેન,ટ્રેકર,ઘડિયાળ,વિજેટ,ડાયરી,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લક્ષણ,લોગ",
+      "new": "માથાનો,dard,માઇગ્રેન,ટ્રેકર,ઘડિયાળ,વિજેટ,ડાયરી,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લક્ષણ,લોગ",
+      "len": 99
+    },
+    "subtitle": {}
+  },
+  "he": {
+    "keywords": {
+      "old": "כאב,ראש,מיגרנה,מעקב,שעון,ווידג'ט,יומן,כאב,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג",
+      "new": "כאב,ראש,מיגרנה,מעקב,שעון,ווידג'ט,יומן,כאב,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג",
+      "len": 81
+    },
+    "subtitle": {}
+  },
+  "hi": {
+    "keywords": {
+      "old": "सिरदर्द,माइग्रेन,ट्रैकर,घड़ी,विजेट,डायरी,दर्द,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लक्षण,लॉग",
+      "new": "सिरदर्द,माइग्रेन,ट्रैकर,घड़ी,विजेट,डायरी,दर्द,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लक्षण,लॉग",
+      "len": 95
+    },
+    "subtitle": {}
+  },
+  "hr": {
+    "keywords": {
+      "old": "glavobolja,migrena,tracker,sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,simptom,log",
+      "new": "glavobolja,migrena,tracker,sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,simptom,log",
+      "len": 90
+    },
+    "subtitle": {}
+  },
+  "hu": {
+    "keywords": {
+      "old": "migrén,tracker,óra,widget,napló,fájdalom,cluster,export,kiváltó,egészség,orvos,tünet,log",
+      "new": "migrén,tracker,óra,widget,napló,fájdalom,cluster,export,kiváltó,egészség,orvos,tünet,log",
+      "len": 88
+    },
+    "subtitle": {}
+  },
+  "id": {
+    "keywords": {
+      "old": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,gejala",
+      "new": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,gejala",
+      "len": 68
+    },
+    "subtitle": {}
+  },
+  "it": {
+    "keywords": {
+      "old": "tracker,orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log",
+      "new": "tracker,orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log",
+      "len": 80
+    },
+    "subtitle": {
+      "old": "Diario emicrania e cefalea",
+      "new": "Diario emicrania e cefalea"
+    }
+  },
+  "ja": {
+    "keywords": {
+      "old": "頭痛,片頭痛,トラッカー,ウォッチ,ウィジェット,日記,痛み,群発,エクスポート,トリガー,健康,医師,症状,ログ",
+      "new": "頭痛,片頭痛,トラッカー,ウォッチ,ウィジェット,日記,痛み,群発,エクスポート,トリガー,健康,医師,症状,ログ",
+      "len": 57
+    },
+    "subtitle": {
+      "old": "片頭痛・頭痛ワンタップログ",
+      "new": "片頭痛・頭痛ワンタップログ"
+    }
+  },
+  "kn-IN": {
+    "keywords": {
+      "old": "ತಲೆನೋವು,ಮೈಗ್ರೇನ್,ಟ್ರ್ಯಾಕರ್,ಗಡಿಯಾರ,ವಿಜೆಟ್,ದಿನಚರಿ,ನೋವು,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಕ್ಷಣ,ಲಾಗ್",
+      "new": "ತಲೆನೋವು,ಮೈಗ್ರೇನ್,ಟ್ರ್ಯಾಕರ್,ಗಡಿಯಾರ,ವಿಜೆಟ್,ದಿನಚರಿ,ನೋವು,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಕ್ಷಣ,ಲಾಗ್",
+      "len": 99
+    },
+    "subtitle": {}
+  },
+  "ko": {
+    "keywords": {
+      "old": "두통,편두통,트래커,워치,위젯,일기,통증,군발,보내기,유발,건강,의사,증상,로그",
+      "new": "두통,편두통,트래커,워치,위젯,일기,통증,군발,보내기,유발,건강,의사,증상,로그",
+      "len": 44
+    },
+    "subtitle": {
+      "old": "두통·편두통 원탭 일기",
+      "new": "두통·편두통 원탭 일기"
+    }
+  },
+  "ml-IN": {
+    "keywords": {
+      "old": "തലവേദന,മൈഗ്രേൻ,ട്രാക്കർ,വാച്ച്,വിജറ്റ്,ഡയറി,വേദന,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,ലക്ഷണം",
+      "new": "തലവേദന,മൈഗ്രേൻ,ട്രാക്കർ,വാച്ച്,വിജറ്റ്,ഡയറി,വേദന,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,ലക്ഷണം",
+      "len": 100
+    },
+    "subtitle": {}
+  },
+  "mr-IN": {
+    "keywords": {
+      "old": "डोकेदुखी,माइग्रेन,ट्रॅकर,घड्याळ,विजेट,डायरी,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लक्षण,लॉग",
+      "new": "डोकेदुखी,माइग्रेन,ट्रॅकर,घड्याळ,विजेट,डायरी,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लक्षण,लॉग",
+      "len": 96
+    },
+    "subtitle": {}
+  },
+  "ms": {
+    "keywords": {
+      "old": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,gejala",
+      "new": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,gejala",
+      "len": 66
+    },
+    "subtitle": {}
+  },
+  "nl-NL": {
+    "keywords": {
+      "old": "horloge,widget,dagboek,cluster,export,trigger,gezondheid,arts,symptoom",
+      "new": "horloge,widget,dagboek,cluster,export,trigger,gezondheid,arts,symptoom",
+      "len": 70
+    },
+    "subtitle": {
+      "old": "Migraine & hoofdpijn log",
+      "new": "Migraine & hoofdpijn log"
+    }
+  },
+  "no": {
+    "keywords": {
+      "old": "migrene,tracker,klokke,widget,dagbok,smerte,cluster,eksport,trigger,helse,lege,symptom,log",
+      "new": "migrene,tracker,klokke,widget,dagbok,smerte,cluster,eksport,trigger,helse,lege,symptom,log",
+      "len": 90
+    },
+    "subtitle": {}
+  },
+  "or-IN": {
+    "keywords": {
+      "old": "ମୁଣ୍ଡବିନାଶ,ମାଇଗ୍ରେନ,ଟ୍ରାକର,ଘଣ୍ଟା,ୱିଜେଟ,ଡାଇରି,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଲକ୍ଷଣ",
+      "new": "ମୁଣ୍ଡବିନାଶ,ମାଇଗ୍ରେନ,ଟ୍ରାକର,ଘଣ୍ଟା,ୱିଜେଟ,ଡାଇରି,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଲକ୍ଷଣ",
+      "len": 99
+    },
+    "subtitle": {}
+  },
+  "pa-IN": {
+    "keywords": {
+      "old": "ਸਿਰਦਰਦ,ਮਾਈਗ੍ਰੇਨ,ਟਰੈਕਰ,ਘੜੀ,ਵਿਜੇਟ,ਡਾਇਰੀ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੱਛਣ,ਲੌਗ",
+      "new": "ਸਿਰਦਰਦ,ਮਾਈਗ੍ਰੇਨ,ਟਰੈਕਰ,ਘੜੀ,ਵਿਜੇਟ,ਡਾਇਰੀ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੱਛਣ,ਲੌਗ",
+      "len": 80
+    },
+    "subtitle": {}
+  },
+  "pl": {
+    "keywords": {
+      "old": "ból,głowy,migrena,tracker,zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,objaw,log",
+      "new": "ból,głowy,migrena,tracker,zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,objaw,log",
+      "len": 91
+    },
+    "subtitle": {
+      "old": "Dziennik migreny i bólu",
+      "new": "Dziennik migreny i bólu"
+    }
+  },
+  "pt-BR": {
+    "keywords": {
+      "old": "cabeça,tracker,relógio,widget,diário,cluster,exportar,gatilho,saúde,médico,sintoma,log",
+      "new": "cabeça,tracker,relógio,widget,diário,cluster,exportar,gatilho,saúde,médico,sintoma,log",
+      "len": 86
+    },
+    "subtitle": {
+      "old": "Diário enxaqueca e dor",
+      "new": "Diário enxaqueca e dor"
+    }
+  },
+  "pt-PT": {
+    "keywords": {
+      "old": "tracker,relógio,widget,diário,dor,cluster,exportar,gatilho,saúde,médico,sintoma,log",
+      "new": "tracker,relógio,widget,diário,dor,cluster,exportar,gatilho,saúde,médico,sintoma,log",
+      "len": 83
+    },
+    "subtitle": {
+      "old": "Diário enxaqueca e cefaleia",
+      "new": "Diário enxaqueca e cefaleia"
+    }
+  },
+  "ro": {
+    "keywords": {
+      "old": "durere,migrenă,tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,simptom,log",
+      "new": "durere,migrenă,tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,simptom,log",
+      "len": 88
+    },
+    "subtitle": {}
+  },
+  "ru": {
+    "keywords": {
+      "old": "головная,боль,мигрень,tracker,часы,widget,дневник,боль,cluster,экспорт,триггер,здоровье,врач,симптом",
+      "new": "головная,боль,мигрень,tracker,часы,widget,дневник,боль,cluster,экспорт,триггер,здоровье,врач,симптом",
+      "len": 100
+    },
+    "subtitle": {}
+  },
+  "sk": {
+    "keywords": {
+      "old": "bolesť,hlav,tracker,hodinky,widget,cluster,export,spúšťač,zdravie,lekár,príznak,log",
+      "new": "bolesť,hlav,tracker,hodinky,widget,cluster,export,spúšťač,zdravie,lekár,príznak,log",
+      "len": 83
+    },
+    "subtitle": {}
+  },
+  "sl-SI": {
+    "keywords": {
+      "old": "glavobol,migrena,ura,widget,dnevnik,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,simptom",
+      "new": "glavobol,migrena,ura,widget,dnevnik,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,simptom",
+      "len": 93
+    },
+    "subtitle": {}
+  },
+  "sv": {
+    "keywords": {
+      "old": "tracker,klocka,widget,dagbok,smärta,cluster,export,trigger,hälsa,läkare,symptom,log",
+      "new": "tracker,klocka,widget,dagbok,smärta,cluster,export,trigger,hälsa,läkare,symptom,log",
+      "len": 83
+    },
+    "subtitle": {}
+  },
+  "ta-IN": {
+    "keywords": {
+      "old": "தலைவலி,மைக்ரேன்,ட்ராக்கர்,கடிகாரம்,விட்ஜெட்,நாள்,பதிவு,வலி,க்ளஸ்டர்,ஏற்றுமதி,தூண்டி,ஆரோக்கியம்",
+      "new": "தலைவலி,மைக்ரேன்,ட்ராக்கர்,கடிகாரம்,விட்ஜெட்,நாள்,பதிவு,வலி,க்ளஸ்டர்,ஏற்றுமதி,தூண்டி,ஆரோக்கியம்",
+      "len": 94
+    },
+    "subtitle": {}
+  },
+  "te-IN": {
+    "keywords": {
+      "old": "తలనొప్పి,మైగ్రేన్,ట్రాకర్,గడియారం,విడ్జెట్,డైరీ,నొప్పి,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్",
+      "new": "తలనొప్పి,మైగ్రేన్,ట్రాకర్,గడియారం,విడ్జెట్,డైరీ,నొప్పి,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్",
+      "len": 94
+    },
+    "subtitle": {}
+  },
+  "th": {
+    "keywords": {
+      "old": "ปวดหัว,ไมเกรน,ติดตาม,นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,อาการ,บันทึก",
+      "new": "ปวดหัว,ไมเกรน,ติดตาม,นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,อาการ,บันทึก",
+      "len": 98
+    },
+    "subtitle": {}
+  },
+  "tr": {
+    "keywords": {
+      "old": "baş,tracker,saat,widget,günlük,ağrı,cluster,dışa,aktar,tetik,sağlık,doktor,semptom,log",
+      "new": "baş,tracker,saat,widget,günlük,ağrı,cluster,dışa,aktar,tetik,sağlık,doktor,semptom,log",
+      "len": 86
+    },
+    "subtitle": {}
+  },
+  "uk": {
+    "keywords": {
+      "old": "головний,біль,мігрень,tracker,годинник,widget,щоденник,біль,cluster,експорт,тригер,здоров'я,лікар",
+      "new": "головний,біль,мігрень,tracker,годинник,widget,щоденник,біль,cluster,експорт,тригер,здоров'я,лікар",
+      "len": 97
+    },
+    "subtitle": {}
+  },
+  "ur-PK": {
+    "keywords": {
+      "old": "سر,درد,مائیگرین,ٹریکر,گھڑی,وجیٹ,ڈائری,درد,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ",
+      "new": "سر,درد,مائیگرین,ٹریکر,گھڑی,وجیٹ,ڈائری,درد,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ",
+      "len": 78
+    },
+    "subtitle": {}
+  },
+  "vi": {
+    "keywords": {
+      "old": "dau,daudau,theodoi,dongho,widget,nhatky,cum,xuat,kichhoat,suckhoe,bacsi,trieuchung,log",
+      "new": "dau,daudau,theodoi,dongho,widget,nhatky,cum,xuat,kichhoat,suckhoe,bacsi,trieuchung,log",
+      "len": 86
+    },
+    "subtitle": {}
+  },
+  "zh-Hans": {
+    "keywords": {
+      "old": "头痛,偏头痛,追踪,手表,小组件,日记,疼痛,丛集,导出,诱因,健康,医生,症状,记录",
+      "new": "头痛,偏头痛,追踪,手表,小组件,日记,疼痛,丛集,导出,诱因,健康,医生,症状,记录",
+      "len": 43
+    },
+    "subtitle": {
+      "old": "偏头痛头痛一键日记",
+      "new": "偏头痛头痛一键日记"
+    }
+  },
+  "zh-Hant": {
+    "keywords": {
+      "old": "頭痛,偏頭痛,追蹤,手錶,小工具,日記,疼痛,叢發,匯出,誘因,健康,醫師,症狀,記錄",
+      "new": "頭痛,偏頭痛,追蹤,手錶,小工具,日記,疼痛,叢發,匯出,誘因,健康,醫師,症狀,記錄",
+      "len": 43
+    },
+    "subtitle": {
+      "old": "偏頭痛頭痛一鍵日記",
+      "new": "偏頭痛頭痛一鍵日記"
+    }
+  }
+}

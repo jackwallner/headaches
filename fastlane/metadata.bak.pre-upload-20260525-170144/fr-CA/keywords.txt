@@ -1,0 +1,1 @@
+santé,journal,exportation,médecin,symptôme,tête,épisode,déclencheur,migraine,grappe,tension

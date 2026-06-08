@@ -17,3 +17,6 @@ Package.resolved
 .DS_Store
 *.swp
 *~
+
+# Claude Code local runtime
+.claude/

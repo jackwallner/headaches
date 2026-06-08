@@ -1,0 +1,1 @@
+salute,diario,esporta,medico,sintomo,cefalea,episodio,trigger,registro,grappolo,tensivo,cronico

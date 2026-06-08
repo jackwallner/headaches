@@ -1,0 +1,1 @@
+health,journal,export,doctor,symptom,head,episode,trigger,diary,cluster,tension,chronic,pain,pattern

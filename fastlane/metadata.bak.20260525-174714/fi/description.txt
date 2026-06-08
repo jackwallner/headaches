@@ -1,0 +1,45 @@
+One Tap Headache Tracker on iPhonen nopein migreeni- ja päänsärkypäiväkirja – kirjaa päänsärky yhdellä napautuksella ja anna Headache Pro ‑ominaisuuden etsiä datastasi piilossa olevat kuviot.
+
+Heti kun päänsärky alkaa, napauta kerran iPhonessa tai Apple Watchissa. Sovellus aikaleimaa tapahtuman välittömästi ja liittää automaattisesti mukaan sen taustatiedot, joista lääkärit ja migreeniasiantuntijat oikeasti kyselevät – ei kirjoittamista, ei lomakkeita, ei kitkaa.
+
+JOKAINEN PÄÄNSÄRKY KIRJATAAN NÄIN:
+
+- Aika ja rytmi – viikonpäivä, tunti, minuutti, aikavyöhyke ja vuorokaudenaika
+- Apple Health ‑signaalit – askeleet, aktiivisuus, univaiheet, syke, HRV, leposyke, SpO₂, VO₂ max, hengitystiheys, melualtistus, tietoisen läsnäolon minuutit ja viimeaikaiset treenit
+- Sää ja ympäristö – lämpötila, ilmanpaineen muutokset, ilmankosteus, ilmanlaatu (AQI), UV-indeksi ja siitepölytyyppiset signaalit, joilla on pitkään ollut yhteys migreenikohtauksiin
+- Valinnainen voimakkuusasteikko (1–10) ja omat muistiinpanot lääkkeistä, aurasta, kivun sijainnista tai epäillyistä laukaisevista tekijöistä
+
+HEADACHE PRO – LÖYDÄ LAUKAISEVAT TEKIJÄT:
+
+Muutama napautus dataa ei yksin riitä. Headache Pro lukee koko historiasi ja nostaa esiin todelliset signaalit päänsärkyjesi taustalla.
+
+- Henkilökohtaiset kuviolöydökset – uni, ilmanpaineen laskut, vuorokaudenaikakeskittymät, viikonpäiväkuviot, HRV‑piikit ja ‑notkahdukset, sään muutokset ja paljon muuta, kaikki kaavion ja selkokielisen selityksen kanssa
+- Yli 15 kuviotunnistinta sekä monimuuttuja‑analyysi, joka havaitsee yhdistetyt laukaisijat (esim. paineen lasku + huono uni), jotka yksittäisiä tekijöitä seuraamalla jäisivät piiloon
+- Proactive Alerts ‑hälytykset – Pro seuraa paikallista sääennustettasi taustalla ja ilmoittaa vain silloin, kun olosuhteet vastaavat SINUN historiastasi löydettyä laukaisukuviota. Ei mitään geneeristä ”myrsky tulossa” ‑roskapostia.
+- Henkilökohtaiset kynnysarvot ja hiljaiset ajat, jotta hälytykset kunnioittavat päivärytmiäsi
+- Vain Pro‑versiossa saatavat suodattimet ja jaottelut historiakatselussa
+
+ARKIPÄIVÄÄ VARTEN SUUNNITELTU:
+
+- Yhden napautuksen Apple Watch ‑kirjaus, joka synkronoituu paritettuun iPhoneen
+- Koti‑ ja lukitusnäytön widgetit, joilla kirjaat päänsäryn avaamatta sovellusta
+- Siri‑oikopolut ja ”Hei Siri, kirjaa päänsärky” ‑tuki
+- CSV‑vienti, jolla jaat selkeän päänsärkymuistion neurologille, yleislääkärille tai migreeniasiantuntijalle
+
+YKSITYISYYS JO SUUNNITTELUSSA:
+
+One Tap Headache Tracker on paikallisesti toimiva päänsärkypäiväkirja.
+
+- Ei vaadi käyttäjätiliä
+- Ei mainoksia
+- Ei analytiikka‑SDK:ita
+- Ei pilvisynkronointia
+- Päänsärkyhistoriasi pysyy laitteellasi – vienti vain manuaalisesti, kun itse haluat jakaa
+
+Olitpa seuraamassa kroonista migreeniä, sarjoittaisia päänsärkyjä, jännityspäänsärkyjä, hormonaalisia päänsärkyjä tai haluat vain ymmärtää satunnaisen päänsäryn kuvioita, One Tap Headache Tracker muuttaa yhden napautuksen kattavaksi, lääkärille valmiiksi yhteenvedoksi – ja Headache Pro muuttaa tämän yhteenvedon vastauksiksi.
+
+Tilaustiedot
+Headache Pro on saatavilla automaattisesti uusiutuvana tilauksena (Monthly 2,99 $ / Yearly 9,99 $ sisältäen 7 päivän ilmaisen kokeilun) tai kertaluonteisena Lifetime‑ostona (24,99 $). Maksu veloitetaan Apple ID ‑tililtä vahvistuksen yhteydessä. Tilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallinnoi tai peru milloin tahansa kohdassa Asetukset → Apple ID → Tilaukset.
+
+Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

@@ -1,0 +1,1 @@
+saúde,diário,exportar,médico,sintoma,cabeça,episódio,gatilho,registro,salvas,tensão,crônica,dor

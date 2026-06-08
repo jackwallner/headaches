@@ -186,6 +186,10 @@ final class StoreService: NSObject, ObservableObject {
     @Published private(set) var isProUnlocked: Bool = false
     @Published private(set) var purchaseInFlight: Bool = false
     @Published private(set) var isLoadingProducts: Bool = false
+    /// False until the first `CustomerInfo` lands (from a fetch or the delegate). Promotional
+    /// sheets must wait on this so a Pro user never gets pitched during the launch window where
+    /// `isProUnlocked` is still its `false` default and entitlements haven't resolved yet.
+    @Published private(set) var hasResolvedEntitlements: Bool = false
     @Published var lastError: String?
 
     /// Per-product intro-offer eligibility. Populated with `fetchProducts` so the
@@ -325,6 +329,9 @@ final class StoreService: NSObject, ObservableObject {
         if isProUnlocked != hasPro {
             isProUnlocked = hasPro
             logger.info("isProUnlocked updated to \(hasPro, privacy: .public)")
+        }
+        if !hasResolvedEntitlements {
+            hasResolvedEntitlements = true
         }
     }
 

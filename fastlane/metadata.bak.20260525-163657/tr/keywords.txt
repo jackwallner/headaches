@@ -1,0 +1,1 @@
+sağlık,günlük,aktar,dr,belirti,baş,bölüm,tetikleyici,ajanda,küme,gerilim,kronik,ağrı,örüntü
