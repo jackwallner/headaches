@@ -23,4 +23,5 @@ Package.resolved
 
 # Fastlane backups & run logs (throwaway, regenerated on each run)
 fastlane/metadata.bak.*/
+fastlane/report.xml
 scripts/*.log
