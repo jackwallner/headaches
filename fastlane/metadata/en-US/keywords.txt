@@ -1,1 +1,1 @@
-  headache,migraine,health,journal,tracker,watch,export,doctor,weather,symptoms
+watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic
