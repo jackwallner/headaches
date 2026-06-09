@@ -186,9 +186,12 @@ final class StoreService: NSObject, ObservableObject {
     @Published private(set) var isProUnlocked: Bool = false
     @Published private(set) var purchaseInFlight: Bool = false
     @Published private(set) var isLoadingProducts: Bool = false
-    /// False until the first `CustomerInfo` lands (from a fetch or the delegate). Promotional
-    /// sheets must wait on this so a Pro user never gets pitched during the launch window where
-    /// `isProUnlocked` is still its `false` default and entitlements haven't resolved yet.
+    /// False until an *explicit* `customerInfo()` fetch completes (the forced-network
+    /// `.fetchCurrent` call in `start()`). Promotional sheets must wait on this so a Pro user
+    /// is never pitched during the launch window. Deliberately NOT set by the delegate's
+    /// initial push: that push can carry a stale/cached non-Pro `CustomerInfo`, and flipping
+    /// this true on it let the Pro-intro sheet present (then get yanked when the authoritative
+    /// result arrived) — a blank sheet flashing on every cold launch for returning Pro users.
     @Published private(set) var hasResolvedEntitlements: Bool = false
     @Published var lastError: String?
 
@@ -272,6 +275,9 @@ final class StoreService: NSObject, ObservableObject {
         do {
             let info = try await Purchases.shared.customerInfo(fetchPolicy: fetchPolicy)
             apply(customerInfo: info)
+            // This is an explicit fetch (network-backed on `.fetchCurrent`), so the Pro
+            // status is now authoritative — only here do we let promo sheets unblock.
+            hasResolvedEntitlements = true
             lastError = nil
         } catch {
             logger.error("Customer info refresh failed: \(String(describing: error), privacy: .public)")
@@ -330,9 +336,9 @@ final class StoreService: NSObject, ObservableObject {
             isProUnlocked = hasPro
             logger.info("isProUnlocked updated to \(hasPro, privacy: .public)")
         }
-        if !hasResolvedEntitlements {
-            hasResolvedEntitlements = true
-        }
+        // `hasResolvedEntitlements` is intentionally NOT set here. The delegate's initial
+        // push can deliver stale/cached info; promo gating waits on the explicit fetch in
+        // `updateCustomerProductStatus` so it only ever acts on an authoritative result.
     }
 
     // MARK: - Private
