@@ -65,9 +65,11 @@ private struct HeadacheLoggerRootContent: View {
     /// Count-only awareness of logged events. Drives the first-log trial trigger
     /// without paying for a full event hydration on every change.
     @Query private var events: [HeadacheEvent]
-    @State private var showProIntro = false
-    @State private var showTrialOffer = false
-    @State private var showTrialPaywall = false
+    /// Single source of truth for the root-level promo / review sheets. Using one
+    /// `.sheet(item:)` instead of four stacked `.sheet(isPresented:)` modifiers
+    /// guarantees only one ever presents. Stacked sheets on the same view can race
+    /// and present an empty shell (e.g. a blank "trial" card to an already-Pro user).
+    @State private var activeSheet: RootPromoSheet?
     @State private var trialPurchaseInFlight = false
     @State private var trialPurchaseError: String?
     /// True once the first-log / existing-user offer has been presented in *this*
@@ -83,7 +85,6 @@ private struct HeadacheLoggerRootContent: View {
     /// runloop tick is racy in SwiftUI and frequently drops the second sheet.
     @State private var pendingPaywallAfterTrialDismiss = false
     @StateObject private var reviewPromptCoordinator = ReviewPromptCoordinator.shared
-    @State private var showReviewPrompt = false
     @State private var reviewPromptInitialStep: ReviewPromptSheet.Step = .enjoyment
     @State private var reviewPromptShownThisSession = false
     @State private var pendingNativeReviewAfterDismiss = false
@@ -93,6 +94,15 @@ private struct HeadacheLoggerRootContent: View {
         case firstLog
         case existingUser
         case insights
+    }
+
+    /// The mutually-exclusive root sheet currently presented.
+    private enum RootPromoSheet: String, Identifiable {
+        case proIntro
+        case trialOffer
+        case trialPaywall
+        case reviewPrompt
+        var id: String { rawValue }
     }
 
     private var trialOfferLabel: String? {
@@ -113,57 +123,44 @@ private struct HeadacheLoggerRootContent: View {
         Group {
             if AppEnvironment.bypassOnboarding || hasCompletedOnboarding {
                 RootTabView()
-                    .sheet(isPresented: $showProIntro) {
-                        ProIntroSheet(onDismiss: { hasSeenProIntro = true })
-                            .environmentObject(storeService)
-                    }
-                    .sheet(isPresented: $showTrialOffer, onDismiss: {
-                        markTrialOfferSeen()
-                        trialPurchaseInFlight = false
-                        trialPurchaseError = nil
-                        if pendingPaywallAfterTrialDismiss {
-                            pendingPaywallAfterTrialDismiss = false
-                            showTrialPaywall = true
-                        }
-                    }) {
-                        TrialOfferSheet(
-                            offerLabel: trialOfferLabel,
-                            priceLabel: directTrialPackage?.headacheProPriceLabel,
-                            directPurchase: directTrialPackage != nil,
-                            isPurchasing: trialPurchaseInFlight,
-                            errorMessage: trialPurchaseError,
-                            onStartTrial: {
-                                if directTrialPackage != nil {
-                                    startDirectTrialPurchase()
-                                } else {
+                    .sheet(item: $activeSheet, onDismiss: handleRootSheetDismiss) { sheet in
+                        switch sheet {
+                        case .proIntro:
+                            ProIntroSheet(onDismiss: { hasSeenProIntro = true })
+                                .environmentObject(storeService)
+                        case .trialOffer:
+                            TrialOfferSheet(
+                                offerLabel: trialOfferLabel,
+                                priceLabel: directTrialPackage?.headacheProPriceLabel,
+                                directPurchase: directTrialPackage != nil,
+                                isPurchasing: trialPurchaseInFlight,
+                                errorMessage: trialPurchaseError,
+                                onStartTrial: {
+                                    if directTrialPackage != nil {
+                                        startDirectTrialPurchase()
+                                    } else {
+                                        pendingPaywallAfterTrialDismiss = true
+                                        activeSheet = nil
+                                    }
+                                },
+                                onSeeAllPlans: {
                                     pendingPaywallAfterTrialDismiss = true
-                                    showTrialOffer = false
+                                    activeSheet = nil
+                                },
+                                onDismiss: {
+                                    activeSheet = nil
                                 }
-                            },
-                            onSeeAllPlans: {
-                                pendingPaywallAfterTrialDismiss = true
-                                showTrialOffer = false
-                            },
-                            onDismiss: {
-                                showTrialOffer = false
-                            }
-                        )
-                        .presentationDetents([.fraction(0.85), .large])
-                        .presentationDragIndicator(.visible)
-                        .interactiveDismissDisabled(trialPurchaseInFlight)
-                    }
-                    .sheet(isPresented: $showTrialPaywall) {
-                        PaywallView()
-                            .environmentObject(storeService)
-                            .task { storeService.trackPaywallImpression(id: "headache_trial_sheet") }
-                    }
-                    .sheet(isPresented: $showReviewPrompt, onDismiss: {
-                        if pendingNativeReviewAfterDismiss {
-                            pendingNativeReviewAfterDismiss = false
-                            requestReview()
+                            )
+                            .presentationDetents([.fraction(0.85), .large])
+                            .presentationDragIndicator(.visible)
+                            .interactiveDismissDisabled(trialPurchaseInFlight)
+                        case .trialPaywall:
+                            PaywallView()
+                                .environmentObject(storeService)
+                                .task { storeService.trackPaywallImpression(id: "headache_trial_sheet") }
+                        case .reviewPrompt:
+                            ReviewPromptSheet(initialStep: reviewPromptInitialStep, onFinish: handleReviewPromptFinish)
                         }
-                    }) {
-                        ReviewPromptSheet(initialStep: reviewPromptInitialStep, onFinish: handleReviewPromptFinish)
                     }
             } else {
                 OnboardingView()
@@ -201,9 +198,8 @@ private struct HeadacheLoggerRootContent: View {
         }
         .onChange(of: storeService.isProUnlocked) { _, isPro in
             scheduleBackgroundIfNeeded()
-            if isPro {
-                showProIntro = false
-                showTrialOffer = false
+            if isPro, activeSheet == .proIntro || activeSheet == .trialOffer {
+                activeSheet = nil
             }
         }
         .onChange(of: storeService.products.count) { _, _ in
@@ -233,7 +229,7 @@ private struct HeadacheLoggerRootContent: View {
         .onChange(of: reviewPromptCoordinator.pendingPresentation) { _, presentation in
             guard let presentation else { return }
             defer { reviewPromptCoordinator.clear() }
-            guard !showTrialOffer, !showTrialPaywall, !showProIntro else { return }
+            guard activeSheet == nil else { return }
             switch presentation {
             case .enjoymentPrompt:
                 presentReviewPrompt(step: .enjoyment)
@@ -250,10 +246,7 @@ private struct HeadacheLoggerRootContent: View {
               ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true),
               !reviewPromptShownThisSession,
               reviewPromptCoordinator.isOnHomeTab,
-              !showTrialOffer,
-              !showTrialPaywall,
-              !showProIntro,
-              !showReviewPrompt,
+              activeSheet == nil,
               !captureCoordinator.proPromptShownThisSession
         else { return }
 
@@ -261,10 +254,7 @@ private struct HeadacheLoggerRootContent: View {
             try? await Task.sleep(nanoseconds: 3_500_000_000)
             guard hasCompletedOnboarding,
                   reviewPromptCoordinator.isOnHomeTab,
-                  !showTrialOffer,
-                  !showTrialPaywall,
-                  !showProIntro,
-                  !showReviewPrompt,
+                  activeSheet == nil,
                   !captureCoordinator.proPromptShownThisSession,
                   ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true)
             else { return }
@@ -274,16 +264,35 @@ private struct HeadacheLoggerRootContent: View {
     }
 
     private func handleReviewPromptFinish(_ outcome: ReviewPromptDismissOutcome) {
-        showReviewPrompt = false
+        // Set the deferred follow-up flag before dismissing so the shared
+        // `handleRootSheetDismiss` fires the native review prompt once the sheet closes.
         if outcome == .requestedNativeReview {
             pendingNativeReviewAfterDismiss = true
+        }
+        activeSheet = nil
+    }
+
+    /// Single dismissal handler for the root promo / review sheet. Runs trial-purchase
+    /// cleanup and the two deferred follow-ups (chained paywall, native review prompt)
+    /// that must fire only after the sheet has fully dismissed. Both follow-ups are
+    /// gated on flags that only their own flow sets, so this is safe to run for any sheet.
+    private func handleRootSheetDismiss() {
+        trialPurchaseInFlight = false
+        trialPurchaseError = nil
+        if pendingPaywallAfterTrialDismiss {
+            pendingPaywallAfterTrialDismiss = false
+            activeSheet = .trialPaywall
+        }
+        if pendingNativeReviewAfterDismiss {
+            pendingNativeReviewAfterDismiss = false
+            requestReview()
         }
     }
 
     private func presentReviewPrompt(step: ReviewPromptSheet.Step) {
         reviewPromptInitialStep = step
         reviewPromptShownThisSession = true
-        showReviewPrompt = true
+        activeSheet = .reviewPrompt
     }
 
     private func runWidgetEnrichmentIfReady() {
@@ -344,11 +353,11 @@ private struct HeadacheLoggerRootContent: View {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 800_000_000)
             // Wait until entitlements have resolved so a premium user is never shown the intro.
-            guard storeService.hasResolvedEntitlements, !hasSeenProIntro, !storeService.isProUnlocked, !showTrialOffer else { return }
+            guard storeService.hasResolvedEntitlements, !hasSeenProIntro, !storeService.isProUnlocked, activeSheet == nil else { return }
             if hasTrialOffer { return }
             if captureCoordinator.proPromptShownThisSession { return }
             captureCoordinator.proPromptShownThisSession = true
-            showProIntro = true
+            activeSheet = .proIntro
         }
     }
 
@@ -393,8 +402,7 @@ private struct HeadacheLoggerRootContent: View {
               !hasSeenInsightsTrialOffer,
               !firstLogOfferShownThisSession,
               hasTrialOffer,
-              !showTrialOffer,
-              !showTrialPaywall
+              activeSheet == nil
         else { return }
         presentTrialOfferIfReady(source: .insights)
     }
@@ -403,8 +411,7 @@ private struct HeadacheLoggerRootContent: View {
         // Never pitch before RevenueCat has told us whether the user is already Pro — otherwise a
         // premium user gets a promo (and the sibling-sheet race a blank one) during the launch window.
         guard storeService.hasResolvedEntitlements,
-              !showTrialOffer,
-              !showTrialPaywall,
+              activeSheet == nil,
               !storeService.isProUnlocked,
               hasTrialOffer
         else { return }
@@ -417,7 +424,6 @@ private struct HeadacheLoggerRootContent: View {
         case .insights:
             guard !hasSeenInsightsTrialOffer else { return }
         }
-        showProIntro = false
         trialPurchaseError = nil
         trialPurchaseInFlight = false
         trialOfferSource = source
@@ -426,7 +432,10 @@ private struct HeadacheLoggerRootContent: View {
         }
         // Cap to one Pro moment per session — suppresses the Home milestone card.
         captureCoordinator.proPromptShownThisSession = true
-        showTrialOffer = true
+        // Mark the offer seen at present-time (not on dismiss) so it stays a one-shot
+        // even if the app is killed while the sheet is up.
+        markTrialOfferSeen()
+        activeSheet = .trialOffer
     }
 
     /// Records the one-shot flag for whichever trigger opened the offer.
@@ -444,7 +453,7 @@ private struct HeadacheLoggerRootContent: View {
     private func startDirectTrialPurchase() {
         guard let package = directTrialPackage else {
             pendingPaywallAfterTrialDismiss = true
-            showTrialOffer = false
+            activeSheet = nil
             return
         }
         trialPurchaseError = nil
@@ -455,7 +464,7 @@ private struct HeadacheLoggerRootContent: View {
                 switch try await storeService.purchase(package) {
                 case .purchased, .pending:
                     hasSeenTrialOffer = true
-                    showTrialOffer = false
+                    activeSheet = nil
                 case .cancelled:
                     trialPurchaseError = "Trial wasn't started. Tap again, or pick a different plan."
                 }
