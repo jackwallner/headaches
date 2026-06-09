@@ -393,17 +393,48 @@ actor HealthKitService {
     /// Health and whether we've already presented the read-permission sheet.
     func connectionSummary() async -> String {
         guard HKHealthStore.isHealthDataAvailable() else { return "Unavailable on this device" }
+
+        // The honest signal is whether we can actually READ data. HealthKit never
+        // reports read authorization, and `getRequestStatusForAuthorization` only
+        // answers "have we shown the sheet" — it can return `.shouldRequest`
+        // ("Not connected") even right after the user grants full access (grants
+        // made out-of-band in the Health app, or a read-type set that drifted from
+        // what was granted across versions). So probe for a real sample first: a
+        // returned value proves read access regardless of the request status.
+        if await hasAnyReadableSample() { return "Connected" }
+
         let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
             store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, _ in
                 continuation.resume(returning: status)
             }
         }
         switch status {
+        case .unnecessary: return "Connected" // sheet already shown; data may simply be absent
         case .shouldRequest: return "Not connected"
-        case .unnecessary: return "Connected"
         case .unknown: return "Not connected"
         @unknown default: return "Not connected"
         }
+    }
+
+    /// Probes a few common read types over a recent window. A denied read silently
+    /// yields zero samples (never an error), so any non-nil result can only mean we
+    /// have read access *and* data — a definitive "Connected" signal that the raw
+    /// request status can't give us.
+    private func hasAnyReadableSample() async -> Bool {
+        let now = Date()
+        let weekAgo = now.addingTimeInterval(-7 * 86_400)
+        if let steps = await optionalCumulativeSum(identifier: .stepCount, unit: .count(), start: weekAgo, end: now),
+           steps > 0 {
+            return true
+        }
+        let bpm = HKUnit.count().unitDivided(by: .minute())
+        if await optionalLatestQuantity(identifier: .heartRate, unit: bpm, lookbackDays: 30, relativeTo: now) != nil {
+            return true
+        }
+        if await optionalLatestQuantity(identifier: .restingHeartRate, unit: bpm, lookbackDays: 30, relativeTo: now) != nil {
+            return true
+        }
+        return false
     }
 
     /// Returns the cumulative sum of a sample type, or `nil` when HealthKit has no samples in the window
