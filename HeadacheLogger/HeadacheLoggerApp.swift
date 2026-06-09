@@ -396,9 +396,18 @@ private struct HeadacheLoggerRootContent: View {
     /// during the first-log path still get a later pitch when Patterns appears.
     /// Gated on the first-log/existing-user path NOT having fired this session,
     /// so the two never stack back-to-back.
+    ///
+    /// Also gated on `!hasSeenTrialOffer`: if the offer was ever actually presented
+    /// (first-log or existing-user), that flag is true and the Patterns touch must
+    /// not re-fire in a later session. Without this guard the offer re-presented on
+    /// every fresh launch when Patterns appeared and could flash open/closed as the
+    /// entitlement/product guards re-resolved. The fallback intent is preserved: when
+    /// products failed to load the offer never presented, so `hasSeenTrialOffer` stays
+    /// false and this still fires.
     private func evaluateInsightsTrialOffer() {
         guard hasCompletedOnboarding,
               !storeService.isProUnlocked,
+              !hasSeenTrialOffer,
               !hasSeenInsightsTrialOffer,
               !firstLogOfferShownThisSession,
               hasTrialOffer,
@@ -621,32 +630,41 @@ private struct TrialOfferSheet: View {
 
     private var subheadline: String {
         if trialPeriodPhrase != nil {
-            return "Personalized patterns, proactive alerts, full exports, no charge until your trial ends."
+            return "Find your triggers and get ahead of risky weather. Free until your trial ends."
         }
-        return "Personalized patterns, proactive alerts, full exports, free for eligible new subscribers."
+        return "Find your triggers and get ahead of risky weather, free for eligible new subscribers."
     }
 
+    /// Leads with the patterns/alerts payoff. "All on-device" is intentionally demoted
+    /// to a single trust line below the cards so the value props get top billing.
     private var trialBullets: [TrialBullet] {
         [
+            TrialBullet(
+                icon: "chart.bar.xaxis",
+                tint: .indigo,
+                title: "Your personal patterns",
+                detail: "Sleep, timing, pressure, and weather from your own logs."
+            ),
             TrialBullet(
                 icon: "barometer",
                 tint: .orange,
                 title: "Pressure & AQI alerts",
-                detail: "Heads-up 12–24h before risky weather matching your personal triggers."
-            ),
-            TrialBullet(
-                icon: "chart.bar.xaxis",
-                tint: .indigo,
-                title: "Personalized patterns",
-                detail: "Sleep, time of day, pressure, weather, surfaced from your own logs."
-            ),
-            TrialBullet(
-                icon: "lock.shield",
-                tint: .teal,
-                title: "All on-device",
-                detail: "Your logs never leave your phone. Forecasts run locally too."
+                detail: "A heads-up 12–24h before risky weather hits."
             )
         ]
+    }
+
+    /// Compliant billing disclosure shown beside the buy control (Apple 3.1.2): trial
+    /// length, recurring price, auto-renew, and how to cancel — condensed to one line so
+    /// it stops eating the real estate the older two-paragraph version did.
+    private var billingDisclosure: String {
+        if directPurchase, let priceLabel {
+            if let period = trialPeriodPhrase {
+                return "Free for \(period), then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24h before it ends."
+            }
+            return "Then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24h before it ends."
+        }
+        return "Billed through Apple. No charge during the trial."
     }
 
     private var glowAnimation: Animation {
@@ -679,6 +697,7 @@ private struct TrialOfferSheet: View {
                     .animation(glowAnimation, value: animateGlow)
             }
 
+            ScrollView(showsIndicators: false) {
             VStack(spacing: 18) {
                 ZStack {
                     Circle()
@@ -724,14 +743,10 @@ private struct TrialOfferSheet: View {
                 }
                 .padding(.horizontal, 4)
 
-                if directPurchase, let priceLabel {
-                    Text("Free during your trial, then \(priceLabel). Cancel anytime in Settings, at least 24h before the trial ends to avoid the charge.")
-                        .font(.system(.footnote, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, 4)
-                }
+                Label("All on-device. Your logs never leave your phone.", systemImage: "lock.shield")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .labelStyle(.titleAndIcon)
 
                 Group {
                     if let errorMessage {
@@ -763,10 +778,11 @@ private struct TrialOfferSheet: View {
                     .buttonStyle(.plain)
                     .disabled(isPurchasing)
 
-                    Text("Billed through Apple. No charge during the trial.")
-                        .font(.system(.caption, design: .rounded))
+                    Text(billingDisclosure)
+                        .font(.system(.caption2, design: .rounded))
                         .foregroundStyle(.tertiary)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     if directPurchase {
                         Button(action: onSeeAllPlans) {
@@ -815,7 +831,10 @@ private struct TrialOfferSheet: View {
                 .foregroundStyle(.tertiary)
             }
             .padding(.horizontal, 24)
-            .padding(.bottom, 24)
+            .padding(.top, 8)
+            .padding(.bottom, 28)
+            .frame(maxWidth: .infinity)
+            }
         }
         .onAppear {
             guard !reduceMotion else { return }
