@@ -321,9 +321,15 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(overwriteResult.overwritten, 1)
         try context.save()
 
-        let descriptor = FetchDescriptor<HeadacheEvent>()
-        let all = try context.fetch(descriptor)
-        let fetched = try XCTUnwrap(all.first(where: { $0.id == original.id }))
+        // Import into a completely fresh store to genuinely prove the CSV alone round-trips
+        // every field. The same-context overwrite above mutates `original` in place, so an
+        // assert against it self-compares and can't catch a column that fails to round-trip.
+        let freshConfig = ModelConfiguration("ExportImportRoundTripFresh", schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let freshContainer = try ModelContainer(for: schema, configurations: [freshConfig])
+        let freshContext = ModelContext(freshContainer)
+        let freshResult = ImportService.importEvents(from: rows, into: freshContext, strategy: .skipExisting)
+        XCTAssertEqual(freshResult.imported, 1)
+        let fetched = try XCTUnwrap(try freshContext.fetch(FetchDescriptor<HeadacheEvent>()).first)
 
         assertEventEquals(original: original, imported: fetched)
     }
@@ -475,6 +481,7 @@ final class HeadacheLoggerTests: XCTestCase {
 
         event.locality = "Portland"
         event.region = "OR"
+        event.altitudeM = 47.0
         event.weatherSummary = "Partly Cloudy"
         event.weatherCode = 2
         event.temperatureC = 18.75
@@ -487,6 +494,7 @@ final class HeadacheLoggerTests: XCTestCase {
         event.windDirectionDegrees = 225
         event.cloudCoverPercent = 60
         event.uvIndex = 4.5
+        event.dewPointC = 11.3
         event.usAQI = 42
         event.europeanAQI = 35
         event.pm25 = 8.5
@@ -524,6 +532,18 @@ final class HeadacheLoggerTests: XCTestCase {
         event.flightsClimbedToday = 4
         event.mindfulMinutesToday = 10
         event.barometricPressureDeltaHpa6h = -2.5
+        event.caffeineMgToday = 150.0
+        event.waterMlToday = 900.0
+        event.daysSinceLastPeriodStart = 12
+        event.bloodPressureSystolicMmHg = 118
+        event.bloodPressureDiastolicMmHg = 76
+        event.bloodGlucoseMgPerDL = 92
+        event.headphoneAudioExposureDbA = 68.0
+        event.timeInDaylightMinutesToday = 55.0
+        event.batteryLevelPercent = 73.0
+        event.isCharging = true
+        event.isLowPowerMode = false
+        event.motionActivity = .walking
 
         event.severity = .extreme
         event.userNotes = "Started after lunch, aura present"
@@ -547,7 +567,9 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(imported.environmentStatusMessage, original.environmentStatusMessage, file: file, line: line)
         XCTAssertEqual(imported.locality, original.locality, file: file, line: line)
         XCTAssertEqual(imported.region, original.region, file: file, line: line)
+        XCTAssertEqual(imported.altitudeM, original.altitudeM, file: file, line: line)
         XCTAssertEqual(imported.weatherSummary, original.weatherSummary, file: file, line: line)
+        XCTAssertEqual(imported.weatherCode, original.weatherCode, file: file, line: line)
         XCTAssertEqual(imported.temperatureC, original.temperatureC, file: file, line: line)
         XCTAssertEqual(imported.apparentTemperatureC, original.apparentTemperatureC, file: file, line: line)
         XCTAssertEqual(imported.humidityPercent, original.humidityPercent, file: file, line: line)
@@ -558,6 +580,7 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(imported.windDirectionDegrees, original.windDirectionDegrees, file: file, line: line)
         XCTAssertEqual(imported.cloudCoverPercent, original.cloudCoverPercent, file: file, line: line)
         XCTAssertEqual(imported.uvIndex, original.uvIndex, file: file, line: line)
+        XCTAssertEqual(imported.dewPointC, original.dewPointC, file: file, line: line)
         XCTAssertEqual(imported.usAQI, original.usAQI, file: file, line: line)
         XCTAssertEqual(imported.europeanAQI, original.europeanAQI, file: file, line: line)
         XCTAssertEqual(imported.pm25, original.pm25, file: file, line: line)
@@ -602,6 +625,18 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertEqual(imported.flightsClimbedToday, original.flightsClimbedToday, file: file, line: line)
         XCTAssertEqual(imported.mindfulMinutesToday, original.mindfulMinutesToday, file: file, line: line)
         XCTAssertEqual(imported.barometricPressureDeltaHpa6h, original.barometricPressureDeltaHpa6h, file: file, line: line)
+        XCTAssertEqual(imported.caffeineMgToday, original.caffeineMgToday, file: file, line: line)
+        XCTAssertEqual(imported.waterMlToday, original.waterMlToday, file: file, line: line)
+        XCTAssertEqual(imported.daysSinceLastPeriodStart, original.daysSinceLastPeriodStart, file: file, line: line)
+        XCTAssertEqual(imported.bloodPressureSystolicMmHg, original.bloodPressureSystolicMmHg, file: file, line: line)
+        XCTAssertEqual(imported.bloodPressureDiastolicMmHg, original.bloodPressureDiastolicMmHg, file: file, line: line)
+        XCTAssertEqual(imported.bloodGlucoseMgPerDL, original.bloodGlucoseMgPerDL, file: file, line: line)
+        XCTAssertEqual(imported.headphoneAudioExposureDbA, original.headphoneAudioExposureDbA, file: file, line: line)
+        XCTAssertEqual(imported.timeInDaylightMinutesToday, original.timeInDaylightMinutesToday, file: file, line: line)
+        XCTAssertEqual(imported.batteryLevelPercent, original.batteryLevelPercent, file: file, line: line)
+        XCTAssertEqual(imported.isCharging, original.isCharging, file: file, line: line)
+        XCTAssertEqual(imported.isLowPowerMode, original.isLowPowerMode, file: file, line: line)
+        XCTAssertEqual(imported.motionActivityRaw, original.motionActivityRaw, file: file, line: line)
         XCTAssertEqual(imported.severity, original.severity, file: file, line: line)
         XCTAssertEqual(imported.userNotes, original.userNotes, file: file, line: line)
     }
