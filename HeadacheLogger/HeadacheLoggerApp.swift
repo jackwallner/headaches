@@ -198,8 +198,20 @@ private struct HeadacheLoggerRootContent: View {
         }
         .onChange(of: storeService.isProUnlocked) { _, isPro in
             scheduleBackgroundIfNeeded()
-            if isPro, activeSheet == .proIntro || activeSheet == .trialOffer {
-                activeSheet = nil
+            if isPro {
+                // Once we know the user is Pro, never pitch the intro/trial again, and
+                // dismiss any promo sheet that presented during the entitlement-resolution
+                // window. Persisting the seen flags here is the durable fix for the blank
+                // promo sheet that flashed on every cold launch: RevenueCat resolves in two
+                // beats (a first cached customerInfo that can read non-Pro, then the
+                // authoritative one), so the intro could present in that gap and then get
+                // dismissed *programmatically* below — never running its own dismiss handler
+                // that marks `hasSeenProIntro`, so it re-presented on the next launch.
+                hasSeenProIntro = true
+                hasSeenTrialOffer = true
+                if activeSheet == .proIntro || activeSheet == .trialOffer {
+                    activeSheet = nil
+                }
             }
         }
         .onChange(of: storeService.products.count) { _, _ in
@@ -357,6 +369,10 @@ private struct HeadacheLoggerRootContent: View {
             if hasTrialOffer { return }
             if captureCoordinator.proPromptShownThisSession { return }
             captureCoordinator.proPromptShownThisSession = true
+            // Mark seen at present-time (mirrors the trial offer) so a programmatic
+            // dismissal — e.g. entitlements resolving to Pro a beat after this presents —
+            // can't leave the flag unset and re-fire the sheet on the next cold launch.
+            hasSeenProIntro = true
             activeSheet = .proIntro
         }
     }
