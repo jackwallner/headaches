@@ -11,8 +11,10 @@ struct HomeView: View {
     @AppStorage(HeadacheStorageKey.milestonePrompt5Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone5PromptShown = false
     @AppStorage(HeadacheStorageKey.milestonePrompt10Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone10PromptShown = false
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
-    @State private var severityNotesEventID: UUID?
-    @State private var showSeverityNotesSheet = false
+    /// Item-based so the sheet can only ever present *with* an event id. The old
+    /// `.sheet(isPresented:)` + `if let id` pattern could present an empty shell
+    /// (a blank white sheet) if the bool and the id ever desynced.
+    @State private var severityNotesTarget: SeverityNotesTarget?
     @State private var showCheckmark = false
     @State private var showPaywall = false
     /// Drives the bottom Undo / Add Details snackbar. Set when a tap completes and
@@ -195,10 +197,8 @@ struct HomeView: View {
         .onChange(of: captureCoordinator.lastCapturedEventID) { _, newValue in
             if newValue == nil { dismissUndoSnackbar() }
         }
-        .sheet(isPresented: $showSeverityNotesSheet, onDismiss: { severityNotesEventID = nil }) {
-            if let eventID = severityNotesEventID {
-                SeverityNotesSheet(eventID: eventID)
-            }
+        .sheet(item: $severityNotesTarget) { target in
+            SeverityNotesSheet(eventID: target.id)
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
@@ -208,8 +208,7 @@ struct HomeView: View {
     }
 
     private func showDetails(for eventID: UUID) {
-        severityNotesEventID = eventID
-        showSeverityNotesSheet = true
+        severityNotesTarget = SeverityNotesTarget(id: eventID)
     }
 
     private func showUndoSnackbar() {
@@ -576,6 +575,11 @@ private struct CaptureRecoveryCard: View {
         ]
         return components.url
     }
+}
+
+/// Identifiable wrapper so the severity/notes sheet is driven by `.sheet(item:)`.
+private struct SeverityNotesTarget: Identifiable {
+    let id: UUID
 }
 
 private struct SeverityNotesSheet: View {
