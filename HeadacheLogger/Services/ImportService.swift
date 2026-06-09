@@ -217,8 +217,13 @@ enum ImportService {
         event.healthStatusMessage = emptyToNil(row["health_message"])
         event.environmentStatusMessage = emptyToNil(row["environment_message"])
 
-        event.locality = emptyToNil(row["location"])
+        // Prefer the structured locality/region columns (newer exports); fall back to the
+        // combined human-readable `location` column for files exported before they existed.
+        event.locality = emptyToNil(row["locality"]) ?? emptyToNil(row["location"])
+        event.region = emptyToNil(row["region"])
+        event.altitudeM = parseDouble(row["altitude_m"])
         event.weatherSummary = emptyToNil(row["weather_summary"])
+        event.weatherCode = row["weather_code"].flatMap(Int.init)
         event.temperatureC = parseDouble(row["temperature_c"])
         event.apparentTemperatureC = parseDouble(row["feels_like_c"])
         event.humidityPercent = parseDouble(row["humidity_percent"])
@@ -229,6 +234,7 @@ enum ImportService {
         event.windDirectionDegrees = parseDouble(row["wind_direction_deg"])
         event.cloudCoverPercent = parseDouble(row["cloud_cover_percent"])
         event.uvIndex = parseDouble(row["uv_index"])
+        event.dewPointC = parseDouble(row["dew_point_c"])
         event.usAQI = parseDouble(row["us_aqi"])
         event.europeanAQI = parseDouble(row["european_aqi"])
         event.pm25 = parseDouble(row["pm2_5"])
@@ -266,6 +272,18 @@ enum ImportService {
         event.flightsClimbedToday = parseDouble(row["flights_climbed_today"])
         event.mindfulMinutesToday = parseDouble(row["mindful_minutes_today"])
         event.barometricPressureDeltaHpa6h = parseDouble(row["barometric_pressure_delta_hpa_6h"])
+        event.caffeineMgToday = parseDouble(row["caffeine_mg_today"])
+        event.waterMlToday = parseDouble(row["water_ml_today"])
+        event.daysSinceLastPeriodStart = row["days_since_last_period_start"].flatMap(Int.init)
+        event.bloodPressureSystolicMmHg = parseDouble(row["blood_pressure_systolic_mmhg"])
+        event.bloodPressureDiastolicMmHg = parseDouble(row["blood_pressure_diastolic_mmhg"])
+        event.bloodGlucoseMgPerDL = parseDouble(row["blood_glucose_mg_dl"])
+        event.headphoneAudioExposureDbA = parseDouble(row["headphone_audio_db_a"])
+        event.timeInDaylightMinutesToday = parseDouble(row["time_in_daylight_minutes_today"])
+        event.batteryLevelPercent = parseDouble(row["battery_level_percent"])
+        event.isCharging = parseBool(row["is_charging"])
+        event.isLowPowerMode = parseBool(row["is_low_power_mode"])
+        event.motionActivityRaw = emptyToNil(row["motion_activity"])
 
         event.severityRaw = emptyToNil(row["severity"])
         event.userNotes = emptyToNil(row["user_notes"])
@@ -277,6 +295,15 @@ enum ImportService {
     private static func parseDouble(_ string: String?) -> Double? {
         guard let string, !string.isEmpty else { return nil }
         return numberFormatter.number(from: string)?.doubleValue
+    }
+
+    private static func parseBool(_ string: String?) -> Bool? {
+        guard let string, !string.isEmpty else { return nil }
+        switch string.lowercased() {
+        case "true", "1", "yes": return true
+        case "false", "0", "no": return false
+        default: return nil
+        }
     }
 
     private static func emptyToNil(_ string: String?) -> String? {
