@@ -68,6 +68,54 @@ actor HealthKitService {
         readTypes = Self.buildReadTypes()
     }
 
+    /// Persisted marker that we already auto-requested read authorization for this exact
+    /// read-type set. `getRequestStatusForAuthorization` can report `.shouldRequest`
+    /// indefinitely for types the sheet can't actually display, and `requestAuthorization`
+    /// with nothing displayable flashes an empty white permission sheet — so unprompted
+    /// (non-onboarding) requests are allowed at most once per type-set.
+    private static let autoRequestedFingerprintKey = "healthkit.autoRequestedReadFingerprint"
+
+    private var readTypesFingerprint: String {
+        readTypes.map(\.identifier).sorted().joined(separator: ",")
+    }
+
+    private func markAutoRequested() {
+        HeadacheAppGroup.userDefaults.set(readTypesFingerprint, forKey: Self.autoRequestedFingerprintKey)
+        hasRequestedAuthorization = true
+    }
+
+    /// Unprompted authorization request for launch/capture paths. Only calls
+    /// `requestAuthorization` when HealthKit says the sheet is genuinely needed, and at
+    /// most once per read-type set. Calling it unconditionally on every cold launch is
+    /// what presented (and instantly dismissed) the blank white Health sheet.
+    func requestReadAuthorizationIfNeeded() async {
+        guard HKHealthStore.isHealthDataAvailable() else { return }
+        guard !hasRequestedAuthorization else { return }
+        if HeadacheAppGroup.userDefaults.string(forKey: Self.autoRequestedFingerprintKey) == readTypesFingerprint {
+            hasRequestedAuthorization = true
+            return
+        }
+
+        let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
+            store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, error in
+                if let error {
+                    print("HealthKitService.getRequestStatusForAuthorization error: \(String(describing: error))")
+                }
+                continuation.resume(returning: status)
+            }
+        }
+        if status == .shouldRequest {
+            do {
+                try await store.requestAuthorization(toShare: [], read: readTypes)
+            } catch {
+                #if DEBUG
+                print("HealthKitService.requestAuthorization error: \(error.localizedDescription)")
+                #endif
+            }
+        }
+        markAutoRequested()
+    }
+
     func captureSnapshot(at date: Date) async -> HealthCaptureResult {
         if AppEnvironment.isUITesting {
             let wake = date.addingTimeInterval(-7 * 3600)
@@ -139,31 +187,7 @@ actor HealthKitService {
     /// C20: auth errors are non-fatal. If permissions are already granted (e.g. user enabled them in Settings),
     /// a spurious `requestAuthorization` throw should not abort the capture — we fall through to queries.
     private func synchronizeReadAuthorizationForCapture() async {
-        guard !hasRequestedAuthorization else { return }
-
-        let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
-            store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, error in
-                if let error {
-                    print("HealthKitService.getRequestStatusForAuthorization error: \(String(describing: error))")
-                }
-                continuation.resume(returning: status)
-            }
-        }
-        switch status {
-        case .shouldRequest:
-            do {
-                try await store.requestAuthorization(toShare: [], read: readTypes)
-            } catch {
-                #if DEBUG
-                print("HealthKitService.requestAuthorization error: \(error.localizedDescription)")
-                #endif
-            }
-            hasRequestedAuthorization = true
-        case .unnecessary, .unknown:
-            hasRequestedAuthorization = true
-        @unknown default:
-            hasRequestedAuthorization = true
-        }
+        await requestReadAuthorizationIfNeeded()
     }
 
     /// Short delay + second pull catches Watch / iCloud Health lag (same idea as Vitals `fetchTodayStatsWithRetry`).
@@ -375,10 +399,11 @@ actor HealthKitService {
     }
 
     /// Call from onboarding so the first “Headache” tap does not show the Health permission sheet mid-capture.
+    /// Unconditional by design: this is the one place the user explicitly opted into the system flow.
     func prepareAuthorizationDuringOnboarding() async throws {
         guard HKHealthStore.isHealthDataAvailable() else { return }
         try await store.requestAuthorization(toShare: [], read: readTypes)
-        hasRequestedAuthorization = true
+        markAutoRequested()
     }
 
     /// User chose not to connect Health during onboarding — skip future authorization prompts during capture.

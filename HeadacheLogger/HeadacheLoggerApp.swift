@@ -355,10 +355,12 @@ private struct HeadacheLoggerRootContent: View {
 
     /// Catch the case where onboarding completed without recording a decision (skipped step,
     /// killed mid-prompt, etc.) so the OS sheet doesn't fire mid–"Headache" tap later on.
+    /// Must go through the status-gated request: calling `requestAuthorization` outright on
+    /// every cold launch flashed an empty white Health permission sheet over Home.
     private func ensureUndecidedPermissionsAreRequested() {
         guard hasCompletedOnboarding else { return }
         Task {
-            try? await HealthKitService.shared.prepareAuthorizationDuringOnboarding()
+            await HealthKitService.shared.requestReadAuthorizationIfNeeded()
             await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
         }
     }
