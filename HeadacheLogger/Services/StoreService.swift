@@ -215,6 +215,22 @@ final class StoreService: NSObject, ObservableObject {
         products.first { $0.headacheProPackageKind == .lifetime }
     }
 
+    /// True when the account shows any sign of current or recent Pro access: an active
+    /// entitlement, a lifetime (non-subscription) purchase, or an entitlement that expired
+    /// within the last 48 hours. Renewals (especially sandbox/TestFlight) and billing retry
+    /// can read "not Pro" authoritatively for a beat right before the renewed entitlement
+    /// lands — presenting a promo inside that window gets the sheet yanked before layout,
+    /// which is the blank-sheet flash. Promo surfaces treat these accounts as Pro and stay quiet.
+    var hasRecentOrActiveProSignal: Bool {
+        guard let info = customerInfo else { return false }
+        if info.hasHeadacheProEntitlement { return true }
+        if !info.nonSubscriptions.isEmpty { return true }
+        let cutoff = Date(timeIntervalSinceNow: -48 * 3600)
+        return info.entitlements.all.values.contains { entitlement in
+            entitlement.isActive || (entitlement.expirationDate.map { $0 > cutoff } ?? false)
+        }
+    }
+
     /// True when Pro is unlocked via an auto-renewable subscription (not lifetime).
     var hasSubscription: Bool {
         guard let info = customerInfo else { return false }

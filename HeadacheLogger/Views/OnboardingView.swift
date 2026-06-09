@@ -4,6 +4,7 @@ import SwiftUI
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
+    @AppStorage(HeadacheStorageKey.hasSeenProIntro.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenProIntro = false
 
     @State private var step = 0
     @State private var isWorking = false
@@ -130,6 +131,10 @@ struct OnboardingView: View {
 
     private func finishOnboarding() {
         hasCompletedOnboarding = true
+        // The "Headache Pro is here" intro is a catch-up for users who finished onboarding
+        // before Pro shipped. Net-new users learn about Pro through the trial/milestone
+        // paths, so mark the intro seen here or it presents right after onboarding.
+        hasSeenProIntro = true
         Task { await initializeDailyRecords() }
     }
 

@@ -88,6 +88,11 @@ private struct HeadacheLoggerRootContent: View {
     @State private var reviewPromptInitialStep: ReviewPromptSheet.Step = .enjoyment
     @State private var reviewPromptShownThisSession = false
     @State private var pendingNativeReviewAfterDismiss = false
+    /// Bumped every time the scene leaves the foreground. Delayed presentation tasks
+    /// capture it before sleeping and abort if it changed: a timer that slept across a
+    /// backgrounding would otherwise fire the instant the app resumes and present a
+    /// sheet over a scene that hasn't rendered yet — a blank white shell.
+    @State private var foregroundEpoch = 0
     @Environment(\.requestReview) private var requestReview
 
     private enum TrialOfferSource {
@@ -193,6 +198,7 @@ private struct HeadacheLoggerRootContent: View {
                 schedulePatterns()
                 maintainDailyRecordsIfNeeded()
             } else if phase == .background {
+                foregroundEpoch += 1
                 scheduleBackgroundIfNeeded()
             }
         }
@@ -262,8 +268,10 @@ private struct HeadacheLoggerRootContent: View {
               !captureCoordinator.proPromptShownThisSession
         else { return }
 
+        let epoch = foregroundEpoch
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 3_500_000_000)
+            guard epoch == foregroundEpoch, scenePhase == .active else { return }
             guard hasCompletedOnboarding,
                   reviewPromptCoordinator.isOnHomeTab,
                   activeSheet == nil,
@@ -362,10 +370,18 @@ private struct HeadacheLoggerRootContent: View {
     private func offerProIntroIfNeeded() {
         guard hasCompletedOnboarding, !hasSeenProIntro, !storeService.isProUnlocked else { return }
         if hasTrialOffer { return }
+        let epoch = foregroundEpoch
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 800_000_000)
+            // If the app left the foreground while we slept, this would fire mid-resume
+            // and present over a half-rendered scene. Skip; the next launch re-evaluates.
+            guard epoch == foregroundEpoch, scenePhase == .active else { return }
             // Wait until entitlements have resolved so a premium user is never shown the intro.
             guard storeService.hasResolvedEntitlements, !hasSeenProIntro, !storeService.isProUnlocked, activeSheet == nil else { return }
+            // Recent Pro history (active, lifetime, or just-expired) means a renewal can
+            // flip isProUnlocked at any beat and yank this sheet before layout — never
+            // pitch into that window.
+            if storeService.hasRecentOrActiveProSignal { return }
             if hasTrialOffer { return }
             if captureCoordinator.proPromptShownThisSession { return }
             captureCoordinator.proPromptShownThisSession = true
@@ -386,8 +402,10 @@ private struct HeadacheLoggerRootContent: View {
               !hasSeenTrialOffer,
               hasTrialOffer
         else { return }
+        let epoch = foregroundEpoch
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 4_000_000_000)
+            guard epoch == foregroundEpoch else { return }
             presentTrialOfferIfReady(source: .firstLog)
         }
     }
@@ -401,8 +419,10 @@ private struct HeadacheLoggerRootContent: View {
               hasTrialOffer,
               events.count > 0
         else { return }
+        let epoch = foregroundEpoch
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 3_000_000_000)
+            guard epoch == foregroundEpoch else { return }
             presentTrialOfferIfReady(source: .existingUser)
         }
     }
@@ -435,9 +455,14 @@ private struct HeadacheLoggerRootContent: View {
     private func presentTrialOfferIfReady(source: TrialOfferSource) {
         // Never pitch before RevenueCat has told us whether the user is already Pro — otherwise a
         // premium user gets a promo (and the sibling-sheet race a blank one) during the launch window.
+        // Also require an active foreground scene (a sheet presented while not active never lays
+        // out — blank shell) and no recent Pro history (a pending renewal can flip isProUnlocked
+        // a beat later and yank the sheet mid-presentation).
         guard storeService.hasResolvedEntitlements,
+              scenePhase == .active,
               activeSheet == nil,
               !storeService.isProUnlocked,
+              !storeService.hasRecentOrActiveProSignal,
               hasTrialOffer
         else { return }
         // If the Home milestone card already claimed this session's Pro moment, don't stack.
