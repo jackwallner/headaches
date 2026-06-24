@@ -1,1 +1,1 @@
-tracker,hodinky,widget,deník,cluster,export,spouštěč,zdraví,lékař,příznak,log
+migréna,tracker,hodinky,widget,deník,cluster,export,spouštěč,zdraví,lékař,příznak,log

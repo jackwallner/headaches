@@ -1,1 +1,1 @@
-watch,widget,diary,pain,cluster,export,trigger,health,doctor,symptom,healthkit,tension,chronic
+migraine,pain,barometric,weather,pressure,cluster,trigger,relief,aura,chronic,symptom,tension,diary
