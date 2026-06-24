@@ -1,1 +1,1 @@
-migréna,bolesť,hlav,tracker,hodinky,widget,cluster,export,spúšťač,zdravie,lekár,príznak,log
+hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,tlak,počasie,predpoveď,úľava,aura,tenzný

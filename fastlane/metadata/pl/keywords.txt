@@ -1,1 +1,1 @@
-ból,głowy,migrena,tracker,zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,objaw,log
+zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura

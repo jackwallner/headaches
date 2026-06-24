@@ -1,1 +1,1 @@
-migrain,jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,gejala
+jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,tekanan,cuaca,ramalan,pelega,aura,tegang

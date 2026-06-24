@@ -1,1 +1,1 @@
-migraña,tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,síntoma,log
+tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio

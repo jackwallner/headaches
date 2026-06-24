@@ -1,1 +1,1 @@
-päänsärky,migreeni,tracker,kello,widget,päiväkirja,kipu,cluster,vienti,laukaisin,terveys,lääkäri
+tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus

@@ -1,1 +1,1 @@
-migraine,pain,barometric,weather,pressure,cluster,trigger,relief,aura,chronic,symptom,tension,diary
+simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura

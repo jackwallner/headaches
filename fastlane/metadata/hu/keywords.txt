@@ -1,1 +1,1 @@
-migrén,tracker,óra,widget,napló,fájdalom,cluster,export,kiváltó,egészség,orvos,tünet,log
+tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés

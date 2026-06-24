@@ -1,1 +1,1 @@
-durere,migrenă,tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,simptom,log
+tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,log,presiune,vreme,prognoză,ameliorare

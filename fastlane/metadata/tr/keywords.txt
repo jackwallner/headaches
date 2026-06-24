@@ -1,1 +1,1 @@
-migren,baş,tracker,saat,widget,günlük,ağrı,cluster,dışa,aktar,tetik,sağlık,doktor,semptom,log
+tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama

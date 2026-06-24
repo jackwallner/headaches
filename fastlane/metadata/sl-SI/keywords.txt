@@ -1,1 +1,1 @@
-glavobol,migrena,ura,widget,dnevnik,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,simptom
+migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje
