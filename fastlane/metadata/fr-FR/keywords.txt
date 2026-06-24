@@ -1,1 +1,1 @@
-migraine,tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,symptôme,log
+tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,pression,météo,prévision

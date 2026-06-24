@@ -1,1 +1,1 @@
-migræne,tracker,ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,symptom
+ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,vejr,varsel,lindring,aura,spænding,enkel

@@ -1,1 +1,1 @@
-migräne,uhr,widget,cluster,export,auslöser,gesundheit,arzt,symptom,log
+uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura

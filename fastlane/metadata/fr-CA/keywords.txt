@@ -1,1 +1,1 @@
-migraine,mal,tête,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,symptôme,log
+mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision

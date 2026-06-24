@@ -1,1 +1,1 @@
-migrain,jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,gejala
+jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,tekanan,cuaca,prakiraan,pereda,aura
