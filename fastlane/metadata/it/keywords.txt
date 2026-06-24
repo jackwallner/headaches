@@ -1,1 +1,1 @@
-tracker,orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log
+emicrania,tracker,orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log

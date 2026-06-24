@@ -1,1 +1,1 @@
-tracker,klocka,widget,dagbok,smärta,cluster,export,trigger,hälsa,läkare,symptom,log
+migrän,tracker,klocka,widget,dagbok,smärta,cluster,export,trigger,hälsa,läkare,symptom,log

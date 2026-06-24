@@ -1,1 +1,1 @@
-horloge,widget,dagboek,cluster,export,trigger,gezondheid,arts,symptoom
+migraine,horloge,widget,dagboek,cluster,export,trigger,gezondheid,arts,symptoom
