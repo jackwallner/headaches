@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Upload screenshots and metadata to App Store Connect (fastlane 2.234+)
 
+### ios submit_release
+
+```sh
+[bundle exec] fastlane ios submit_release
+```
+
+Upload metadata (incl. name/subtitle appInfo) and submit for review with auto-release
+
 ### ios deploy_testflight
 
 ```sh
