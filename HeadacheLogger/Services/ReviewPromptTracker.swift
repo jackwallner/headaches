@@ -122,6 +122,7 @@ enum ReviewPromptTracker {
         guard hasCompletedOnboarding else { return false }
         guard passivePromptAllowed(now: now) else { return false }
         guard appLaunchCount >= minimumLaunchCount else { return false }
+        guard positiveMomentCount >= minimumPositiveMoments else { return false }
         guard let first = firstAppOpenDate else { return false }
         let minInterval = TimeInterval(minimumDaysSinceFirstOpen) * 86_400
         guard now.timeIntervalSince(first) >= minInterval else { return false }

@@ -1,6 +1,1 @@
-Dieses Update macht die Insight-Engine von Headache Pro intelligenter und zuverlässiger, damit du den Mustern, die du siehst, vertrauen kannst.
-
-- 15 neue Musterdetektoren, einschließlich Kombinations-Trigger-Erkennung, die das gleichzeitige Auftreten von Faktoren wie Luftdruckabfall plus schlechtem Schlaf hervorheben kann
-- Strengere Schwellenwerte für die Anzeige von Insights, um Fehlalarme zu reduzieren und den Fokus auf Muster zu legen, die in deinen Daten tatsächlich Bestand haben
-- Eine verfeinerte Verlaufsansicht und ein reibungsloseres Onboarding, um das Überprüfen vergangener Kopfschmerzen und das Einrichten zu erleichtern
-- Allgemeine Leistungs- und Stabilitätsverbesserungen, damit Protokollierung und Analyse schnell und zuverlässig bleiben
+Bug fixes and performance improvements for faster, more reliable headache logging.

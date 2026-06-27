@@ -1,6 +1,1 @@
-Kemas kini ini menjadikan enjin cerapan Headache Pro lebih bijak dan lebih boleh dipercayai supaya anda boleh mempercayai corak yang anda lihat.
-
-- 15 pengesan corak baharu, termasuk pengesanan pencetus gabungan yang boleh menyerlahkan kejadian serentak seperti penurunan tekanan ditambah tidur yang kurang berkualiti
-- Ambang yang lebih ketat untuk memaparkan cerapan bagi mengurangkan positif palsu dan memberi tumpuan pada corak yang benar-benar konsisten dalam data anda
-- Paparan sejarah yang lebih kemas dan proses onboarding yang lebih lancar untuk memudahkan semakan sakit kepala lepas dan tetapan awal
-- Penambahbaikan prestasi dan kestabilan umum untuk memastikan pencatatan dan analisis kekal pantas dan boleh diharap
+Bug fixes and performance improvements for faster, more reliable headache logging.

@@ -1,6 +1,1 @@
-Bản cập nhật này làm cho hệ thống phân tích của Headache Pro thông minh và đáng tin cậy hơn, để bạn có thể tin tưởng vào các mẫu bạn nhìn thấy.
-
-- 15 bộ phát hiện mẫu mới, bao gồm phát hiện tác nhân kết hợp có thể làm nổi bật các trường hợp đồng thời như tụt áp suất cộng với giấc ngủ kém  
-- Ngưỡng chặt chẽ hơn khi hiển thị insight nhằm giảm cảnh báo sai và tập trung vào các mẫu thực sự ổn định trong dữ liệu của bạn  
-- Giao diện lịch sử được trau chuốt hơn và quy trình giới thiệu mượt mà hơn, giúp bạn dễ dàng xem lại các cơn đau đầu trước đây và thiết lập ứng dụng  
-- Cải thiện hiệu năng và độ ổn định tổng thể để việc ghi chép và phân tích luôn nhanh chóng và đáng tin cậy
+Bug fixes and performance improvements for faster, more reliable headache logging.

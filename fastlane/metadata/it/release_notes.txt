@@ -1,6 +1,1 @@
-Questo aggiornamento rende il motore di analisi di Headache Pro più intelligente e affidabile, così puoi fidarti dei modelli che vedi.
-
-- 15 nuovi rilevatori di pattern, inclusa la rilevazione di trigger combinati che può evidenziare co-occorrenze come cali di pressione insieme a sonno di scarsa qualità
-- Soglie più rigorose per mostrare le informazioni utili, in modo da ridurre i falsi positivi e concentrarsi sui pattern che effettivamente si confermano nei tuoi dati
-- Una vista cronologica più rifinita e un onboarding più fluido per rendere più semplice rivedere i mal di testa passati e configurare l’app
-- Miglioramenti generali delle prestazioni e della stabilità per mantenere la registrazione e l’analisi rapide e affidabili
+Bug fixes and performance improvements for faster, more reliable headache logging.

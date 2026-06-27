@@ -1,6 +1,1 @@
-Ovo ažuriranje čini Headache Pro sustav za uvid pametnijim i pouzdanijim kako biste mogli vjerovati obrascima koje vidite.
-
-- 15 novih detektora obrazaca, uključujući detekciju kombiniranih okidača koja može istaknuti pojave kao što su pad tlaka zraka zajedno s lošim snom
-- Stroži pragovi za prikaz uvida kako bi se smanjio broj lažno pozitivnih rezultata i fokusiralo na obrasce koji se zaista potvrđuju u vašim podacima
-- Uglađeniji prikaz povijesti i jednostavniji početni postupak kako bi bilo lakše pregledavati prošle glavobolje i postaviti aplikaciju
-- Opća poboljšanja performansi i stabilnosti kako bi vođenje evidencije i analiza ostali brzi i pouzdani
+Bug fixes and performance improvements for faster, more reliable headache logging.

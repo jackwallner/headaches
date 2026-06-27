@@ -1,6 +1,1 @@
-Esta actualización hace que el motor de información de Headache Pro sea más inteligente y confiable, para que puedas confiar en los patrones que ves.
-
-- 15 nuevos detectores de patrones, incluyendo detección de disparadores combinados que puede resaltar co-ocurrencias como caídas de presión junto con mal sueño
-- Umbrales más estrictos para mostrar información, con el fin de reducir falsos positivos y enfocarse en patrones que realmente se mantengan en tus datos
-- Una vista de historial más pulida y un proceso de incorporación más fluido para que sea más fácil revisar dolores de cabeza pasados y configurarte
-- Mejoras generales de rendimiento y estabilidad para mantener el registro y el análisis rápidos y confiables
+Bug fixes and performance improvements for faster, more reliable headache logging.

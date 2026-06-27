@@ -35,8 +35,8 @@ enum ReviewPromptDismissOutcome: Sendable {
     case notNow
     case feedbackSubmitted
     case openedWriteReview
-    /// User tapped the primary rate CTA. The host presents the native StoreKit review prompt once in `onDismiss`.
-    case requestedNativeReview
+    /// User chose "Yes" but dismissed the pitch without opening the store — host may call `requestReview()` once in `onDismiss`.
+    case enjoyedMaybeLater
 }
 
 struct ReviewPromptSheet: View {
@@ -156,23 +156,19 @@ struct ReviewPromptSheet: View {
 
             VStack(spacing: 10) {
                 Button {
-                    // The native StoreKit prompt is a one-tap, in-app star rating and converts far
-                    // better than the write-review web page. The host fires it in `onDismiss`. We mark
-                    // shown (120-day cooldown) but set no permanent outcome, since Apple may silently
-                    // throttle the prompt and we want a future chance to ask.
-                    ReviewPromptTracker.markShown()
-                    finish(.requestedNativeReview)
-                } label: {
-                    primaryButtonLabel("Rate the app")
-                }
-                .buttonStyle(.plain)
-
-                Button {
                     ReviewPromptTracker.markOpenedWriteReview()
                     UIApplication.shared.open(AppStoreReviewLinks.writeReviewURL)
                     finish(.openedWriteReview)
                 } label: {
-                    secondaryButtonLabel("Write a full review instead")
+                    primaryButtonLabel("Rate on the App Store")
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    ReviewPromptTracker.markShown()
+                    finish(.enjoyedMaybeLater)
+                } label: {
+                    secondaryButtonLabel("Maybe later")
                 }
                 .buttonStyle(.plain)
             }
