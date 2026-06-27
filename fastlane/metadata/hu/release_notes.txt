@@ -1,6 +1,1 @@
-Ez a frissítés okosabbá és megbízhatóbbá teszi a Headache Pro elemzőmotorját, hogy bátrabban bízhass az általad látott mintákban.
-
-- 15 új mintadetektor, köztük kombinált kiváltó okok felismerése, amely kiemelheti az együttes előfordulásokat, például a légnyomáscsökkenést és a rossz alvást
-- Szigorúbb küszöbértékek az észlelések megjelenítésére, hogy csökkenjen a téves riasztások száma, és azokra a mintákra összpontosíthass, amelyek tényleg megállják a helyüket az adataidban
-- Finomhangolt előzmény-nézet és gördülékenyebb első beállítás, hogy könnyebb legyen a korábbi fejfájások áttekintése és az alkalmazás beüzemelése
-- Általános teljesítmény- és stabilitásjavítások, hogy a naplózás és az elemzés gyors és megbízható maradjon
+Bug fixes and performance improvements for faster, more reliable headache logging.

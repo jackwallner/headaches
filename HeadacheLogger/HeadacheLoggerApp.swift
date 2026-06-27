@@ -284,9 +284,7 @@ private struct HeadacheLoggerRootContent: View {
     }
 
     private func handleReviewPromptFinish(_ outcome: ReviewPromptDismissOutcome) {
-        // Set the deferred follow-up flag before dismissing so the shared
-        // `handleRootSheetDismiss` fires the native review prompt once the sheet closes.
-        if outcome == .requestedNativeReview {
+        if outcome == .enjoyedMaybeLater {
             pendingNativeReviewAfterDismiss = true
         }
         activeSheet = nil

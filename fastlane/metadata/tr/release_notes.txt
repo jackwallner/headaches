@@ -1,6 +1,1 @@
-Bu güncelleme, Headache Pro’nun içgörü motorunu daha akıllı ve güvenilir hale getirerek gördüğünüz örüntülere güvenebilmenizi sağlar.
-
-- Basınç düşüşü artı kötü uyku gibi birlikte görülen durumları vurgulayabilen birleştirilmiş tetikleyici algılama da dahil olmak üzere 15 yeni örüntü algılayıcı
-- Yanlış pozitifleri azaltmak ve verilerinizde gerçekten geçerli olan örüntülere odaklanmak için içgörülerin gösterilmesine yönelik daha sıkı eşikler
-- Geçmiş baş ağrılarını gözden geçirmeyi ve ilk kurulumu kolaylaştırmak için daha cilalı bir geçmiş görünümü ve daha akıcı bir başlangıç deneyimi
-- Günlük tutma ve analiz süreçlerini hızlı ve güvenilir tutmak için genel performans ve kararlılık iyileştirmeleri
+Bug fixes and performance improvements for faster, more reliable headache logging.

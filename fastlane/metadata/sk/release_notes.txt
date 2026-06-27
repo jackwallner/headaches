@@ -1,6 +1,1 @@
-Táto aktualizácia robí analytický nástroj Headache Pro inteligentnejším a spoľahlivejším, aby ste mohli dôverovať vzorom, ktoré vidíte.
-
-- 15 nových detektorov vzorov vrátane detekcie kombinovaných spúšťačov, ktoré môžu zvýrazniť súčasný výskyt, ako napríklad pokles tlaku plus nekvalitný spánok
-- Prísnejšie prahové hodnoty na zobrazovanie insightov s cieľom znížiť počet falošne pozitívnych nálezov a zamerať sa na vzory, ktoré sa vo vašich dátach skutočne potvrdzujú
-- Vyleštenejšie zobrazenie histórie a plynulejšie prvotné nastavenie, aby bolo jednoduchšie prehliadať minulé bolesti hlavy a všetko si nastaviť
-- Všeobecné vylepšenia výkonu a stability, aby zaznamenávanie a analýza zostali rýchle a spoľahlivé
+Bug fixes and performance improvements for faster, more reliable headache logging.
