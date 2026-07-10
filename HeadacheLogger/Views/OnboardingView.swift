@@ -3,13 +3,18 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var store: StoreService
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
     @AppStorage(HeadacheStorageKey.hasSeenProIntro.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenProIntro = false
+    @AppStorage(HeadacheStorageKey.hasSeenTrialOffer.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenTrialOffer = false
 
     @State private var step = 0
     @State private var isWorking = false
+    @State private var isPurchasing = false
+    @State private var trialError: String?
+    @State private var showPaywallFallback = false
 
-    private static let totalSteps = 3
+    private static let totalSteps = 4
     private static let brandColor = Color(red: 0.95, green: 0.25, blue: 0.36)
 
     var body: some View {
@@ -25,6 +30,7 @@ struct OnboardingView: View {
                     case 0: welcomePage
                     case 1: healthPage
                     case 2: locationPage
+                    case 3: trialPage
                     default: welcomePage
                     }
                 }
@@ -32,6 +38,18 @@ struct OnboardingView: View {
             }
             .navigationTitle("Welcome")
             .navigationBarTitleDisplayMode(.inline)
+        }
+        // Prefetch products/offerings early so the trial step has live price and
+        // trial copy the moment it appears.
+        .task {
+            if store.currentOffering == nil {
+                await store.fetchProducts()
+            }
+        }
+        .fullScreenCover(isPresented: $showPaywallFallback, onDismiss: { finishOnboarding() }) {
+            PaywallView()
+                .environmentObject(store)
+                .task { store.trackPaywallImpression(id: "headache_onboarding_trial") }
         }
     }
 
@@ -126,7 +144,144 @@ struct OnboardingView: View {
         isWorking = true
         defer { isWorking = false }
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
-        await MainActor.run { finishOnboarding() }
+        await MainActor.run { step = 3 }
+    }
+
+    // MARK: - Trial step
+
+    /// Fourth onboarding step: the same page chrome as Health/Location (progress
+    /// bar now 4/4, "Welcome" nav title, pink-red primary), but the CTA area
+    /// carries a soft "Not now" above, the billing disclosure, and the direct
+    /// trial purchase button in the same frame as the prior Continues. Reads as
+    /// the next onboarding step, not a paywall sheet.
+    private var trialPage: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 56, weight: .bold))
+                .foregroundStyle(Self.brandColor)
+            Text("Get ahead of your headaches")
+                .font(.title.bold())
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
+                trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
+                trialBullet(icon: "lock.shield", text: "All processing stays on your device")
+            }
+
+            Spacer()
+
+            trialCTAStack
+        }
+        .padding(24)
+        .onAppear(perform: handleTrialStepAppear)
+    }
+
+    private func trialBullet(icon: String, text: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(Self.brandColor)
+                .frame(width: 24)
+            Text(text)
+                .font(.body)
+                .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
+        }
+    }
+
+    @ViewBuilder
+    private var trialCTAStack: some View {
+        VStack(spacing: 12) {
+            // Soft free exit sits ABOVE the primary so the trial button lands in
+            // the exact spot the user has been tapping "Continue".
+            Button("Not now") {
+                finishOnboarding()
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.secondary)
+            .disabled(isPurchasing)
+
+            // No disclosure until the package (and its real price) loads — never a
+            // placeholder price (Apple 3.1.2).
+            if let disclosure = store.yearlyCTADisclosureText {
+                Text(disclosure)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            // Primary CTA — same frame/style as the Continue buttons on steps 1-2.
+            Button {
+                startTrialPurchase()
+            } label: {
+                if isPurchasing {
+                    ProgressView().tint(.white)
+                } else {
+                    Text(store.yearlyPackage != nil ? store.yearlyCTALabel : "Start 7-day free trial")
+                }
+            }
+            .disabled(isPurchasing)
+            .buttonStyle(.borderedProminent)
+            .tint(Self.brandColor)
+            .controlSize(.large)
+            .frame(maxWidth: .infinity)
+
+            if let trialError {
+                Text(trialError)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+            }
+
+            // Legal footer beside the purchase point.
+            HStack(spacing: 12) {
+                Link("Terms of Use", destination: PaywallLinks.standardEULA)
+                Text("·").foregroundStyle(.tertiary)
+                Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
+                Text("·").foregroundStyle(.tertiary)
+                Button("Restore") {
+                    Task { await store.restorePurchases() }
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(.tertiary)
+        }
+    }
+
+    /// Stamp the mid-app trial offer as seen so it doesn't double-pitch right
+    /// after onboarding, and report the impression.
+    private func handleTrialStepAppear() {
+        hasSeenTrialOffer = true
+        store.trackPaywallImpression(id: "headache_onboarding_trial", oncePerSession: true)
+    }
+
+    /// One-tap conversion: buy the yearly plan in place (trial when eligible).
+    /// Products failing to load falls back to the full PaywallView rather than a
+    /// dead button; a successful purchase or the emergency paywall both finish
+    /// onboarding.
+    private func startTrialPurchase() {
+        guard let yearly = store.yearlyPackage else {
+            showPaywallFallback = true
+            return
+        }
+        trialError = nil
+        isPurchasing = true
+        Task { @MainActor in
+            defer { isPurchasing = false }
+            do {
+                switch try await store.purchase(yearly) {
+                case .purchased, .pending:
+                    finishOnboarding()
+                case .cancelled:
+                    trialError = "Trial wasn't started. Tap again, or choose Not now."
+                }
+            } catch {
+                trialError = store.lastError ?? "Couldn't start your trial. Please try again."
+            }
+        }
     }
 
     private func finishOnboarding() {
