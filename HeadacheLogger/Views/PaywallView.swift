@@ -23,22 +23,11 @@ struct PaywallView: View {
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
 
-    private var features: [(icon: String, title: String, detail: String)] {
-        [
-            ("bell.badge.fill",
-             "12-24h headache warnings",
-             "A heads-up before pressure drops and AQI spikes."),
-            ("chart.bar.xaxis",
-             "Your personal triggers",
-             "Patterns from your own sleep, weather, and timing."),
-            ("waveform.path.ecg",
-             "Daily risk forecast",
-             "Tomorrow's risk from pressure, air quality, and sleep."),
-            ("lock.shield",
-             "Stays on your device",
-             "No accounts, no tracking, all processing is local.")
-        ]
-    }
+    private let paywallFeatures: [(icon: String, title: String)] = [
+        ("bell.badge.fill", "12-24h warnings: heads-up before pressure and AQI shift"),
+        ("chart.bar.xaxis", "Personal triggers: patterns from your sleep and weather"),
+        ("waveform.path.ecg", "Daily risk forecast: tomorrow's score from your own data")
+    ]
 
     var body: some View {
         ZStack {
@@ -49,7 +38,7 @@ struct PaywallView: View {
             } else if store.products.isEmpty {
                 emptyState
             } else {
-                content
+                paywallContent
             }
 
             if displayCloseButton {
@@ -68,15 +57,22 @@ struct PaywallView: View {
 
     private var loadingState: some View {
         VStack(spacing: 14) {
+            Spacer()
             ProgressView()
             Text("Loading plans…")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+            Spacer()
+            legalFooter
         }
+        .padding(.horizontal, 22)
+        .padding(.bottom, 16)
+        .frame(maxHeight: .infinity)
     }
 
     private var emptyState: some View {
         VStack(spacing: 12) {
+            Spacer()
             Image(systemName: "wifi.exclamationmark")
                 .font(.system(size: 40))
                 .foregroundStyle(.tertiary)
@@ -95,42 +91,74 @@ struct PaywallView: View {
             }
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(brandColor)
+            Spacer()
+            legalFooter
         }
+        .padding(.horizontal, 22)
+        .padding(.bottom, 16)
+        .frame(maxHeight: .infinity)
     }
 
-    private var content: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 16) {
-                header
-                featureList
-                planCards
-                purchaseSection
-            }
-            .padding(.horizontal, 22)
-            .padding(.top, displayCloseButton ? 48 : 24)
-            .padding(.bottom, 20)
+    /// Single viewport — warning hero, compact benefits, plans, and CTA together.
+    private var paywallContent: some View {
+        VStack(spacing: 12) {
+            header
+            compactFeatureList
+            planCards
+            Spacer(minLength: 0)
+            purchaseSection
         }
+        .padding(.horizontal, 22)
+        .padding(.top, displayCloseButton ? 44 : 20)
+        .padding(.bottom, 16)
+        .frame(maxHeight: .infinity)
     }
 
     private var header: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "bell.badge.fill")
-                .font(.system(size: 42, weight: .bold))
-                .foregroundStyle(brandColor)
+        VStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(brandColor.opacity(0.14))
+                    .frame(width: 52, height: 52)
+                Image(systemName: "bell.badge.fill")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(brandColor)
+            }
             Text("Know before the headache hits")
-                .font(.system(.title2, design: .rounded, weight: .bold))
+                .font(.system(.title3, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            Text("Get a heads-up before pressure drops and AQI spikes, plus the personal triggers hiding in your own logs.")
-                .font(.subheadline)
+                .lineLimit(2)
+                .minimumScaleFactor(0.9)
+            Text("Unlock every Headache Pro feature. Private, on-device, no accounts.")
+                .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(2)
+                .minimumScaleFactor(0.9)
         }
     }
 
+    private var compactFeatureList: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(paywallFeatures, id: \.title) { feature in
+                HStack(spacing: 12) {
+                    Image(systemName: feature.icon)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(brandColor)
+                        .frame(width: 24)
+                    Text(feature.title)
+                        .font(.subheadline)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
+                    Spacer(minLength: 0)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
     private var planCards: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 8) {
             ForEach(store.products, id: \.identifier) { package in
                 PaywallPlanCard(
                     package: package,
@@ -146,34 +174,6 @@ struct PaywallView: View {
             }
         }
     }
-
-    private var featureList: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ForEach(features, id: \.title) { feature in
-                HStack(alignment: .top, spacing: 12) {
-                    Image(systemName: feature.icon)
-                        .font(.callout.weight(.semibold))
-                        .foregroundStyle(brandColor)
-                        .frame(width: 26, height: 26)
-                        .background(brandColor.opacity(0.12), in: Circle())
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(feature.title)
-                            .font(.subheadline.weight(.semibold))
-                        Text(feature.detail)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    Spacer(minLength: 0)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-
     private var purchaseSection: some View {
         VStack(spacing: 12) {
             Button(action: startPurchase) {
@@ -181,33 +181,40 @@ struct PaywallView: View {
                     Text(ctaTitle)
                         .font(.headline.bold())
                         .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
                         .opacity(isPurchasing ? 0 : 1)
                     if isPurchasing {
                         ProgressView().tint(.white)
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .frame(height: 52)
                 .background(brandColor, in: Capsule())
                 .shadow(color: brandColor.opacity(0.25), radius: 12, x: 0, y: 6)
             }
             .buttonStyle(.plain)
             .disabled(isPurchasing || selectedPackage == nil)
 
-            if let trustLine {
-                Text(trustLine)
-                    .font(.footnote.weight(.medium))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
+            Text(trustLine ?? " ")
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
+                .frame(minHeight: 20)
+                .opacity(trustLine == nil ? 0 : 1)
+                .accessibilityHidden(trustLine == nil)
 
-            if let disclosure = disclosureText {
-                Text(disclosure)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            Text(disclosureText ?? " ")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(4)
+                .minimumScaleFactor(0.9)
+                .frame(minHeight: 64, alignment: .top)
+                .opacity(disclosureText == nil ? 0 : 1)
+                .accessibilityHidden(disclosureText == nil)
 
             if let errorMessage {
                 Text(errorMessage)
@@ -222,6 +229,13 @@ struct PaywallView: View {
                     .multilineTextAlignment(.center)
             }
 
+            legalFooter
+        }
+    }
+
+    /// Restore + legal links — required on every paywall state (Apple 3.1.2).
+    private var legalFooter: some View {
+        VStack(spacing: 8) {
             Button(action: startRestore) {
                 Text(isRestoring ? "Restoring…" : "Restore Purchases")
                     .font(.subheadline.weight(.semibold))
@@ -292,6 +306,19 @@ struct PaywallView: View {
     }
 
     private func selectDefaultPackageIfNeeded() {
+        #if DEBUG
+        if let mode = PaywallScreenshotMode.current, !store.products.isEmpty {
+            switch mode {
+            case .monthly:
+                selectedPackage = store.products.first { $0.headacheProPackageKind == .monthly }
+            case .lifetime:
+                selectedPackage = store.products.first { $0.headacheProPackageKind == .lifetime }
+            case .yearly, .trial:
+                selectedPackage = store.products.first { $0.headacheProPackageKind == .yearly }
+            }
+            return
+        }
+        #endif
         guard selectedPackage == nil, !store.products.isEmpty else { return }
         selectedPackage = store.products.first { $0.headacheProPackageKind == .yearly }
             ?? store.products.first
@@ -359,6 +386,8 @@ private struct PaywallPlanCard: View {
                     HStack(spacing: 6) {
                         Text(package.headacheProDisplayName)
                             .font(.subheadline.bold())
+                            .layoutPriority(1)
+                        // One badge only: dual pills truncate on compact widths.
                         if isRecommended {
                             Text("BEST VALUE")
                                 .font(.system(size: 9, weight: .heavy))
@@ -366,24 +395,40 @@ private struct PaywallPlanCard: View {
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(accent, in: Capsule())
-                        }
-                        if let savingsPercent {
+                                .fixedSize()
+                        } else if let savingsPercent {
                             Text("SAVE \(savingsPercent)%")
                                 .font(.system(size: 9, weight: .heavy))
                                 .foregroundStyle(accent)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(accent.opacity(0.14), in: Capsule())
+                                .fixedSize()
                         }
                     }
-                    if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
-                        Text(trial.capitalized)
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(accent)
-                    } else if package.headacheProPackageKind == .lifetime {
-                        Text("One-time purchase")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                    HStack(spacing: 6) {
+                        if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
+                            Text(trial.capitalized)
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(accent)
+                                .lineLimit(1)
+                        } else if package.headacheProPackageKind == .lifetime {
+                            Text("One-time purchase")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
+                        if isRecommended, let savingsPercent {
+                            if showsTrialBadge || package.headacheProPackageKind == .lifetime {
+                                Text("·")
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(.tertiary)
+                            }
+                            Text("Save \(savingsPercent)%")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
                     }
                 }
 
@@ -393,12 +438,16 @@ private struct PaywallPlanCard: View {
                     Text(package.headacheProPriceLabel)
                         .font(.subheadline.weight(.semibold).monospacedDigit())
                         .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                     if let monthlyEquivalent {
-                        Text("\(monthlyEquivalent) / month")
+                        Text("\(monthlyEquivalent)/mo")
                             .font(.caption2.weight(.medium).monospacedDigit())
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
                 }
+                .fixedSize(horizontal: true, vertical: false)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
