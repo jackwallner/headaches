@@ -1,0 +1,902 @@
+{
+  "ar-SA": {
+    "name": {
+      "val": "متتبع الشقيقة والصداع",
+      "len": 21
+    },
+    "subtitle": {
+      "old": "يوميات الأعراض بلمسة واحدة",
+      "new": "يوميات الأعراض بلمسة واحدة",
+      "len": 26,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ساعة,ودجت,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل,ضغط,طقس,توقعات,تخفيف,هالة,توتر,بسيط",
+      "new": "ساعة,ودجت,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل,ضغط,طقس,توقعات,تخفيف,هالة,توتر,بسيط,diary,pain",
+      "len": 95,
+      "changed": true
+    }
+  },
+  "bn-BD": {
+    "name": {
+      "val": "মাইগ্রেন ও মাথাব্যথা ট্র্যাকার",
+      "len": 30
+    },
+    "subtitle": {
+      "old": "এক ট্যাপে উপসর্গ ডায়েরি",
+      "new": "এক ট্যাপে উপসর্গ ডায়েরি",
+      "len": 24,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ঘড়ি,উইজেট,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার,চাপ,আবহাওয়া,পূর্বাভাস,উপশম,অরা,টেনশন,সহজ",
+      "new": "ঘড়ি,উইজেট,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার,চাপ,আবহাওয়া,পূর্বাভাস,উপশম,অরা,টেনশন,সহজ",
+      "len": 96,
+      "changed": false
+    }
+  },
+  "ca": {
+    "name": {
+      "val": "Registre Migranya i Cefalea",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Diari de símptomes, un toc",
+      "new": "Diari de símptomes, un toc",
+      "len": 26,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,pressió,temps",
+      "new": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,pressió,temps",
+      "len": 99,
+      "changed": false
+    }
+  },
+  "cs": {
+    "name": {
+      "val": "Migréna a Bolest Hlavy Tracker",
+      "len": 30
+    },
+    "subtitle": {
+      "old": "Deník příznaků jedním ťukem",
+      "new": "Deník příznaků jedním ťukem",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,tlak,počasí,předpověď,úleva,aura,tenzní",
+      "new": "hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,tlak,počasí,předpověď,úleva,aura,tenzní",
+      "len": 95,
+      "changed": false
+    }
+  },
+  "da": {
+    "name": {
+      "val": "Migræne & Hovedpine Tracker",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Symptomdagbog med ét tryk",
+      "new": "Symptomdagbog med ét tryk",
+      "len": 25,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,vejr,varsel,lindring,aura,spænding,enkel",
+      "new": "ur,widget,smerte,cluster,eksport,trigger,sundhed,læge,vejr,varsel,lindring,aura,spænding,enkel",
+      "len": 94,
+      "changed": false
+    }
+  },
+  "de-DE": {
+    "name": {
+      "val": "Migräne Kopfschmerz Tracker",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Symptom-Tagebuch, ein Tipp",
+      "new": "Symptom-Tagebuch, ein Tipp",
+      "len": 26,
+      "changed": false
+    },
+    "keywords": {
+      "old": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura",
+      "new": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "el": {
+    "name": {
+      "val": "Ημικρανία Πονοκέφαλος Tracker",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "Ημερολόγιο συμπτωμάτων",
+      "new": "Ημερολόγιο συμπτωμάτων",
+      "len": 22,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,πίεση,καιρός,πρόγνωση,ανακούφιση",
+      "new": "ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,πίεση,καιρός,πρόγνωση,ανακούφιση,diary",
+      "len": 95,
+      "changed": true
+    }
+  },
+  "en-AU": {
+    "name": {
+      "val": "Migraine Headache Tracker Log",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "One Tap Symptom Diary Journal",
+      "new": "One Tap Symptom Diary Journal",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "en-CA": {
+    "name": {
+      "val": "Migraine Headache Tracker Log",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "One Tap Symptom Diary Journal",
+      "new": "One Tap Symptom Diary Journal",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "en-GB": {
+    "name": {
+      "val": "Migraine Headache Tracker Log",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "One Tap Symptom Diary Journal",
+      "new": "One Tap Symptom Diary Journal",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "en-US": {
+    "name": {
+      "val": "Migraine Headache Tracker Log",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "One Tap Symptom Diary Journal",
+      "new": "One Tap Symptom Diary Journal",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "es-ES": {
+    "name": {
+      "val": "Registro Migraña y Cefalea",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Diario de síntomas, un toque",
+      "new": "Diario de síntomas, un toque",
+      "len": 28,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio",
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "es-MX": {
+    "name": {
+      "val": "Registro Migraña y Cefalea",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Diario de síntomas, un toque",
+      "new": "Diario de síntomas, un toque",
+      "len": 28,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,clima,pronóstico",
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,clima,pronóstico",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "fi": {
+    "name": {
+      "val": "Migreeni & Päänsärky Seuranta",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "Oirepäiväkirja, yksi napautus",
+      "new": "Oirepäiväkirja, yksi napautus",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus",
+      "new": "tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "fr-CA": {
+    "name": {
+      "val": "Migraine & Maux de Tête Suivi",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "Journal symptômes, un geste",
+      "new": "Journal symptômes, un geste",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision",
+      "new": "mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision",
+      "len": 96,
+      "changed": false
+    }
+  },
+  "fr-FR": {
+    "name": {
+      "val": "Migraine & Céphalées Suivi",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Journal symptômes, un geste",
+      "new": "Journal symptômes, un geste",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,pression,météo,prévision",
+      "new": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,pression,météo,prévision",
+      "len": 99,
+      "changed": false
+    }
+  },
+  "gu-IN": {
+    "name": {
+      "val": "માઇગ્રેન અને માથાનો દુખાવો",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "એક ટેપમાં લક્ષણ ડાયરી",
+      "new": "એક ટેપમાં લક્ષણ ડાયરી",
+      "len": 21,
+      "changed": false
+    },
+    "keywords": {
+      "old": "dard,ટ્રેકર,ઘડિયાળ,વિજેટ,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લોગ,દબાણ,હવામાન,આગાહી,રાહત,ઓરા",
+      "new": "dard,ટ્રેકર,ઘડિયાળ,વિજેટ,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લોગ,દબાણ,હવામાન,આગાહી,રાહત,ઓરા",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "he": {
+    "name": {
+      "val": "מעקב מיגרנה וכאב ראש",
+      "len": 20
+    },
+    "subtitle": {
+      "old": "יומן תסמינים בנגיעה אחת",
+      "new": "יומן תסמינים בנגיעה אחת",
+      "len": 23,
+      "changed": false
+    },
+    "keywords": {
+      "old": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,לחץ,מזג,תחזית,הקלה,הילה,מתח,פשוט",
+      "new": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,לחץ,מזג,תחזית,הקלה,הילה,מתח,פשוט,diary,pain",
+      "len": 96,
+      "changed": true
+    }
+  },
+  "hi": {
+    "name": {
+      "val": "माइग्रेन और सिरदर्द ट्रैकर",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "एक टैप में लक्षण डायरी",
+      "new": "एक टैप में लक्षण डायरी",
+      "len": 22,
+      "changed": false
+    },
+    "keywords": {
+      "old": "घड़ी,विजेट,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लॉग,दबाव,मौसम,पूर्वानुमान,राहत,ऑरा,तनाव,सरल",
+      "new": "घड़ी,विजेट,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लॉग,दबाव,मौसम,पूर्वानुमान,राहत,ऑरा,तनाव,सरल",
+      "len": 94,
+      "changed": false
+    }
+  },
+  "hr": {
+    "name": {
+      "val": "Migrena i Glavobolja Tracker",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "Dnevnik simptoma, jedan dodir",
+      "new": "Dnevnik simptoma, jedan dodir",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura",
+      "new": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura,diary",
+      "len": 98,
+      "changed": true
+    }
+  },
+  "hu": {
+    "name": {
+      "val": "Migrén & Fejfájás Követő",
+      "len": 24
+    },
+    "subtitle": {
+      "old": "Tünetnapló egy érintéssel",
+      "new": "Tünetnapló egy érintéssel",
+      "len": 25,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés",
+      "new": "tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "id": {
+    "name": {
+      "val": "Pelacak Migrain Sakit Kepala",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "Catat gejala dengan satu ketuk",
+      "new": "Catat gejala dengan satu ketuk",
+      "len": 30,
+      "changed": false
+    },
+    "keywords": {
+      "old": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,tekanan,cuaca,prakiraan,pereda,aura",
+      "new": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,tekanan,cuaca,prakiraan,pereda,aura",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "it": {
+    "name": {
+      "val": "Emicrania e Cefalea Tracker",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Diario sintomi con un tocco",
+      "new": "Diario sintomi con un tocco",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log,pressione,meteo,previsione",
+      "new": "orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log,pressione,meteo,previsione",
+      "len": 99,
+      "changed": false
+    }
+  },
+  "ja": {
+    "name": {
+      "val": "片頭痛・頭痛トラッカー",
+      "len": 11
+    },
+    "subtitle": {
+      "old": "症状を1タップで記録・日記",
+      "new": "症状を1タップで記録・日記",
+      "len": 13,
+      "changed": false
+    },
+    "keywords": {
+      "old": "気圧,天気,予報,緩和,前兆,群発,緊張,トリガー,痛み,簡単,健康,医師",
+      "new": "気圧,天気,予報,緩和,前兆,群発,緊張,トリガー,痛み,簡単,健康,医師,ウォッチ,ウィジェット,エクスポート,ログ",
+      "len": 59,
+      "changed": true
+    }
+  },
+  "kn-IN": {
+    "name": {
+      "val": "ಮೈಗ್ರೇನ್ ತಲೆನೋವು ಟ್ರ್ಯಾಕರ್",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "ಒಂದು ಟ್ಯಾಪ್‌ನಲ್ಲಿ ಲಕ್ಷಣ ದಿನಚರಿ",
+      "new": "ಒಂದು ಟ್ಯಾಪ್‌ನಲ್ಲಿ ಲಕ್ಷಣ ದಿನಚರಿ",
+      "len": 30,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಮುನ್ಸೂಚನೆ,ಶಮನ,ಅರಾ,ಸರಳ",
+      "new": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಮುನ್ಸೂಚನೆ,ಶಮನ,ಅರಾ,ಸರಳ,diary",
+      "len": 95,
+      "changed": true
+    }
+  },
+  "ko": {
+    "name": {
+      "val": "편두통·두통 기록기",
+      "len": 10
+    },
+    "subtitle": {
+      "old": "증상 원탭 기록·일기",
+      "new": "증상 원탭 기록·일기",
+      "len": 11,
+      "changed": false
+    },
+    "keywords": {
+      "old": "기압,날씨,예보,완화,전조,군발,긴장,유발,통증,간단,건강,트래커",
+      "new": "기압,날씨,예보,완화,전조,군발,긴장,유발,통증,간단,건강,트래커,워치,위젯,보내기,의사,로그",
+      "len": 52,
+      "changed": true
+    }
+  },
+  "ml-IN": {
+    "name": {
+      "val": "മൈഗ്രേൻ തലവേദന ട്രാക്കർ",
+      "len": 23
+    },
+    "subtitle": {
+      "old": "ഒറ്റ ടാപ്പിൽ ലക്ഷണ ഡയറി",
+      "new": "ഒറ്റ ടാപ്പിൽ ലക്ഷണ ഡയറി",
+      "len": 23,
+      "changed": false
+    },
+    "keywords": {
+      "old": "വാച്ച്,വിജറ്റ്,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,മർദ്ദം,കാലാവസ്ഥ,പ്രവചനം,ആശ്വാസം,ഓറ,ലളിതം",
+      "new": "വാച്ച്,വിജറ്റ്,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,മർദ്ദം,കാലാവസ്ഥ,പ്രവചനം,ആശ്വാസം,ഓറ,ലളിതം",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "mr-IN": {
+    "name": {
+      "val": "माइग्रेन आणि डोकेदुखी ट्रॅकर",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "एका टॅपमध्ये लक्षण डायरी",
+      "new": "एका टॅपमध्ये लक्षण डायरी",
+      "len": 24,
+      "changed": false
+    },
+    "keywords": {
+      "old": "घड्याळ,विजेट,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लॉग,दाब,हवामान,अंदाज,आराम,ऑरा,ताण,सोपे",
+      "new": "घड्याळ,विजेट,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लॉग,दाब,हवामान,अंदाज,आराम,ऑरा,ताण,सोपे",
+      "len": 94,
+      "changed": false
+    }
+  },
+  "ms": {
+    "name": {
+      "val": "Penjejak Migrain Sakit Kepala",
+      "len": 29
+    },
+    "subtitle": {
+      "old": "Catat gejala satu ketikan",
+      "new": "Catat gejala satu ketikan",
+      "len": 25,
+      "changed": false
+    },
+    "keywords": {
+      "old": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,tekanan,cuaca,ramalan,pelega,aura,tegang",
+      "new": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,tekanan,cuaca,ramalan,pelega,aura,tegang",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "nl-NL": {
+    "name": {
+      "val": "Migraine Hoofdpijn Tracker",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Symptomen dagboek, één tik",
+      "new": "Symptomen dagboek, één tik",
+      "len": 26,
+      "changed": false
+    },
+    "keywords": {
+      "old": "horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,luchtdruk,weer,voorspelling,aura",
+      "new": "horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,luchtdruk,weer,voorspelling,aura",
+      "len": 95,
+      "changed": false
+    }
+  },
+  "no": {
+    "name": {
+      "val": "Migrene & Hodepine Tracker",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Symptomdagbok med ett trykk",
+      "new": "Symptomdagbok med ett trykk",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "klokke,widget,smerte,cluster,eksport,trigger,helse,lege,log,vær,varsel,lindring,aura,spenning,enkel",
+      "new": "klokke,widget,smerte,cluster,eksport,trigger,helse,lege,log,vær,varsel,lindring,aura,spenning,enkel",
+      "len": 99,
+      "changed": false
+    }
+  },
+  "or-IN": {
+    "name": {
+      "val": "ମାଇଗ୍ରେନ ଓ ମୁଣ୍ଡବିନାଶ ଟ୍ରାକର",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "ଏକ ଟ୍ୟାପରେ ଲକ୍ଷଣ ଡାଇରି",
+      "new": "ଏକ ଟ୍ୟାପରେ ଲକ୍ଷଣ ଡାଇରି",
+      "len": 22,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ଘଣ୍ଟା,ୱିଜେଟ,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଚାପ,ପାଣିପାଗ,ପୂର୍ବାନୁମାନ,ଆରାମ,ଅରା,ସରଳ",
+      "new": "ଘଣ୍ଟା,ୱିଜେଟ,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଚାପ,ପାଣିପାଗ,ପୂର୍ବାନୁମାନ,ଆରାମ,ଅରା,ସରଳ",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "pa-IN": {
+    "name": {
+      "val": "ਮਾਈਗ੍ਰੇਨ ਤੇ ਸਿਰਦਰਦ ਟਰੈਕਰ",
+      "len": 24
+    },
+    "subtitle": {
+      "old": "ਇੱਕ ਟੈਪ ਵਿੱਚ ਲੱਛਣ ਡਾਇਰੀ",
+      "new": "ਇੱਕ ਟੈਪ ਵਿੱਚ ਲੱਛਣ ਡਾਇਰੀ",
+      "len": 23,
+      "changed": false
+    },
+    "keywords": {
+      "old": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਦਬਾਅ,ਮੌਸਮ,ਭਵਿੱਖਬਾਣੀ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ",
+      "new": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਦਬਾਅ,ਮੌਸਮ,ਭਵਿੱਖਬਾਣੀ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ,diary,pain",
+      "len": 98,
+      "changed": true
+    }
+  },
+  "pl": {
+    "name": {
+      "val": "Migrena i Ból Głowy Tracker",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Dziennik objawów jednym gestem",
+      "new": "Dziennik objawów jednym gestem",
+      "len": 30,
+      "changed": false
+    },
+    "keywords": {
+      "old": "zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura",
+      "new": "zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura",
+      "len": 95,
+      "changed": false
+    }
+  },
+  "pt-BR": {
+    "name": {
+      "val": "Rastreador Enxaqueca e Dor",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Diário de sintomas num toque",
+      "new": "Diário de sintomas num toque",
+      "len": 28,
+      "changed": false
+    },
+    "keywords": {
+      "old": "cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,pressão,clima,previsão,aura",
+      "new": "cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,pressão,clima,previsão,aura",
+      "len": 99,
+      "changed": false
+    }
+  },
+  "pt-PT": {
+    "name": {
+      "val": "Registo Enxaqueca e Cefaleia",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "Diário de sintomas num toque",
+      "new": "Diário de sintomas num toque",
+      "len": 28,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,relógio,widget,dor,cluster,exportar,gatilho,saúde,médico,log,pressão,tempo,previsão,alívio",
+      "new": "tracker,relógio,widget,dor,cluster,exportar,gatilho,saúde,médico,log,pressão,tempo,previsão,alívio",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "ro": {
+    "name": {
+      "val": "Migrenă & Durere Cap Jurnal",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Jurnal simptome, o atingere",
+      "new": "Simptome într-o atingere",
+      "len": 24,
+      "changed": true
+    },
+    "keywords": {
+      "old": "tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,log,presiune,vreme,prognoză,ameliorare",
+      "new": "tracker,ceas,widget,cluster,export,declanșator,sănătate,medic,log,presiune,vreme,prognoză,ameliorare",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "ru": {
+    "name": {
+      "val": "Дневник мигрени, головной боли",
+      "len": 30
+    },
+    "subtitle": {
+      "old": "Дневник симптомов, 1 касание",
+      "new": "Журнал симптомов, 1 касание",
+      "len": 27,
+      "changed": true
+    },
+    "keywords": {
+      "old": "головная,боль,мигрень,tracker,часы,widget,cluster,экспорт,триггер,здоровье,врач,давление,погода,аура",
+      "new": "tracker,часы,widget,cluster,экспорт,триггер,здоровье,врач,давление,погода,аура,облегчение,напряжение",
+      "len": 100,
+      "changed": true
+    }
+  },
+  "sk": {
+    "name": {
+      "val": "Migréna a Bolesť Hlavy Tracker",
+      "len": 30
+    },
+    "subtitle": {
+      "old": "Denník príznakov jedným ťukom",
+      "new": "Denník príznakov jedným ťukom",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,tlak,počasie,predpoveď,úľava,aura,tenzný",
+      "new": "hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,tlak,počasie,predpoveď,úľava,aura,tenzný",
+      "len": 96,
+      "changed": false
+    }
+  },
+  "sl-SI": {
+    "name": {
+      "val": "Sledilnik Migrene Glavobola",
+      "len": 27
+    },
+    "subtitle": {
+      "old": "Dnevnik simptomov z dotikom",
+      "new": "Dnevnik simptomov z dotikom",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje",
+      "new": "migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "sv": {
+    "name": {
+      "val": "Migrän & Huvudvärk Tracker",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Symtomdagbok med ett tryck",
+      "new": "Symtomdagbok med ett tryck",
+      "len": 26,
+      "changed": false
+    },
+    "keywords": {
+      "old": "klocka,widget,smärta,cluster,export,trigger,hälsa,läkare,symptom,log,väder,prognos,lindring,aura",
+      "new": "klocka,widget,smärta,cluster,export,trigger,hälsa,läkare,symptom,log,väder,prognos,lindring,aura",
+      "len": 96,
+      "changed": false
+    }
+  },
+  "ta-IN": {
+    "name": {
+      "val": "மைக்ரேன் தலைவலி ட்ராக்கர்",
+      "len": 25
+    },
+    "subtitle": {
+      "old": "ஒரு தட்டில் அறிகுறி டைரி",
+      "new": "ஒரு தட்டில் அறிகுறி டைரி",
+      "len": 24,
+      "changed": false
+    },
+    "keywords": {
+      "old": "கடிகாரம்,விட்ஜெட்,நாள்,பதிவு,வலி,க்ளஸ்டர்,ஏற்றுமதி,தூண்டி,ஆரோக்கியம்,அழுத்தம்,வானிலை,முன்னறிவிப்பு",
+      "new": "கடிகாரம்,விட்ஜெட்,நாள்,பதிவு,வலி,க்ளஸ்டர்,ஏற்றுமதி,தூண்டி,ஆரோக்கியம்,அழுத்தம்,வானிலை,முன்னறிவிப்பு",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "te-IN": {
+    "name": {
+      "val": "మైగ్రేన్ తలనొప్పి ట్రాకర్",
+      "len": 25
+    },
+    "subtitle": {
+      "old": "ఒక్క ట్యాప్‌లో లక్షణ డైరీ",
+      "new": "ఒక్క ట్యాప్‌లో లక్షణ డైరీ",
+      "len": 25,
+      "changed": false
+    },
+    "keywords": {
+      "old": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,సూచన,ఉపశమనం,ఆరా,సరళ",
+      "new": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,సూచన,ఉపశమనం,ఆరా,సరళ,diary",
+      "len": 99,
+      "changed": true
+    }
+  },
+  "th": {
+    "name": {
+      "val": "บันทึกไมเกรนและปวดหัว",
+      "len": 21
+    },
+    "subtitle": {
+      "old": "บันทึกอาการแตะเดียว",
+      "new": "บันทึกอาการแตะเดียว",
+      "len": 19,
+      "changed": false
+    },
+    "keywords": {
+      "old": "นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,ความกดอากาศ,อากาศ,พยากรณ์,บรรเทา",
+      "new": "นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,ความกดอากาศ,อากาศ,พยากรณ์,บรรเทา",
+      "len": 97,
+      "changed": false
+    }
+  },
+  "tr": {
+    "name": {
+      "val": "Migren & Baş Ağrısı Takip",
+      "len": 25
+    },
+    "subtitle": {
+      "old": "Tek dokunuşla semptom günlüğü",
+      "new": "Tek dokunuşla semptom günlüğü",
+      "len": 29,
+      "changed": false
+    },
+    "keywords": {
+      "old": "tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama",
+      "new": "tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "uk": {
+    "name": {
+      "val": "Трекер Мігрені й Болю Голови",
+      "len": 28
+    },
+    "subtitle": {
+      "old": "Щоденник симптомів, 1 дотик",
+      "new": "Щоденник симптомів, 1 дотик",
+      "len": 27,
+      "changed": false
+    },
+    "keywords": {
+      "old": "головний,біль,мігрень,tracker,годинник,widget,cluster,експорт,тригер,здоров'я,лікар,тиск,погода,аура",
+      "new": "головний,біль,мігрень,tracker,годинник,widget,cluster,експорт,тригер,здоров'я,лікар,тиск,погода,аура",
+      "len": 100,
+      "changed": false
+    }
+  },
+  "ur-PK": {
+    "name": {
+      "val": "مائیگرین اور سر درد ٹریکر",
+      "len": 25
+    },
+    "subtitle": {
+      "old": "ایک ٹیپ میں علامات ڈائری",
+      "new": "ایک ٹیپ میں علامات ڈائری",
+      "len": 24,
+      "changed": false
+    },
+    "keywords": {
+      "old": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,دباؤ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان",
+      "new": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,دباؤ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان,diary,pain",
+      "len": 95,
+      "changed": true
+    }
+  },
+  "vi": {
+    "name": {
+      "val": "Nhật ký Migraine & Đau đầu",
+      "len": 26
+    },
+    "subtitle": {
+      "old": "Nhật ký triệu chứng một chạm",
+      "new": "Ghi triệu chứng một chạm",
+      "len": 24,
+      "changed": true
+    },
+    "keywords": {
+      "old": "dau,daudau,dongho,widget,nhatky,cum,xuat,kichhoat,suckhoe,bacsi,trieuchung,log,ápsuất,thờitiết,cụm",
+      "new": "dau,daudau,dongho,widget,nhatky,cum,xuat,kichhoat,suckhoe,bacsi,trieuchung,log,ápsuất,thờitiết,cụm",
+      "len": 98,
+      "changed": false
+    }
+  },
+  "zh-Hans": {
+    "name": {
+      "val": "偏头痛头痛追踪记录",
+      "len": 9
+    },
+    "subtitle": {
+      "old": "一键记录症状日记",
+      "new": "一键记录症状日记",
+      "len": 8,
+      "changed": false
+    },
+    "keywords": {
+      "old": "气压,天气,预报,缓解,先兆,丛集,紧张,诱因,疼痛,简单,健康,医生",
+      "new": "气压,天气,预报,缓解,先兆,丛集,紧张,诱因,疼痛,简单,健康,医生,手表,小组件,导出",
+      "len": 45,
+      "changed": true
+    }
+  },
+  "zh-Hant": {
+    "name": {
+      "val": "偏頭痛頭痛追蹤記錄",
+      "len": 9
+    },
+    "subtitle": {
+      "old": "一鍵記錄症狀日記",
+      "new": "一鍵記錄症狀日記",
+      "len": 8,
+      "changed": false
+    },
+    "keywords": {
+      "old": "氣壓,天氣,預報,緩解,先兆,叢發,緊張,誘因,疼痛,簡單,健康,醫師",
+      "new": "氣壓,天氣,預報,緩解,先兆,叢發,緊張,誘因,疼痛,簡單,健康,醫師,手錶,小工具,匯出",
+      "len": 45,
+      "changed": true
+    }
+  }
+}
