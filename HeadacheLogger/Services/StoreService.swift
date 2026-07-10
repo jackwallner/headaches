@@ -144,6 +144,35 @@ extension CustomerInfo {
 }
 
 extension StoreService {
+    /// One-tap conversion target for the onboarding trial step and every teaser
+    /// CTA: the yearly package. Bought directly (trial when eligible); the full
+    /// `PaywallView` is only the fallback when this is nil (products not loaded).
+    var directTrialPackage: Package? { yearlyPackage }
+
+    /// CTA label for a one-tap yearly conversion. Leads with the free-trial offer
+    /// when the user is eligible, price-forward otherwise so the price is never
+    /// hidden (Apple 3.1.2 — nothing implies Pro is free forever).
+    var yearlyCTALabel: String {
+        guard let yearly = yearlyPackage else { return "Unlock Headache Pro" }
+        if isEligibleForIntroOffer(yearly), let trial = yearly.headacheProIntroOfferLabel {
+            return "Start \(trial)"
+        }
+        return "Unlock Headache Pro for \(yearly.storeProduct.localizedPriceString)"
+    }
+
+    /// Full Apple-3.1.2 auto-renew disclosure for the yearly plan, shown beside any
+    /// direct-purchase CTA. States trial length (when eligible), then the real
+    /// yearly price from the loaded package, then auto-renew and how to cancel.
+    /// Returns nil until the package loads so no placeholder price is ever rendered.
+    var yearlyCTADisclosureText: String? {
+        guard let yearly = yearlyPackage else { return nil }
+        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings › Apple ID › Subscriptions."
+        if isEligibleForIntroOffer(yearly), let trial = yearly.headacheProIntroOfferLabel {
+            return "\(trial.capitalized), then \(yearly.headacheProPriceLabel). \(renew)"
+        }
+        return "\(yearly.headacheProPriceLabel). \(renew)"
+    }
+
     /// Percent savings of the yearly plan compared to 12× the monthly plan. Returns
     /// nil unless both packages are available and yearly is actually cheaper.
     var yearlySavingsPercent: Int? {
