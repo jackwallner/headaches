@@ -23,9 +23,21 @@ struct HeadacheLoggerApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
+            if let mode = PaywallScreenshotMode.current {
+                PaywallScreenshotHarness(mode: mode)
+                    .environmentObject(captureCoordinator)
+                    .environmentObject(storeService)
+            } else {
+                HeadacheLoggerRootContent()
+                    .environmentObject(captureCoordinator)
+                    .environmentObject(storeService)
+            }
+            #else
             HeadacheLoggerRootContent()
                 .environmentObject(captureCoordinator)
                 .environmentObject(storeService)
+            #endif
         }
         .modelContainer(HeadacheModelStore.sharedModelContainer)
     }
@@ -618,7 +630,7 @@ private struct ProBullet: View {
     }
 }
 
-private struct TrialOfferSheet: View {
+struct TrialOfferSheet: View {
     let offerLabel: String?
     /// Recurring price after the trial, e.g. "$29.99 / year". Only required in
     /// `directPurchase` mode (Apple 3.1.2 needs price + terms before purchase).
@@ -690,7 +702,7 @@ private struct TrialOfferSheet: View {
                 icon: "barometer",
                 tint: .orange,
                 title: "Pressure & AQI alerts",
-                detail: "A heads-up 12–24h before risky weather hits."
+                detail: "A heads-up 12-24h before risky weather hits."
             )
         ]
     }

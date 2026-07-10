@@ -23,6 +23,7 @@
 		3B3E6ABE557601B722370E58 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0E5946D1956839971B4BD1 /* InsightsView.swift */; };
 		3D42B6E3B8CE8428D6E4E2C1 /* SleepIntervalMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */; };
 		49AE2469750959923DB47B54 /* HeadacheLoggerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4B607C028DE8827ACBF9F1A8 /* PaywallScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C122FA1DCDD3C28ACD64DC8F /* PaywallScreenshotMode.swift */; };
 		4FF1FFB5F23073C65650D156 /* HeadacheQuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10255FE5700D35F1C3F78C7 /* HeadacheQuizStore.swift */; };
 		525E79C0B4C96B34042C3849 /* ReviewPromptSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */; };
 		551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
@@ -30,6 +31,7 @@
 		60B9158044768AE58696968A /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
 		66BB8D1DB18704F145A7F89A /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
 		6CFD72F3A80156A2FB145833 /* PhoneWatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */; };
+		763657B4D3F887137F8094C5 /* PaywallScreenshotHarness.swift in Sources */ = {isa = PBXBuildFile; fileRef = D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */; };
 		7D78EBD5BA76358D7D4F22AD /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */; };
 		8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9374226F8FD525B4B20127E /* OnboardingView.swift */; };
 		91CDB6C33CBEDA295626BBF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C0026857E7B70CB3A1374 /* Assets.xcassets */; };
@@ -166,9 +168,11 @@
 		B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMeteoTimeParsing.swift; sourceTree = "<group>"; };
 		BD143915C7D5D51FD3601AFC /* HeadacheLoggerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerWidget.swift; sourceTree = "<group>"; };
 		BE8412887F4E26C9B3CC85AC /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		C122FA1DCDD3C28ACD64DC8F /* PaywallScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallScreenshotMode.swift; sourceTree = "<group>"; };
 		C88D1313C9785E44B4C49729 /* HeadacheLoggerWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLoggerWatch.entitlements; sourceTree = "<group>"; };
 		C9374226F8FD525B4B20127E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		C9DCB474A89830CF74A79945 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallScreenshotHarness.swift; sourceTree = "<group>"; };
 		DBE1C310F077996DFAD946E6 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
 		E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
 		E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheModelStore.swift; sourceTree = "<group>"; };
@@ -266,6 +270,7 @@
 				91367B1F7BDF8F54249C011B /* AppEnvironment.swift */,
 				5AEE6167C7FC20A8B75E1EF3 /* AppStoreReviewLinks.swift */,
 				B8A5ED40BB498C35867A2937 /* OpenMeteoTimeParsing.swift */,
+				C122FA1DCDD3C28ACD64DC8F /* PaywallScreenshotMode.swift */,
 				87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */,
 			);
 			path = Utilities;
@@ -327,6 +332,7 @@
 				334426D57EADD647A3B13738 /* HomeView.swift */,
 				FA0E5946D1956839971B4BD1 /* InsightsView.swift */,
 				C9374226F8FD525B4B20127E /* OnboardingView.swift */,
+				D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */,
 				BE8412887F4E26C9B3CC85AC /* PaywallView.swift */,
 				93DCE63E131C76802F1F575B /* ProAlertsConfigView.swift */,
 				A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */,
@@ -557,6 +563,8 @@
 				3B3E6ABE557601B722370E58 /* InsightsView.swift in Sources */,
 				8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */,
 				1EE3B2967FF4A10BB0B96280 /* OpenMeteoTimeParsing.swift in Sources */,
+				763657B4D3F887137F8094C5 /* PaywallScreenshotHarness.swift in Sources */,
+				4B607C028DE8827ACBF9F1A8 /* PaywallScreenshotMode.swift in Sources */,
 				EDFC1B480765BA3ACFBBB289 /* PaywallView.swift in Sources */,
 				6CFD72F3A80156A2FB145833 /* PhoneWatchSession.swift in Sources */,
 				FA8EFEC5D1F70EC66FAEF806 /* ProAlertPreferences.swift in Sources */,
