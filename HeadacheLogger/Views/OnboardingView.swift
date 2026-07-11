@@ -53,11 +53,21 @@ struct OnboardingView: View {
         }
     }
 
-    private func page<Icon: View, Content: View>(
+    /// Unified onboarding page. Every step routes through this so the primary
+    /// button lands at a pixel-identical frame (Rev A zero-shift CTA):
+    ///   - All variable content (soft exit, disclosure, error) is passed via
+    ///     `aboveButton` and sits ABOVE the primary, absorbed by the Spacer.
+    ///   - A fixed-height legal-footer slot is rendered BELOW the primary on EVERY
+    ///     step (real links on the trial step, invisible placeholder elsewhere) so
+    ///     the distance from the button to the screen bottom is byte-identical.
+    private func page<Icon: View, Content: View, Above: View>(
         icon: Icon,
         title: String,
         @ViewBuilder body: () -> Content,
+        @ViewBuilder aboveButton: () -> Above = { EmptyView() },
         primaryLabel: String,
+        busy: Bool,
+        showLegalFooter: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -65,23 +75,33 @@ struct OnboardingView: View {
             Text(title)
                 .font(.title.bold())
             body()
-                .font(.body)
-                .foregroundStyle(.secondary)
             Spacer()
-            Button {
-                action()
-            } label: {
-                if isWorking {
-                    ProgressView().tint(.white)
-                } else {
-                    Text(primaryLabel)
+            VStack(spacing: 12) {
+                aboveButton()
+
+                Button {
+                    action()
+                } label: {
+                    if busy {
+                        ProgressView().tint(.white)
+                    } else {
+                        Text(primaryLabel)
+                    }
                 }
+                .disabled(busy)
+                .buttonStyle(.borderedProminent)
+                .tint(Self.brandColor)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity)
+
+                // Fixed-height legal-footer slot on EVERY step. Reserving the space
+                // even when empty keeps the primary button's frame identical across
+                // the flow so the thumb never moves.
+                legalFooter
+                    .opacity(showLegalFooter ? 1 : 0)
+                    .allowsHitTesting(showLegalFooter)
+                    .accessibilityHidden(!showLegalFooter)
             }
-            .disabled(isWorking)
-            .buttonStyle(.borderedProminent)
-            .tint(Self.brandColor)
-            .controlSize(.large)
-            .frame(maxWidth: .infinity)
         }
         .padding(24)
     }
@@ -94,8 +114,11 @@ struct OnboardingView: View {
             title: "One Tap Headache Tracker",
             body: {
                 Text("Log a headache with a single tap. The app quietly captures time, optional Apple Health context, and optional local weather so you can spot patterns.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
             },
             primaryLabel: "Get Started",
+            busy: false,
             action: { step = 1 }
         )
     }
@@ -108,8 +131,11 @@ struct OnboardingView: View {
             title: "Apple Health",
             body: {
                 Text("Next, iOS will ask whether to allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
             },
             primaryLabel: "Continue",
+            busy: isWorking,
             action: { Task { await enableHealthTapped() } }
         )
     }
@@ -122,10 +148,29 @@ struct OnboardingView: View {
             title: "Location",
             body: {
                 Text("Next, iOS will ask whether to share your location. It's used only to fetch approximate weather and place labels when you log. We don't track you in the background.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
             },
             primaryLabel: "Continue",
+            busy: isWorking,
             action: { Task { await enableLocationTapped() } }
         )
+    }
+
+    /// Terms / Privacy / Restore. Rendered on every onboarding step (invisible off
+    /// the trial step) so its height reserves the same space under the CTA.
+    private var legalFooter: some View {
+        HStack(spacing: 12) {
+            Link("Terms of Use", destination: PaywallLinks.standardEULA)
+            Text("·").foregroundStyle(.tertiary)
+            Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
+            Text("·").foregroundStyle(.tertiary)
+            Button("Restore") {
+                Task { await store.restorePurchases() }
+            }
+        }
+        .font(.caption2)
+        .foregroundStyle(.tertiary)
     }
 
     private func enableHealthTapped() async {
@@ -149,32 +194,34 @@ struct OnboardingView: View {
 
     // MARK: - Trial step
 
-    /// Fourth onboarding step: the same page chrome as Health/Location (progress
-    /// bar now 4/4, "Welcome" nav title, pink-red primary), but the CTA area
-    /// carries a soft "Not now" above, the billing disclosure, and the direct
-    /// trial purchase button in the same frame as the prior Continues. Reads as
-    /// the next onboarding step, not a paywall sheet.
+    /// Fourth onboarding step: the same `page(...)` chrome as Health/Location
+    /// (progress bar now 4/4, "Welcome" nav title, pink-red primary). The primary
+    /// button is in the exact same frame as the prior Continues; all trial-only
+    /// content (soft "Get Started" exit, billing disclosure, error) sits ABOVE it,
+    /// and the real Terms/Privacy/Restore footer fills the reserved slot below.
+    /// Reads as the next onboarding step, not a paywall sheet.
     private var trialPage: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Image(systemName: "sparkles")
+        page(
+            icon: Image(systemName: "sparkles")
                 .font(.system(size: 56, weight: .bold))
-                .foregroundStyle(Self.brandColor)
-            Text("Get ahead of your headaches")
-                .font(.title.bold())
-            VStack(alignment: .leading, spacing: 14) {
-                Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
-                trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
-                trialBullet(icon: "lock.shield", text: "All processing stays on your device")
-            }
-
-            Spacer()
-
-            trialCTAStack
-        }
-        .padding(24)
+                .foregroundStyle(Self.brandColor),
+            title: "Get ahead of your headaches",
+            body: {
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                    trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
+                    trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
+                    trialBullet(icon: "lock.shield", text: "All processing stays on your device")
+                }
+            },
+            aboveButton: { trialAboveButton },
+            primaryLabel: store.yearlyPackage != nil ? store.yearlyCTALabel : "Start 7-day free trial",
+            busy: isPurchasing,
+            showLegalFooter: true,
+            action: { startTrialPurchase() }
+        )
         .onAppear(perform: handleTrialStepAppear)
     }
 
@@ -191,12 +238,15 @@ struct OnboardingView: View {
         }
     }
 
+    /// Trial-only content that sits ABOVE the primary CTA (absorbed by the Spacer
+    /// so it never shifts the button): soft free exit, billing disclosure, error.
     @ViewBuilder
-    private var trialCTAStack: some View {
+    private var trialAboveButton: some View {
         VStack(spacing: 12) {
-            // Soft free exit sits ABOVE the primary so the trial button lands in
-            // the exact spot the user has been tapping "Continue".
-            Button("Not now") {
+            // Soft free exit sits ABOVE the primary so the trial button lands in the
+            // exact spot the user has been tapping "Continue". Rev A: labeled
+            // "Get Started" (StatScout soft-exit label), visually secondary.
+            Button("Get Started") {
                 finishOnboarding()
             }
             .font(.subheadline.weight(.semibold))
@@ -213,41 +263,12 @@ struct OnboardingView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            // Primary CTA — same frame/style as the Continue buttons on steps 1-2.
-            Button {
-                startTrialPurchase()
-            } label: {
-                if isPurchasing {
-                    ProgressView().tint(.white)
-                } else {
-                    Text(store.yearlyPackage != nil ? store.yearlyCTALabel : "Start 7-day free trial")
-                }
-            }
-            .disabled(isPurchasing)
-            .buttonStyle(.borderedProminent)
-            .tint(Self.brandColor)
-            .controlSize(.large)
-            .frame(maxWidth: .infinity)
-
             if let trialError {
                 Text(trialError)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .multilineTextAlignment(.center)
             }
-
-            // Legal footer beside the purchase point.
-            HStack(spacing: 12) {
-                Link("Terms of Use", destination: PaywallLinks.standardEULA)
-                Text("·").foregroundStyle(.tertiary)
-                Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
-                Text("·").foregroundStyle(.tertiary)
-                Button("Restore") {
-                    Task { await store.restorePurchases() }
-                }
-            }
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
         }
     }
 
@@ -276,7 +297,7 @@ struct OnboardingView: View {
                 case .purchased, .pending:
                     finishOnboarding()
                 case .cancelled:
-                    trialError = "Trial wasn't started. Tap again, or choose Not now."
+                    trialError = "Trial wasn't started. Tap again, or choose Get Started."
                 }
             } catch {
                 trialError = store.lastError ?? "Couldn't start your trial. Please try again."
