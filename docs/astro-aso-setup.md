@@ -1,6 +1,6 @@
 # Astro ASO setup — Headache Tracker - One Tap
 
-**Playbook run:** 2026-05-25 · `astro-global-aso-go-2026.md` **go** (full pipeline)
+**Playbook run:** 2026-05-25 · `~/ios/archive/aso/2026-05/astro-global-aso-go-2026.md` **go** (full pipeline)
 
 | Field | Value |
 |-------|--------|
