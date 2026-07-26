@@ -1,4 +1,4 @@
-A One Tap Headache Tracker a leggyorsabb migrén- és fejfájásnapló iPhone-on – egyetlen koppintással rögzíthetsz egy fejfájást, majd a Headache Pro feltárja a mintákat, amelyek az adataidban rejtőznek.
+A Migraine Headache Tracker Log a leggyorsabb migrén- és fejfájásnapló iPhone-on – egyetlen koppintással rögzíthetsz egy fejfájást, majd a Headache Pro feltárja a mintákat, amelyek az adataidban rejtőznek.
 
 Amint beüt a fejfájás, koppints egyet iPhone-on vagy Apple Watch-on. Az app azonnal időbélyeget ad, és automatikusan csatolja azt a környezeti kontextust, amiről az orvosok és a migrénspecialisták valójában kérdeznek – nincs gépelés, nincs űrlap, semmi súrlódás.
 
@@ -28,7 +28,7 @@ A VALÓ ÉLETRE TERVEZVE:
 
 ADATVÉDELEMRE ÉPÍTVE:
 
-A One Tap Headache Tracker elsősorban helyben futó fejfájás-napló.
+A Migraine Headache Tracker Log elsősorban helyben futó fejfájás-napló.
 
 - Nincs szükség fiókra
 - Nincsenek hirdetések
@@ -36,10 +36,10 @@ A One Tap Headache Tracker elsősorban helyben futó fejfájás-napló.
 - Nincs felhőszinkron
 - A fejfájásnaplód az eszközödön marad – csak akkor exportálod manuálisan, amikor meg szeretnéd osztani
 
-Akár krónikus migrént, klaszteres fejfájást, tenziós fejfájást, hormonális fejfájást követsz, akár csak az alkalmi fejfájásmintákat próbálod megérteni, a One Tap Headache Tracker egyetlen koppintásból teljes, orvosra kész naplót készít – a Headache Pro pedig válaszokká alakítja ezt a naplót.
+Akár krónikus migrént, klaszteres fejfájást, tenziós fejfájást, hormonális fejfájást követsz, akár csak az alkalmi fejfájásmintákat próbálod megérteni, a Migraine Headache Tracker Log egyetlen koppintásból teljes, orvosra kész naplót készít – a Headache Pro pedig válaszokká alakítja ezt a naplót.
 
 Előfizetési információk
-A Headache Pro automatikusan megújuló előfizetésként érhető el (havi 2,99 USD / éves 9,99 USD 7 napos ingyenes próbaidővel) vagy egyszeri Lifetime vásárlásként (24,99 USD). A fizetés az Apple ID-fiókodra kerül terhelésre a megerősítéskor. Az előfizetések automatikusan megújulnak, hacsak nem mondod le őket legalább 24 órával a jelenlegi időszak vége előtt. Kezelheted vagy lemondhatod a következőtől: Beállítások → Apple ID → Előfizetések.
+A Headache Pro automatikusan megújuló előfizetésként érhető el (havi 4,99 USD / éves 29,99 USD mindkettő 7 napos ingyenes próbaidővel) vagy egyszeri Lifetime vásárlásként (59,99 USD). A fizetés az Apple ID-fiókodra kerül terhelésre a megerősítéskor. Az előfizetések automatikusan megújulnak, hacsak nem mondod le őket legalább 24 órával a jelenlegi időszak vége előtt. Kezelheted vagy lemondhatod a következőtől: Beállítások → Apple ID → Előfizetések.
 
 Adatvédelmi irányelvek: https://jackwallner.github.io/headaches/privacy-policy.html
 Felhasználási feltételek (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

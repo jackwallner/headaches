@@ -1,4 +1,4 @@
-One Tap Headache Tracker là nhật ký migraine và đau đầu nhanh nhất trên iPhone – ghi lại cơn đau chỉ với một lần chạm, rồi để Headache Pro tìm ra các mẫu ẩn trong dữ liệu của bạn.
+Migraine Headache Tracker Log là nhật ký migraine và đau đầu nhanh nhất trên iPhone – ghi lại cơn đau chỉ với một lần chạm, rồi để Headache Pro tìm ra các mẫu ẩn trong dữ liệu của bạn.
 
 Ngay khi cơn đau đầu xuất hiện, chạm một lần trên iPhone hoặc Apple Watch. Ứng dụng tự động đóng dấu thời gian và tự gắn kèm bối cảnh xung quanh mà bác sĩ và chuyên gia migraine thực sự hỏi đến – không phải gõ, không biểu mẫu, không phiền toái.
 
@@ -28,7 +28,7 @@ THIẾT KẾ CHO CUỘC SỐNG THỰC:
 
 RIÊNG TƯ NGAY TỪ THIẾT KẾ:
 
-One Tap Headache Tracker là nhật ký đau đầu ưu tiên lưu trữ cục bộ.
+Migraine Headache Tracker Log là nhật ký đau đầu ưu tiên lưu trữ cục bộ.
 
 - Không cần tài khoản
 - Không quảng cáo
@@ -36,10 +36,10 @@ One Tap Headache Tracker là nhật ký đau đầu ưu tiên lưu trữ cục b
 - Không đồng bộ đám mây
 - Nhật ký đau đầu của bạn chỉ nằm trên thiết bị – chỉ xuất thủ công khi bạn chọn chia sẻ
 
-Dù bạn đang theo dõi migraine mạn tính, đau đầu chuỗi, đau đầu căng thẳng, đau đầu do nội tiết tố hay chỉ cố hiểu mẫu đau đầu thỉnh thoảng xuất hiện, One Tap Headache Tracker biến một lần chạm thành bản ghi đầy đủ sẵn sàng cho bác sĩ – và Headache Pro biến bản ghi đó thành câu trả lời.
+Dù bạn đang theo dõi migraine mạn tính, đau đầu chuỗi, đau đầu căng thẳng, đau đầu do nội tiết tố hay chỉ cố hiểu mẫu đau đầu thỉnh thoảng xuất hiện, Migraine Headache Tracker Log biến một lần chạm thành bản ghi đầy đủ sẵn sàng cho bác sĩ – và Headache Pro biến bản ghi đó thành câu trả lời.
 
 Chi tiết gói đăng ký
-Headache Pro có sẵn dưới dạng đăng ký tự gia hạn (Hàng tháng $2,99 / Hàng năm $9,99 với 7 ngày dùng thử miễn phí) hoặc mua trọn đời một lần ($24,99). Thanh toán sẽ được trừ vào Apple ID của bạn khi xác nhận. Gói đăng ký tự gia hạn trừ khi huỷ ít nhất 24 giờ trước khi kết thúc chu kỳ. Bạn có thể quản lý hoặc huỷ bất cứ lúc nào trong Cài đặt → Apple ID → Subscriptions.
+Headache Pro có sẵn dưới dạng đăng ký tự gia hạn (Hàng tháng $4,99 / Hàng năm $29,99 cả hai với 7 ngày dùng thử miễn phí) hoặc mua trọn đời một lần ($59,99). Thanh toán sẽ được trừ vào Apple ID của bạn khi xác nhận. Gói đăng ký tự gia hạn trừ khi huỷ ít nhất 24 giờ trước khi kết thúc chu kỳ. Bạn có thể quản lý hoặc huỷ bất cứ lúc nào trong Cài đặt → Apple ID → Subscriptions.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

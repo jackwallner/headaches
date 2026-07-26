@@ -1,4 +1,4 @@
-One Tap Headache Tracker és el diari de migranya i mals de cap més ràpid a l’iPhone: registra un mal de cap amb un sol toc i deixa que Headache Pro trobi els patrons amagats a les teves dades.
+Migraine Headache Tracker Log és el diari de migranya i mals de cap més ràpid a l’iPhone: registra un mal de cap amb un sol toc i deixa que Headache Pro trobi els patrons amagats a les teves dades.
 
 Quan comença un mal de cap, toca un cop a l’iPhone o a l’Apple Watch. L’app posa una marca de temps a l’instant i hi associa automàticament el context que els metges i especialistes en migranya realment pregunten: sense teclejar, sense formularis, sense friccions.
 
@@ -28,7 +28,7 @@ DISSENYADA PER A LA VIDA REAL
 
 PRIVACITAT DES DEL DISSENY
 
-One Tap Headache Tracker és un diari de mals de cap que prioritza l’emmagatzematge local.
+Migraine Headache Tracker Log és un diari de mals de cap que prioritza l’emmagatzematge local.
 
 - No cal cap compte
 - Sense anuncis
@@ -36,10 +36,10 @@ One Tap Headache Tracker és un diari de mals de cap que prioritza l’emmagatze
 - Sense sincronització al núvol
 - El registre de mals de cap es queda al teu dispositiu: només s’exporta manualment quan tu decideixes compartir-lo
 
-Tant si segueixes una migranya crònica, cefalees en raïm (cluster), mals de cap tensionals, mals de cap hormonals com si només intentes entendre un patró ocasional de dolor de cap, One Tap Headache Tracker converteix un sol toc en un registre complet i preparat per al metge, i Headache Pro converteix aquest registre en respostes.
+Tant si segueixes una migranya crònica, cefalees en raïm (cluster), mals de cap tensionals, mals de cap hormonals com si només intentes entendre un patró ocasional de dolor de cap, Migraine Headache Tracker Log converteix un sol toc en un registre complet i preparat per al metge, i Headache Pro converteix aquest registre en respostes.
 
 Detalls de la subscripció
-Headache Pro està disponible com a subscripció amb renovació automàtica (Mensual 2,99 $ / Anual 9,99 $ amb prova gratuïta de 7 dies) o com a compra única de per vida (24,99 $). El pagament es carrega a l’ID d’Apple en confirmar-lo. La subscripció es renova automàticament tret que la cancel·lis com a mínim 24 hores abans que acabi el període. Pots gestionar-la o cancel·lar-la a Configuració → ID d’Apple → Subscripcions.
+Headache Pro està disponible com a subscripció amb renovació automàtica (Mensual 4,99 $ / Anual 29,99 $ cadascuna amb prova gratuïta de 7 dies) o com a compra única de per vida (59,99 $). El pagament es carrega a l’ID d’Apple en confirmar-lo. La subscripció es renova automàticament tret que la cancel·lis com a mínim 24 hores abans que acabi el període. Pots gestionar-la o cancel·lar-la a Configuració → ID d’Apple → Subscripcions.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

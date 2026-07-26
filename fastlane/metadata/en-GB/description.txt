@@ -1,4 +1,4 @@
-One Tap Headache Tracker is the fastest migraine and headache diary on iPhone – log a headache in a single tap, then let Headache Pro find the patterns hiding in your data.
+Migraine Headache Tracker Log turns one tap into a doctor-ready headache diary, then flags the barometric pressure and weather shifts that line up with your own attack history.
 
 The moment a headache hits, tap once on iPhone or Apple Watch. The app timestamps the event instantly and automatically attaches the surrounding context that doctors and migraine specialists actually ask about – no typing, no forms, no friction.
 
@@ -28,7 +28,7 @@ BUILT FOR REAL LIFE:
 
 PRIVATE BY DESIGN:
 
-One Tap Headache Tracker is a local-first headache journal.
+Migraine Headache Tracker Log is a local-first headache journal.
 
 - No account required
 - No ads
@@ -36,10 +36,10 @@ One Tap Headache Tracker is a local-first headache journal.
 - No cloud sync
 - Your headache log stays on your device – manual export only when you choose to share
 
-Whether you’re tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, One Tap Headache Tracker turns a single tap into a complete, doctor-ready record – and Headache Pro turns that record into answers.
+Whether you’re tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, Migraine Headache Tracker Log turns a single tap into a complete, doctor-ready record – and Headache Pro turns that record into answers.
 
 Subscription details
-Headache Pro is available as an auto-renewing subscription (Monthly $2.99 / Yearly $9.99 with a 7-day free trial) or a one-off Lifetime purchase ($24.99). Payment is charged to your Apple ID at confirmation. Subscriptions auto-renew unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple ID → Subscriptions.
+Headache Pro is available as an auto-renewing subscription (Monthly $4.99 / Yearly $29.99 each with a 7-day free trial) or a one-off Lifetime purchase ($59.99). Payment is charged to your Apple ID at confirmation. Subscriptions auto-renew unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple ID → Subscriptions.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

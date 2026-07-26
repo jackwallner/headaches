@@ -146,16 +146,87 @@ enum DailyRecordStore {
         save(records)
     }
 
-    /// Ensure yesterday has a record. Called on app foreground.
-    static func ensureYesterdayRecord() {
+    /// Reconciles the persisted daily baseline against the live event log and persists the result.
+    ///
+    /// The baseline is the denominator behind every lift/probability number in the app (Proactive
+    /// Alerts' personal signal, the headache-free-day insight, the sleep lift analysis). It used to
+    /// be built exactly once, when onboarding finished, so every headache logged afterwards was
+    /// invisible to it: `hadHeadache` stayed false forever, `relativeRisk` stayed 0, and the
+    /// forecast alerts users pay for could never clear `isSupported`. Syncing on capture and on
+    /// foreground keeps events the source of truth for the headache columns while preserving the
+    /// fetched weather/sleep columns that only the network/HealthKit backfills can supply.
+    @discardableResult
+    static func sync(with events: [HeadacheEvent], now: Date = Date()) -> [DailyRecord] {
+        let existing = load()
+        let merged = merged(existing: existing, events: events, now: now)
+        if merged != existing {
+            save(merged)
+        }
+        return merged
+    }
+
+    /// Pure merge used by `sync` (and the unit tests). Events win on `hadHeadache`/`headacheCount`;
+    /// already-fetched weather and sleep on an existing record are never discarded. Every calendar
+    /// day from the earliest known day through `now` is represented so the denominator stays honest
+    /// even when the user goes a week without opening the app.
+    static func merged(existing: [DailyRecord], events: [HeadacheEvent], now: Date = Date()) -> [DailyRecord] {
         let calendar = Calendar.current
-        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()).map({ normalizeDate($0) }) else { return }
+        let today = normalizeDate(now)
 
-        let records = load()
-        if records.contains(where: { normalizeDate($0.date) == yesterday }) { return }
+        var byDate: [Date: DailyRecord] = [:]
+        for record in existing {
+            let day = normalizeDate(record.date)
+            var normalized = record
+            normalized.date = day
+            byDate[day] = normalized
+        }
 
-        var newRecord = DailyRecord(
-            date: yesterday,
+        // Events are authoritative for the headache columns, so clear them first: an event that was
+        // deleted from History must be able to turn a day back into a headache-free day.
+        for day in byDate.keys {
+            byDate[day]?.hadHeadache = false
+            byDate[day]?.headacheCount = 0
+        }
+
+        for event in events {
+            let day = normalizeDate(event.timestamp)
+            guard day <= today else { continue }
+            var record = byDate[day] ?? blankRecord(for: day)
+            record.hadHeadache = true
+            record.headacheCount += 1
+            // Only let an event supply context the day doesn't already have from a backfill —
+            // the archive backfill covers the whole day, an event only covers one moment in it.
+            if !record.weatherFetched, event.environmentStatus == .captured {
+                if event.pressureTrend != .unavailable {
+                    record.pressureTrendRaw = event.pressureTrend.rawValue
+                }
+                if let aqi = event.usAQI {
+                    record.usAQI = max(record.usAQI ?? 0, aqi)
+                }
+                record.weatherFetched = true
+            }
+            if !record.sleepFetched, let sleepHours = event.sleepHoursLastNight {
+                record.sleepHoursLastNight = sleepHours
+                record.sleepFetched = true
+            }
+            byDate[day] = record
+        }
+
+        guard let earliest = byDate.keys.min() else { return [] }
+        var cursor = earliest
+        while cursor <= today {
+            if byDate[cursor] == nil {
+                byDate[cursor] = blankRecord(for: cursor)
+            }
+            cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+        }
+
+        return byDate.values.sorted { $0.date < $1.date }
+    }
+
+    private static func blankRecord(for day: Date) -> DailyRecord {
+        DailyRecord(
+            date: day,
             hadHeadache: false,
             headacheCount: 0,
             pressureTrendRaw: PressureTrend.unavailable.rawValue,
@@ -164,8 +235,6 @@ enum DailyRecordStore {
             sleepHoursLastNight: nil,
             sleepFetched: false
         )
-        newRecord.hadHeadache = records.contains(where: { normalizeDate($0.date) == yesterday && $0.hadHeadache })
-        upsert(newRecord)
     }
 
     /// Count statistics for probability calculations.

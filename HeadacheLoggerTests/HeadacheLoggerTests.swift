@@ -867,6 +867,51 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(decision?.body.contains("similar days") == true)
     }
 
+    func testDailyRecordMergeCountsEventsAndFillsCalendarGaps() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: today)!
+        let first = HeadacheEvent(timestamp: twoDaysAgo.addingTimeInterval(3600))
+        let second = HeadacheEvent(timestamp: twoDaysAgo.addingTimeInterval(7200))
+
+        let records = DailyRecordStore.merged(
+            existing: [],
+            events: [first, second],
+            now: today
+        )
+
+        XCTAssertEqual(records.map(\.date), [twoDaysAgo, calendar.date(byAdding: .day, value: -1, to: today)!, today])
+        XCTAssertEqual(records.map(\.headacheCount), [2, 0, 0])
+        XCTAssertEqual(records.map(\.hadHeadache), [true, false, false])
+    }
+
+    func testDailyRecordMergePreservesBackfilledContextAndReflectsDeletedEvents() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        let existing = DailyRecord(
+            date: yesterday,
+            hadHeadache: true,
+            headacheCount: 4,
+            pressureTrendRaw: PressureTrend.falling.rawValue,
+            usAQI: 91,
+            weatherFetched: true,
+            sleepHoursLastNight: 6.5,
+            sleepFetched: true
+        )
+
+        let records = DailyRecordStore.merged(existing: [existing], events: [], now: today)
+        let restored = try! XCTUnwrap(records.first(where: { $0.date == yesterday }))
+
+        XCTAssertFalse(restored.hadHeadache)
+        XCTAssertEqual(restored.headacheCount, 0)
+        XCTAssertEqual(restored.pressureTrend, .falling)
+        XCTAssertEqual(restored.usAQI, 91)
+        XCTAssertEqual(restored.sleepHoursLastNight, 6.5)
+        XCTAssertTrue(restored.weatherFetched)
+        XCTAssertTrue(restored.sleepFetched)
+    }
+
     // MARK: - daily record test helpers
 
     private func makeTestRecords(totalDays: Int, headacheDays: [Int], pressureTrends: [Int: PressureTrend]) -> [DailyRecord] {

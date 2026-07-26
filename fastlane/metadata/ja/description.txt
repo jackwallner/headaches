@@ -1,4 +1,4 @@
-「One Tap Headache Tracker」は、iPhoneで最速クラスの片頭痛・頭痛日記アプリです。ワンタップで頭痛を記録し、「Headache Pro」がデータに隠れたパターンを見つけます。
+「Migraine Headache Tracker Log」は、iPhoneで最速クラスの片頭痛・頭痛日記アプリです。ワンタップで頭痛を記録し、「Headache Pro」がデータに隠れたパターンを見つけます。
 
 頭痛が来たら、iPhoneまたはApple Watchを1回タップするだけ。アプリがその瞬間にタイムスタンプを付け、医師や片頭痛専門医が実際に聞きたがる周辺の状況を自動で紐づけます。入力フォームも文字入力も不要で、ストレスなく記録できます。
 
@@ -28,7 +28,7 @@ Headache Pro: トリガーを特定
 
 プライバシー重視の設計:
 
-One Tap Headache Trackerは、ローカル保存を前提とした頭痛ジャーナルです。
+Migraine Headache Tracker Logは、ローカル保存を前提とした頭痛ジャーナルです。
 
 - アカウント登録不要
 - 広告なし
@@ -36,10 +36,10 @@ One Tap Headache Trackerは、ローカル保存を前提とした頭痛ジャ�
 - クラウド同期なし
 - 頭痛ログはあなたのデバイス内に保存され、共有したいときだけ手動エクスポート
 
-慢性片頭痛、群発頭痛、緊張型頭痛、ホルモン性頭痛の記録から、ときどき起こる頭痛パターンの把握まで、One Tap Headache Trackerは1回のタップを、医師にそのまま見せられる詳細な記録へと変換し、Headache Proがその記録から答えを引き出します。
+慢性片頭痛、群発頭痛、緊張型頭痛、ホルモン性頭痛の記録から、ときどき起こる頭痛パターンの把握まで、Migraine Headache Tracker Logは1回のタップを、医師にそのまま見せられる詳細な記録へと変換し、Headache Proがその記録から答えを引き出します。
 
 サブスクリプションについて
-Headache Proは自動更新サブスクリプション（月額$2.99 / 年額$9.99、7日間の無料トライアル付き）または買い切りのLifetime（$24.99）として提供されます。支払いは購入確認時にApple IDに請求されます。サブスクリプションは、期間終了の少なくとも24時間前までにキャンセルしない限り自動更新されます。管理やキャンセルは「設定」→「Apple ID」→「サブスクリプション」からいつでも行えます。
+Headache Proは自動更新サブスクリプション（月額$4.99 / 年額$29.99、どちらも7日間の無料トライアル付き）または買い切りのLifetime（$59.99）として提供されます。支払いは購入確認時にApple IDに請求されます。サブスクリプションは、期間終了の少なくとも24時間前までにキャンセルしない限り自動更新されます。管理やキャンセルは「設定」→「Apple ID」→「サブスクリプション」からいつでも行えます。
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

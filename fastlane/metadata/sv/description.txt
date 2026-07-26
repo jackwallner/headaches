@@ -1,4 +1,4 @@
-One Tap Headache Tracker är den snabbaste migrän- och huvudvärksdagboken på iPhone – logga en huvudvärk med ett enda tryck och låt Headache Pro hitta mönstren som döljer sig i dina data.
+Migraine Headache Tracker Log är den snabbaste migrän- och huvudvärksdagboken på iPhone – logga en huvudvärk med ett enda tryck och låt Headache Pro hitta mönstren som döljer sig i dina data.
 
 När en huvudvärk slår till trycker du en gång på din iPhone eller Apple Watch. Appen tidsstämplar händelsen direkt och lägger automatiskt till den omgivande kontext som läkare och migränspecialister faktiskt frågar efter – ingen textinmatning, inga formulär, inget krångel.
 
@@ -28,7 +28,7 @@ BYGGD FÖR VARDAGEN:
 
 PRIVAT FRÅN GRUNDEN:
 
-One Tap Headache Tracker är en lokal-först-huvudvärksdagbok.
+Migraine Headache Tracker Log är en lokal-först-huvudvärksdagbok.
 
 - Inget konto krävs
 - Inga annonser
@@ -36,10 +36,10 @@ One Tap Headache Tracker är en lokal-först-huvudvärksdagbok.
 - Ingen molnsynk
 - Din huvudvärkslogg stannar på din enhet – manuell export bara när du själv väljer att dela
 
-Oavsett om du följer kronisk migrän, klusterhuvudvärk, spänningshuvudvärk, hormonell huvudvärk eller bara vill förstå ett återkommande mönster av huvudsmärta, gör One Tap Headache Tracker ett enda tryck till en komplett journal redo för läkaren – och Headache Pro förvandlar den journalen till svar.
+Oavsett om du följer kronisk migrän, klusterhuvudvärk, spänningshuvudvärk, hormonell huvudvärk eller bara vill förstå ett återkommande mönster av huvudsmärta, gör Migraine Headache Tracker Log ett enda tryck till en komplett journal redo för läkaren – och Headache Pro förvandlar den journalen till svar.
 
 Prenumerationsinformation
-Headache Pro finns som en automatiskt förnyad prenumeration (Månadsvis 2,99 USD / Årsvis 9,99 USD med sju dagars gratis provperiod) eller ett engångsköp Lifetime (24,99 USD). Betalning debiteras ditt Apple-ID vid bekräftelse. Prenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före periodens slut. Hantera eller avsluta när som helst i Inställningar → Apple-ID → Prenumerationer.
+Headache Pro finns som en automatiskt förnyad prenumeration (Månadsvis 4,99 USD / Årsvis 29,99 USD båda med sju dagars gratis provperiod) eller ett engångsköp Lifetime (59,99 USD). Betalning debiteras ditt Apple-ID vid bekräftelse. Prenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före periodens slut. Hantera eller avsluta när som helst i Inställningar → Apple-ID → Prenumerationer.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

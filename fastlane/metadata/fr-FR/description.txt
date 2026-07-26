@@ -1,4 +1,4 @@
-One Tap Headache Tracker est le journal de migraines et de maux de tête le plus rapide sur iPhone : enregistrez une céphalée en un seul tap, puis laissez Headache Pro trouver les schémas cachés dans vos données.
+Migraine Headache Tracker Log est le journal de migraines et de maux de tête le plus rapide sur iPhone : enregistrez une céphalée en un seul tap, puis laissez Headache Pro trouver les schémas cachés dans vos données.
 
 Au moment précis où la douleur commence, touchez une fois sur iPhone ou Apple Watch. L’app horodate instantanément l’événement et ajoute automatiquement le contexte que les médecins et spécialistes de la migraine demandent réellement : aucun texte à saisir, aucun formulaire, aucun frein.
 
@@ -28,7 +28,7 @@ CONÇU POUR LE QUOTIDIEN :
 
 CONFIDENTIALITÉ PAR CONCEPTION :
 
-One Tap Headache Tracker est un journal de céphalées d’abord local.
+Migraine Headache Tracker Log est un journal de céphalées d’abord local.
 
 - Aucun compte requis
 - Aucune publicité
@@ -36,10 +36,10 @@ One Tap Headache Tracker est un journal de céphalées d’abord local.
 - Aucune synchronisation cloud
 - Votre journal de céphalées reste sur votre appareil, avec export manuel uniquement lorsque vous choisissez de le partager
 
-Que vous suiviez une migraine chronique, des céphalées en grappe, des céphalées de tension, hormonales, ou que vous cherchiez simplement à comprendre un schéma de douleur occasionnelle, One Tap Headache Tracker transforme un tap en un compte rendu complet, prêt pour le médecin – et Headache Pro transforme ce compte rendu en réponses.
+Que vous suiviez une migraine chronique, des céphalées en grappe, des céphalées de tension, hormonales, ou que vous cherchiez simplement à comprendre un schéma de douleur occasionnelle, Migraine Headache Tracker Log transforme un tap en un compte rendu complet, prêt pour le médecin – et Headache Pro transforme ce compte rendu en réponses.
 
 Détails de l’abonnement
-Headache Pro est disponible sous forme d’abonnement avec renouvellement automatique (mensuel 2,99 $ / annuel 9,99 $ avec 7 jours d’essai gratuit) ou d’achat unique à vie (24,99 $). Le paiement est prélevé sur votre identifiant Apple lors de la confirmation. L’abonnement se renouvelle automatiquement sauf si vous l’annulez au moins 24 heures avant la fin de la période. Gérez ou annulez à tout moment dans Réglages → Identifiant Apple → Abonnements.
+Headache Pro est disponible sous forme d’abonnement avec renouvellement automatique (mensuel 4,99 $ / annuel 29,99 $ chacun avec 7 jours d’essai gratuit) ou d’achat unique à vie (59,99 $). Le paiement est prélevé sur votre identifiant Apple lors de la confirmation. L’abonnement se renouvelle automatiquement sauf si vous l’annulez au moins 24 heures avant la fin de la période. Gérez ou annulez à tout moment dans Réglages → Identifiant Apple → Abonnements.
 
 Politique de confidentialité : https://jackwallner.github.io/headaches/privacy-policy.html
 Conditions d’utilisation (EULA) : https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
