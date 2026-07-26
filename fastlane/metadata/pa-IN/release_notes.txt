@@ -1,1 +1,1 @@
-Bug fixes and performance improvements for faster, more reliable headache logging.
+ਬੱਗ ਫਿਕਸ ਅਤੇ ਪ੍ਰਦਰਸ਼ਨ ਸੁਧਾਰ।

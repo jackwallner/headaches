@@ -1,4 +1,4 @@
-One Tap Headache Tracker je nejrychlejší deník migrény a bolestí hlavy na iPhonu – záznam vytvoříte jediným klepnutím a Headache Pro pak v datech najde skryté vzorce.
+Migraine Headache Tracker Log je nejrychlejší deník migrény a bolestí hlavy na iPhonu – záznam vytvoříte jediným klepnutím a Headache Pro pak v datech najde skryté vzorce.
 
 Jakmile bolest hlavy začne, jednou klepnete na iPhonu nebo Apple Watch. Aplikace okamžitě uloží čas a automaticky přidá kontext, na který se lékaři a specialisté na migrénu skutečně ptají – bez psaní, bez formulářů, bez tření.
 
@@ -28,7 +28,7 @@ NAVRŽENO PRO SKUTEČNÝ ŽIVOT:
 
 SOUKROMÍ NA PRVNÍM MÍSTĚ:
 
-One Tap Headache Tracker je deník bolestí hlavy s lokálním ukládáním dat.
+Migraine Headache Tracker Log je deník bolestí hlavy s lokálním ukládáním dat.
 
 - Není potřeba účet
 - Žádné reklamy
@@ -36,10 +36,10 @@ One Tap Headache Tracker je deník bolestí hlavy s lokálním ukládáním dat.
 - Žádná synchronizace do cloudu
 - Váš deník bolestí hlavy zůstává ve vašem zařízení – export proběhne jen ručně, když se rozhodnete data sdílet
 
-Ať už sledujete chronickou migrénu, clusterové bolesti hlavy, tenzní bolesti, hormonální bolesti hlavy, nebo se jen snažíte pochopit občasný vzorec bolestí, One Tap Headache Tracker promění jedno klepnutí v úplný záznam připravený pro lékaře – a Headache Pro z tohoto záznamu získá odpovědi.
+Ať už sledujete chronickou migrénu, clusterové bolesti hlavy, tenzní bolesti, hormonální bolesti hlavy, nebo se jen snažíte pochopit občasný vzorec bolestí, Migraine Headache Tracker Log promění jedno klepnutí v úplný záznam připravený pro lékaře – a Headache Pro z tohoto záznamu získá odpovědi.
 
 Podrobnosti předplatného
-Headache Pro je dostupné jako automaticky obnovované předplatné (měsíčně 2,99 $ / ročně 9,99 $ se 7denní bezplatnou zkušební dobou) nebo jednorázový doživotní nákup (24,99 $). Platba se strhne z vašeho Apple ID po potvrzení nákupu. Předplatné se automaticky obnovuje, pokud jej nezrušíte alespoň 24 hodin před koncem období. Spravovat nebo zrušit ho můžete kdykoli v Nastavení → Apple ID → Předplatná.
+Headache Pro je dostupné jako automaticky obnovované předplatné (měsíčně 4,99 $ / ročně 29,99 $ obě se 7denní bezplatnou zkušební dobou) nebo jednorázový doživotní nákup (59,99 $). Platba se strhne z vašeho Apple ID po potvrzení nákupu. Předplatné se automaticky obnovuje, pokud jej nezrušíte alespoň 24 hodin před koncem období. Spravovat nebo zrušit ho můžete kdykoli v Nastavení → Apple ID → Předplatná.
 
 Zásady ochrany osobních údajů: https://jackwallner.github.io/headaches/privacy-policy.html
 Podmínky použití (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

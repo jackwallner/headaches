@@ -1,1 +1,1 @@
-Registe dores de cabeça com um toque e capture automaticamente saúde, meteorologia e contexto diário para identificar padrões de enxaqueca mais rápido.
+Um toque regista uma dor de cabeça. Com o tempo obtém um registo pronto para o médico: gatilhos, padrões e o que ajuda mesmo.

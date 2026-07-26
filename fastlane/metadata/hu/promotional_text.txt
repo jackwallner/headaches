@@ -1,1 +1,1 @@
-Egy koppintással naplózd a fejfájást, és automatikusan rögzítsd az egészségi, időjárási és napi kontextust, hogy a csapatod gyorsabban felismerje a migrénmintákat.
+Egy érintés rögzíti a fejfájást. Idővel orvosnak is bemutatható kép áll össze: kiváltó okok, mintázatok és ami tényleg segít.

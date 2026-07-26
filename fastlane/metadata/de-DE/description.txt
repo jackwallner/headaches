@@ -1,4 +1,4 @@
-One Tap Headache Tracker ist das schnellste Migräne- und Kopfschmerztagebuch auf dem iPhone – erfasse einen Kopfschmerz mit einem einzigen Tipp und lass Headache Pro die Muster in deinen Daten finden.
+Migraine Headache Tracker Log ist das schnellste Migräne- und Kopfschmerztagebuch auf dem iPhone – erfasse einen Kopfschmerz mit einem einzigen Tipp und lass Headache Pro die Muster in deinen Daten finden.
 
 Sobald der Schmerz einsetzt, tippst du einmal auf dem iPhone oder der Apple Watch. Die App versieht den Eintrag sofort mit einem Zeitstempel und ergänzt automatisch den Kontext, nach dem Ärztinnen, Ärzte und Migränespezialistinnen wirklich fragen – kein Tippen, keine Formulare, keine Reibung.
 
@@ -28,7 +28,7 @@ FÜR DEN ALLTAG GEMACHT:
 
 DATENSCHUTZ VON ANFANG AN:
 
-One Tap Headache Tracker ist ein lokal-first geführtes Kopfschmerztagebuch.
+Migraine Headache Tracker Log ist ein lokal-first geführtes Kopfschmerztagebuch.
 
 - Kein Konto erforderlich
 - Keine Werbung
@@ -36,10 +36,10 @@ One Tap Headache Tracker ist ein lokal-first geführtes Kopfschmerztagebuch.
 - Keine Cloudsynchronisation
 - Dein Kopfschmerztagebuch bleibt auf deinem Gerät – Export nur manuell, wenn du teilen möchtest
 
-Ob du chronische Migräne, Clusterkopfschmerzen, Spannungskopfschmerzen, hormonelle Kopfschmerzen verfolgst oder nur gelegentliche Kopfweh-Muster verstehen willst: One Tap Headache Tracker macht aus einem einzigen Tipp einen vollständigen, arztbereiten Verlauf – und Headache Pro verwandelt diesen Verlauf in Antworten.
+Ob du chronische Migräne, Clusterkopfschmerzen, Spannungskopfschmerzen, hormonelle Kopfschmerzen verfolgst oder nur gelegentliche Kopfweh-Muster verstehen willst: Migraine Headache Tracker Log macht aus einem einzigen Tipp einen vollständigen, arztbereiten Verlauf – und Headache Pro verwandelt diesen Verlauf in Antworten.
 
 Abonnementdetails
-Headache Pro ist als automatisch verlängerndes Abonnement verfügbar (monatlich 2,99 $ / jährlich 9,99 $ mit 7-tägiger kostenloser Testphase) oder als einmaliger Lifetime-Kauf (24,99 $). Die Zahlung wird bei Bestätigung deinem Apple-ID-Konto belastet. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt werden. Verwalte oder kündige jederzeit unter Einstellungen → Apple-ID → Abonnements.
+Headache Pro ist als automatisch verlängerndes Abonnement verfügbar (monatlich 4,99 $ / jährlich 29,99 $ jeweils mit 7-tägiger kostenloser Testphase) oder als einmaliger Lifetime-Kauf (59,99 $). Die Zahlung wird bei Bestätigung deinem Apple-ID-Konto belastet. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt werden. Verwalte oder kündige jederzeit unter Einstellungen → Apple-ID → Abonnements.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

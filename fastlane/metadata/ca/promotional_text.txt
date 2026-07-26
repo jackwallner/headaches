@@ -1,1 +1,1 @@
-Registra mals de cap amb un sol toc i captura automàticament salut, temps i context diari per detectar patrons de migranya abans.
+Un toc registra un mal de cap. Amb el temps tindràs un historial a punt per al metge: desencadenants, patrons i què ajuda de debò.

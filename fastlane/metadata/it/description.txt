@@ -1,4 +1,4 @@
-One Tap Headache Tracker è il diario di emicrania e mal di testa più veloce su iPhone: registra un attacco con un solo tocco e lascia che Headache Pro trovi i schemi nascosti nei tuoi dati.
+Migraine Headache Tracker Log è il diario di emicrania e mal di testa più veloce su iPhone: registra un attacco con un solo tocco e lascia che Headache Pro trovi i schemi nascosti nei tuoi dati.
 
 Nel momento in cui arriva un mal di testa, tocca una volta su iPhone o Apple Watch. L’app applica subito data e ora e collega automaticamente il contesto circostante che medici e specialisti in emicrania chiedono davvero: niente digitazione, niente moduli, nessun attrito.
 
@@ -28,7 +28,7 @@ PROGETTATA PER LA VITA REALE:
 
 PRIVATA PER PROGETTAZIONE:
 
-One Tap Headache Tracker è un diario locale-prima per il mal di testa.
+Migraine Headache Tracker Log è un diario locale-prima per il mal di testa.
 
 - Nessun account richiesto
 - Nessuna pubblicità
@@ -36,10 +36,10 @@ One Tap Headache Tracker è un diario locale-prima per il mal di testa.
 - Nessuna sincronizzazione sul cloud
 - Il registro dei mal di testa resta sul dispositivo: esportazione manuale solo quando scegli di condividerlo
 
-Che tu stia monitorando emicrania cronica, cefalee a grappolo, cefalea tensiva, mal di testa ormonali o che stia solo cercando di capire uno schema di dolore occasionale, One Tap Headache Tracker trasforma un singolo tocco in un resoconto completo, pronto per il medico – e Headache Pro trasforma quel resoconto in risposte.
+Che tu stia monitorando emicrania cronica, cefalee a grappolo, cefalea tensiva, mal di testa ormonali o che stia solo cercando di capire uno schema di dolore occasionale, Migraine Headache Tracker Log trasforma un singolo tocco in un resoconto completo, pronto per il medico – e Headache Pro trasforma quel resoconto in risposte.
 
 Dettagli sull’abbonamento
-Headache Pro è disponibile come abbonamento con rinnovo automatico (Mensile 2,99 $ / Annuale 9,99 $ con prova gratuita di 7 giorni) oppure come acquisto una tantum Lifetime (24,99 $). Il pagamento viene addebitato sul tuo ID Apple alla conferma. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo. Puoi gestirli o annullarli in qualsiasi momento in Impostazioni → ID Apple → Abbonamenti.
+Headache Pro è disponibile come abbonamento con rinnovo automatico (Mensile 4,99 $ / Annuale 29,99 $ ciascuno con prova gratuita di 7 giorni) oppure come acquisto una tantum Lifetime (59,99 $). Il pagamento viene addebitato sul tuo ID Apple alla conferma. Gli abbonamenti si rinnovano automaticamente a meno che non vengano annullati almeno 24 ore prima della fine del periodo. Puoi gestirli o annullarli in qualsiasi momento in Impostazioni → ID Apple → Abbonamenti.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

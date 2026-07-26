@@ -245,6 +245,10 @@ private struct HeadacheLoggerRootContent: View {
             evaluateExistingUserTrialOffer()
         }
         .onChange(of: events.count) { oldCount, newCount in
+            // Keep the daily baseline in lockstep with additions and deletions in History.
+            if hasCompletedOnboarding {
+                DailyRecordStore.sync(with: events)
+            }
             // First-use trigger: just logged their first headache.
             if oldCount == 0, newCount >= 1 {
                 evaluateFirstLogTrialOffer()
@@ -345,7 +349,7 @@ private struct HeadacheLoggerRootContent: View {
     /// weather when location is available.
     private func maintainDailyRecordsIfNeeded() {
         guard hasCompletedOnboarding else { return }
-        DailyRecordStore.ensureYesterdayRecord()
+        DailyRecordStore.sync(with: events)
 
         let records = DailyRecordStore.load()
         let missingWeather = records.filter { !$0.weatherFetched }

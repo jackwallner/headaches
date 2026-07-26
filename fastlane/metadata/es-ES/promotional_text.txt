@@ -1,1 +1,1 @@
-Registra dolores de cabeza con un toque y captura automáticamente salud, clima y contexto diario para detectar antes patrones de migraña.
+Un toque registra un dolor de cabeza. Con el tiempo tendrás un historial listo para tu médico: desencadenantes, patrones y lo que de verdad ayuda.
