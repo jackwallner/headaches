@@ -1,45 +1,39 @@
-Migraine Headache Tracker Log turns one tap into a doctor-ready headache diary, then flags the barometric pressure and weather shifts that line up with your own attack history.
+Migraine Headache Tracker Log ഒരു ടാപ്പിൽ തലവേദന രേഖപ്പെടുത്തുകയും കാലക്രമേണ ഉറക്കം, കാലാവസ്ഥ, വായുമർദ്ദം, ദൈനംദിന ശീലങ്ങൾ എന്നിവയുമായി പൊരുത്തപ്പെടുന്ന നിങ്ങളുടെ വ്യക്തിഗത പാറ്റേണുകൾ മനസ്സിലാക്കാൻ സഹായിക്കുകയും ചെയ്യുന്നു.
 
-The moment a headache hits, tap once on iPhone or Apple Watch. The app timestamps the event instantly and automatically attaches the surrounding context that doctors and migraine specialists actually ask about - no typing, no forms, no friction.
+തലവേദന തുടങ്ങുമ്പോൾ iPhone അല്ലെങ്കിൽ Apple Watch ൽ ഒരിക്കൽ ടാപ്പ് ചെയ്യുക. ആപ്പ് ഉടൻ സമയം സൂക്ഷിക്കുകയും ലഭ്യമെങ്കിൽ Apple Health, പ്രാദേശിക കാലാവസ്ഥ വിവരങ്ങൾ എന്നിവ ചേർക്കുകയും ചെയ്യും. നീണ്ട ഫോമുകൾ പൂരിപ്പിക്കേണ്ടതില്ല.
 
-EVERY HEADACHE IS LOGGED WITH:
+ഓരോ രേഖയിലും ഉൾപ്പെടാവുന്നത്:
 
-- Time and rhythm - weekday, hour, minute, time zone, and part of day
-- Apple Health signals - steps, activity, sleep stages, heart rate, HRV, resting heart rate, SpO₂, VO₂ max, respiratory rate, audio exposure, mindful minutes, and recent workouts
-- Weather and environment - temperature, barometric pressure changes, humidity, air quality (AQI), UV index, and pollen-style signals long associated with migraine attacks
-- Optional severity rating (1–10) and personal notes for medications, aura, location of pain, or suspected triggers
+- തീയതി, സമയം, ദിവസത്തിന്റെ ഭാഗം, സമയമേഖല
+- ഐച്ഛിക വേദന തീവ്രതയും വ്യക്തിഗത കുറിപ്പുകളും
+- ഉറക്കം, ചുവടുകൾ, ഹൃദയമിടിപ്പ്, HRV, സമീപകാല പ്രവർത്തനം
+- താപനില, ഈർപ്പം, വായുമർദ്ദ വ്യതിയാനം, AQI, UV സൂചിക
+- മരുന്ന്, ഓറ, വേദനയുടെ സ്ഥാനം, സംശയിക്കുന്ന ട്രിഗറുകൾ എന്നിവയെക്കുറിച്ചുള്ള കുറിപ്പുകൾ
 
-HEADACHE PRO - FIND YOUR TRIGGERS:
+HEADACHE PRO
 
-A few taps of data isn't useful on its own. Headache Pro reads your full history and surfaces the real signals behind your headaches.
+നിങ്ങളുടെ രേഖകൾ വർധിക്കുമ്പോൾ Headache Pro ഉറക്കത്തിലെ മാറ്റം, വായുമർദ്ദം കുറയുന്നത്, പ്രത്യേക സമയം അല്ലെങ്കിൽ ആഴ്ചയിലെ ദിവസങ്ങളുടെ ആവർത്തനം, ഒന്നിലധികം ഘടകങ്ങളുടെ കൂട്ടായ്മ എന്നിവ പോലുള്ള വ്യക്തിഗത പാറ്റേണുകൾ കാണിക്കുന്നു. ഓരോ ഇൻസൈറ്റിനും ചാർട്ടും ലളിതമായ വിശദീകരണവും ലഭിക്കും.
 
-- Personalized pattern insights - sleep, barometric pressure drops, time-of-day clusters, weekday patterns, HRV dips, weather shifts, and more, each shown with a chart and plain-English explanation
-- 15+ pattern detectors plus multivariate co-occurrence analysis to catch combined triggers (e.g. pressure drop + poor sleep) that single-variable tracking misses
-- Proactive Alerts - Pro watches your local forecast in the background and only pings you when the conditions match a trigger pattern in YOUR history. No generic "storm coming" spam.
-- Personalized thresholds and quiet hours so alerts respect your day
-- Pro-only filters and breakdowns in your history view
+കൂടുതൽ സൗകര്യങ്ങൾ:
 
-BUILT FOR REAL LIFE:
+- നിങ്ങളുടെ സ്വന്തം ചരിത്രവുമായി പൊരുത്തപ്പെടുന്ന കാലാവസ്ഥ, വായുമർദ്ദ മുന്നറിയിപ്പുകൾ
+- വ്യക്തിഗത പരിധികളും ശാന്ത സമയവും
+- ചരിത്രത്തിനായുള്ള വിപുലമായ ഫിൽട്ടറുകൾ
+- ഡോക്ടറുമായോ വിദഗ്ധനുമായോ പങ്കിടാൻ CSV എക്സ്പോർട്ട്
+- Home Screen, Lock Screen വിഡ്ജറ്റുകൾ, Siri Shortcuts, Apple Watch ലോഗിംഗ്
 
-- One-tap Apple Watch logging that syncs back to your paired iPhone
-- Home Screen and Lock Screen widgets to log a headache without opening the app
-- Siri Shortcuts and "Hey Siri, log a headache" support
-- CSV export to share a clean headache history with your neurologist, GP, or migraine specialist
+സ്വകാര്യത:
 
-PRIVATE BY DESIGN:
+- അക്കൗണ്ട് ആവശ്യമില്ല
+- പരസ്യങ്ങളില്ല
+- അനലിറ്റിക്സ് SDK ഇല്ല
+- ക്ലൗഡ് സിങ്ക് ഇല്ല
+- വിവരങ്ങൾ നിങ്ങളുടെ ഉപകരണത്തിൽ തന്നെ നിലനിൽക്കും, നിങ്ങൾ തിരഞ്ഞെടുക്കുമ്പോൾ മാത്രം എക്സ്പോർട്ട് ചെയ്യും
 
-Migraine Headache Tracker Log is a local-first headache journal.
+ഈ ആപ്പ് വൈദ്യോപദേശം, രോഗനിർണയം അല്ലെങ്കിൽ ചികിത്സയ്ക്ക് പകരമല്ല. ഗുരുതരമായ, പുതിയതോ ആശങ്കാജനകമായതോ ആയ ലക്ഷണങ്ങൾക്ക് യോഗ്യനായ ആരോഗ്യ വിദഗ്ധനെ സമീപിക്കുക.
 
-- No account required
-- No ads
-- No analytics SDKs
-- No cloud sync
-- Your headache log stays on your device - manual export only when you choose to share
+സബ്സ്ക്രിപ്ഷൻ വിവരങ്ങൾ
+Headache Pro സ്വയം പുതുക്കുന്ന സബ്സ്ക്രിപ്ഷനായി ലഭ്യമാണ്, പ്രതിമാസം $4.99 അല്ലെങ്കിൽ പ്രതിവർഷം $29.99. യോഗ്യരായ പുതിയ സബ്സ്ക്രൈബർമാർക്ക് രണ്ട് പ്ലാനിലും 7 ദിവസത്തെ സൗജന്യ ട്രയൽ ലഭിക്കും. ഒറ്റത്തവണ Lifetime വാങ്ങൽ $59.99 ആണ്. വാങ്ങൽ സ്ഥിരീകരിക്കുമ്പോൾ നിങ്ങളുടെ Apple ID യിൽ നിന്ന് തുക ഈടാക്കും. നിലവിലെ കാലയളവ് അവസാനിക്കുന്നതിന് കുറഞ്ഞത് 24 മണിക്കൂർ മുമ്പ് റദ്ദാക്കാത്ത പക്ഷം സബ്സ്ക്രിപ്ഷൻ സ്വയം പുതുക്കും. Settings > Apple ID > Subscriptions ൽ എപ്പോൾ വേണമെങ്കിലും നിയന്ത്രിക്കുകയോ റദ്ദാക്കുകയോ ചെയ്യാം.
 
-Whether you're tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, Migraine Headache Tracker Log turns a single tap into a complete, doctor-ready record - and Headache Pro turns that record into answers.
-
-Subscription Details
-Headache Pro is available as an auto-renewing subscription (Monthly $4.99 / Yearly $29.99 each with a 7-day free trial) or a one-time Lifetime purchase ($59.99). Payment is charged to your Apple ID at confirmation. Subscriptions auto-renew unless canceled at least 24 hours before the end of the period. Manage or cancel anytime in Settings → Apple ID → Subscriptions.
-
-Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
-Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+സ്വകാര്യതാ നയം: https://jackwallner.github.io/headaches/privacy-policy.html
+ഉപയോഗ നിബന്ധനകൾ (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

@@ -1,9 +1,10 @@
 import Foundation
 import os
+import StoreKit
 @preconcurrency import RevenueCat
 
 enum HeadacheProProduct {
-    static let lifetime = "com.jackwallner.headachelogger.pro.lifetime"
+    static let lifetime = "com.jackwallner.headachelogger"
     static let yearly = "com.jackwallner.headachelogger.pro.yearly"
     static let monthly = "com.jackwallner.headachelogger.pro.monthly"
     static let all: [String] = [lifetime, yearly, monthly]
@@ -19,6 +20,11 @@ enum PurchaseState {
     case purchased
     case cancelled
     case pending
+}
+
+enum StoreServiceError: Error {
+    case productUnavailable
+    case verificationFailed
 }
 
 enum HeadacheProPackageKind: Int {
@@ -282,9 +288,12 @@ final class StoreService: NSObject, ObservableObject {
     }
 
     func fetchProducts() async {
-        configureIfNeeded()
         isLoadingProducts = true
         defer { isLoadingProducts = false }
+        #if targetEnvironment(simulator)
+        await fetchSimulatorProducts()
+        #else
+        configureIfNeeded()
         do {
             let offerings = try await Purchases.shared.offerings()
             let offering = offerings.headacheProPaywallOffering
@@ -296,14 +305,34 @@ final class StoreService: NSObject, ObservableObject {
             logger.error("Product fetch failed: \(String(describing: error), privacy: .public)")
             lastError = "Couldn't load purchase options. Check your connection and try again."
         }
+        #endif
     }
 
     @discardableResult
     func purchase(_ package: Package) async throws -> PurchaseState {
-        configureIfNeeded()
         purchaseInFlight = true
         defer { purchaseInFlight = false }
-
+        #if targetEnvironment(simulator)
+        guard let product = package.storeProduct.sk2Product else {
+            throw StoreServiceError.productUnavailable
+        }
+        switch try await product.purchase() {
+        case .success(let verification):
+            guard case .verified(let transaction) = verification else {
+                throw StoreServiceError.verificationFailed
+            }
+            await transaction.finish()
+            isProUnlocked = true
+            return .purchased
+        case .userCancelled:
+            return .cancelled
+        case .pending:
+            return .pending
+        @unknown default:
+            return .pending
+        }
+        #else
+        configureIfNeeded()
         let result = try await Purchases.shared.purchase(package: package)
         apply(customerInfo: result.customerInfo)
         if result.userCancelled {
@@ -313,9 +342,14 @@ final class StoreService: NSObject, ObservableObject {
         } else {
             return .pending
         }
+        #endif
     }
 
     func updateCustomerProductStatus(fetchPolicy: CacheFetchPolicy = .default) async {
+        #if targetEnvironment(simulator)
+        hasResolvedEntitlements = true
+        lastError = nil
+        #else
         configureIfNeeded()
         do {
             let info = try await Purchases.shared.customerInfo(fetchPolicy: fetchPolicy)
@@ -328,7 +362,58 @@ final class StoreService: NSObject, ObservableObject {
             logger.error("Customer info refresh failed: \(String(describing: error), privacy: .public)")
             lastError = "Couldn't refresh your subscription status. Check your connection and try again."
         }
+        #endif
     }
+
+    #if targetEnvironment(simulator)
+    private func fetchSimulatorProducts() async {
+        do {
+            let storeProducts = try await Product.products(for: HeadacheProProduct.all)
+            products = storeProducts.map { product in
+                let storeProduct = StoreProduct(sk2Product: product)
+                return Package(
+                    identifier: product.id,
+                    packageType: packageType(for: product.id),
+                    storeProduct: storeProduct,
+                    offeringIdentifier: "storekit-testing",
+                    webCheckoutUrl: nil
+                )
+            }
+            .sorted {
+                if $0.headacheProPaywallSortIndex != $1.headacheProPaywallSortIndex {
+                    return $0.headacheProPaywallSortIndex < $1.headacheProPaywallSortIndex
+                }
+                return $0.storeProduct.productIdentifier < $1.storeProduct.productIdentifier
+            }
+            introEligibility = Dictionary(
+                uniqueKeysWithValues: products.compactMap { package in
+                    guard package.storeProduct.introductoryDiscount != nil else { return nil }
+                    return (package.storeProduct.productIdentifier, true)
+                }
+            )
+            currentOffering = nil
+            lastError = products.isEmpty ? "StoreKit Testing products are unavailable." : nil
+        } catch {
+            logger.error("StoreKit Testing product fetch failed: \(String(describing: error), privacy: .public)")
+            products = []
+            introEligibility = [:]
+            lastError = "Couldn't load StoreKit Testing products."
+        }
+    }
+
+    private func packageType(for productID: String) -> PackageType {
+        switch productID {
+        case HeadacheProProduct.yearly:
+            return .annual
+        case HeadacheProProduct.monthly:
+            return .monthly
+        case HeadacheProProduct.lifetime:
+            return .lifetime
+        default:
+            return .custom
+        }
+    }
+    #endif
 
     private func refreshIntroEligibility() async {
         let identifiers = products
@@ -350,6 +435,9 @@ final class StoreService: NSObject, ObservableObject {
 
     /// Reports a custom paywall impression to RevenueCat (required for native paywalls).
     func trackPaywallImpression(id: String, oncePerSession: Bool = false) {
+        #if targetEnvironment(simulator)
+        return
+        #else
         configureIfNeeded()
         if AppEnvironment.isUITesting { return }
         if oncePerSession {
@@ -359,11 +447,22 @@ final class StoreService: NSObject, ObservableObject {
         Purchases.shared.trackCustomPaywallImpression(
             CustomPaywallImpressionParams(paywallId: id)
         )
+        #endif
     }
 
     func restorePurchases() async {
-        configureIfNeeded()
         lastError = nil
+        #if targetEnvironment(simulator)
+        for await result in Transaction.currentEntitlements {
+            if case .verified(let transaction) = result,
+               HeadacheProProduct.all.contains(transaction.productID) {
+                isProUnlocked = true
+                return
+            }
+        }
+        lastError = "No previous Headache Pro purchase was found on this Apple ID."
+        #else
+        configureIfNeeded()
         do {
             let info = try await Purchases.shared.restorePurchases()
             apply(customerInfo: info)
@@ -372,6 +471,7 @@ final class StoreService: NSObject, ObservableObject {
             logger.error("Restore failed: \(String(describing: error), privacy: .public)")
             lastError = "Couldn't restore purchases. Try again."
         }
+        #endif
     }
 
     func apply(customerInfo: CustomerInfo) {
@@ -390,12 +490,16 @@ final class StoreService: NSObject, ObservableObject {
 
     private func configureIfNeeded() {
         guard !isConfigured else { return }
+        #if targetEnvironment(simulator)
+        return
+        #else
         #if DEBUG
         Purchases.logLevel = .debug
         #endif
         Purchases.configure(withAPIKey: RevenueCatConfig.apiKey)
         Purchases.shared.delegate = self
         isConfigured = true
+        #endif
     }
 }
 

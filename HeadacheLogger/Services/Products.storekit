@@ -3,7 +3,7 @@
   "nonRenewingSubscriptions" : [],
   "products" : [
     {
-      "displayPrice" : "24.99",
+      "displayPrice" : "59.99",
       "familyShareable" : true,
       "internalID" : "PRO_LIFETIME_001",
       "localizations" : [
@@ -13,7 +13,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.jackwallner.headachelogger.pro.lifetime",
+      "productID" : "com.jackwallner.headachelogger",
       "referenceName" : "Pro Lifetime",
       "type" : "NonConsumable"
     }
@@ -42,10 +42,15 @@
         {
           "adHocOffers" : [],
           "codeOffers" : [],
-          "displayPrice" : "2.99",
+          "displayPrice" : "4.99",
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "PRO_MONTHLY_001",
+          "introductoryOffer" : {
+            "internalID" : "PRO_MONTHLY_INTRO_FREE_TRIAL",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
           "localizations" : [
             {
               "description" : "Monthly Pro access. Proactive alerts and personalized headache pattern insights.",
@@ -62,7 +67,7 @@
         {
           "adHocOffers" : [],
           "codeOffers" : [],
-          "displayPrice" : "9.99",
+          "displayPrice" : "29.99",
           "familyShareable" : true,
           "groupNumber" : 2,
           "internalID" : "PRO_YEARLY_001",
