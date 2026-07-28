@@ -43,7 +43,9 @@ def load_credentials() -> tuple[str, str, str]:
                 if not line or line.startswith("#") or "=" not in line:
                     continue
                 k, v = line.split("=", 1)
-                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+                key = k.strip().removeprefix("export ").strip()
+                value = os.path.expandvars(os.path.expanduser(v.strip().strip('"').strip("'")))
+                os.environ.setdefault(key, value)
         key_id = os.environ.get("ASC_API_KEY_ID")
         issuer_id = os.environ.get("ASC_ISSUER_ID")
         key_path = os.environ.get("ASC_KEY_PATH")

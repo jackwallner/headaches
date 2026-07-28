@@ -3,9 +3,66 @@ import SwiftData
 @testable import OneTapHeadacheTracker
 
 final class HeadacheLoggerTests: XCTestCase {
+    private struct StoreKitConfiguration: Decodable {
+        struct Product: Decodable {
+            let displayPrice: String
+            let productID: String
+        }
+
+        struct SubscriptionGroup: Decodable {
+            struct Subscription: Decodable {
+                struct IntroductoryOffer: Decodable {
+                    let paymentMode: String
+                    let subscriptionPeriod: String
+                }
+
+                let displayPrice: String
+                let introductoryOffer: IntroductoryOffer?
+                let productID: String
+                let recurringSubscriptionPeriod: String
+            }
+
+            let subscriptions: [Subscription]
+        }
+
+        let products: [Product]
+        let subscriptionGroups: [SubscriptionGroup]
+    }
+
     override class func setUp() {
         super.setUp()
         HeadacheAppGroup.userDefaults.set(true, forKey: HeadacheStorageKey.hasCompletedOnboarding.rawValue)
+    }
+
+    func testStoreKitCatalogMatchesAppStoreConnect() throws {
+        let testFile = URL(fileURLWithPath: #filePath)
+        let root = testFile.deletingLastPathComponent().deletingLastPathComponent()
+        let url = root.appendingPathComponent("HeadacheLogger/Services/Products.storekit")
+        let configuration = try JSONDecoder().decode(
+            StoreKitConfiguration.self,
+            from: Data(contentsOf: url)
+        )
+        let lifetime = try XCTUnwrap(
+            configuration.products.first { $0.productID == HeadacheProProduct.lifetime }
+        )
+        XCTAssertEqual(lifetime.displayPrice, "59.99")
+
+        let subscriptions = configuration.subscriptionGroups.flatMap(\.subscriptions)
+        let monthly = try XCTUnwrap(
+            subscriptions.first { $0.productID == HeadacheProProduct.monthly }
+        )
+        XCTAssertEqual(monthly.displayPrice, "4.99")
+        XCTAssertEqual(monthly.recurringSubscriptionPeriod, "P1M")
+        XCTAssertEqual(monthly.introductoryOffer?.paymentMode, "free")
+        XCTAssertEqual(monthly.introductoryOffer?.subscriptionPeriod, "P1W")
+
+        let yearly = try XCTUnwrap(
+            subscriptions.first { $0.productID == HeadacheProProduct.yearly }
+        )
+        XCTAssertEqual(yearly.displayPrice, "29.99")
+        XCTAssertEqual(yearly.recurringSubscriptionPeriod, "P1Y")
+        XCTAssertEqual(yearly.introductoryOffer?.paymentMode, "free")
+        XCTAssertEqual(yearly.introductoryOffer?.subscriptionPeriod, "P1W")
     }
 
     func testCelsiusToFahrenheitConversion() {

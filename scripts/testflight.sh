@@ -53,9 +53,8 @@ xcodebuild -exportArchive \
 
 # Commit the bump
 git add "$PROJECT_YML"
-git commit -m "Bump build for TestFlight upload
-
-Co-authored-by: CommandCodeBot <noreply@commandcode.ai>"
+git commit -m "chore: bump build for TestFlight upload"
+git push origin HEAD
 
 echo ""
-echo "Done! Build $NEW uploaded. Check App Store Connect → TestFlight for Processing."
+echo "Done! Build $NEW uploaded and pushed. Check App Store Connect → TestFlight for Processing."
