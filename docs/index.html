@@ -21,21 +21,43 @@
     <meta name="twitter:description" content="Log headaches in one tap with automatic context from Apple Health and local weather. Optionally rate severity and add notes. Free, private, no account required.">
     <meta name="twitter:image" content="https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg">
     <script type="application/ld+json">
-    {
+{
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Migraine Headache Tracker Log",
         "operatingSystem": "iOS",
         "applicationCategory": "HealthApplication",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-        },
+        "offers": [
+            {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "description": "Free tier with one-tap logging, history, and Apple Watch logging"
+            },
+            {
+                "@type": "Offer",
+                "price": "4.99",
+                "priceCurrency": "USD",
+                "description": "Headache Pro Monthly with a 7-day free trial"
+            },
+            {
+                "@type": "Offer",
+                "price": "29.99",
+                "priceCurrency": "USD",
+                "description": "Headache Pro Yearly with a 7-day free trial"
+            },
+            {
+                "@type": "Offer",
+                "price": "59.99",
+                "priceCurrency": "USD",
+                "description": "Headache Pro Lifetime, one-time purchase"
+            }
+        ],
         "description": "Log a headache in one tap. Automatic context from Apple Health, weather, and air quality. Optionally rate severity and add notes. Export to CSV for your doctor. Free for iPhone and Apple Watch.",
         "url": "https://jackwallner.github.io/headaches/",
+        "downloadUrl": "https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561",
         "screenshot": "https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg",
-        "softwareVersion": "1.4.6",
+        "softwareVersion": "1.4.9",
         "author": {
             "@type": "Person",
             "name": "Jack Wallner"
@@ -490,7 +512,7 @@
         <div class="container">
             <a class="nav-brand" href="./">
                 <img src="icon_256.png" alt="One Tap Headache Tracker">
-                <span>One Tap Headache Tracker</span>
+                <span>Headache Tracker</span>
             </a>
             <a class="nav-link" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561">Download</a>
         </div>
