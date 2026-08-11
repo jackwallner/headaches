@@ -39,7 +39,7 @@ Migraine Headache Tracker Log on paikallisesti toimiva päänsärkypäiväkirja.
 Olitpa seuraamassa kroonista migreeniä, sarjoittaisia päänsärkyjä, jännityspäänsärkyjä, hormonaalisia päänsärkyjä tai haluat vain ymmärtää satunnaisen päänsäryn kuvioita, Migraine Headache Tracker Log muuttaa yhden napautuksen kattavaksi, lääkärille valmiiksi yhteenvedoksi – ja Headache Pro muuttaa tämän yhteenvedon vastauksiksi.
 
 Tilaustiedot
-Headache Pro on saatavilla automaattisesti uusiutuvana tilauksena (Kuukausi 4,99 $ / Vuosi 29,99 $ molemmat sisältäen 7 päivän ilmaisen kokeilun) tai kertaluonteisena Lifetime‑ostona (59,99 $). Maksu veloitetaan Apple ID ‑tililtä vahvistuksen yhteydessä. Tilaukset uusiutuvat automaattisesti, ellei niitä peruta vähintään 24 tuntia ennen jakson loppua. Hallinnoi tai peru milloin tahansa kohdassa Asetukset → Apple ID → Tilaukset.
+Headache Pro on saatavana automaattisesti uusiutuvana tilauksena (kuukausi tai vuosi, molemmissa 7 päivän ilmainen kokeilu) tai kertaostoksena Lifetime. Hinnat näkyvät apissa ennen ostoa ja vaihtelevat alueittain. Maksu veloitetaan Apple ID:ltäsi vahvistuksen yhteydessä. Tilaukset uusiutuvat automaattisesti, ellei niitä peruuteta vähintään 24 tuntia ennen kuluvan jakson päättymistä. Voit hallita tai peruuttaa milloin tahansa: Asetukset → Apple ID → Tilaukset.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

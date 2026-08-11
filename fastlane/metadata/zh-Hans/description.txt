@@ -39,7 +39,7 @@ Migraine Headache Tracker Log 是一款本地优先的头痛日记应用。
 无论你是在追踪慢性偏头痛、丛集性头痛、紧张性头痛、激素相关头痛，还是只是想弄清偶发性头痛的规律，Migraine Headache Tracker Log 都能把一次轻点变成完整、可供医生使用的记录: 而 Headache Pro 则会把这些记录转化为答案。
 
 订阅详情
-Headache Pro 提供自动续订订阅（按月 US$4.99 / 按年 US$29.99，均含 7 天免费试用），也可一次性购买终身版（US$59.99）。确认购买后费用会从你的 Apple ID 扣款。订阅会在当前周期结束前 24 小时内自动续订，除非你提前取消。你可以随时在“设置 → Apple ID → 订阅”中管理或取消订阅。
+Headache Pro 提供自动续期订阅（每月或每年，两者均含 7 天免费试用）或一次性买断 Lifetime。价格会在购买前显示于 App 内，并因地区而异。确认购买时将从你的 Apple ID 扣款。除非在当前周期结束前至少 24 小时取消，否则订阅会自动续期。你可随时在“设置 → Apple ID → 订阅”中管理或取消。
 
 隐私政策: https://jackwallner.github.io/headaches/privacy-policy.html
 使用条款 (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

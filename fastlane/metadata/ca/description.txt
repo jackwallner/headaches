@@ -39,7 +39,7 @@ Migraine Headache Tracker Log és un diari de mals de cap que prioritza l’emma
 Tant si segueixes una migranya crònica, cefalees en raïm (cluster), mals de cap tensionals, mals de cap hormonals com si només intentes entendre un patró ocasional de dolor de cap, Migraine Headache Tracker Log converteix un sol toc en un registre complet i preparat per al metge, i Headache Pro converteix aquest registre en respostes.
 
 Detalls de la subscripció
-Headache Pro està disponible com a subscripció amb renovació automàtica (Mensual 4,99 $ / Anual 29,99 $ cadascuna amb prova gratuïta de 7 dies) o com a compra única de per vida (59,99 $). El pagament es carrega a l’ID d’Apple en confirmar-lo. La subscripció es renova automàticament tret que la cancel·lis com a mínim 24 hores abans que acabi el període. Pots gestionar-la o cancel·lar-la a Configuració → ID d’Apple → Subscripcions.
+Headache Pro està disponible com a subscripció de renovació automàtica (mensual o anual, totes dues amb 7 dies de prova gratuïta) o com a compra única Lifetime. Els preus es mostren a l’app abans de comprar i varien segons la regió. El pagament es carrega al teu Apple ID en confirmar. Les subscripcions es renoven automàticament llevat que les cancel·lis com a mínim 24 hores abans que acabi el període actual. Gestiona-les o cancel·la-les quan vulguis a Configuració → Apple ID → Subscripcions.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

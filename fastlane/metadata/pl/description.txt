@@ -39,7 +39,7 @@ Migraine Headache Tracker Log to dziennik bólów głowy oparty przede wszystkim
 Niezależnie od tego, czy śledzisz przewlekłą migrenę, bóle klasterowe, napięciowe, hormonalne, czy po prostu próbujesz zrozumieć okazjonalne wzorce bólu głowy, Migraine Headache Tracker Log zamienia jedno stuknięcie w pełny, gotowy dla lekarza zapis – a Headache Pro przekształca ten zapis w odpowiedzi.
 
 Szczegóły subskrypcji
-Headache Pro jest dostępny jako automatycznie odnawialna subskrypcja (miesięcznie 4,99 USD / rocznie 29,99 USD oba z 7-dniowym bezpłatnym okresem próbnym) lub jednorazowy zakup Lifetime (59,99 USD). Płatność zostanie pobrana z Twojego Apple ID po potwierdzeniu. Subskrypcje odnawiają się automatycznie, chyba że zostaną anulowane co najmniej 24 godziny przed końcem okresu. Zarządzaj nimi lub anuluj w dowolnym momencie w Ustawienia → Apple ID → Subskrypcje.
+Headache Pro jest dostępny w automatycznie odnawianej subskrypcji (miesięcznej lub rocznej, obie z 7-dniowym bezpłatnym okresem próbnym) albo jako jednorazowy zakup Lifetime. Ceny są widoczne w aplikacji przed zakupem i różnią się w zależności od regionu. Płatność jest pobierana z Apple ID przy potwierdzeniu. Subskrypcje odnawiają się automatycznie, o ile nie zostaną anulowane co najmniej 24 godziny przed końcem bieżącego okresu. Zarządzaj nimi lub anuluj w dowolnej chwili w Ustawienia → Apple ID → Subskrypcje.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

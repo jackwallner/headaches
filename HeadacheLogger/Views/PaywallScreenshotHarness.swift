@@ -12,7 +12,11 @@ struct PaywallScreenshotHarness: View {
                 trialBackdrop {
                     TrialOfferSheet(
                         offerLabel: trialPackage?.headacheProIntroOfferLabel ?? "7-day free trial",
-                        priceLabel: trialPackage?.headacheProPriceLabel ?? "$19.99 / year",
+                        // No hardcoded fallback amount. This harness renders the
+                        // App Store screenshots, and a stale literal here would put
+                        // a price we don't charge on the product page. Nil drops the
+                        // amount from the disclosure instead of inventing one.
+                        priceLabel: trialPackage?.headacheProPriceLabel,
                         directPurchase: true,
                         isPurchasing: false,
                         errorMessage: nil,
