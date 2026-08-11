@@ -39,7 +39,7 @@ Migraine Headache Tracker Log là nhật ký đau đầu ưu tiên lưu trữ c�
 Dù bạn đang theo dõi migraine mạn tính, đau đầu chuỗi, đau đầu căng thẳng, đau đầu do nội tiết tố hay chỉ cố hiểu mẫu đau đầu thỉnh thoảng xuất hiện, Migraine Headache Tracker Log biến một lần chạm thành bản ghi đầy đủ sẵn sàng cho bác sĩ – và Headache Pro biến bản ghi đó thành câu trả lời.
 
 Chi tiết gói đăng ký
-Headache Pro có sẵn dưới dạng đăng ký tự gia hạn (Hàng tháng $4,99 / Hàng năm $29,99 cả hai với 7 ngày dùng thử miễn phí) hoặc mua trọn đời một lần ($59,99). Thanh toán sẽ được trừ vào Apple ID của bạn khi xác nhận. Gói đăng ký tự gia hạn trừ khi huỷ ít nhất 24 giờ trước khi kết thúc chu kỳ. Bạn có thể quản lý hoặc huỷ bất cứ lúc nào trong Cài đặt → Apple ID → Subscriptions.
+Headache Pro có sẵn dưới dạng gói đăng ký tự động gia hạn (Hằng tháng hoặc Hằng năm, cả hai đều có 7 ngày dùng thử miễn phí) hoặc mua một lần Lifetime. Giá được hiển thị trong ứng dụng trước khi bạn mua và thay đổi theo khu vực. Khoản thanh toán được tính vào Apple ID của bạn khi xác nhận. Gói đăng ký tự động gia hạn trừ khi bị hủy ít nhất 24 giờ trước khi kỳ hiện tại kết thúc. Quản lý hoặc hủy bất cứ lúc nào trong Cài đặt → Apple ID → Gói đăng ký.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

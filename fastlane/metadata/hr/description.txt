@@ -39,7 +39,7 @@ Migraine Headache Tracker Log je lokalno orijentiran dnevnik glavobolja.
 Bilo da pratite kroničnu migrenu, klaster glavobolje, tenzijske glavobolje, hormonalne glavobolje ili samo pokušavate razumjeti povremeni obrazac boli u glavi, Migraine Headache Tracker Log pretvara jedan dodir u potpun, za liječnika spreman zapis – a Headache Pro taj zapis pretvara u odgovore.
 
 Pojedinosti pretplate
-Headache Pro je dostupan kao pretplata s automatskom obnovom (mjesečno 4,99 USD / godišnje 29,99 USD oba sa 7-dnevnim besplatnim probnim razdobljem) ili jednokratnom Lifetime kupnjom (59,99 USD). Plaćanje se naplaćuje vašem Apple ID računu pri potvrdi. Pretplate se automatski obnavljaju osim ako ne otkažete najmanje 24 sata prije kraja razdoblja. Upravljačete ili otkažite bilo kada u Postavke → Apple ID → Pretplate.
+Headache Pro dostupan je kao pretplata koja se automatski obnavlja (mjesečna ili godišnja, obje sa 7 dana besplatnog probnog razdoblja) ili kao jednokratna kupnja Lifetime. Cijene se prikazuju u aplikaciji prije kupnje i razlikuju se po regiji. Plaćanje se naplaćuje s vašeg Apple ID-a pri potvrdi. Pretplate se automatski obnavljaju osim ako ih ne otkažete najmanje 24 sata prije kraja tekućeg razdoblja. Upravljajte njima ili ih otkažite bilo kada u Postavke → Apple ID → Pretplate.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

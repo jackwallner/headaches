@@ -39,7 +39,7 @@ Migraine Headache Tracker Log, yerel-öncelikli bir baş ağrısı günlüğüd�
 İster kronik migren, küme baş ağrıları, gerilim tipi baş ağrıları, hormonal baş ağrıları takip ediyor olun, ister sadece ara sıra yaşanan baş ağrılarının kalıplarını anlamaya çalışın; Migraine Headache Tracker Log tek bir dokunuşu eksiksiz, doktor hazır bir kayda dönüştürür ve Headache Pro bu kaydı gerçek yanıtlara çevirir.
 
 Abonelik Ayrıntıları
-Headache Pro, otomatik yenilenen abonelik olarak sunulur (Aylık 4,99 $ / Yıllık 29,99 $; her ikisi de 7 günlük ücretsiz denemeyle) veya tek seferlik Lifetime satın alma (59,99 $) şeklinde alınabilir. Ödeme, onay anında Apple Kimliğinize yansıtılır. Abonelikler, dönem bitiminden en az 24 saat önce iptal edilmediği sürece otomatik yenilenir. Dilediğiniz zaman Ayarlar → Apple Kimliği → Abonelikler bölümünden yönetebilir veya iptal edebilirsiniz.
+Headache Pro, otomatik yenilenen abonelik (Aylık veya Yıllık, ikisinde de 7 günlük ücretsiz deneme) ya da tek seferlik Lifetime satın alma olarak sunulur. Fiyatlar satın almadan önce uygulamada gösterilir ve bölgeye göre değişir. Ödeme, onay sırasında Apple Kimliğinizden tahsil edilir. Geçerli dönemin bitiminden en az 24 saat önce iptal edilmediği sürece abonelikler otomatik olarak yenilenir. Ayarlar → Apple Kimliği → Abonelikler bölümünden istediğiniz zaman yönetin veya iptal edin.
 
 Gizlilik Politikası: https://jackwallner.github.io/headaches/privacy-policy.html
 Kullanım Koşulları (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

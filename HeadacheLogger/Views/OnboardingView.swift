@@ -217,7 +217,7 @@ struct OnboardingView: View {
                 }
             },
             aboveButton: { trialAboveButton },
-            primaryLabel: store.yearlyPackage != nil ? store.yearlyCTALabel : "Start 7-day free trial",
+            primaryLabel: store.onboardingTrialPackage != nil ? store.onboardingCTALabel : "Start 7-day free trial",
             busy: isPurchasing,
             showLegalFooter: true,
             action: { startTrialPurchase() }
@@ -255,7 +255,7 @@ struct OnboardingView: View {
 
             // No disclosure until the package (and its real price) loads — never a
             // placeholder price (Apple 3.1.2).
-            if let disclosure = store.yearlyCTADisclosureText {
+            if let disclosure = store.onboardingCTADisclosureText {
                 Text(disclosure)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
@@ -279,12 +279,12 @@ struct OnboardingView: View {
         store.trackPaywallImpression(id: "headache_onboarding_trial", oncePerSession: true)
     }
 
-    /// One-tap conversion: buy the yearly plan in place (trial when eligible).
-    /// Products failing to load falls back to the full PaywallView rather than a
-    /// dead button; a successful purchase or the emergency paywall both finish
+    /// One-tap conversion: buy `onboardingTrialPackage` (monthly) in place, trial when
+    /// eligible. Products failing to load falls back to the full PaywallView rather
+    /// than a dead button; a successful purchase or the emergency paywall both finish
     /// onboarding.
     private func startTrialPurchase() {
-        guard let yearly = store.yearlyPackage else {
+        guard let package = store.onboardingTrialPackage else {
             showPaywallFallback = true
             return
         }
@@ -293,7 +293,7 @@ struct OnboardingView: View {
         Task { @MainActor in
             defer { isPurchasing = false }
             do {
-                switch try await store.purchase(yearly) {
+                switch try await store.purchase(package) {
                 case .purchased, .pending:
                     finishOnboarding()
                 case .cancelled:

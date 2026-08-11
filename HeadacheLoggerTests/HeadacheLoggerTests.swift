@@ -45,13 +45,13 @@ final class HeadacheLoggerTests: XCTestCase {
         let lifetime = try XCTUnwrap(
             configuration.products.first { $0.productID == HeadacheProProduct.lifetime }
         )
-        XCTAssertEqual(lifetime.displayPrice, "59.99")
+        XCTAssertEqual(lifetime.displayPrice, "89.99")
 
         let subscriptions = configuration.subscriptionGroups.flatMap(\.subscriptions)
         let monthly = try XCTUnwrap(
             subscriptions.first { $0.productID == HeadacheProProduct.monthly }
         )
-        XCTAssertEqual(monthly.displayPrice, "4.99")
+        XCTAssertEqual(monthly.displayPrice, "9.99")
         XCTAssertEqual(monthly.recurringSubscriptionPeriod, "P1M")
         XCTAssertEqual(monthly.introductoryOffer?.paymentMode, "free")
         XCTAssertEqual(monthly.introductoryOffer?.subscriptionPeriod, "P1W")
@@ -59,7 +59,7 @@ final class HeadacheLoggerTests: XCTestCase {
         let yearly = try XCTUnwrap(
             subscriptions.first { $0.productID == HeadacheProProduct.yearly }
         )
-        XCTAssertEqual(yearly.displayPrice, "29.99")
+        XCTAssertEqual(yearly.displayPrice, "39.99")
         XCTAssertEqual(yearly.recurringSubscriptionPeriod, "P1Y")
         XCTAssertEqual(yearly.introductoryOffer?.paymentMode, "free")
         XCTAssertEqual(yearly.introductoryOffer?.subscriptionPeriod, "P1W")
