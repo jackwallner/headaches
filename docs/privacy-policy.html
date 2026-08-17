@@ -1,171 +1,163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <link rel="icon" type="image/png" sizes="256x256" href="icon_256.png">
-    <link rel="apple-touch-icon" href="icon_256.png">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>One Tap Headache Tracker Privacy Policy</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-      --bg: #fff9fa;
-      --card: #ffffff;
-      --text: #1f1f24;
-      --muted: #535a67;
-      --accent: #ef3f63;
-      --border: #f0d7dd;
-    }
-
-    @media (prefers-color-scheme: dark) {
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>One Tap Headache Tracker Privacy Policy</title>
+    <style>
       :root {
-        --bg: #111217;
-        --card: #1b1d24;
-        --text: #f3f4f6;
-        --muted: #c1c6d0;
-        --accent: #ff5a7d;
-        --border: #2d313d;
+        color-scheme: light dark;
       }
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    main {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 40px 20px 72px;
-    }
-
-    article {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-    }
-
-    h1, h2 {
-      color: var(--text);
-    }
-
-    p, li {
-      line-height: 1.65;
-      color: var(--muted);
-    }
-
-    a {
-      color: var(--accent);
-    }
-  </style>
-</head>
-<body>
-  <main>
-    <article>
-      <h1>Privacy Policy for One Tap Headache Tracker</h1>
-      <p><strong>Effective date:</strong> April 11, 2026</p>
-
+      body {
+        margin: 0;
+        padding: 32px 20px 64px;
+        font:
+          16px/1.65 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: #202124;
+        background: #fafafa;
+      }
+      main {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      h1 {
+        line-height: 1.15;
+      }
+      h2 {
+        margin-top: 32px;
+      }
+      p,
+      li {
+        color: #55585f;
+      }
+      a {
+        color: #0868c7;
+      }
+      .date,
+      footer {
+        color: #73757a;
+        font-size: 14px;
+      }
+      .nav {
+        margin-bottom: 28px;
+        font-size: 14px;
+      }
+      .card {
+        margin-top: 30px;
+        padding: 18px;
+        background: #fff;
+        border: 1px solid #e3e3e6;
+        border-radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          color: #f5f5f7;
+          background: #111214;
+        }
+        p,
+        li {
+          color: #c8c9cc;
+        }
+        .date,
+        footer {
+          color: #a1a1a6;
+        }
+        .card {
+          background: #1c1c1e;
+          border-color: #38383a;
+        }
+        a {
+          color: #6ab0ff;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav class="nav">
+        <a href="index.html">Back to One Tap Headache Tracker</a> ·
+        <a href="support.html">Support</a> ·
+        <a href="privacy-policy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a>
+      </nav>
+      <h1>One Tap Headache Tracker Privacy Policy</h1>
+      <p class="date">Last updated: August 17, 2026</p>
       <p>
-        One Tap Headache Tracker is designed to make headache logging fast and private. The app
-        stores headache entries on your device and captures surrounding context only to
-        help you identify patterns and export that information if you choose to share it.
+        One Tap Headache Tracker is a personal logging tool. It does not require
+        an account and does not upload your headache history to a
+        developer-owned server.
       </p>
-
-      <h2>What One Tap Headache Tracker Accesses</h2>
-      <p>The app may access the following information when you grant permission:</p>
-      <ul>
-        <li>Apple Health data such as steps, active energy, basal energy, walking or running distance, exercise minutes, stand time, flights climbed, sleep, heart rate, resting heart rate, HRV, respiratory rate, blood oxygen saturation (SpO&#8322;), VO&#8322; max, walking speed, environmental audio exposure, mindful minutes, and recent workouts.</li>
-        <li>Your current location at the time you log a headache so the app can look up weather, air quality, UV, and pollen-style environmental context.</li>
-        <li>Time and date information from your device, such as weekday, hour, minute, time zone, and part of day.</li>
-      </ul>
-
-      <h2>How Your Data Is Used</h2>
-      <ul>
-        <li>To create a detailed local headache entry at the moment you tap the log button.</li>
-        <li>To show history and trends inside the app.</li>
-        <li>To generate a CSV export only when you choose to export your records.</li>
-        <li>To sync a watch-logged headache to your paired iPhone through Apple&apos;s device-to-device connectivity framework.</li>
-      </ul>
-
-      <h2>What Stays On Device</h2>
+      <h2>Health and device data</h2>
       <p>
-        Your headache records, HealthKit-derived context, and exported CSV files are
-        created locally on your device. One Tap Headache Tracker does not require an account, does
-        not upload your log history to a developer-owned server, and does not use analytics
-        or advertising SDKs.
+        When you grant permission, the app may read Apple Health data including
+        steps, active and basal energy, walking or running distance, exercise,
+        stand time, flights climbed, sleep, heart rate, resting heart rate, HRV,
+        respiratory rate, blood oxygen, VO2 max, walking speed, environmental
+        audio exposure, mindful minutes, and recent workouts. It reads this data
+        to add context to local entries. The app does not write HealthKit data.
       </p>
-
-      <h2>Third-Party Requests</h2>
       <p>
-        When you allow location access, the app sends your approximate latitude and longitude
-        to Open-Meteo endpoints to retrieve weather and air-quality context. Those requests are
-        made directly from your device. The app stores the resulting context values, such as
-        temperature, AQI, and locality name, rather than storing raw latitude and longitude in
-        the headache record itself.
+        The app may use your current location when you log an entry to request
+        weather, air quality, UV, and pollen-style context from Open-Meteo.
+        Requests include approximate latitude and longitude. The saved entry
+        keeps resulting context such as temperature, AQI, and locality rather
+        than raw coordinates. Background requests use the last known coarse
+        location and do not request continuous or Always location access.
       </p>
-
-      <h2>In-App Purchases</h2>
+      <h2>Storage and sharing</h2>
       <p>
-        The app offers three Pro purchase options, all unlocking Proactive Alerts and
-        Personalized Insights: auto-renewable yearly (&ldquo;Pro Yearly&rdquo;) with a 7-day
-        free trial for eligible new subscribers; auto-renewable monthly (&ldquo;Pro Monthly&rdquo;);
-        and a one-time non-consumable lifetime purchase (&ldquo;Pro Lifetime&rdquo;). Subscriptions
-        auto-renew at the listed price unless cancelled at least 24 hours before the renewal date.
-        You can manage or cancel subscriptions anytime in iPhone Settings &rarr; Apple&nbsp;ID
-        &rarr; Subscriptions, or via Manage Subscription in the app when you have an active
-        subscription. Purchase processing is handled entirely by Apple. The app stores no payment
-        information and does not associate purchases with any account.
+        Headache entries, HealthKit-derived context, settings, watch sync data,
+        and CSV exports are handled locally. CSV files are shared only when you
+        choose a destination. The app has no account, remote log database,
+        advertising SDK, or analytics SDK.
       </p>
-
-      <h2>Notifications</h2>
+      <h2>Purchases</h2>
       <p>
-        When Proactive Alerts is enabled, the app posts local notifications based on weather
-        forecasts. No notification content is sent to any server.
+        Pro options are a yearly auto-renewing subscription with a 7-day
+        introductory trial for eligible accounts, a monthly auto-renewing
+        subscription, and a one-time lifetime purchase. Apple processes payment.
+        RevenueCat verifies entitlement status and may process an anonymous app
+        user ID, purchase and entitlement information, and limited technical
+        context. It does not receive your headache records, HealthKit data,
+        location history, or exported files. See
+        <a href="https://www.revenuecat.com/privacy/"
+          >RevenueCat's privacy policy</a
+        >.
       </p>
-
-      <h2>Background Location Use</h2>
+      <h2>Retention and deletion</h2>
       <p>
-        The app uses only the last-known coarse location captured during foreground use for
-        background forecast queries. It does not request continuous location access or &ldquo;Always&rdquo;
-        authorization, and it does not track your location.
+        Local records remain until you delete them in the app or remove the app.
+        You can revoke Health and Location permissions in iOS Settings. Exported
+        files are controlled by the destination you choose. Apple and RevenueCat
+        retain transaction records under their policies.
       </p>
-
-      <h2>Forecast Data</h2>
+      <h2>Children and medical use</h2>
       <p>
-        Forecast queries are sent to Open-Meteo (open-meteo.com), a free public weather API, with
-        only latitude, longitude, and the current request timestamp. No personal identifiers are
-        sent.
+        The app is not directed to children under 13 and does not knowingly
+        collect their information. It is a tracking tool, not medical advice,
+        diagnosis, emergency service, or treatment.
       </p>
-
-      <h2>Sharing</h2>
+      <h2>Changes</h2>
       <p>
-        Your data is only shared when you explicitly export a CSV or otherwise use system share
-        features. The developer does not sell your data.
+        We may update this policy when the app or its services change. The date
+        above identifies the current version.
       </p>
-
-      <h2>Permissions and Control</h2>
-      <ul>
-        <li>You can deny or revoke Health and Location permissions at any time in iOS Settings.</li>
-        <li>If a permission is denied, the app can still log a headache, but the saved context may be partial.</li>
-        <li>Deleting the app removes its on-device data from the device where it is installed.</li>
-      </ul>
-
-      <h2>Children and Medical Use</h2>
-      <p>
-        One Tap Headache Tracker is a personal tracking tool. It is not intended to provide medical advice,
-        diagnosis, or emergency services.
-      </p>
-
-      <h2>Contact</h2>
-      <p>
-        If you have questions about this policy, contact
-        <a href="mailto:jackwallner+ha@gmail.com">jackwallner+ha@gmail.com</a>.
-      </p>
-    </article>
-  </main>
-</body>
+      <div class="card">
+        <strong>Contact</strong>
+        <p>
+          Questions about this page? Email
+          <a href="mailto:jackwallner+ha@gmail.com">jackwallner+ha@gmail.com</a
+          >.
+        </p>
+      </div>
+      <footer>
+        <a href="index.html">Home</a> · <a href="support.html">Support</a> ·
+        <a href="privacy-policy.html">Privacy</a> ·
+        <a href="terms.html">Terms</a>
+      </footer>
+    </main>
+  </body>
 </html>
