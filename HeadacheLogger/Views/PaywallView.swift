@@ -309,11 +309,13 @@ struct PaywallView: View {
         #if DEBUG
         if let mode = PaywallScreenshotMode.current, !store.products.isEmpty {
             switch mode {
+            case .trial:
+                selectedPackage = store.products.first { $0.headacheProPackageKind == .monthly }
             case .monthly:
                 selectedPackage = store.products.first { $0.headacheProPackageKind == .monthly }
             case .lifetime:
                 selectedPackage = store.products.first { $0.headacheProPackageKind == .lifetime }
-            case .yearly, .trial:
+            case .yearly:
                 selectedPackage = store.products.first { $0.headacheProPackageKind == .yearly }
             }
             return

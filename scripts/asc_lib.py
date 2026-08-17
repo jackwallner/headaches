@@ -153,7 +153,7 @@ def find_editable_app_info(client: ASCClient, app_id: str) -> dict | None:
     infos = list_all(client, f"/apps/{app_id}/appInfos")
     if not infos:
         return None
-    for state in ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "METADATA_REJECTED"):
+    for state in ("PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"):
         for info in infos:
             if info.get("attributes", {}).get("appStoreState") == state:
                 return info

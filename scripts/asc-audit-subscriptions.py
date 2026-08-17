@@ -13,8 +13,8 @@ from asc_lib import ASCClient, bearer_token, find_app, list_all, load_credential
 
 BUNDLE_ID = "com.jackwallner.headachelogger"
 EXPECTED_PRODUCTS = {
-    "monthly": ("com.jackwallner.headachelogger.pro.monthly", "4.99"),
-    "yearly": ("com.jackwallner.headachelogger.pro.yearly", "29.99"),
+    "monthly": ("com.jackwallner.headachelogger.pro.monthly", "9.99"),
+    "yearly": ("com.jackwallner.headachelogger.pro.yearly", "39.99"),
 }
 US_TERRITORY = "USA"
 
@@ -44,7 +44,8 @@ def us_price(client: ASCClient, subscription_id: str) -> str | None:
         f"/subscriptions/{subscription_id}/prices?filter[territory]={US_TERRITORY}"
         "&include=subscriptionPricePoint&limit=200",
     )
-    for price in prices:
+    current = [price for price in prices if not price["attributes"].get("preserved")]
+    for price in current or prices:
         point = price.get("relationships", {}).get("subscriptionPricePoint", {}).get("data") or {}
         if point:
             detail = client.get(f"/subscriptionPricePoints/{point['id']}")

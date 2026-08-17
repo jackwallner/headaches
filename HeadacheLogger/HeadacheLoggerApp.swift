@@ -129,11 +129,12 @@ private struct HeadacheLoggerRootContent: View {
 
     private var hasTrialOffer: Bool { directTrialPackage != nil }
 
-    /// The package the direct trial purchase buys: prefer eligible yearly trial,
-    /// else any eligible trial-bearing package.
+    /// The package the direct trial purchase buys. Keep this aligned with the
+    /// onboarding CTA so the same trial copy always opens the same Apple sheet.
     private var directTrialPackage: Package? {
-        let trialPackages = storeService.products.filter { storeService.isEligibleForIntroOffer($0) }
-        return trialPackages.first { $0.headacheProPackageKind == .yearly } ?? trialPackages.first
+        guard let package = storeService.onboardingTrialPackage,
+              storeService.isEligibleForIntroOffer(package) else { return nil }
+        return package
     }
 
     var body: some View {
@@ -532,7 +533,9 @@ private struct HeadacheLoggerRootContent: View {
                     hasSeenTrialOffer = true
                     activeSheet = nil
                 case .cancelled:
-                    trialPurchaseError = "Trial wasn't started. Tap again, or pick a different plan."
+                    // Dismissing Apple's sheet is a choice, not a failure. Leave the
+                    // offer usable without showing a red error state.
+                    trialPurchaseError = nil
                 }
             } catch {
                 trialPurchaseError = "Couldn't start your trial. Please try again."

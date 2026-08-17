@@ -36,7 +36,7 @@ struct PaywallScreenshotHarness: View {
     }
 
     private var trialPackage: Package? {
-        store.products.first { $0.headacheProPackageKind == .yearly } ?? store.products.first
+        store.products.first { $0.headacheProPackageKind == .monthly } ?? store.products.first
     }
 
     private func trialBackdrop<Content: View>(@ViewBuilder content: () -> Content) -> some View {

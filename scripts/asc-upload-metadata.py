@@ -124,7 +124,8 @@ def main() -> None:
     }
     draft_info = find_editable_app_info(client, app_id)
     info_locs: dict = {}
-    if draft_info and draft_info.get("attributes", {}).get("appStoreState") == "PREPARE_FOR_SUBMISSION":
+    editable_info_states = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"}
+    if draft_info and draft_info.get("attributes", {}).get("appStoreState") in editable_info_states:
         info_locs = {
             x["attributes"]["locale"]: x
             for x in list_all(client, f"/appInfos/{draft_info['id']}/appInfoLocalizations")
