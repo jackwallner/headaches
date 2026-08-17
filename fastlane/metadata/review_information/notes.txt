@@ -1,12 +1,15 @@
-- No account or login is required.
-  - The main experience is the Headache Logger tab on iPhone and the watch companion app.
-  - On first launch, a short onboarding flow explains the app and requests HealthKit and Location
-  permissions. Both are optional - if either is denied, the app still logs the headache with partial
-  context.
-  - The History tab exports a CSV through the standard iOS share sheet.
-  - The About tab contains a temperature unit toggle, permission status, and links for privacy policy
-  and support.
-  - The Apple Watch app queues headache entries to the paired iPhone using WatchConnectivity.
-  - The Home Screen widget logs a quick headache event; the main app enriches it with full context on
-  next open.
-  - The app does not use non-exempt encryption.
+No account or login is required for the core logging experience.
+
+Review flow:
+1. Launch the app and complete onboarding. HealthKit and Location permissions are optional.
+2. The trial screen shows the monthly Pro trial. Tap Start 7-day free trial to open Apple's purchase sheet, or tap Get Started to continue without purchasing.
+3. Settings > Proactive Alerts or Patterns > See Pro plans opens the full paywall.
+
+Pro products:
+- Pro Monthly: com.jackwallner.headachelogger.pro.monthly, $9.99/month, 7-day free trial for eligible new subscribers.
+- Pro Yearly: com.jackwallner.headachelogger.pro.yearly, $39.99/year, 7-day free trial for eligible new subscribers.
+- Pro Lifetime: com.jackwallner.headachelogger.pro.lifetime, $89.99 one-time purchase.
+
+The onboarding trial and every optional one-tap trial sheet purchase the monthly product. They never purchase the yearly product. The full paywall opens with yearly selected and lets the reviewer choose monthly, yearly, or lifetime. Both subscription products use Apple's localized one-week introductory offer for eligible new subscribers. The purchase disclosure shows the selected product's localized price, trial length, auto-renewal, cancellation, and subscription management details.
+
+The History tab exports a CSV through the standard iOS share sheet. The About tab contains permission status and links for privacy policy and support. The Apple Watch app queues entries to the paired iPhone using WatchConnectivity. The app does not use non-exempt encryption.

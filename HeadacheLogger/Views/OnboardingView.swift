@@ -71,11 +71,23 @@ struct OnboardingView: View {
         action: @escaping () -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            icon
-            Text(title)
-                .font(.title.bold())
-            body()
-            Spacer()
+            // Scrolls rather than truncates. A plain VStack hands its flexible Text
+            // children whatever height is left over, and on a short container (iPad
+            // Split View, a resized window, landscape) that is one line each, so
+            // every paragraph and bullet renders clipped mid-word. App Review hit
+            // exactly that on the trial step. The CTA block stays outside the
+            // ScrollView so the zero-shift button frame is unchanged.
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    icon
+                    Text(title)
+                        .font(.title.bold())
+                        .fixedSize(horizontal: false, vertical: true)
+                    body()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .scrollBounceBehavior(.basedOnSize)
             VStack(spacing: 12) {
                 aboveButton()
 
@@ -116,6 +128,7 @@ struct OnboardingView: View {
                 Text("Log a headache with a single tap. The app quietly captures time, optional Apple Health context, and optional local weather so you can spot patterns.")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Get Started",
             busy: false,
@@ -133,6 +146,7 @@ struct OnboardingView: View {
                 Text("Next, iOS will ask whether to allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Continue",
             busy: isWorking,
@@ -150,6 +164,7 @@ struct OnboardingView: View {
                 Text("Next, iOS will ask whether to share your location. It's used only to fetch approximate weather and place labels when you log. We don't track you in the background.")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Continue",
             busy: isWorking,
@@ -211,6 +226,7 @@ struct OnboardingView: View {
                     Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
                         .font(.body)
                         .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
                     trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
                     trialBullet(icon: "lock.shield", text: "All processing stays on your device")
@@ -234,6 +250,7 @@ struct OnboardingView: View {
             Text(text)
                 .font(.body)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
     }
@@ -297,7 +314,11 @@ struct OnboardingView: View {
                 case .purchased, .pending:
                     finishOnboarding()
                 case .cancelled:
-                    trialError = "Trial wasn't started. Tap again, or choose Get Started."
+                    // Dismissing Apple's sheet is a choice, not a failure. Rendering a
+                    // red error on it makes a working screen look broken, which is the
+                    // state App Review captured. Stay silent and leave both the trial
+                    // CTA and the Get Started exit in place.
+                    trialError = nil
                 }
             } catch {
                 trialError = store.lastError ?? "Couldn't start your trial. Please try again."

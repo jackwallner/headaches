@@ -76,9 +76,10 @@ extension Package {
         }
     }
 
-    /// Display order for the paywall: yearly first (default + trial), then monthly,
-    /// then lifetime. Conversion-optimized — the trial path is what most users buy,
-    /// monthly is the "I want to think about it" option, lifetime is the alternative
+    /// Display order for the paywall: yearly first (default), then monthly, then
+    /// lifetime. The direct trial path uses monthly, while the full picker still
+    /// leads with yearly.
+    /// Monthly is the "I want to think about it" option, lifetime is the alternative
     /// for people who refuse subscriptions outright.
     var headacheProPaywallSortIndex: Int {
         switch headacheProPackageKind {

@@ -84,7 +84,7 @@ Below is the complete text for App Store Connect → App Review → App Review I
 Three IAP products unlock the same on-device Pro entitlement:
 
 - **Pro Yearly** (`com.jackwallner.headachelogger.pro.yearly`) — auto-renewable yearly subscription with a 7-day free trial for eligible new subscribers.
-- **Pro Monthly** (`com.jackwallner.headachelogger.pro.monthly`) — auto-renewable monthly subscription (no introductory offer).
+- **Pro Monthly** (`com.jackwallner.headachelogger.pro.monthly`): auto-renewable monthly subscription with a 7-day free trial for eligible new subscribers.
 - **Pro Lifetime** (`com.jackwallner.headachelogger.pro.lifetime`) — one-time non-consumable purchase.
 
 **Reach the paywall:**
@@ -92,7 +92,7 @@ Three IAP products unlock the same on-device Pro entitlement:
 - Patterns tab → **See Pro plans**, OR
 - After the optional trial-offer sheet → **See all plans** (or dismiss trial and open paywall from Settings/Patterns).
 
-**Trial-offer sheet** (eligible new subscribers only): may appear after the first headache log, for returning users with existing logs, or on Patterns (second touch). Primary button starts the yearly free trial; **See all plans** opens the full paywall with all three options. **Restore Purchases** is on both the trial sheet and full paywall.
+**Trial-offer sheet** (eligible new subscribers only): may appear after the first headache log, for returning users with existing logs, or on Patterns (second touch). Primary button starts the monthly free trial; **See all plans** opens the full paywall with all three options. **Restore Purchases** is on both the trial sheet and full paywall.
 
 **Full paywall:** yearly (default), monthly, and lifetime plan cards; CTA reflects selection (e.g. **Start Free Trial** when eligible on yearly). Disclosure text under the button includes price, auto-renew, and subscription management in Settings. **Restore Purchases** and Terms/Privacy links at the bottom. Dismiss with the × button. Purchases dismiss the sheet automatically when Pro unlocks.
 
