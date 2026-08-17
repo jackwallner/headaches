@@ -1,1 +1,1 @@
-barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,sinus,daily,nausea,symptom
+barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,simple,daily,symptom,sinus

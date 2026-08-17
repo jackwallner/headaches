@@ -18,7 +18,7 @@ which triggers are yours. Every competitor above us is a manual diary.
 |---|---|---|
 | name | `Migraine Tracker: Headache Log` | 30/30 |
 | subtitle | `One Tap Diary & Trigger Alerts` | 30/30 |
-| keywords | `barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,sinus,daily,nausea,symptom` | 97/100 |
+| keywords | `barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,simple,daily,symptom,sinus` | 97/100 |
 
 **Was live before this change:** name `Migraine Headache Tracker Log`, subtitle
 `Barometric Pressure Forecast` (a verbatim copy of Pressure Pal's subtitle),
@@ -79,6 +79,24 @@ to health tracking, and popularity 5 says almost nobody types it.
 **Those words belong in screenshot captions**, where they are the strongest
 conversion argument and feed Apple's AI tag layer (tags are Apple-documented and
 editable in ASC; screenshot OCR into search is vendor-claimed, not confirmed).
+
+---
+
+## 3b. Full word-level delta (do this every time)
+
+Any word leaving the name, subtitle **or** field must be consciously re-homed or
+consciously dropped. Missing this cost us `simple` on the first draft.
+
+| Word | Was | Now | Backing combos at risk |
+|---|---|---|---|
+| barometric, pressure, forecast | subtitle | field | ranks soften, see §4 |
+| one, tap, diary, trigger | field | subtitle | promoted, higher weight |
+| simple | field | **field (restored)** | `simple migraine log` #10, `simple migraine` #14, `simple headache log` #23 |
+| track | field | dropped | `track migraine` #25, `track headache` #32 — betting "Tracker" in the name stems to cover it |
+| episode | field | dropped | `migraine episode tracker` #20 — first candidate to restore |
+| relief | field | dropped | `headache relief tracker` #45, `migraine relief` #183 — treatment intent, not tracking |
+| journal, pal | field | dropped | evidence in §2 |
+| nausea | (new draft) | dropped | made room for `simple`; weak slot |
 
 ---
 
