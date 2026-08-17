@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log est le journal de migraines et de maux de tête le plus rapide sur iPhone : enregistrez une céphalée en un seul tap, puis laissez Headache Pro trouver les schémas cachés dans vos données.
+Migraine Tracker- Headache Log est le journal de migraines et de maux de tête le plus rapide sur iPhone : enregistrez une céphalée en un seul tap, puis laissez Headache Pro trouver les schémas cachés dans vos données.
 
 Au moment précis où la douleur commence, touchez une fois sur iPhone ou Apple Watch. L’app horodate instantanément l’événement et ajoute automatiquement le contexte que les médecins et spécialistes de la migraine demandent réellement : aucun texte à saisir, aucun formulaire, aucun frein.
 
@@ -28,7 +28,7 @@ CONÇU POUR LE QUOTIDIEN :
 
 CONFIDENTIALITÉ PAR CONCEPTION :
 
-Migraine Tracker Headache Log est un journal de céphalées d’abord local.
+Migraine Tracker- Headache Log est un journal de céphalées d’abord local.
 
 - Aucun compte requis
 - Aucune publicité
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log est un journal de céphalées d’abord local.
 - Aucune synchronisation cloud
 - Votre journal de céphalées reste sur votre appareil, avec export manuel uniquement lorsque vous choisissez de le partager
 
-Que vous suiviez une migraine chronique, des céphalées en grappe, des céphalées de tension, hormonales, ou que vous cherchiez simplement à comprendre un schéma de douleur occasionnelle, Migraine Tracker Headache Log transforme un tap en un compte rendu complet, prêt pour le médecin – et Headache Pro transforme ce compte rendu en réponses.
+Que vous suiviez une migraine chronique, des céphalées en grappe, des céphalées de tension, hormonales, ou que vous cherchiez simplement à comprendre un schéma de douleur occasionnelle, Migraine Tracker- Headache Log transforme un tap en un compte rendu complet, prêt pour le médecin – et Headache Pro transforme ce compte rendu en réponses.
 
 Détails de l’abonnement
 Headache Pro est disponible en abonnement à renouvellement automatique (mensuel ou annuel, avec 7 jours d’essai gratuit) ou en achat unique Lifetime. Les prix sont affichés dans l’app et varient selon la région. Le paiement est prélevé sur votre identifiant Apple à la confirmation. Renouvellement automatique sauf annulation au moins 24 heures avant la fin de la période. Gérez ou annulez à tout moment dans Réglages → Identifiant Apple → Abonnements.

@@ -1,4 +1,4 @@
-Migraine Headache Log Tracker turns one tap into a doctor-ready headache diary, then flags the barometric pressure and weather shifts that line up with your own attack history.
+Migraine Tracker- Headache Log turns one tap into a doctor-ready headache diary, then flags the barometric pressure and weather shifts that line up with your own attack history.
 
 The moment a headache hits, tap once on iPhone or Apple Watch. The app timestamps the event instantly and automatically attaches the surrounding context that doctors and migraine specialists actually ask about - no typing, no forms, no friction.
 
@@ -28,7 +28,7 @@ BUILT FOR REAL LIFE:
 
 PRIVATE BY DESIGN:
 
-Migraine Headache Log Tracker is a local-first headache journal.
+Migraine Tracker- Headache Log is a local-first headache journal.
 
 - No account required
 - No ads
@@ -36,7 +36,7 @@ Migraine Headache Log Tracker is a local-first headache journal.
 - No cloud sync
 - Your headache log stays on your device - manual export only when you choose to share
 
-Whether you're tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, Migraine Headache Log Tracker turns a single tap into a complete, doctor-ready record - and Headache Pro turns that record into answers.
+Whether you're tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, Migraine Tracker- Headache Log turns a single tap into a complete, doctor-ready record - and Headache Pro turns that record into answers.
 
 Subscription Details
 Headache Pro is available as an auto-renewing subscription (Monthly or Yearly, both with a 7-day free trial) or as a one-time Lifetime purchase. Prices are shown in the app before you buy and vary by region. Payment is charged to your Apple ID at confirmation. Subscriptions renew automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings → Apple ID → Subscriptions.

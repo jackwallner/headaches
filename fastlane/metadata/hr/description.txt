@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log je najbrži dnevnik migrena i glavobolja na iPhoneu – zabilježite glavobolju jednim dodirom, a zatim prepustite da Headache Pro pronađe obrasce skrivene u vašim podacima.
+Migraine Tracker- Headache Log je najbrži dnevnik migrena i glavobolja na iPhoneu – zabilježite glavobolju jednim dodirom, a zatim prepustite da Headache Pro pronađe obrasce skrivene u vašim podacima.
 
 Čim glavobolja krene, dotaknite jednom na iPhoneu ili Apple Watchu. Aplikacija odmah bilježi vrijeme događaja i automatski dodaje kontekst koji liječnici i specijalisti za migrene zaista traže – bez tipkanja, bez obrazaca, bez muke.
 
@@ -28,7 +28,7 @@ DIZAJNIRANO ZA STVARAN ŽIVOT:
 
 PRIVATNOST NA PRVOM MJESTU:
 
-Migraine Tracker Headache Log je lokalno orijentiran dnevnik glavobolja.
+Migraine Tracker- Headache Log je lokalno orijentiran dnevnik glavobolja.
 
 - Nije potreban račun
 - Nema oglasa
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log je lokalno orijentiran dnevnik glavobolja.
 - Nema sinkronizacije u oblaku
 - Vaš dnevnik glavobolja ostaje na vašem uređaju – ručni izvoz samo kada odlučite dijeliti
 
-Bilo da pratite kroničnu migrenu, klaster glavobolje, tenzijske glavobolje, hormonalne glavobolje ili samo pokušavate razumjeti povremeni obrazac boli u glavi, Migraine Tracker Headache Log pretvara jedan dodir u potpun, za liječnika spreman zapis – a Headache Pro taj zapis pretvara u odgovore.
+Bilo da pratite kroničnu migrenu, klaster glavobolje, tenzijske glavobolje, hormonalne glavobolje ili samo pokušavate razumjeti povremeni obrazac boli u glavi, Migraine Tracker- Headache Log pretvara jedan dodir u potpun, za liječnika spreman zapis – a Headache Pro taj zapis pretvara u odgovore.
 
 Pojedinosti pretplate
 Headache Pro dostupan je kao pretplata koja se automatski obnavlja (mjesečna ili godišnja, obje sa 7 dana besplatnog probnog razdoblja) ili kao jednokratna kupnja Lifetime. Cijene se prikazuju u aplikaciji prije kupnje i razlikuju se po regiji. Plaćanje se naplaćuje s vašeg Apple ID-a pri potvrdi. Pretplate se automatski obnavljaju osim ako ih ne otkažete najmanje 24 sata prije kraja tekućeg razdoblja. Upravljajte njima ili ih otkažite bilo kada u Postavke → Apple ID → Pretplate.

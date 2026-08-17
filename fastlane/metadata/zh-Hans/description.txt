@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log 是 iPhone 上最快的偏头痛和头痛日记: 一键记录一次头痛，然后交给 Headache Pro 在你的数据中寻找隐藏的模式。
+Migraine Tracker- Headache Log 是 iPhone 上最快的偏头痛和头痛日记: 一键记录一次头痛，然后交给 Headache Pro 在你的数据中寻找隐藏的模式。
 
 一旦头痛来袭，只需在 iPhone 或 Apple Watch 上点一下。应用会立刻为事件打上时间戳，并自动附加医生和偏头痛专家真正会询问的相关背景: 无需输入、无需表单、没有阻力。
 
@@ -28,7 +28,7 @@ HEADACHE PRO :  找出你的诱因：
 
 以隐私为核心：
 
-Migraine Tracker Headache Log 是一款本地优先的头痛日记应用。
+Migraine Tracker- Headache Log 是一款本地优先的头痛日记应用。
 
 - 无需账号
 - 无广告
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log 是一款本地优先的头痛日记应用。
 - 无云同步
 - 你的头痛记录仅保留在设备上: 只有在你选择分享时才会手动导出
 
-无论你是在追踪慢性偏头痛、丛集性头痛、紧张性头痛、激素相关头痛，还是只是想弄清偶发性头痛的规律，Migraine Tracker Headache Log 都能把一次轻点变成完整、可供医生使用的记录: 而 Headache Pro 则会把这些记录转化为答案。
+无论你是在追踪慢性偏头痛、丛集性头痛、紧张性头痛、激素相关头痛，还是只是想弄清偶发性头痛的规律，Migraine Tracker- Headache Log 都能把一次轻点变成完整、可供医生使用的记录: 而 Headache Pro 则会把这些记录转化为答案。
 
 订阅详情
 Headache Pro 提供自动续期订阅（每月或每年，两者均含 7 天免费试用）或一次性买断 Lifetime。价格会在购买前显示于 App 内，并因地区而异。确认购买时将从你的 Apple ID 扣款。除非在当前周期结束前至少 24 小时取消，否则订阅会自动续期。你可随时在“设置 → Apple ID → 订阅”中管理或取消。
