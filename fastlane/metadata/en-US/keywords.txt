@@ -1,1 +1,1 @@
-one,tap,diary,aura,cluster,tension,trigger,pain,relief,simple,track,weather,journal,pal,episode
+barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,sinus,hormonal,nausea,symptom
