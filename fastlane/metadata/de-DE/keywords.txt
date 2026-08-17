@@ -1,1 +1,1 @@
-uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura
+uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,wetter,vorhersage,linderung,aura,diary,pain

@@ -1,1 +1,1 @@
-mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision
+mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,météo,prévision,diary,pain

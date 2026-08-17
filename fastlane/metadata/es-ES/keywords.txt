@@ -1,1 +1,1 @@
-tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio
+tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,tiempo,alivio,diary

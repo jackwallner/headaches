@@ -1,1 +1,1 @@
-horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,luchtdruk,weer,voorspelling,aura
+horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,weer,voorspelling,aura,diary,pain

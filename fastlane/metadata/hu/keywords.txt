@@ -1,1 +1,1 @@
-tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés
+tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,időjárás,előrejelzés,diary

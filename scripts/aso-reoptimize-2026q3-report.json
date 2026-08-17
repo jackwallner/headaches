@@ -5,16 +5,16 @@
       "len": 21
     },
     "subtitle": {
-      "old": "يوميات الأعراض بلمسة واحدة",
-      "new": "يوميات الأعراض بلمسة واحدة",
+      "old": "الضغط الجوي وتوقعات الصداع",
+      "new": "الضغط الجوي وتوقعات الصداع",
       "len": 26,
       "changed": false
     },
     "keywords": {
-      "old": "ساعة,ودجت,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل,ضغط,طقس,توقعات,تخفيف,هالة,توتر,بسيط",
+      "old": "ساعة,ودجت,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل,ضغط,طقس,توقعات,تخفيف,هالة,توتر,بسيط,diary,pain",
       "new": "ساعة,ودجت,ألم,عنقودي,تصدير,محفز,صحة,طبيب,عرض,سجل,ضغط,طقس,توقعات,تخفيف,هالة,توتر,بسيط,diary,pain",
       "len": 95,
-      "changed": true
+      "changed": false
     }
   },
   "bn-BD": {
@@ -23,16 +23,16 @@
       "len": 30
     },
     "subtitle": {
-      "old": "এক ট্যাপে উপসর্গ ডায়েরি",
-      "new": "এক ট্যাপে উপসর্গ ডায়েরি",
-      "len": 24,
+      "old": "বায়ুচাপ ও মাইগ্রেন পূর্বাভাস",
+      "new": "বায়ুচাপ ও মাইগ্রেন পূর্বাভাস",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "ঘড়ি,উইজেট,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার,চাপ,আবহাওয়া,পূর্বাভাস,উপশম,অরা,টেনশন,সহজ",
-      "new": "ঘড়ি,উইজেট,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার,চাপ,আবহাওয়া,পূর্বাভাস,উপশম,অরা,টেনশন,সহজ",
-      "len": 96,
-      "changed": false
+      "new": "ঘড়ি,উইজেট,ক্লাস্টার,রপ্তানি,ট্রিগার,স্বাস্থ্য,ডাক্তার,চাপ,আবহাওয়া,উপশম,অরা,টেনশন,সহজ,diary,pain",
+      "len": 97,
+      "changed": true
     }
   },
   "ca": {
@@ -41,16 +41,16 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Diari de símptomes, un toc",
-      "new": "Diari de símptomes, un toc",
-      "len": 26,
+      "old": "Pressió i alerta de migranya",
+      "new": "Pressió i alerta de migranya",
+      "len": 28,
       "changed": false
     },
     "keywords": {
       "old": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,pressió,temps",
-      "new": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,pressió,temps",
-      "len": 99,
-      "changed": false
+      "new": "tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,temps,diary",
+      "len": 97,
+      "changed": true
     }
   },
   "cs": {
@@ -59,16 +59,16 @@
       "len": 30
     },
     "subtitle": {
-      "old": "Deník příznaků jedním ťukem",
-      "new": "Deník příznaků jedním ťukem",
-      "len": 27,
+      "old": "Tlak a předpověď migrény",
+      "new": "Tlak a předpověď migrény",
+      "len": 24,
       "changed": false
     },
     "keywords": {
       "old": "hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,tlak,počasí,předpověď,úleva,aura,tenzní",
-      "new": "hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,tlak,počasí,předpověď,úleva,aura,tenzní",
-      "len": 95,
-      "changed": false
+      "new": "hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,počasí,úleva,aura,tenzní,diary,pain,trigger",
+      "len": 99,
+      "changed": true
     }
   },
   "da": {
@@ -77,8 +77,8 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Symptomdagbog med ét tryk",
-      "new": "Symptomdagbog med ét tryk",
+      "old": "Lufttryk og migrænevarsel",
+      "new": "Lufttryk og migrænevarsel",
       "len": 25,
       "changed": false
     },
@@ -95,16 +95,16 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Symptom-Tagebuch, ein Tipp",
-      "new": "Symptom-Tagebuch, ein Tipp",
-      "len": 26,
+      "old": "Luftdruck & Migräne-Vorhersage",
+      "new": "Luftdruck & Migräne-Vorhersage",
+      "len": 30,
       "changed": false
     },
     "keywords": {
       "old": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura",
-      "new": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,luftdruck,wetter,vorhersage,linderung,aura",
-      "len": 97,
-      "changed": false
+      "new": "uhr,widget,cluster,export,auslöser,gesundheit,arzt,log,wetter,vorhersage,linderung,aura,diary,pain",
+      "len": 98,
+      "changed": true
     }
   },
   "el": {
@@ -113,87 +113,87 @@
       "len": 29
     },
     "subtitle": {
-      "old": "Ημερολόγιο συμπτωμάτων",
-      "new": "Ημερολόγιο συμπτωμάτων",
-      "len": 22,
+      "old": "Πίεση & πρόγνωση ημικρανίας",
+      "new": "Πίεση & πρόγνωση ημικρανίας",
+      "len": 27,
       "changed": false
     },
     "keywords": {
-      "old": "tracker,ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,πίεση,καιρός,πρόγνωση,ανακούφιση",
-      "new": "ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,πίεση,καιρός,πρόγνωση,ανακούφιση,diary",
-      "len": 95,
+      "old": "ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,πίεση,καιρός,πρόγνωση,ανακούφιση,diary",
+      "new": "ρολόι,widget,πόνος,cluster,εξαγωγή,εναυσμα,υγεία,γιατρός,καιρός,ανακούφιση,diary,pain,trigger,relief",
+      "len": 100,
       "changed": true
     }
   },
   "en-AU": {
     "name": {
-      "val": "Migraine Headache Tracker Log",
+      "val": "Migraine Tracker Headache Log",
       "len": 29
     },
     "subtitle": {
-      "old": "One Tap Symptom Diary Journal",
-      "new": "One Tap Symptom Diary Journal",
-      "len": 29,
+      "old": "Weather Pressure Migraine Risk",
+      "new": "Weather Pressure Migraine Risk",
+      "len": 30,
       "changed": false
     },
     "keywords": {
       "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "len": 100,
-      "changed": false
+      "new": "simple,track,pal,buddy,barometric,cluster,tension,trigger,pain,relief,forecast,chronic,aura,diary",
+      "len": 97,
+      "changed": true
     }
   },
   "en-CA": {
     "name": {
-      "val": "Migraine Headache Tracker Log",
+      "val": "Migraine Tracker Headache Log",
       "len": 29
     },
     "subtitle": {
-      "old": "One Tap Symptom Diary Journal",
-      "new": "One Tap Symptom Diary Journal",
-      "len": 29,
+      "old": "Barometric Migraine Forecast",
+      "new": "Barometric Migraine Forecast",
+      "len": 28,
       "changed": false
     },
     "keywords": {
       "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,pressure,cluster,tension,trigger,pain,relief,chronic,aura,diary,export,doctor",
       "len": 100,
-      "changed": false
+      "changed": true
     }
   },
   "en-GB": {
     "name": {
-      "val": "Migraine Headache Tracker Log",
+      "val": "Migraine Tracker Headache Log",
       "len": 29
     },
     "subtitle": {
-      "old": "One Tap Symptom Diary Journal",
-      "new": "One Tap Symptom Diary Journal",
+      "old": "Barometric Pressure & Weather",
+      "new": "Barometric Pressure & Weather",
       "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
+      "new": "simple,track,pal,buddy,cluster,tension,trigger,pain,relief,forecast,chronic,aura,diary,export,doctor",
       "len": 100,
-      "changed": false
+      "changed": true
     }
   },
   "en-US": {
     "name": {
-      "val": "Migraine Headache Tracker Log",
+      "val": "Migraine Tracker Headache Log",
       "len": 29
     },
     "subtitle": {
-      "old": "One Tap Symptom Diary Journal",
-      "new": "One Tap Symptom Diary Journal",
-      "len": 29,
+      "old": "One Tap Diary & Trigger Alerts",
+      "new": "One Tap Diary & Trigger Alerts",
+      "len": 30,
       "changed": false
     },
     "keywords": {
-      "old": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "new": "simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura",
-      "len": 100,
+      "old": "barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,simple,daily,symptom,sinus",
+      "new": "barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,simple,daily,symptom,sinus",
+      "len": 97,
       "changed": false
     }
   },
@@ -203,16 +203,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Diario de síntomas, un toque",
-      "new": "Diario de síntomas, un toque",
-      "len": 28,
+      "old": "Presión y alerta de migraña",
+      "new": "Presión y alerta de migraña",
+      "len": 27,
       "changed": false
     },
     "keywords": {
       "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio",
-      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,tiempo,alivio",
-      "len": 97,
-      "changed": false
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,tiempo,alivio,diary",
+      "len": 95,
+      "changed": true
     }
   },
   "es-MX": {
@@ -221,16 +221,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Diario de síntomas, un toque",
-      "new": "Diario de síntomas, un toque",
-      "len": 28,
+      "old": "Presión barométrica y migraña",
+      "new": "Presión barométrica y migraña",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,clima,pronóstico",
-      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,presión,clima,pronóstico",
-      "len": 100,
-      "changed": false
+      "new": "tracker,reloj,widget,dolor,cluster,exportar,desencadenante,salud,médico,log,clima,pronóstico,diary",
+      "len": 98,
+      "changed": true
     }
   },
   "fi": {
@@ -239,16 +239,16 @@
       "len": 29
     },
     "subtitle": {
-      "old": "Oirepäiväkirja, yksi napautus",
-      "new": "Oirepäiväkirja, yksi napautus",
+      "old": "Ilmanpaine ja migreeniennuste",
+      "new": "Ilmanpaine ja migreeniennuste",
       "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus",
-      "new": "tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus",
+      "new": "tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,sää,ennuste,helpotus,diary,pain",
       "len": 98,
-      "changed": false
+      "changed": true
     }
   },
   "fr-CA": {
@@ -257,16 +257,16 @@
       "len": 29
     },
     "subtitle": {
-      "old": "Journal symptômes, un geste",
-      "new": "Journal symptômes, un geste",
+      "old": "Pression et alerte migraine",
+      "new": "Pression et alerte migraine",
       "len": 27,
       "changed": false
     },
     "keywords": {
       "old": "mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision",
-      "new": "mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,pression,météo,prévision",
-      "len": 96,
-      "changed": false
+      "new": "mal,tracker,montre,widget,douleur,cluster,déclencheur,santé,médecin,log,météo,prévision,diary,pain",
+      "len": 98,
+      "changed": true
     }
   },
   "fr-FR": {
@@ -275,16 +275,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Journal symptômes, un geste",
-      "new": "Journal symptômes, un geste",
-      "len": 27,
+      "old": "Pression météo et migraine",
+      "new": "Pression météo et migraine",
+      "len": 26,
       "changed": false
     },
     "keywords": {
       "old": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,pression,météo,prévision",
-      "new": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,pression,météo,prévision",
-      "len": 99,
-      "changed": false
+      "new": "tracker,montre,widget,douleur,cluster,export,déclencheur,santé,médecin,log,prévision,diary,pain",
+      "len": 95,
+      "changed": true
     }
   },
   "gu-IN": {
@@ -293,16 +293,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "એક ટેપમાં લક્ષણ ડાયરી",
-      "new": "એક ટેપમાં લક્ષણ ડાયરી",
-      "len": 21,
+      "old": "હવાનું દબાણ માઇગ્રેન આગાહી",
+      "new": "હવાનું દબાણ માઇગ્રેન આગાહી",
+      "len": 26,
       "changed": false
     },
     "keywords": {
       "old": "dard,ટ્રેકર,ઘડિયાળ,વિજેટ,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લોગ,દબાણ,હવામાન,આગાહી,રાહત,ઓરા",
-      "new": "dard,ટ્રેકર,ઘડિયાળ,વિજેટ,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લોગ,દબાણ,હવામાન,આગાહી,રાહત,ઓરા",
+      "new": "dard,ટ્રેકર,ઘડિયાળ,વિજેટ,દર્દ,ક્લસ્ટર,નિકાસ,ટ્રિગર,સ્વાસ્થ્ય,ડોક્ટર,લોગ,હવામાન,રાહત,ઓરા,diary,pain",
       "len": 98,
-      "changed": false
+      "changed": true
     }
   },
   "he": {
@@ -311,15 +311,15 @@
       "len": 20
     },
     "subtitle": {
-      "old": "יומן תסמינים בנגיעה אחת",
-      "new": "יומן תסמינים בנגיעה אחת",
-      "len": 23,
+      "old": "לחץ ברומטרי ותחזית מיגרנה",
+      "new": "לחץ ברומטרי ותחזית מיגרנה",
+      "len": 25,
       "changed": false
     },
     "keywords": {
-      "old": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,לחץ,מזג,תחזית,הקלה,הילה,מתח,פשוט",
-      "new": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,לחץ,מזג,תחזית,הקלה,הילה,מתח,פשוט,diary,pain",
-      "len": 96,
+      "old": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,לחץ,מזג,תחזית,הקלה,הילה,מתח,פשוט,diary,pain",
+      "new": "שעון,ווידג'ט,אשכול,ייצוא,מעורר,בריאות,רופא,תסמין,לוג,מזג,תחזית,הקלה,הילה,מתח,פשוט,diary,pain,trigger",
+      "len": 100,
       "changed": true
     }
   },
@@ -329,16 +329,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "एक टैप में लक्षण डायरी",
-      "new": "एक टैप में लक्षण डायरी",
-      "len": 22,
+      "old": "माइग्रेन वायुदाब पूर्वानुमान",
+      "new": "माइग्रेन वायुदाब पूर्वानुमान",
+      "len": 28,
       "changed": false
     },
     "keywords": {
       "old": "घड़ी,विजेट,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लॉग,दबाव,मौसम,पूर्वानुमान,राहत,ऑरा,तनाव,सरल",
-      "new": "घड़ी,विजेट,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लॉग,दबाव,मौसम,पूर्वानुमान,राहत,ऑरा,तनाव,सरल",
-      "len": 94,
-      "changed": false
+      "new": "घड़ी,विजेट,क्लस्टर,निर्यात,ट्रिगर,स्वास्थ्य,डॉक्टर,लॉग,दबाव,मौसम,राहत,ऑरा,तनाव,सरल,diary,pain,relief",
+      "len": 100,
+      "changed": true
     }
   },
   "hr": {
@@ -347,15 +347,15 @@
       "len": 28
     },
     "subtitle": {
-      "old": "Dnevnik simptoma, jedan dodir",
-      "new": "Dnevnik simptoma, jedan dodir",
-      "len": 29,
+      "old": "Tlak i prognoza migrene",
+      "new": "Tlak i prognoza migrene",
+      "len": 23,
       "changed": false
     },
     "keywords": {
-      "old": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura",
-      "new": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura,diary",
-      "len": 98,
+      "old": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura,diary",
+      "new": "sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,vrijeme,olakšanje,aura,diary,pain,trigger",
+      "len": 97,
       "changed": true
     }
   },
@@ -365,16 +365,16 @@
       "len": 24
     },
     "subtitle": {
-      "old": "Tünetnapló egy érintéssel",
-      "new": "Tünetnapló egy érintéssel",
+      "old": "Légnyomás és migrénjelzés",
+      "new": "Légnyomás és migrénjelzés",
       "len": 25,
       "changed": false
     },
     "keywords": {
       "old": "tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés",
-      "new": "tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,légnyomás,időjárás,előrejelzés",
-      "len": 100,
-      "changed": false
+      "new": "tracker,óra,widget,fájdalom,cluster,export,kiváltó,egészség,orvos,log,időjárás,előrejelzés,diary",
+      "len": 96,
+      "changed": true
     }
   },
   "id": {
@@ -383,16 +383,16 @@
       "len": 28
     },
     "subtitle": {
-      "old": "Catat gejala dengan satu ketuk",
-      "new": "Catat gejala dengan satu ketuk",
-      "len": 30,
+      "old": "Tekanan udara & migrain",
+      "new": "Tekanan udara & migrain",
+      "len": 23,
       "changed": false
     },
     "keywords": {
       "old": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,tekanan,cuaca,prakiraan,pereda,aura",
-      "new": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,tekanan,cuaca,prakiraan,pereda,aura",
-      "len": 97,
-      "changed": false
+      "new": "jam,widget,diari,nyeri,cluster,ekspor,pemicu,kesehatan,dokter,cuaca,prakiraan,pereda,aura,diary",
+      "len": 95,
+      "changed": true
     }
   },
   "it": {
@@ -401,16 +401,16 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Diario sintomi con un tocco",
-      "new": "Diario sintomi con un tocco",
-      "len": 27,
+      "old": "Pressione e allerta emicrania",
+      "new": "Pressione e allerta emicrania",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log,pressione,meteo,previsione",
-      "new": "orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log,pressione,meteo,previsione",
-      "len": 99,
-      "changed": false
+      "new": "orologio,widget,dolore,cluster,esporta,trigger,salute,medico,sintomo,log,meteo,previsione,diary",
+      "len": 95,
+      "changed": true
     }
   },
   "ja": {
@@ -419,16 +419,16 @@
       "len": 11
     },
     "subtitle": {
-      "old": "症状を1タップで記録・日記",
-      "new": "症状を1タップで記録・日記",
-      "len": 13,
+      "old": "気圧・天気で片頭痛を予測、記録",
+      "new": "気圧・天気で片頭痛を予測、記録",
+      "len": 15,
       "changed": false
     },
     "keywords": {
-      "old": "気圧,天気,予報,緩和,前兆,群発,緊張,トリガー,痛み,簡単,健康,医師",
-      "new": "気圧,天気,予報,緩和,前兆,群発,緊張,トリガー,痛み,簡単,健康,医師,ウォッチ,ウィジェット,エクスポート,ログ",
-      "len": 59,
-      "changed": true
+      "old": "頭痛日記,症状,誘因,前兆,服薬,痛みレベル,群発頭痛,緊張型頭痛,ホルモン,睡眠,心拍数,HRV,空気質,花粉,AppleWatch,ウィジェット,CSV,医師,神経内科,エクスポート,健康記録",
+      "new": "頭痛日記,症状,誘因,前兆,服薬,痛みレベル,群発頭痛,緊張型頭痛,ホルモン,睡眠,心拍数,HRV,空気質,花粉,AppleWatch,ウィジェット,CSV,医師,神経内科,エクスポート,健康記録",
+      "len": 98,
+      "changed": false
     }
   },
   "kn-IN": {
@@ -437,15 +437,15 @@
       "len": 26
     },
     "subtitle": {
-      "old": "ಒಂದು ಟ್ಯಾಪ್‌ನಲ್ಲಿ ಲಕ್ಷಣ ದಿನಚರಿ",
-      "new": "ಒಂದು ಟ್ಯಾಪ್‌ನಲ್ಲಿ ಲಕ್ಷಣ ದಿನಚರಿ",
-      "len": 30,
+      "old": "ವಾಯುಒತ್ತಡ ಮೈಗ್ರೇನ್ ಮುನ್ಸೂಚನೆ",
+      "new": "ವಾಯುಒತ್ತಡ ಮೈಗ್ರೇನ್ ಮುನ್ಸೂಚನೆ",
+      "len": 28,
       "changed": false
     },
     "keywords": {
-      "old": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಮುನ್ಸೂಚನೆ,ಶಮನ,ಅರಾ,ಸರಳ",
-      "new": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಮುನ್ಸೂಚನೆ,ಶಮನ,ಅರಾ,ಸರಳ,diary",
-      "len": 95,
+      "old": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಮುನ್ಸೂಚನೆ,ಶಮನ,ಅರಾ,ಸರಳ,diary",
+      "new": "ಗಡಿಯಾರ,ವಿಜೆಟ್,ಕ್ಲಸ್ಟರ್,ರಫ್ತು,ಟ್ರಿಗರ್,ಆರೋಗ್ಯ,ವೈದ್ಯ,ಲಾಗ್,ಒತ್ತಡ,ಹವಾಮಾನ,ಶಮನ,ಅರಾ,ಸರಳ,diary,pain,trigger",
+      "len": 98,
       "changed": true
     }
   },
@@ -455,16 +455,16 @@
       "len": 10
     },
     "subtitle": {
-      "old": "증상 원탭 기록·일기",
-      "new": "증상 원탭 기록·일기",
-      "len": 11,
+      "old": "기압·날씨 편두통 예보, 원탭 기록",
+      "new": "기압·날씨 편두통 예보, 원탭 기록",
+      "len": 19,
       "changed": false
     },
     "keywords": {
-      "old": "기압,날씨,예보,완화,전조,군발,긴장,유발,통증,간단,건강,트래커",
-      "new": "기압,날씨,예보,완화,전조,군발,긴장,유발,통증,간단,건강,트래커,워치,위젯,보내기,의사,로그",
-      "len": 52,
-      "changed": true
+      "old": "두통일기,증상,유발요인,전조,복약,통증강도,군발두통,긴장성두통,호르몬,수면,심박수,HRV,공기질,꽃가루,애플워치,위젯,CSV,의사,신경과,내보내기,건강기록,통증부위,발작시간,병원",
+      "new": "두통일기,증상,유발요인,전조,복약,통증강도,군발두통,긴장성두통,호르몬,수면,심박수,HRV,공기질,꽃가루,애플워치,위젯,CSV,의사,신경과,내보내기,건강기록,통증부위,발작시간,병원",
+      "len": 99,
+      "changed": false
     }
   },
   "ml-IN": {
@@ -473,16 +473,16 @@
       "len": 23
     },
     "subtitle": {
-      "old": "ഒറ്റ ടാപ്പിൽ ലക്ഷണ ഡയറി",
-      "new": "ഒറ്റ ടാപ്പിൽ ലക്ഷണ ഡയറി",
-      "len": 23,
+      "old": "വായുമർദ്ദം മൈഗ്രെയ്ൻ പ്രവചനം",
+      "new": "വായുമർദ്ദം മൈഗ്രെയ്ൻ പ്രവചനം",
+      "len": 28,
       "changed": false
     },
     "keywords": {
       "old": "വാച്ച്,വിജറ്റ്,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,മർദ്ദം,കാലാവസ്ഥ,പ്രവചനം,ആശ്വാസം,ഓറ,ലളിതം",
-      "new": "വാച്ച്,വിജറ്റ്,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,മർദ്ദം,കാലാവസ്ഥ,പ്രവചനം,ആശ്വാസം,ഓറ,ലളിതം",
-      "len": 100,
-      "changed": false
+      "new": "വാച്ച്,വിജറ്റ്,ക്ലസ്റ്റർ,എക്സ്പോർട്ട്,ട്രിഗർ,ആരോഗ്യം,ഡോക്ടർ,മർദ്ദം,കാലാവസ്ഥ,ആശ്വാസം,ഓറ,ലളിതം,diary",
+      "len": 98,
+      "changed": true
     }
   },
   "mr-IN": {
@@ -491,16 +491,16 @@
       "len": 28
     },
     "subtitle": {
-      "old": "एका टॅपमध्ये लक्षण डायरी",
-      "new": "एका टॅपमध्ये लक्षण डायरी",
+      "old": "हवेचा दाब मायग्रेन अंदाज",
+      "new": "हवेचा दाब मायग्रेन अंदाज",
       "len": 24,
       "changed": false
     },
     "keywords": {
       "old": "घड्याळ,विजेट,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लॉग,दाब,हवामान,अंदाज,आराम,ऑरा,ताण,सोपे",
-      "new": "घड्याळ,विजेट,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लॉग,दाब,हवामान,अंदाज,आराम,ऑरा,ताण,सोपे",
-      "len": 94,
-      "changed": false
+      "new": "घड्याळ,विजेट,वेदना,क्लस्टर,निर्यात,ट्रिगर,आरोग्य,डॉक्टर,लॉग,हवामान,आराम,ऑरा,ताण,सोपे,diary,pain",
+      "len": 95,
+      "changed": true
     }
   },
   "ms": {
@@ -509,16 +509,16 @@
       "len": 29
     },
     "subtitle": {
-      "old": "Catat gejala satu ketikan",
-      "new": "Catat gejala satu ketikan",
-      "len": 25,
+      "old": "Tekanan udara & migrain",
+      "new": "Tekanan udara & migrain",
+      "len": 23,
       "changed": false
     },
     "keywords": {
       "old": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,tekanan,cuaca,ramalan,pelega,aura,tegang",
-      "new": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,tekanan,cuaca,ramalan,pelega,aura,tegang",
-      "len": 100,
-      "changed": false
+      "new": "jam,widget,diari,kelompok,eksport,pencetus,kesihatan,doktor,cuaca,ramalan,pelega,aura,tegang,diary",
+      "len": 98,
+      "changed": true
     }
   },
   "nl-NL": {
@@ -527,16 +527,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Symptomen dagboek, één tik",
-      "new": "Symptomen dagboek, één tik",
-      "len": 26,
+      "old": "Luchtdruk en migraine-alert",
+      "new": "Luchtdruk en migraine-alert",
+      "len": 27,
       "changed": false
     },
     "keywords": {
       "old": "horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,luchtdruk,weer,voorspelling,aura",
-      "new": "horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,luchtdruk,weer,voorspelling,aura",
-      "len": 95,
-      "changed": false
+      "new": "horloge,widget,cluster,export,trigger,gezondheid,arts,symptoom,weer,voorspelling,aura,diary,pain",
+      "len": 96,
+      "changed": true
     }
   },
   "no": {
@@ -545,9 +545,9 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Symptomdagbok med ett trykk",
-      "new": "Symptomdagbok med ett trykk",
-      "len": 27,
+      "old": "Lufttrykk og migrenevarsel",
+      "new": "Lufttrykk og migrenevarsel",
+      "len": 26,
       "changed": false
     },
     "keywords": {
@@ -563,16 +563,16 @@
       "len": 28
     },
     "subtitle": {
-      "old": "ଏକ ଟ୍ୟାପରେ ଲକ୍ଷଣ ଡାଇରି",
-      "new": "ଏକ ଟ୍ୟାପରେ ଲକ୍ଷଣ ଡାଇରି",
-      "len": 22,
+      "old": "ବାୟୁଚାପ ମାଇଗ୍ରେନ୍ ପୂର୍ବାନୁମାନ",
+      "new": "ବାୟୁଚାପ ମାଇଗ୍ରେନ୍ ପୂର୍ବାନୁମାନ",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "ଘଣ୍ଟା,ୱିଜେଟ,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଚାପ,ପାଣିପାଗ,ପୂର୍ବାନୁମାନ,ଆରାମ,ଅରା,ସରଳ",
-      "new": "ଘଣ୍ଟା,ୱିଜେଟ,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଚାପ,ପାଣିପାଗ,ପୂର୍ବାନୁମାନ,ଆରାମ,ଅରା,ସରଳ",
-      "len": 97,
-      "changed": false
+      "new": "ଘଣ୍ଟା,ୱିଜେଟ,ଯନ୍ତ୍ରଣା,କ୍ଲଷ୍ଟର,ରପ୍ତାନି,ଟ୍ରିଗର,ସ୍ୱାସ୍ଥ୍ୟ,ଡାକ୍ତର,ଚାପ,ପାଣିପାଗ,ଆରାମ,ଅରା,ସରଳ,diary,pain",
+      "len": 96,
+      "changed": true
     }
   },
   "pa-IN": {
@@ -581,14 +581,14 @@
       "len": 24
     },
     "subtitle": {
-      "old": "ਇੱਕ ਟੈਪ ਵਿੱਚ ਲੱਛਣ ਡਾਇਰੀ",
-      "new": "ਇੱਕ ਟੈਪ ਵਿੱਚ ਲੱਛਣ ਡਾਇਰੀ",
-      "len": 23,
+      "old": "ਹਵਾ ਦਾ ਦਬਾਅ ਮਾਈਗ੍ਰੇਨ ਭਵਿੱਖਬਾਣੀ",
+      "new": "ਹਵਾ ਦਾ ਦਬਾਅ ਮਾਈਗ੍ਰੇਨ ਭਵਿੱਖਬਾਣੀ",
+      "len": 30,
       "changed": false
     },
     "keywords": {
-      "old": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਦਬਾਅ,ਮੌਸਮ,ਭਵਿੱਖਬਾਣੀ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ",
-      "new": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਦਬਾਅ,ਮੌਸਮ,ਭਵਿੱਖਬਾਣੀ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ,diary,pain",
+      "old": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਦਬਾਅ,ਮੌਸਮ,ਭਵਿੱਖਬਾਣੀ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ,diary,pain",
+      "new": "ਘੜੀ,ਵਿਜੇਟ,ਦਰਦ,ਕਲਸਟਰ,ਨਿਰਯਾਤ,ਟਰਿਗਰ,ਸਿਹਤ,ਡਾਕਟਰ,ਲੌਗ,ਮੌਸਮ,ਰਾਹਤ,ਆਰਾ,ਤਣਾਅ,ਸਧਾਰਨ,diary,pain,trigger,relief",
       "len": 98,
       "changed": true
     }
@@ -599,16 +599,16 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Dziennik objawów jednym gestem",
-      "new": "Dziennik objawów jednym gestem",
-      "len": 30,
+      "old": "Ciśnienie i prognoza migreny",
+      "new": "Ciśnienie i prognoza migreny",
+      "len": 28,
       "changed": false
     },
     "keywords": {
       "old": "zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura",
-      "new": "zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura",
+      "new": "zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,pogoda,ulga,aura,diary,pain,trigger",
       "len": 95,
-      "changed": false
+      "changed": true
     }
   },
   "pt-BR": {
@@ -617,16 +617,16 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Diário de sintomas num toque",
-      "new": "Diário de sintomas num toque",
-      "len": 28,
+      "old": "Pressão e alerta de enxaqueca",
+      "new": "Pressão e alerta de enxaqueca",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,pressão,clima,previsão,aura",
-      "new": "cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,pressão,clima,previsão,aura",
-      "len": 99,
-      "changed": false
+      "new": "cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,clima,previsão,aura,diary",
+      "len": 97,
+      "changed": true
     }
   },
   "pt-PT": {
@@ -635,16 +635,16 @@
       "len": 28
     },
     "subtitle": {
-      "old": "Diário de sintomas num toque",
-      "new": "Diário de sintomas num toque",
-      "len": 28,
+      "old": "Pressão e alerta de enxaqueca",
+      "new": "Pressão e alerta de enxaqueca",
+      "len": 29,
       "changed": false
     },
     "keywords": {
       "old": "tracker,relógio,widget,dor,cluster,exportar,gatilho,saúde,médico,log,pressão,tempo,previsão,alívio",
-      "new": "tracker,relógio,widget,dor,cluster,exportar,gatilho,saúde,médico,log,pressão,tempo,previsão,alívio",
-      "len": 98,
-      "changed": false
+      "new": "tracker,relógio,widget,dor,cluster,exportar,gatilho,saúde,médico,log,tempo,previsão,alívio,diary",
+      "len": 96,
+      "changed": true
     }
   },
   "ro": {
@@ -653,7 +653,7 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Jurnal simptome, o atingere",
+      "old": "Presiune și prognoză migrenă",
       "new": "Simptome într-o atingere",
       "len": 24,
       "changed": true
@@ -671,16 +671,16 @@
       "len": 30
     },
     "subtitle": {
-      "old": "Дневник симптомов, 1 касание",
+      "old": "Давление и прогноз мигрени",
       "new": "Журнал симптомов, 1 касание",
       "len": 27,
       "changed": true
     },
     "keywords": {
-      "old": "головная,боль,мигрень,tracker,часы,widget,cluster,экспорт,триггер,здоровье,врач,давление,погода,аура",
+      "old": "tracker,часы,widget,cluster,экспорт,триггер,здоровье,врач,давление,погода,аура,облегчение,напряжение",
       "new": "tracker,часы,widget,cluster,экспорт,триггер,здоровье,врач,давление,погода,аура,облегчение,напряжение",
       "len": 100,
-      "changed": true
+      "changed": false
     }
   },
   "sk": {
@@ -689,16 +689,16 @@
       "len": 30
     },
     "subtitle": {
-      "old": "Denník príznakov jedným ťukom",
-      "new": "Denník príznakov jedným ťukom",
-      "len": 29,
+      "old": "Tlak a predpoveď migrény",
+      "new": "Tlak a predpoveď migrény",
+      "len": 24,
       "changed": false
     },
     "keywords": {
       "old": "hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,tlak,počasie,predpoveď,úľava,aura,tenzný",
-      "new": "hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,tlak,počasie,predpoveď,úľava,aura,tenzný",
-      "len": 96,
-      "changed": false
+      "new": "hodinky,widget,cluster,export,spúšťač,zdravie,lekár,log,počasie,úľava,aura,tenzný,diary,pain,trigger",
+      "len": 100,
+      "changed": true
     }
   },
   "sl-SI": {
@@ -707,16 +707,16 @@
       "len": 27
     },
     "subtitle": {
-      "old": "Dnevnik simptomov z dotikom",
-      "new": "Dnevnik simptomov z dotikom",
-      "len": 27,
+      "old": "Tlak in napoved migrene",
+      "new": "Tlak in napoved migrene",
+      "len": 23,
       "changed": false
     },
     "keywords": {
       "old": "migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje",
-      "new": "migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje",
-      "len": 97,
-      "changed": false
+      "new": "migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,vreme,olajšanje,diary,pain",
+      "len": 95,
+      "changed": true
     }
   },
   "sv": {
@@ -725,9 +725,9 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Symtomdagbok med ett tryck",
-      "new": "Symtomdagbok med ett tryck",
-      "len": 26,
+      "old": "Lufttryck och migränvarning",
+      "new": "Lufttryck och migränvarning",
+      "len": 27,
       "changed": false
     },
     "keywords": {
@@ -743,9 +743,9 @@
       "len": 25
     },
     "subtitle": {
-      "old": "ஒரு தட்டில் அறிகுறி டைரி",
-      "new": "ஒரு தட்டில் அறிகுறி டைரி",
-      "len": 24,
+      "old": "காற்றழுத்தம் ஒற்றைத் தலைவலி",
+      "new": "காற்றழுத்தம் ஒற்றைத் தலைவலி",
+      "len": 27,
       "changed": false
     },
     "keywords": {
@@ -761,15 +761,15 @@
       "len": 25
     },
     "subtitle": {
-      "old": "ఒక్క ట్యాప్‌లో లక్షణ డైరీ",
-      "new": "ఒక్క ట్యాప్‌లో లక్షణ డైరీ",
-      "len": 25,
+      "old": "వాయు పీడనం మైగ్రేన్ సూచన",
+      "new": "వాయు పీడనం మైగ్రేన్ సూచన",
+      "len": 24,
       "changed": false
     },
     "keywords": {
-      "old": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,సూచన,ఉపశమనం,ఆరా,సరళ",
-      "new": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,సూచన,ఉపశమనం,ఆరా,సరళ,diary",
-      "len": 99,
+      "old": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,సూచన,ఉపశమనం,ఆరా,సరళ,diary",
+      "new": "గడియారం,విడ్జెట్,క్లస్టర్,ఎగుమతి,ట్రిగర్,ఆరోగ్యం,డాక్టర్,ఒత్తిడి,వాతావరణం,ఉపశమనం,ఆరా,సరళ,diary",
+      "len": 94,
       "changed": true
     }
   },
@@ -779,16 +779,16 @@
       "len": 21
     },
     "subtitle": {
-      "old": "บันทึกอาการแตะเดียว",
-      "new": "บันทึกอาการแตะเดียว",
-      "len": 19,
+      "old": "ความกดอากาศ พยากรณ์ไมเกรน",
+      "new": "ความกดอากาศ พยากรณ์ไมเกรน",
+      "len": 25,
       "changed": false
     },
     "keywords": {
       "old": "นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,ความกดอากาศ,อากาศ,พยากรณ์,บรรเทา",
-      "new": "นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,ความกดอากาศ,อากาศ,พยากรณ์,บรรเทา",
-      "len": 97,
-      "changed": false
+      "new": "นาฬิกา,วิดเจ็ต,ไดอารี่,ปวด,คลัสเตอร์,ส่งออก,ทริกเกอร์,สุขภาพ,หมอ,อากาศ,พยากรณ์,บรรเทา,diary,pain",
+      "len": 96,
+      "changed": true
     }
   },
   "tr": {
@@ -797,16 +797,16 @@
       "len": 25
     },
     "subtitle": {
-      "old": "Tek dokunuşla semptom günlüğü",
-      "new": "Tek dokunuşla semptom günlüğü",
-      "len": 29,
+      "old": "Basınç ve migren tahmini",
+      "new": "Basınç ve migren tahmini",
+      "len": 24,
       "changed": false
     },
     "keywords": {
       "old": "tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama",
-      "new": "tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama",
-      "len": 98,
-      "changed": false
+      "new": "tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,hava,tahmin,rahatlama,diary",
+      "len": 97,
+      "changed": true
     }
   },
   "uk": {
@@ -815,16 +815,16 @@
       "len": 28
     },
     "subtitle": {
-      "old": "Щоденник симптомів, 1 дотик",
-      "new": "Щоденник симптомів, 1 дотик",
-      "len": 27,
+      "old": "Тиск і прогноз мігрені",
+      "new": "Тиск і прогноз мігрені",
+      "len": 22,
       "changed": false
     },
     "keywords": {
       "old": "головний,біль,мігрень,tracker,годинник,widget,cluster,експорт,тригер,здоров'я,лікар,тиск,погода,аура",
-      "new": "головний,біль,мігрень,tracker,годинник,widget,cluster,експорт,тригер,здоров'я,лікар,тиск,погода,аура",
-      "len": 100,
-      "changed": false
+      "new": "головний,біль,мігрень,tracker,годинник,widget,cluster,експорт,тригер,здоров'я,лікар,погода,аура",
+      "len": 95,
+      "changed": true
     }
   },
   "ur-PK": {
@@ -833,15 +833,15 @@
       "len": 25
     },
     "subtitle": {
-      "old": "ایک ٹیپ میں علامات ڈائری",
-      "new": "ایک ٹیپ میں علامات ڈائری",
-      "len": 24,
+      "old": "ہوا کا دباؤ مائیگرین پیش گوئی",
+      "new": "ہوا کا دباؤ مائیگرین پیش گوئی",
+      "len": 29,
       "changed": false
     },
     "keywords": {
-      "old": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,دباؤ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان",
-      "new": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,دباؤ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان,diary,pain",
-      "len": 95,
+      "old": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,دباؤ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان,diary,pain",
+      "new": "گھڑی,وجیٹ,کلسٹر,برآمد,ٹرگر,صحت,ڈاکٹر,علامت,لاگ,موسم,پیشگوئی,آرام,ہالہ,تناؤ,آسان,diary,pain,trigger",
+      "len": 98,
       "changed": true
     }
   },
@@ -851,7 +851,7 @@
       "len": 26
     },
     "subtitle": {
-      "old": "Nhật ký triệu chứng một chạm",
+      "old": "Áp suất và dự báo đau đầu",
       "new": "Ghi triệu chứng một chạm",
       "len": 24,
       "changed": true
@@ -869,15 +869,15 @@
       "len": 9
     },
     "subtitle": {
-      "old": "一键记录症状日记",
-      "new": "一键记录症状日记",
-      "len": 8,
+      "old": "气压天气偏头痛预报，一键记录",
+      "new": "气压天气偏头痛预报，一键记录",
+      "len": 14,
       "changed": false
     },
     "keywords": {
-      "old": "气压,天气,预报,缓解,先兆,丛集,紧张,诱因,疼痛,简单,健康,医生",
-      "new": "气压,天气,预报,缓解,先兆,丛集,紧张,诱因,疼痛,简单,健康,医生,手表,小组件,导出",
-      "len": 45,
+      "old": "头痛日记,症状,诱因,先兆,用药,疼痛等级,丛集性头痛,紧张性头痛,激素,睡眠,心率,HRV,空气质量,花粉,苹果手表,小组件,CSV,医生,神经科,导出,健康记录,疼痛部位,发作时间,医院咨询",
+      "new": "头痛日记,症状,诱因,先兆,用药,疼痛等级,丛集性头痛,紧张性头痛,激素,睡眠,心率,HRV,空气质量,花粉,苹果手表,小组件,CSV,医生,神经科,导出,健康记录,疼痛部位,发作时间,医院咨询,手表",
+      "len": 100,
       "changed": true
     }
   },
@@ -887,16 +887,16 @@
       "len": 9
     },
     "subtitle": {
-      "old": "一鍵記錄症狀日記",
-      "new": "一鍵記錄症狀日記",
-      "len": 8,
+      "old": "氣壓天氣偏頭痛預報，一鍵記錄",
+      "new": "氣壓天氣偏頭痛預報，一鍵記錄",
+      "len": 14,
       "changed": false
     },
     "keywords": {
-      "old": "氣壓,天氣,預報,緩解,先兆,叢發,緊張,誘因,疼痛,簡單,健康,醫師",
-      "new": "氣壓,天氣,預報,緩解,先兆,叢發,緊張,誘因,疼痛,簡單,健康,醫師,手錶,小工具,匯出",
-      "len": 45,
-      "changed": true
+      "old": "頭痛日記,症狀,誘因,先兆,用藥,疼痛等級,叢發性頭痛,緊張性頭痛,荷爾蒙,睡眠,心率,HRV,空氣品質,花粉,AppleWatch,小工具,CSV,醫師,神經科,匯出,健康記錄,疼痛部位,發作時間",
+      "new": "頭痛日記,症狀,誘因,先兆,用藥,疼痛等級,叢發性頭痛,緊張性頭痛,荷爾蒙,睡眠,心率,HRV,空氣品質,花粉,AppleWatch,小工具,CSV,醫師,神經科,匯出,健康記錄,疼痛部位,發作時間",
+      "len": 99,
+      "changed": false
     }
   }
 }

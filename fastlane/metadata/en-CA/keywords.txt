@@ -1,1 +1,1 @@
-simple,track,pal,buddy,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura
+simple,track,pal,buddy,pressure,cluster,tension,trigger,pain,relief,chronic,aura,diary,export,doctor

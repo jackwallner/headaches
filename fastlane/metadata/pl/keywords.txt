@@ -1,1 +1,1 @@
-zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,ciśnienie,pogoda,prognoza,ulga,aura
+zegarek,widget,klaster,eksport,wyzwalacz,zdrowie,lekarz,log,pogoda,ulga,aura,diary,pain,trigger
