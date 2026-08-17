@@ -1,98 +1,129 @@
-# aso-plan.md — Headache Tracker ASO Metadata Update + Rollout Plan
+# aso-plan.md — HeadacheLogger ASO positioning + metadata
 
-> Written 2026-06-25 (SERP-corrected same day). App: **Headache Tracker - One Tap** (ID `6762074561`, repo `~/headaches`). Methodology: `~/Desktop/aso.md`.
-
----
-
-## 0. TL;DR / Current decision
-
-- **Positioning:** one-tap headache/migraine **log** with barometric pressure context — NOT a weather/barometer app, NOT general symptom diary, NOT Migraine Buddy.
-- **Two lanes (don't conflate):**
-  1. **One-tap log lane** (subtitle weight) — `one tap headache` SERP PASS, app **#2**
-  2. **Baro/forecast lane** (keyword field only) — `headache forecast` PASS app **#8**; `barometric headache` PASS app **#8**
-- **SERP FAIL — do not subtitle-weight:** `barometric forecast` (pure weather apps, not in top 50), `symptom diary` (Daylio/IBS journals), `weather migraine` (Yahoo Weather/WeatherBug), field word `pal` (blood-pressure apps)
-- **US edit:** subtitle → `One Tap Migraine & Headache Log`; keywords drop `pal,buddy` → add `export,seconds` (~15% swap)
-- **Astro:** cleaned 22 junk keywords; tagged `deployed`/`target`/`wall` with SERP notes on baro terms
+> Rewritten 2026-08-16. App ID `6762074561`, repo `~/headaches`.
+> Supersedes the 2026-06-25 plan, whose subtitle recommendation never shipped.
+> Methodology: `~/Desktop/aso.md`.
 
 ---
 
-## STEP 0 — Re-pull current state first
+## 0. Current decision (2026-08-16)
 
-| What | How |
-|---|---|
-| Live metadata | `scripts/pull-appstore-metadata.sh` |
-| Rankings/tags/notes | Astro `get_app_keywords(appId="6762074561", store="us")` |
-| SERP guardrail | `search_app_store(keyword, store, appId="6762074561")` — **required before any subtitle change** |
+**Positioning:** the migraine log that fills itself in. One tap, then Watch,
+HealthKit and weather attach the context automatically, then the app tells you
+which triggers are yours. Every competitor above us is a manual diary.
 
----
+**Staged in `fastlane/metadata/en-US`, not yet submitted:**
 
-## 1. SERP validation table (2026-06-25, non-negotiable)
+| Field | Value | Chars |
+|---|---|---|
+| name | `Migraine Tracker: Headache Log` | 30/30 |
+| subtitle | `One Tap Diary & Trigger Alerts` | 30/30 |
+| keywords | `barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,sinus,daily,nausea,symptom` | 97/100 |
 
-| Term / combo | Rank | SERP top results | Guardrail |
-|---|---|---|---|
-| `one tap headache` | **#2** | One Tap Headache Diary, Migraine Buddy, MiG, Cranium | ✅ **Subtitle lane** |
-| `headache forecast` | **#8** | Headache Forecast-Barometer, MigraineZen, Buddy, **you** | ✅ **Keyword field** (`forecast`) |
-| `barometric headache` | **#8** | Buddy, Pressure Pal, BaroBuddy, **you** + some weather | ✅ **Keyword field** (`barometric`,`pressure`) |
-| `headache tracker` | #21 | MiG, Buddy, small loggers | ⚠️ target — wall-adjacent |
-| `barometric forecast` | not in 50 | Ventusky, Barometric Pressure Today, NOAA marine, Forecast Bar | ❌ **FAIL — never in subtitle** |
-| `weather migraine` | not in 50 | WeatherBug 2M★, Yahoo Weather, generic weather | ❌ FAIL — do not add `weather` |
-| `symptom diary` | not in 50 | Daylio, IBS food diary, general symptom trackers | ❌ FAIL — drop from subtitle |
-| `pressure pal` (field `pal`) | #20 | Barometric Pressure Pal + **blood pressure** apps | ❌ FAIL — remove `pal` from field |
-| `migraine diary` | not in top 15 | Migraine Buddy wall | 🚫 wall |
-
-**Lesson:** barometric/forecast value is real but lives in **keyword-field combos** (`headache forecast`, `barometric headache`). Putting `Barometric Forecast` in the **subtitle** steers Apple toward the **weather/barometer SERP** — wrong product class.
+**Was live before this change:** name `Migraine Headache Tracker Log`, subtitle
+`Barometric Pressure Forecast` (a verbatim copy of Pressure Pal's subtitle),
+keywords `one,tap,diary,aura,cluster,tension,trigger,pain,relief,simple,track,weather,journal,pal,episode`.
 
 ---
 
-## 2. Competitor tiers
+## 1. The volume reality (Astro US, 2026-08-16)
+
+| Term | Popularity | Our rank |
+|---|---|---|
+| `migraine tracker` | **44–47** | #37 |
+| `one tap` (generic) | 29 | #243 |
+| `headache tracker` | 9 | #11 |
+| `migraine` / `headache` | 6–7 | #26 / #34 |
+| `one tap headache`, `one tap migraine`, `tap migraine` | **5 (floor)** | **#1–#2** |
+| `apple watch headache`, `headache widget`, `headache export` | 5 (floor) | #2, #164, #27 |
+
+`migraine tracker` is the only term in this category with real demand. We were
+#37, and all top 12 results carry the literal string "Migraine Tracker" in the
+app name. That is what the name change buys.
+
+The one-tap cluster is fully owned and worth nothing: popularity 5 is the floor,
+and 7 days of it produced 2,048 search impressions and 13 first-time downloads.
+
+---
+
+## 2. Method: the literal-word SERP test
+
+For any candidate keyword, pull the SERP and ask **do small apps rank here on the
+literal word, or do generic headache trackers rank without it?** Under 2026
+semantic matching, synonym nouns collapse into one cluster and the word is waste.
+
+| Candidate | Verdict | Evidence (2026-08-16 SERP) |
+|---|---|---|
+| `daily` | ✅ **IN** | `daily headache log`: #1 and #2 are tiny apps (1 and 3 ratings) named "…Daily Log", beating Cranium (157★) on the literal word |
+| `hormonal` | ❌ OUT | `hormonal headache`: 8/8 are generic headache trackers, none carry the word. Slot is already served without paying 8 chars |
+| `journal` | ❌ OUT | `headache journal`: top 8 (Buddy, MiG, Cranium…) carry "journal" nowhere. Collapses into `diary` |
+| `attack` | ❌ OUT | `migraine attack tracker`: only 1 of 8 uses the word |
+| `sinus` | ⚠️ weak IN | `sinus headache`: only Migraine Weather Forecast (#5) carries it. Cheap at 5 chars, legitimate subtype |
+| `severity` | ❌ OUT | Attribute word, not a query. Nobody searches it |
+| `vestibular` | ❌ OUT | Passes the test (4 of 8 carry it, small apps rank) but we do not track vertigo. Intent mismatch |
+| `watch`, `widget`, `export`, `sleep` | ❌ OUT | See §3 |
+
+---
+
+## 3. Why no watch/widget/export in the field
+
+We rank **#2 for `apple watch headache` with no watch word in any field** — the
+old live metadata had no "watch", "widget" or "export" anywhere. Those ranks come
+from actually shipping a watchOS target and widgets, not from metadata. Buying
+them would cost 12 chars (`apple` + `watch`) for a position already held free.
+
+The `apple watch headache` SERP is also contaminated: Apple's own Watch app at #3,
+Chronix Watch Dials #6, Watch Faces Gallery #8. Apple has not resolved that query
+to health tracking, and popularity 5 says almost nobody types it.
+
+**Those words belong in screenshot captions**, where they are the strongest
+conversion argument and feed Apple's AI tag layer (tags are Apple-documented and
+editable in ASC; screenshot OCR into search is vendor-claimed, not confirmed).
+
+---
+
+## 4. Known cost of this change
+
+`barometric`, `pressure` and `forecast` move from the **subtitle** (high weight)
+to the **keyword field** (lower weight). Expect `barometric headache` (#7),
+`pressure headache` (#8) and `headache forecast` (#16) to soften. That is
+deliberate: those are all popularity 5 versus `migraine tracker` at 44.
+
+Expect 2–4 weeks of rank turbulence after any name change. Do not change anything
+else in that window or the signal is unreadable.
+
+---
+
+## 5. Competitor tiers
 
 | Tier | Apps |
 |---|---|
-| **WALL** | Migraine Buddy (40k★), Bearable, MiG — diary/tracker heads |
-| **WINNABLE PEERS** | One Tap Headache Diary (0★), Cranium (149★), Headache Hero (17★), Relief (143★), BaroBuddy (40★) |
-| **ADJACENT** | WeatherX, barometer utilities — share forecast terms, different core UX |
+| **WALL** | Migraine Buddy (41k★), MiG (2.7k★), Bearable (6.1k★) |
+| **BARO LANE INCUMBENT** | Pressure Pal (687★) — owns `Barometric Pressure Forecast` as a subtitle |
+| **WINNABLE PEERS** | Relief AI (25★), Migraine Trail (43★), Migsy (47★), Migraine Insight (458★), Headache Hero (21★) |
+| **NEW ENTRANTS ON OUR CLAIM** | One Tap Headache Diary (0★), ebb "One tap when it starts" (1★), Migraine Tap (0★) |
+
+One tap is no longer a differentiator on its own. Automatic capture is.
 
 ---
 
-## 3. Exact US metadata change (SERP-validated, staged)
+## 6. Screenshot captions (indexed-adjacent, conversion-critical)
 
-**Change to:**
-- name: `Migraine Headache Tracker Log` *(unchanged)*
-- subtitle → `One Tap Migraine & Headache Log`
-- keywords → `simple,track,barometric,pressure,cluster,tension,trigger,pain,relief,forecast,chronic,aura,export,seconds`
+1. "Log a migraine in one tap"
+2. "Your Watch and the weather fill in the rest"
+3. "Sleep, HRV and barometric pressure, attached automatically"
+4. "It tells you which triggers are yours"
+5. "Export a clean CSV for your neurologist"
 
-| Edit | Rationale |
-|---|---|
-| Subtitle → one-tap log | Passes `one tap headache` SERP (#2). Replaces FAIL `symptom diary journal` intent |
-| OUT `pal`, `buddy` | SERP homographs (blood pressure / Migraine Buddy) |
-| IN `export`, `seconds` | Product-fit (fast log, doctor export); `seconds` supports one-tap speed story |
-| KEEP `barometric`,`pressure`,`forecast` in **field only** | Combos already rank #8 — do not promote to subtitle |
-
-100/100 chars · ~15% swap.
+Screens 1 and 2 are the only ones visible in search results. The one-tap claim and
+the auto-capture claim have to be those two.
 
 ---
 
-## 4. Astro state (done 2026-06-25, tag migration complete)
+## 7. Open items
 
-**US:** 84 keywords · **global:** ~599 (non-US pop-5 @ 1000 junk pruned 2026-06-25).
-
-**Tagged (blue/green/gray only — legacy tags retired account-wide):**
-| Tag | Examples |
-|---|---|
-| `deployed` | simple, track, barometric, pressure, forecast, cluster, tension, trigger, pain, chronic, aura, relief, export, seconds |
-| `target` | one tap headache, headache forecast, barometric headache, headache tracker, pressure headache |
-| `wall` | migraine buddy, migraine tracker, symptom diary, weather migraine, pressure pal |
-
-**Notes on:** `barometric headache`, `headache forecast`, `pressure pal` — SERP evidence + field vs subtitle guidance.
-
----
-
-## 5. Product-gated
-
-`apple watch headache`, `migraine medication tracker`, `headache widget` (rank collapsed), doctor-export story weak.
-
----
-
-## 6. Rollout
-
-Next version + manual release. Re-pull ASC after upload. **Do not** ship subtitle with `barometric` or `forecast` — validated FAIL.
+- Conversion is the real bottleneck: 2,048 impressions → 13 installs.
+- Consider moving primary category Medical → Health & Fitness, where nearly the
+  entire `migraine tracker` top 12 sits. Test **after** the metadata change lands.
+- `sinus` and `nausea` are the weakest field slots. First candidates to swap if
+  the next Astro pull shows no movement.
