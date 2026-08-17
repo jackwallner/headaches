@@ -1,1 +1,1 @@
-tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,basınç,hava,tahmin,rahatlama
+tracker,saat,widget,günlük,cluster,dışa,aktar,tetik,sağlık,doktor,log,hava,tahmin,rahatlama,diary

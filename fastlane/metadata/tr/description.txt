@@ -1,4 +1,4 @@
-Migraine Headache Tracker Log, iPhone’daki en hızlı migren ve baş ağrısı günlüğüdür – tek dokunuşla baş ağrısını kaydedin, ardından Headache Pro verilerinizde saklı kalıpları bulsun.
+Migraine Tracker Headache Log, iPhone’daki en hızlı migren ve baş ağrısı günlüğüdür – tek dokunuşla baş ağrısını kaydedin, ardından Headache Pro verilerinizde saklı kalıpları bulsun.
 
 Baş ağrısı başladığı anda iPhone veya Apple Watch üzerinde bir kez dokunun. Uygulama olayı anında zaman damgasıyla kaydeder ve doktorların ile migren uzmanlarının gerçekten sorduğu bağlamsal bilgileri otomatik olarak ekler – yazma yok, form yok, sürtünme yok.
 
@@ -28,7 +28,7 @@ GERÇEK HAYAT İÇİN TASARLANDI:
 
 MAHREMİYET ODAKLI TASARIM:
 
-Migraine Headache Tracker Log, yerel-öncelikli bir baş ağrısı günlüğüdür.
+Migraine Tracker Headache Log, yerel-öncelikli bir baş ağrısı günlüğüdür.
 
 - Hesap gerekmez
 - Reklam yok
@@ -36,7 +36,7 @@ Migraine Headache Tracker Log, yerel-öncelikli bir baş ağrısı günlüğüd�
 - Bulut senkronizasyonu yok
 - Baş ağrısı günlüğünüz cihazınızda kalır – yalnızca siz paylaşmak istediğinizde manuel dışa aktarım
 
-İster kronik migren, küme baş ağrıları, gerilim tipi baş ağrıları, hormonal baş ağrıları takip ediyor olun, ister sadece ara sıra yaşanan baş ağrılarının kalıplarını anlamaya çalışın; Migraine Headache Tracker Log tek bir dokunuşu eksiksiz, doktor hazır bir kayda dönüştürür ve Headache Pro bu kaydı gerçek yanıtlara çevirir.
+İster kronik migren, küme baş ağrıları, gerilim tipi baş ağrıları, hormonal baş ağrıları takip ediyor olun, ister sadece ara sıra yaşanan baş ağrılarının kalıplarını anlamaya çalışın; Migraine Tracker Headache Log tek bir dokunuşu eksiksiz, doktor hazır bir kayda dönüştürür ve Headache Pro bu kaydı gerçek yanıtlara çevirir.
 
 Abonelik Ayrıntıları
 Headache Pro, otomatik yenilenen abonelik (Aylık veya Yıllık, ikisinde de 7 günlük ücretsiz deneme) ya da tek seferlik Lifetime satın alma olarak sunulur. Fiyatlar satın almadan önce uygulamada gösterilir ve bölgeye göre değişir. Ödeme, onay sırasında Apple Kimliğinizden tahsil edilir. Geçerli dönemin bitiminden en az 24 saat önce iptal edilmediği sürece abonelikler otomatik olarak yenilenir. Ayarlar → Apple Kimliği → Abonelikler bölümünden istediğiniz zaman yönetin veya iptal edin.

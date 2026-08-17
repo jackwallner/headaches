@@ -1,1 +1,1 @@
-sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,tlak,vrijeme,prognoza,olakšanje,aura,diary
+sat,widget,bol,cluster,izvoz,okidač,zdravlje,doktor,log,vrijeme,olakšanje,aura,diary,pain,trigger

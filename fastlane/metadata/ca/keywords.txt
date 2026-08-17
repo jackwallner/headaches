@@ -1,1 +1,1 @@
-tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,pressió,temps
+tracker,rellotge,widget,dolor,cluster,exportar,desencadenant,salut,metge,símptoma,log,temps,diary

@@ -1,1 +1,1 @@
-tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,ilmanpaine,sää,ennuste,helpotus
+tracker,kello,widget,kipu,cluster,vienti,laukaisin,terveys,lääkäri,sää,ennuste,helpotus,diary,pain

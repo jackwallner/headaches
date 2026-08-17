@@ -1,1 +1,1 @@
-cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,pressão,clima,previsão,aura
+cabeça,tracker,relógio,widget,cluster,exportar,gatilho,saúde,médico,log,clima,previsão,aura,diary

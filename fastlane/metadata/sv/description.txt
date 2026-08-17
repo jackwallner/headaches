@@ -1,4 +1,4 @@
-Migraine Headache Tracker Log är den snabbaste migrän- och huvudvärksdagboken på iPhone – logga en huvudvärk med ett enda tryck och låt Headache Pro hitta mönstren som döljer sig i dina data.
+Migraine Tracker Headache Log är den snabbaste migrän- och huvudvärksdagboken på iPhone – logga en huvudvärk med ett enda tryck och låt Headache Pro hitta mönstren som döljer sig i dina data.
 
 När en huvudvärk slår till trycker du en gång på din iPhone eller Apple Watch. Appen tidsstämplar händelsen direkt och lägger automatiskt till den omgivande kontext som läkare och migränspecialister faktiskt frågar efter – ingen textinmatning, inga formulär, inget krångel.
 
@@ -28,7 +28,7 @@ BYGGD FÖR VARDAGEN:
 
 PRIVAT FRÅN GRUNDEN:
 
-Migraine Headache Tracker Log är en lokal-först-huvudvärksdagbok.
+Migraine Tracker Headache Log är en lokal-först-huvudvärksdagbok.
 
 - Inget konto krävs
 - Inga annonser
@@ -36,7 +36,7 @@ Migraine Headache Tracker Log är en lokal-först-huvudvärksdagbok.
 - Ingen molnsynk
 - Din huvudvärkslogg stannar på din enhet – manuell export bara när du själv väljer att dela
 
-Oavsett om du följer kronisk migrän, klusterhuvudvärk, spänningshuvudvärk, hormonell huvudvärk eller bara vill förstå ett återkommande mönster av huvudsmärta, gör Migraine Headache Tracker Log ett enda tryck till en komplett journal redo för läkaren – och Headache Pro förvandlar den journalen till svar.
+Oavsett om du följer kronisk migrän, klusterhuvudvärk, spänningshuvudvärk, hormonell huvudvärk eller bara vill förstå ett återkommande mönster av huvudsmärta, gör Migraine Tracker Headache Log ett enda tryck till en komplett journal redo för läkaren – och Headache Pro förvandlar den journalen till svar.
 
 Prenumerationsinformation
 Headache Pro finns som en prenumeration med automatisk förnyelse (månadsvis eller årsvis, båda med 7 dagars gratis provperiod) eller som ett engångsköp av Lifetime. Priserna visas i appen innan du köper och varierar mellan regioner. Betalningen dras från ditt Apple-ID vid bekräftelsen. Prenumerationer förnyas automatiskt om de inte sägs upp minst 24 timmar före den aktuella periodens slut. Hantera eller säg upp när som helst under Inställningar → Apple-ID → Prenumerationer.

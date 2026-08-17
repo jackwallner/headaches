@@ -1,1 +1,1 @@
-migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,tlak,vreme,napoved,olajšanje
+migrena,ura,widget,bolečina,cluster,izvoz,sprožilec,zdravje,zdravnik,vreme,olajšanje,diary,pain

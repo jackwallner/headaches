@@ -1,1 +1,1 @@
-hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,tlak,počasí,předpověď,úleva,aura,tenzní
+hodinky,widget,cluster,export,spouštěč,zdraví,lékař,log,počasí,úleva,aura,tenzní,diary,pain,trigger
