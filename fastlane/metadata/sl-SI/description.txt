@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log z enim dotikom zabeleži glavobol in vam sčasoma pomaga razumeti osebne vzorce, povezane s spanjem, vremenom, zračnim tlakom in vsakodnevnimi navadami.
+Migraine Tracker- Headache Log z enim dotikom zabeleži glavobol in vam sčasoma pomaga razumeti osebne vzorce, povezane s spanjem, vremenom, zračnim tlakom in vsakodnevnimi navadami.
 
 Ko se glavobol začne, enkrat tapnite na iPhonu ali Apple Watch. Aplikacija takoj shrani čas in, kadar je na voljo, doda podatke iz Apple Health ter lokalne vremenske razmere. Brez dolgih obrazcev.
 

@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log er den hurtigste migræne- og hovedpinedagbog på iPhone – registrer en hovedpine med ét tryk, og lad Headache Pro finde de mønstre, der gemmer sig i dine data.
+Migraine Tracker- Headache Log er den hurtigste migræne- og hovedpinedagbog på iPhone – registrer en hovedpine med ét tryk, og lad Headache Pro finde de mønstre, der gemmer sig i dine data.
 
 I det øjeblik en hovedpine rammer, trykker du én gang på din iPhone eller Apple Watch. Appen tidsstempler straks episoden og tilføjer automatisk den kontekst, som læger og migrænespecialister faktisk spørger til – ingen indtastning, ingen formularer, ingen friktion.
 
@@ -28,7 +28,7 @@ DESIGNET TIL HVERDAGEN:
 
 PRIVATLIV SOM STANDARD:
 
-Migraine Tracker Headache Log er en local-first hovedpinedagbog.
+Migraine Tracker- Headache Log er en local-first hovedpinedagbog.
 
 - Ingen konto påkrævet
 - Ingen annoncer
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log er en local-first hovedpinedagbog.
 - Ingen cloud-synkronisering
 - Din hovedpinelog bliver på din enhed – kun manuel eksport, når du selv vælger at dele
 
-Uanset om du sporer kronisk migræne, klyngehovedpine, spændingshovedpine, hormonelle hovedpiner eller bare prøver at forstå et lejlighedsvist mønster i dine hovedsmerter, gør Migraine Tracker Headache Log ét tryk til en komplet, lægeklar registrering – og Headache Pro gør den registrering til svar.
+Uanset om du sporer kronisk migræne, klyngehovedpine, spændingshovedpine, hormonelle hovedpiner eller bare prøver at forstå et lejlighedsvist mønster i dine hovedsmerter, gør Migraine Tracker- Headache Log ét tryk til en komplet, lægeklar registrering – og Headache Pro gør den registrering til svar.
 
 Abonnementsoplysninger
 Headache Pro fås som et abonnement med automatisk fornyelse (månedligt eller årligt, begge med 7 dages gratis prøveperiode) eller som et engangskøb af Lifetime. Priserne vises i appen, inden du køber, og varierer fra region til region. Betalingen trækkes på dit Apple ID ved bekræftelse. Abonnementer fornyes automatisk, medmindre de opsiges mindst 24 timer før den aktuelle periode slutter. Administrer eller opsig når som helst i Indstillinger → Apple ID → Abonnementer.

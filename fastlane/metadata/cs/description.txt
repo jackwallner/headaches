@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log je nejrychlejší deník migrény a bolestí hlavy na iPhonu – záznam vytvoříte jediným klepnutím a Headache Pro pak v datech najde skryté vzorce.
+Migraine Tracker- Headache Log je nejrychlejší deník migrény a bolestí hlavy na iPhonu – záznam vytvoříte jediným klepnutím a Headache Pro pak v datech najde skryté vzorce.
 
 Jakmile bolest hlavy začne, jednou klepnete na iPhonu nebo Apple Watch. Aplikace okamžitě uloží čas a automaticky přidá kontext, na který se lékaři a specialisté na migrénu skutečně ptají – bez psaní, bez formulářů, bez tření.
 
@@ -28,7 +28,7 @@ NAVRŽENO PRO SKUTEČNÝ ŽIVOT:
 
 SOUKROMÍ NA PRVNÍM MÍSTĚ:
 
-Migraine Tracker Headache Log je deník bolestí hlavy s lokálním ukládáním dat.
+Migraine Tracker- Headache Log je deník bolestí hlavy s lokálním ukládáním dat.
 
 - Není potřeba účet
 - Žádné reklamy
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log je deník bolestí hlavy s lokálním ukládáním
 - Žádná synchronizace do cloudu
 - Váš deník bolestí hlavy zůstává ve vašem zařízení – export proběhne jen ručně, když se rozhodnete data sdílet
 
-Ať už sledujete chronickou migrénu, clusterové bolesti hlavy, tenzní bolesti, hormonální bolesti hlavy, nebo se jen snažíte pochopit občasný vzorec bolestí, Migraine Tracker Headache Log promění jedno klepnutí v úplný záznam připravený pro lékaře – a Headache Pro z tohoto záznamu získá odpovědi.
+Ať už sledujete chronickou migrénu, clusterové bolesti hlavy, tenzní bolesti, hormonální bolesti hlavy, nebo se jen snažíte pochopit občasný vzorec bolestí, Migraine Tracker- Headache Log promění jedno klepnutí v úplný záznam připravený pro lékaře – a Headache Pro z tohoto záznamu získá odpovědi.
 
 Podrobnosti předplatného
 Headache Pro je k dispozici jako automaticky obnovované předplatné (měsíční nebo roční, obojí se 7denní bezplatnou zkušební verzí) nebo jako jednorázový nákup Lifetime. Ceny se zobrazují v aplikaci před nákupem a liší se podle regionu. Platba se strhne z vašeho Apple ID při potvrzení. Předplatné se automaticky obnovuje, pokud ho nezrušíte alespoň 24 hodin před koncem aktuálního období. Spravovat nebo zrušit můžete kdykoli v Nastavení → Apple ID → Předplatné.

@@ -1,4 +1,4 @@
-A Migraine Tracker Headache Log a leggyorsabb migrén- és fejfájásnapló iPhone-on – egyetlen koppintással rögzíthetsz egy fejfájást, majd a Headache Pro feltárja a mintákat, amelyek az adataidban rejtőznek.
+A Migraine Tracker- Headache Log a leggyorsabb migrén- és fejfájásnapló iPhone-on – egyetlen koppintással rögzíthetsz egy fejfájást, majd a Headache Pro feltárja a mintákat, amelyek az adataidban rejtőznek.
 
 Amint beüt a fejfájás, koppints egyet iPhone-on vagy Apple Watch-on. Az app azonnal időbélyeget ad, és automatikusan csatolja azt a környezeti kontextust, amiről az orvosok és a migrénspecialisták valójában kérdeznek – nincs gépelés, nincs űrlap, semmi súrlódás.
 
@@ -28,7 +28,7 @@ A VALÓ ÉLETRE TERVEZVE:
 
 ADATVÉDELEMRE ÉPÍTVE:
 
-A Migraine Tracker Headache Log elsősorban helyben futó fejfájás-napló.
+A Migraine Tracker- Headache Log elsősorban helyben futó fejfájás-napló.
 
 - Nincs szükség fiókra
 - Nincsenek hirdetések
@@ -36,7 +36,7 @@ A Migraine Tracker Headache Log elsősorban helyben futó fejfájás-napló.
 - Nincs felhőszinkron
 - A fejfájásnaplód az eszközödön marad – csak akkor exportálod manuálisan, amikor meg szeretnéd osztani
 
-Akár krónikus migrént, klaszteres fejfájást, tenziós fejfájást, hormonális fejfájást követsz, akár csak az alkalmi fejfájásmintákat próbálod megérteni, a Migraine Tracker Headache Log egyetlen koppintásból teljes, orvosra kész naplót készít – a Headache Pro pedig válaszokká alakítja ezt a naplót.
+Akár krónikus migrént, klaszteres fejfájást, tenziós fejfájást, hormonális fejfájást követsz, akár csak az alkalmi fejfájásmintákat próbálod megérteni, a Migraine Tracker- Headache Log egyetlen koppintásból teljes, orvosra kész naplót készít – a Headache Pro pedig válaszokká alakítja ezt a naplót.
 
 Előfizetési információk
 A Headache Pro automatikusan megújuló előfizetésként (havi vagy éves, mindkettő 7 napos ingyenes próbaidőszakkal) vagy egyszeri Lifetime vásárlásként érhető el. Az árak vásárlás előtt az appban láthatók, és régiónként eltérnek. A díjat megerősítéskor terheljük az Apple ID-dra. Az előfizetés automatikusan megújul, ha nem mondod le legalább 24 órával az aktuális időszak vége előtt. Bármikor kezelheted vagy lemondhatod a Beállítások → Apple ID → Előfizetések menüben.

@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log는 iPhone에서 가장 빠른 편두통·두통 다이어리로, 한 번의 탭으로 두통을 기록하고 Headache Pro가 데이터 속에 숨은 패턴을 찾아줍니다.
+Migraine Tracker- Headache Log는 iPhone에서 가장 빠른 편두통·두통 다이어리로, 한 번의 탭으로 두통을 기록하고 Headache Pro가 데이터 속에 숨은 패턴을 찾아줍니다.
 
 두통이 시작되는 순간 iPhone이나 Apple Watch에서 한 번만 탭하면 됩니다. 앱이 즉시 타임스탬프를 남기고, 의사와 편두통 전문의가 실제로 묻는 주변 상황을 자동으로 붙여 줍니다. 입력도, 양식도, 번거로움도 없습니다.
 
@@ -28,7 +28,7 @@ HEADACHE PRO - 유발 요인 찾기:
 
 프라이버시 우선 설계:
 
-Migraine Tracker Headache Log는 로컬 우선 두통 저널입니다.
+Migraine Tracker- Headache Log는 로컬 우선 두통 저널입니다.
 
 - 계정 불필요
 - 광고 없음
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log는 로컬 우선 두통 저널입니다.
 - 클라우드 동기화 없음
 - 두통 기록은 사용자의 기기에만 저장되며, 사용자가 선택할 때만 수동으로 내보내 공유할 수 있습니다.
 
-만성 편두통, 군발두통, 긴장성 두통, 호르몬 두통을 추적하든, 가끔 오는 두통 패턴만 파악하려 하든, Migraine Tracker Headache Log는 한 번의 탭을 완전하고 의사에게 바로 보여줄 수 있는 기록으로 바꾸고, Headache Pro는 그 기록을 근거 있는 답으로 바꿔 줍니다.
+만성 편두통, 군발두통, 긴장성 두통, 호르몬 두통을 추적하든, 가끔 오는 두통 패턴만 파악하려 하든, Migraine Tracker- Headache Log는 한 번의 탭을 완전하고 의사에게 바로 보여줄 수 있는 기록으로 바꾸고, Headache Pro는 그 기록을 근거 있는 답으로 바꿔 줍니다.
 
 구독 정보
 Headache Pro는 자동 갱신 구독(월간 또는 연간, 모두 7일 무료 체험 포함) 또는 일회성 Lifetime 구입으로 이용할 수 있습니다. 가격은 구입 전 앱에 표시되며 지역에 따라 다릅니다. 결제는 확인 시 Apple ID로 청구됩니다. 현재 기간 종료 최소 24시간 전에 취소하지 않으면 구독이 자동으로 갱신됩니다. 설정 → Apple ID → 구독에서 언제든지 관리하거나 취소할 수 있습니다.

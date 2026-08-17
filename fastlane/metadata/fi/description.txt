@@ -1,4 +1,4 @@
-Migraine Tracker Headache Log on iPhonen nopein migreeni- ja päänsärkypäiväkirja – kirjaa päänsärky yhdellä napautuksella ja anna Headache Pro ‑ominaisuuden etsiä datastasi piilossa olevat kuviot.
+Migraine Tracker- Headache Log on iPhonen nopein migreeni- ja päänsärkypäiväkirja – kirjaa päänsärky yhdellä napautuksella ja anna Headache Pro ‑ominaisuuden etsiä datastasi piilossa olevat kuviot.
 
 Heti kun päänsärky alkaa, napauta kerran iPhonessa tai Apple Watchissa. Sovellus aikaleimaa tapahtuman välittömästi ja liittää automaattisesti mukaan sen taustatiedot, joista lääkärit ja migreeniasiantuntijat oikeasti kyselevät – ei kirjoittamista, ei lomakkeita, ei kitkaa.
 
@@ -28,7 +28,7 @@ ARKIPÄIVÄÄ VARTEN SUUNNITELTU:
 
 YKSITYISYYS JO SUUNNITTELUSSA:
 
-Migraine Tracker Headache Log on paikallisesti toimiva päänsärkypäiväkirja.
+Migraine Tracker- Headache Log on paikallisesti toimiva päänsärkypäiväkirja.
 
 - Ei vaadi käyttäjätiliä
 - Ei mainoksia
@@ -36,7 +36,7 @@ Migraine Tracker Headache Log on paikallisesti toimiva päänsärkypäiväkirja.
 - Ei pilvisynkronointia
 - Päänsärkyhistoriasi pysyy laitteellasi – vienti vain manuaalisesti, kun itse haluat jakaa
 
-Olitpa seuraamassa kroonista migreeniä, sarjoittaisia päänsärkyjä, jännityspäänsärkyjä, hormonaalisia päänsärkyjä tai haluat vain ymmärtää satunnaisen päänsäryn kuvioita, Migraine Tracker Headache Log muuttaa yhden napautuksen kattavaksi, lääkärille valmiiksi yhteenvedoksi – ja Headache Pro muuttaa tämän yhteenvedon vastauksiksi.
+Olitpa seuraamassa kroonista migreeniä, sarjoittaisia päänsärkyjä, jännityspäänsärkyjä, hormonaalisia päänsärkyjä tai haluat vain ymmärtää satunnaisen päänsäryn kuvioita, Migraine Tracker- Headache Log muuttaa yhden napautuksen kattavaksi, lääkärille valmiiksi yhteenvedoksi – ja Headache Pro muuttaa tämän yhteenvedon vastauksiksi.
 
 Tilaustiedot
 Headache Pro on saatavana automaattisesti uusiutuvana tilauksena (kuukausi tai vuosi, molemmissa 7 päivän ilmainen kokeilu) tai kertaostoksena Lifetime. Hinnat näkyvät apissa ennen ostoa ja vaihtelevat alueittain. Maksu veloitetaan Apple ID:ltäsi vahvistuksen yhteydessä. Tilaukset uusiutuvat automaattisesti, ellei niitä peruuteta vähintään 24 tuntia ennen kuluvan jakson päättymistä. Voit hallita tai peruuttaa milloin tahansa: Asetukset → Apple ID → Tilaukset.
