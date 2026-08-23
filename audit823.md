@@ -968,3 +968,44 @@ Acceptance: a user reading ASC, the site, privacy, terms, support, onboarding, a
 ## Final audit conclusion
 
 The app's acquisition story is credible: one-tap capture, automatic context, Apple Watch and widget entry, personal patterns, alerts, and local-first trust. The next implementation pass should start with purchase-state correctness and commercial source-of-truth reconciliation. Once those are fixed, safe funnel attributes and release watchdog inputs will make the remaining paywall and metadata experiments measurable instead of speculative. Documentation cleanup should happen alongside those changes so future Cursor, Claude, and Codex sessions use the current product, price, URL, and validation rules.
+
+## Activity and success context, 2026-08-23
+
+Classification: **growing and monetizing**. Confidence: **high**. Trend: **growing signal present**.
+
+ASC release state: `iOS 1.5.0 Ready for Distribution`. ASC evidence: [Analytics Overview](https://appstoreconnect.apple.com/apps/6762074561/analytics/overview?dateSpec=d90), selected range `dateSpec=d90`.
+RevenueCat evidence: [Project Overview](https://app.revenuecat.com/projects/9f4317d7/overview), production mode, selected range `Last 28 days, 2026-07-27 through 2026-08-23`.
+
+### Observed activity
+
+| Source | Metric | Value | Window or comparison |
+| --- | --- | ---: | --- |
+| ASC | First-time downloads | 107 | 90-day Analytics Overview |
+| ASC | Redownloads | 16 | 90-day Analytics Overview |
+| ASC | Conversion rate | 2.29% | comparison +38.8% |
+| ASC | Proceeds | $211 | 90-day Analytics Overview |
+| ASC | In-app purchases | 23 | 90-day Analytics Overview |
+| RevenueCat | New customers | 29 | last 28 days |
+| RevenueCat | Active customers | 57 | last 28 days |
+| RevenueCat | Active trials | 0 | current total |
+| RevenueCat | Active subscriptions | 4 | current total |
+| RevenueCat | MRR | $11 | current total |
+| RevenueCat | Revenue | $30 | last 28 days |
+
+A missing value above means the source did not expose that metric in this read-only snapshot. It is not a zero.
+
+### Interpretation and implementation focus
+
+Headaches is one of the few apps with a positive acquisition and conversion comparison. ASC shows 107 first-time downloads, +174% versus the comparison, a 2.29% conversion rate with a +38.8% comparison, $211 in proceeds, and 23 in-app purchases. RevenueCat shows 29 new customers, 4 active subscriptions, $11 MRR, and $30 of revenue in the last 28 days. Keep the one-tap capture and context wedge, then use the purchase-state and cohort instrumentation in the audit to find whether the next constraint is trial eligibility, renewal, or retention.
+
+The deterministic classifier recommends: Protect the current paid path, then use release and cohort baselines to decide whether acquisition or conversion is the next constraint.
+
+- Join ASC first-time download, first launch, first value, paywall shown, offer loaded, trial started, trial canceled, trial converted, entitlement active, restore, and purchase failure events with the app version and build.
+- Keep ASC's 90-day acquisition and proceeds window separate from RevenueCat's 28-day customer and revenue window. Do not calculate a conversion rate by dividing values from different windows.
+- Use a mature trial cohort and a minimum sample before choosing a native paywall or onboarding A/B winner. Record the offering identifier, package, placement, experiment variant, and build.
+- Put the app's classification and the next baseline date in the release handoff so Cursor, Claude, and Codex do not optimize from an old qualitative audit.
+
+### Boundary on success or death
+
+This snapshot supports the label **growing and monetizing**, not a lifetime verdict. ASC shows a positive comparison and the app has current paid activity. A later decision should include a clean 28-day RevenueCat trend, ASC acquisition and conversion trend, ratings and review count, crash and hang evidence, and a release-specific cohort.
+This dated section supersedes earlier statements in this file that per-app ASC or RevenueCat activity was unavailable as of 2026-08-23. Earlier statements remain historical evidence boundaries for their original audit pass.
