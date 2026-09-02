@@ -348,11 +348,18 @@ final class StoreService: NSObject, ObservableObject {
         }
         #else
         configureIfNeeded()
+        let startedTrial = isEligibleForIntroOffer(package)
         let result = try await Purchases.shared.purchase(package: package)
         apply(customerInfo: result.customerInfo)
         if result.userCancelled {
             return .cancelled
         } else if result.customerInfo.hasHeadacheProEntitlement {
+            ConversionDiagnostics.recordConversion(
+                plan: package.storeProduct.productIdentifier,
+                startedTrial: startedTrial,
+                offeringID: currentOffering?.identifier
+            )
+            syncConversionAttributes()
             return .purchased
         } else {
             return .pending
@@ -459,10 +466,34 @@ final class StoreService: NSObject, ObservableObject {
             guard !paywallImpressionsThisSession.contains(id) else { return }
             paywallImpressionsThisSession.insert(id)
         }
+        ConversionDiagnostics.recordPitchView(impressionID: id)
+        syncConversionAttributes()
         Purchases.shared.trackCustomPaywallImpression(
             CustomPaywallImpressionParams(paywallId: id)
         )
         #endif
+    }
+
+    /// Mirrors the on-device conversion record onto the RevenueCat customer.
+    ///
+    /// Attributes rather than extra impressions: RevenueCat treats every
+    /// impression id as a paywall encounter, so funnel steps sent that way would
+    /// drive the encounter rate to 100% and destroy the one server-side number
+    /// that currently works. Attributes stay off the charts and are readable per
+    /// customer.
+    ///
+    /// `isConfigured` is the load-bearing guard. `Purchases.shared` traps when
+    /// RevenueCat was never configured, so this must never reach it on a launch
+    /// where configuration was skipped or failed.
+    func syncConversionAttributes() {
+        guard isConfigured else { return }
+        if AppEnvironment.isUITesting { return }
+        var attributes = ConversionDiagnostics.subscriberAttributes
+        guard !attributes.isEmpty else { return }
+        if let offering = currentOffering?.identifier {
+            attributes["offering_id"] = offering
+        }
+        Purchases.shared.attribution.setAttributes(attributes)
     }
 
     func restorePurchases() async {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		054B184CD586A26F33E25C6D /* HeadacheQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4457E7EF4F6C8085CCA932D7 /* HeadacheQuizView.swift */; };
+		06E291228E2F22F04D821316 /* ConversionDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC469DF4682BDD380C12307 /* ConversionDiagnostics.swift */; };
 		0A8924E6D51FD77217D15D72 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91367B1F7BDF8F54249C011B /* AppEnvironment.swift */; };
 		0BDA0F43A3DBCF726D2808F0 /* CaptureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */; };
 		12BE0B76D2C2536F0C478313 /* EditEventSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A62B2A353D366DCC908709D /* EditEventSheet.swift */; };
@@ -66,6 +67,7 @@
 		EDFC1B480765BA3ACFBBB289 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8412887F4E26C9B3CC85AC /* PaywallView.swift */; };
 		F44B344B700D41CFC10C376D /* HeadacheEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */; };
 		F4D36C76D423D4BEF2CA59FD /* ProactiveAlertsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */; };
+		F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */; };
 		FA8EFEC5D1F70EC66FAEF806 /* ProAlertPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26C529527476DB4EF2D977F /* ProAlertPreferences.swift */; };
 		FC374774D642F632FF0C187D /* HeadacheLoggerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */; };
 		FDC181FFD202D30A2E2E336A /* InsightsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C7A2B35897EC80F7A321C /* InsightsEngine.swift */; };
@@ -158,6 +160,7 @@
 		9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		9E9FDF0333E813841B3E325A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		9F9C78392E24C65D489A0719 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionDiagnosticsTests.swift; sourceTree = "<group>"; };
 		A8472C3F09A9A16899D362E3 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptSheet.swift; sourceTree = "<group>"; };
 		A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HeadacheLoggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +175,7 @@
 		C88D1313C9785E44B4C49729 /* HeadacheLoggerWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeadacheLoggerWatch.entitlements; sourceTree = "<group>"; };
 		C9374226F8FD525B4B20127E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		C9DCB474A89830CF74A79945 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CEC469DF4682BDD380C12307 /* ConversionDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionDiagnostics.swift; sourceTree = "<group>"; };
 		D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallScreenshotHarness.swift; sourceTree = "<group>"; };
 		DBE1C310F077996DFAD946E6 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
 		E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 		58E0B70DD8BDD0AC07D0AFA0 /* HeadacheLoggerTests */ = {
 			isa = PBXGroup;
 			children = (
+				A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */,
 				B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */,
 			);
 			path = HeadacheLoggerTests;
@@ -290,6 +295,7 @@
 			children = (
 				EB391699EDD40FD6CADD8D1E /* BackgroundRefreshService.swift */,
 				9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */,
+				CEC469DF4682BDD380C12307 /* ConversionDiagnostics.swift */,
 				5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */,
 				86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */,
 				7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */,
@@ -542,6 +548,7 @@
 				B53D8892F1AAF8B8EE8DD434 /* AppStoreReviewLinks.swift in Sources */,
 				2751DCAD06E95DF91DE183FD /* BackgroundRefreshService.swift in Sources */,
 				0BDA0F43A3DBCF726D2808F0 /* CaptureCoordinator.swift in Sources */,
+				06E291228E2F22F04D821316 /* ConversionDiagnostics.swift in Sources */,
 				E1E6406B0B06AEDE54C3E916 /* DailyRecordStore.swift in Sources */,
 				15A305300D800AFD954BEA05 /* DailyWeatherBackfillService.swift in Sources */,
 				12BE0B76D2C2536F0C478313 /* EditEventSheet.swift in Sources */,
@@ -584,6 +591,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */,
 				B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
