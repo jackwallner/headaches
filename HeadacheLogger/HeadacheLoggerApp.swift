@@ -19,6 +19,7 @@ struct HeadacheLoggerApp: App {
     init() {
         StoreService.shared.start()
         ReviewPromptTracker.recordAppLaunch()
+        ConversionDiagnostics.recordAppOpen()
     }
 
     var body: some Scene {
