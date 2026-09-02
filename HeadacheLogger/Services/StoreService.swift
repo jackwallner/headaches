@@ -16,6 +16,40 @@ enum RevenueCatConfig {
     static let fallbackEntitlement = "pro"
 }
 
+#if DEBUG
+/// Simulator-only proof path for the funnel attributes.
+///
+/// The attributes cannot be verified on a simulator under the normal rules: the
+/// production `appl_` key must never be configured there, so RevenueCat is never
+/// configured at all, so nothing is ever sent. That leaves a real device as the
+/// only witness, which makes every rollout wait on a human with a phone.
+///
+/// This uses the project's **Test Store** key instead. It is a different
+/// RevenueCat app inside the same project, so a probe run creates a Test Store
+/// customer and cannot touch App Store customers, revenue, or charts. The app
+/// user id is fixed so the run can be read back by name.
+///
+/// DEBUG only, and only when the launch argument is present, so nothing here can
+/// reach a Release build or an ordinary simulator run.
+enum RevenueCatProbe {
+    static var isEnabled: Bool {
+        ProcessInfo.processInfo.arguments.contains("-rcfunnelprobe")
+    }
+
+    static let testStoreKey = "test_zRersXkQPZJCeNuEjwHlDOMbIOc"
+
+    static var appUserID: String {
+        ProcessInfo.processInfo.environment["RC_PROBE_USER"] ?? "funnel-probe-headaches"
+    }
+
+    /// The surface the probe reports, so a read-back can assert an exact value
+    /// rather than "something arrived".
+    static var impressionID: String {
+        ProcessInfo.processInfo.environment["RC_PROBE_SURFACE"] ?? "headache_home_sheet"
+    }
+}
+#endif
+
 enum PurchaseState {
     case purchased
     case cancelled
@@ -458,6 +492,13 @@ final class StoreService: NSObject, ObservableObject {
     /// Reports a custom paywall impression to RevenueCat (required for native paywalls).
     func trackPaywallImpression(id: String, oncePerSession: Bool = false) {
         #if targetEnvironment(simulator)
+        #if DEBUG
+        if RevenueCatProbe.isEnabled {
+            configureIfNeeded()
+            ConversionDiagnostics.recordPitchView(impressionID: id)
+            syncConversionAttributes()
+        }
+        #endif
         return
         #else
         configureIfNeeded()
@@ -537,6 +578,19 @@ final class StoreService: NSObject, ObservableObject {
     private func configureIfNeeded() {
         guard !isConfigured else { return }
         #if targetEnvironment(simulator)
+        #if DEBUG
+        // The one simulator path that is allowed to configure RevenueCat, and
+        // only ever with the Test Store key. See `RevenueCatProbe`.
+        guard RevenueCatProbe.isEnabled else { return }
+        Purchases.logLevel = .debug
+        Purchases.configure(
+            with: Configuration.Builder(withAPIKey: RevenueCatProbe.testStoreKey)
+                .with(appUserID: RevenueCatProbe.appUserID)
+                .build()
+        )
+        Purchases.shared.delegate = self
+        isConfigured = true
+        #endif
         return
         #else
         #if DEBUG
