@@ -22,6 +22,18 @@ settings:
     GENERATE_INFOPLIST_FILE: NO
 
 schemes:
+  HeadacheLoggerUITests:
+    build:
+      targets:
+        HeadacheLogger: all
+        HeadacheLoggerUITests: [test]
+    test:
+      config: Debug
+      targets:
+        - HeadacheLoggerUITests
+    run:
+      config: Debug
+
   HeadacheLogger:
     build:
       targets:
@@ -123,3 +135,20 @@ targets:
         BUNDLE_LOADER: "$(TEST_HOST)"
     dependencies:
       - target: HeadacheLogger
+
+  # The paywall purchase probe. Its own target and scheme: the app's own test
+  # action activates StoreKit Testing, and this has to reach RevenueCat's Test
+  # Store instead.
+  HeadacheLoggerUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: HeadacheLoggerUITests
+    dependencies:
+      - target: HeadacheLogger
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.jackwallner.headachelogger.uitests
+        TEST_TARGET_NAME: HeadacheLogger
+
