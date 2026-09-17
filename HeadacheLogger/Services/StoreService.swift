@@ -342,6 +342,15 @@ final class StoreService: NSObject, ObservableObject {
         Task { await fetchProducts() }
     }
 
+    #if DEBUG
+    /// Local-only entitlement state for literal screenshot captures. It never
+    /// configures RevenueCat and is unavailable to Release builds.
+    func activateScreenshotPro() {
+        isProUnlocked = true
+        hasResolvedEntitlements = true
+    }
+    #endif
+
     func fetchProducts() async {
         isLoadingProducts = true
         defer { isLoadingProducts = false }
