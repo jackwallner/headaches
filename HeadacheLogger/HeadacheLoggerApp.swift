@@ -4,6 +4,17 @@ import SwiftUI
 import UIKit
 import UserNotifications
 
+enum HeadacheBrand {
+    static var name: String {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotBrand") {
+            return "Migraine Tracker"
+        }
+        #endif
+        return "One Tap Headache Tracker"
+    }
+}
+
 extension Notification.Name {
     /// Posted when the Patterns (Insights) tab appears, so the root content can
     /// consider the second-touch trial offer.
@@ -588,7 +599,7 @@ private enum HeadacheScreenshotSeed {
         let calendar = Calendar.current
         let now = Date()
         let entries: [(daysAgo: Int, hour: Int, severity: HeadacheSeverity, steps: Int, sleep: Double, pressure: Double, weather: String, note: String)] = [
-            (0, 8, .slight, 7_420, 7.4, 1016, "Partly cloudy", "Morning check-in"),
+            (0, 8, .slight, 7_420, 7.4, 1016, "Partly cloudy", "Started after a screen-heavy morning. Added context for my private record."),
             (1, 18, .medium, 9_180, 6.8, 1013, "Clear", "After a long workday"),
             (3, 12, .slight, 6_540, 7.1, 1018, "Clear", "Logged from the desk"),
             (5, 21, .medium, 8_230, 6.5, 1014, "Cloudy", "Evening check-in"),
@@ -601,7 +612,7 @@ private enum HeadacheScreenshotSeed {
             (28, 19, .slight, 9_520, 7.9, 1018, "Clear", "Evening check-in")
         ]
 
-        for entry in entries {
+        for (index, entry) in entries.enumerated() {
             guard let day = calendar.date(byAdding: .day, value: -entry.daysAgo, to: now),
                   let timestamp = calendar.date(bySettingHour: entry.hour, minute: 12, second: 0, of: day)
             else { continue }
@@ -616,7 +627,7 @@ private enum HeadacheScreenshotSeed {
             event.weatherSummary = entry.weather
             event.temperatureC = 15
             event.pressureHpa = entry.pressure
-            event.pressureTrend = .steady
+            event.pressureTrend = [.steady, .rising, .falling][index % 3]
             event.stepsToday = entry.steps
             event.sleepHoursLastNight = entry.sleep
             event.severity = entry.severity

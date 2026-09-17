@@ -167,7 +167,7 @@ struct HomeView: View {
             .padding(20)
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("One Tap Headache Tracker")
+        .navigationTitle(HeadacheBrand.name)
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")
         .onAppear {
