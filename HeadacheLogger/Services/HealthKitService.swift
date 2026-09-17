@@ -419,6 +419,10 @@ actor HealthKitService {
     func connectionSummary() async -> String {
         guard HKHealthStore.isHealthDataAvailable() else { return "Unavailable on this device" }
 
+        #if DEBUG
+        if HeadacheBrand.isScreenshotMode { return "Connected" }
+        #endif
+
         // The honest signal is whether we can actually READ data. HealthKit never
         // reports read authorization, and `getRequestStatusForAuthorization` only
         // answers "have we shown the sheet" — it can return `.shouldRequest`
