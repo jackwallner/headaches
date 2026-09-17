@@ -209,6 +209,9 @@ private struct HeadacheLoggerRootContent: View {
             }
         }
         .onAppear {
+            #if DEBUG
+            HeadacheScreenshotSeed.seedIfRequested(in: modelContext)
+            #endif
             #if os(iOS)
             PhoneWatchSession.shared.onWatchRequestedCapture = { [captureCoordinator] tapDate in
                 captureCoordinator.captureHeadache(
@@ -567,6 +570,59 @@ private struct HeadacheLoggerRootContent: View {
         }
     }
 }
+
+#if DEBUG
+private enum HeadacheScreenshotSeed {
+    static func seedIfRequested(in context: ModelContext) {
+        guard ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotSeed") else { return }
+
+        if let existing = try? context.fetch(FetchDescriptor<HeadacheEvent>()) {
+            existing.forEach(context.delete)
+        }
+
+        let calendar = Calendar.current
+        let now = Date()
+        let entries: [(daysAgo: Int, hour: Int, severity: HeadacheSeverity, steps: Int, sleep: Double, pressure: Double, weather: String, note: String)] = [
+            (0, 8, .slight, 7_420, 7.4, 1016, "Partly cloudy", "Morning check-in"),
+            (1, 18, .medium, 9_180, 6.8, 1013, "Clear", "After a long workday"),
+            (3, 12, .slight, 6_540, 7.1, 1018, "Clear", "Logged from the desk"),
+            (5, 21, .medium, 8_230, 6.5, 1014, "Cloudy", "Evening check-in"),
+            (7, 9, .slight, 5_980, 8.0, 1017, "Partly cloudy", "Quick note"),
+            (10, 16, .medium, 10_240, 6.2, 1011, "Light rain", "Afternoon check-in"),
+            (13, 11, .slight, 7_860, 7.7, 1019, "Clear", "Logged from the park"),
+            (16, 20, .medium, 6_710, 6.9, 1015, "Cloudy", "Evening check-in"),
+            (20, 14, .slight, 8_640, 7.3, 1016, "Clear", "Afternoon note"),
+            (24, 10, .medium, 7_110, 6.6, 1012, "Partly cloudy", "Morning check-in"),
+            (28, 19, .slight, 9_520, 7.9, 1018, "Clear", "Evening check-in")
+        ]
+
+        for entry in entries {
+            guard let day = calendar.date(byAdding: .day, value: -entry.daysAgo, to: now),
+                  let timestamp = calendar.date(bySettingHour: entry.hour, minute: 12, second: 0, of: day)
+            else { continue }
+
+            let event = HeadacheEvent(timestamp: timestamp)
+            event.captureStatus = .complete
+            event.captureCompletedAt = timestamp.addingTimeInterval(42)
+            event.healthStatus = .captured
+            event.environmentStatus = .captured
+            event.locality = "Seattle"
+            event.region = "WA"
+            event.weatherSummary = entry.weather
+            event.temperatureC = 15
+            event.pressureHpa = entry.pressure
+            event.pressureTrend = .steady
+            event.stepsToday = entry.steps
+            event.sleepHoursLastNight = entry.sleep
+            event.severity = entry.severity
+            event.userNotes = entry.note
+            context.insert(event)
+        }
+
+        try? context.save()
+    }
+}
+#endif
 
 private struct ProIntroSheet: View {
     @Environment(\.dismiss) private var dismiss
