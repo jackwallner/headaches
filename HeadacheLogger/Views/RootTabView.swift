@@ -3,7 +3,16 @@ import SwiftUI
 struct RootTabView: View {
     @AppStorage("appearance") private var appearanceRaw = AppAppearance.system.rawValue
     @StateObject private var reviewPromptCoordinator = ReviewPromptCoordinator.shared
-    @State private var selectedTab = 0
+    @State private var selectedTab = Self.initialTab
+
+    private static var initialTab: Int {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotPatterns") {
+            return 2
+        }
+        #endif
+        return 0
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -12,7 +21,7 @@ struct RootTabView: View {
             }
             .tag(0)
             .tabItem {
-                Label("One Tap", systemImage: "brain.head.profile")
+                Label(HeadacheBrand.name, systemImage: "brain.head.profile")
             }
 
             NavigationStack {
