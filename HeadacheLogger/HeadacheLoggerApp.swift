@@ -18,6 +18,11 @@ struct HeadacheLoggerApp: App {
 
     init() {
         StoreService.shared.start()
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheProOverride") {
+            StoreService.shared.activateScreenshotPro()
+        }
+        #endif
         ReviewPromptTracker.recordAppLaunch()
         ConversionDiagnostics.recordAppOpen()
         #if DEBUG

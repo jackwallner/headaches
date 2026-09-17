@@ -17,6 +17,7 @@ struct HomeView: View {
     @State private var severityNotesTarget: SeverityNotesTarget?
     @State private var showCheckmark = false
     @State private var showPaywall = false
+    @State private var didPresentDebugDetails = false
     /// Drives the bottom Undo / Add Details snackbar. Set when a tap completes and
     /// auto-clears after `undoSnackbarTTLSeconds` so the controls don't linger forever.
     @State private var undoSnackbarVisible = false
@@ -169,6 +170,19 @@ struct HomeView: View {
         .navigationTitle("One Tap Headache Tracker")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")
+        .onAppear {
+            #if DEBUG
+            guard !didPresentDebugDetails,
+                  ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotDetails")
+            else { return }
+            didPresentDebugDetails = true
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                guard let event = events.first else { return }
+                showDetails(for: event.id)
+            }
+            #endif
+        }
         .safeAreaInset(edge: .bottom) {
             if undoSnackbarVisible, let eventID = captureCoordinator.lastCapturedEventID {
                 UndoSnackbar(
@@ -631,6 +645,13 @@ private struct SeverityNotesSheet: View {
                     }
                     .fontWeight(.semibold)
                 }
+            }
+            .onAppear {
+                var descriptor = FetchDescriptor<HeadacheEvent>(predicate: #Predicate { $0.id == eventID })
+                descriptor.fetchLimit = 1
+                guard let event = try? modelContext.fetch(descriptor).first else { return }
+                selectedSeverity = event.severity
+                notes = event.userNotes ?? ""
             }
         }
     }
