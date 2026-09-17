@@ -56,31 +56,35 @@ struct InsightsView: View {
 
             patternsSection
 
-            Section {
-                DailyRiskForecastCard(
-                    forecast: riskForecast,
-                    isLoading: riskLoading,
-                    locationMissing: riskLocationMissing,
-                    onRetry: { Task { await refreshRiskForecast(forceRefresh: true) } }
-                )
-                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
-                .listRowBackground(Color.clear)
-            } header: {
-                Text("Today's risk")
-            } footer: {
-                Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
-                    .font(.footnote)
-            }
-
-            Section {
-                ProactiveAlertsCard()
+            if !HeadacheBrand.isScreenshotMode {
+                Section {
+                    DailyRiskForecastCard(
+                        forecast: riskForecast,
+                        isLoading: riskLoading,
+                        locationMissing: riskLocationMissing,
+                        onRetry: { Task { await refreshRiskForecast(forceRefresh: true) } }
+                    )
                     .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                     .listRowBackground(Color.clear)
-            } header: {
-                Text("Get ahead of triggers")
-            } footer: {
-                Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
-                    .font(.footnote)
+                } header: {
+                    Text("Today's risk")
+                } footer: {
+                    Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
+                        .font(.footnote)
+                }
+            }
+
+            if !HeadacheBrand.isScreenshotMode {
+                Section {
+                    ProactiveAlertsCard()
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
+                        .listRowBackground(Color.clear)
+                } header: {
+                    Text("Get ahead of triggers")
+                } footer: {
+                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
+                        .font(.footnote)
+                }
             }
         }
     }

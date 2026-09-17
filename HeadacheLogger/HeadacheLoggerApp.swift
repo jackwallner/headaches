@@ -5,12 +5,18 @@ import UIKit
 import UserNotifications
 
 enum HeadacheBrand {
-    static var name: String {
+    static var isScreenshotMode: Bool {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotBrand") {
+        return ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotBrand")
+        #else
+        return false
+        #endif
+    }
+
+    static var name: String {
+        if isScreenshotMode {
             return "Migraine Tracker"
         }
-        #endif
         return "One Tap Headache Tracker"
     }
 }
