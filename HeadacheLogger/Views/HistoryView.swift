@@ -28,6 +28,7 @@ struct HistoryView: View {
     /// so an accidental swipe on a long-scrolled list can't silently drop history.
     @State private var pendingDeleteEvents: [HeadacheEvent] = []
     @State private var showDeleteConfirmation = false
+    @State private var showDeleteError = false
 
     private static let deleteConfirmGraceDays = 7
 
@@ -93,6 +94,11 @@ struct HistoryView: View {
             .toolbar { historyToolbar }
             .sheet(item: $activeSheet, onDismiss: handleSheetDismiss) { sheet in
                 sheetContent(for: sheet)
+            }
+            .alert("Couldn't Delete", isPresented: $showDeleteError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("The entry could not be deleted. Please try again.")
             }
             .alert("Export Failed", isPresented: $showExportError) {
                 Button("OK", role: .cancel) {}
@@ -409,7 +415,10 @@ struct HistoryView: View {
         do {
             try modelContext.save()
         } catch {
-            print("HistoryView: delete save failed | \(error)")
+            // Put the rows back rather than showing a delete that will undo
+            // itself on the next launch.
+            modelContext.rollback()
+            showDeleteError = true
         }
     }
 

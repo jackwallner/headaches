@@ -101,6 +101,9 @@ final class CaptureCoordinator: ObservableObject {
             try context.save()
         } catch {
             consoleError("CaptureCoordinator: initial save failed", error: error, trace: [:])
+            // Drop the unsaved insert, or a retry leaves two copies pending and
+            // the next successful save writes both.
+            context.rollback()
             lastCapturedEventID = nil
             bannerMessage = "Could not save event. Try again."
             bannerIsError = true
