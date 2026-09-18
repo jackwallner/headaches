@@ -84,14 +84,16 @@ struct SettingsView: View {
                     value: healthStatus,
                     valueIdentifier: "healthPermissionValue"
                 )
-                PermissionRow(
-                    label: "Location",
-                    value: locationStatus,
-                    valueIdentifier: "locationPermissionValue"
-                )
-                Button("Open iPhone Settings") {
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    openURL(url)
+                if !HeadacheBrand.isScreenshotMode {
+                    PermissionRow(
+                        label: "Location",
+                        value: locationStatus,
+                        valueIdentifier: "locationPermissionValue"
+                    )
+                    Button("Open iPhone Settings") {
+                        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                        openURL(url)
+                    }
                 }
             } header: {
                 Text("Permissions")
