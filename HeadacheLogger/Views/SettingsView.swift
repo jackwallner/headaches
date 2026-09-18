@@ -20,40 +20,42 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section {
-                if store.isProUnlocked {
-                    NavigationLink {
-                        ProAlertsConfigView()
-                    } label: {
-                        proRowLabel(unlocked: true)
-                    }
-                } else {
-                    Button {
-                        showPaywall = true
-                    } label: {
-                        proRowLabel(unlocked: false)
-                    }
-                    .buttonStyle(.plain)
-                }
-                if store.isProUnlocked && store.hasSubscription {
-                    Button("Manage Subscription") {
-                        Task { await openManageSubscriptions() }
-                    }
-                }
-                Button {
-                    Task { await restorePurchases() }
-                } label: {
-                    if isRestoring {
-                        ProgressView()
+            if !HeadacheBrand.isScreenshotMode {
+                Section {
+                    if store.isProUnlocked {
+                        NavigationLink {
+                            ProAlertsConfigView()
+                        } label: {
+                            proRowLabel(unlocked: true)
+                        }
                     } else {
-                        Text("Restore Purchases")
+                        Button {
+                            showPaywall = true
+                        } label: {
+                            proRowLabel(unlocked: false)
+                        }
+                        .buttonStyle(.plain)
                     }
+                    if store.isProUnlocked && store.hasSubscription {
+                        Button("Manage Subscription") {
+                            Task { await openManageSubscriptions() }
+                        }
+                    }
+                    Button {
+                        Task { await restorePurchases() }
+                    } label: {
+                        if isRestoring {
+                            ProgressView()
+                        } else {
+                            Text("Restore Purchases")
+                        }
+                    }
+                    .disabled(isRestoring)
+                } header: {
+                    Text("Headache Pro")
+                } footer: {
+                    Text("Pro checks your local forecast and only pings when your logs support the pressure, AQI, or timing pattern behind the alert.")
                 }
-                .disabled(isRestoring)
-            } header: {
-                Text("Headache Pro")
-            } footer: {
-                Text("Pro checks your local forecast and only pings when your logs support the pressure, AQI, or timing pattern behind the alert.")
             }
 
             Section("Logging") {
