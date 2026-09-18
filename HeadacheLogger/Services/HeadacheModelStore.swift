@@ -17,11 +17,10 @@ enum HeadacheModelStore {
             return container
         }
 
-        consoleError("HeadacheModelStore: ModelContainer failed, deleting corrupt store and retrying", trace: ["url": url.path])
-        let storeFiles = [url, url.appendingPathExtension("wal"), url.appendingPathExtension("shm")]
-        for file in storeFiles {
-            try? FileManager.default.removeItem(at: file)
-        }
+        // A failed migration or half-written file can leave the store unopenable.
+        // The headache log exists nowhere else, so move it aside instead of deleting it.
+        consoleError("HeadacheModelStore: ModelContainer failed, quarantining store and retrying", trace: ["url": url.path])
+        quarantineStore(at: url)
 
         if let container = makeContainer(schema: schema, url: url) {
             return container
@@ -35,6 +34,28 @@ enum HeadacheModelStore {
             fatalError("HeadacheModelStore: ModelContainer could not initialize even in-memory: \(error)")
         }
     }()
+
+    /// Renames the store and its SQLite sidecars to `<name>.corrupt-<uuid>` so a
+    /// fresh store can open at `url`. Returns the quarantined copies.
+    @discardableResult
+    static func quarantineStore(at url: URL, fileManager: FileManager = .default) -> [URL] {
+        let suffix = ".corrupt-\(UUID().uuidString)"
+        let candidates = [
+            url,
+            URL(fileURLWithPath: url.path + "-wal"),
+            URL(fileURLWithPath: url.path + "-shm"),
+            url.appendingPathExtension("wal"),
+            url.appendingPathExtension("shm")
+        ]
+        var moved: [URL] = []
+        for file in candidates where fileManager.fileExists(atPath: file.path) {
+            let destination = URL(fileURLWithPath: file.path + suffix)
+            if (try? fileManager.moveItem(at: file, to: destination)) != nil {
+                moved.append(destination)
+            }
+        }
+        return moved
+    }
 
     private static func makeContainer(schema: Schema, url: URL) -> ModelContainer? {
         let config = ModelConfiguration(

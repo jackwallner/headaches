@@ -35,6 +35,7 @@
 		763657B4D3F887137F8094C5 /* PaywallScreenshotHarness.swift in Sources */ = {isa = PBXBuildFile; fileRef = D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */; };
 		7D78EBD5BA76358D7D4F22AD /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */; };
 		8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9374226F8FD525B4B20127E /* OnboardingView.swift */; };
+		87B8E311F08EAEB44603CC3C /* StoreQuarantineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */; };
 		91CDB6C33CBEDA295626BBF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C0026857E7B70CB3A1374 /* Assets.xcassets */; };
 		9464BD8B40A16D2F7896B2E4 /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */; };
 		9578D303D494735FB324CB8A /* HeadacheQuizRetakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6135BFE678ED652EFD5AD41E /* HeadacheQuizRetakeView.swift */; };
@@ -50,6 +51,7 @@
 		B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */; };
 		B53D8892F1AAF8B8EE8DD434 /* AppStoreReviewLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEE6167C7FC20A8B75E1EF3 /* AppStoreReviewLinks.swift */; };
 		B55B7EFA7DE8405ACED3DAD6 /* LogHeadacheIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBBC940CB36BBBEA154BD /* LogHeadacheIntent.swift */; };
+		B6B1C68A73395D515BD99D4E /* PaywallFunnelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFD3560B68D0BDD9D1CF965 /* PaywallFunnelUITests.swift */; };
 		BB55BA0DD27168D383807D1F /* HeadacheQuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10255FE5700D35F1C3F78C7 /* HeadacheQuizStore.swift */; };
 		C1EF4877154C8980F69F4DCA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */; };
 		CFFCF9BE047EBC7351802E30 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
@@ -74,6 +76,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		338EB869951412FEC609EC26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EB1CD75571C6096FB24B924A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B04FF1B2716F4FF668CB3377;
+			remoteInfo = HeadacheLogger;
+		};
 		661D0585CACA6C084DA41A10 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EB1CD75571C6096FB24B924A /* Project object */;
@@ -127,6 +136,7 @@
 		0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveAlertsEngine.swift; sourceTree = "<group>"; };
 		0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheEvent.swift; sourceTree = "<group>"; };
 		0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1AFD3560B68D0BDD9D1CF965 /* PaywallFunnelUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallFunnelUITests.swift; sourceTree = "<group>"; };
 		228C7A2B35897EC80F7A321C /* InsightsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsEngine.swift; sourceTree = "<group>"; };
 		254CAEEDC5A2E194D94ED45D /* HeadacheLoggerTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HeadacheLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CBAB3D4F53FE3E6F6A3972A /* PhoneWatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSession.swift; sourceTree = "<group>"; };
@@ -136,6 +146,7 @@
 		47BEE34A5F306D88A05422FF /* ImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportService.swift; sourceTree = "<group>"; };
 		48CE1BF4F327855139BB6EA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		509C32D90AFE55495875288B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		579D4AF6B4274D41D22C9320 /* HeadacheLoggerUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HeadacheLoggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheAppGroup.swift; sourceTree = "<group>"; };
 		5AEE6167C7FC20A8B75E1EF3 /* AppStoreReviewLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreReviewLinks.swift; sourceTree = "<group>"; };
 		5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRecordStore.swift; sourceTree = "<group>"; };
@@ -145,6 +156,7 @@
 		637BE807C4B06F925D4E872E /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
 		63ACBBC940CB36BBBEA154BD /* LogHeadacheIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHeadacheIntent.swift; sourceTree = "<group>"; };
 		6A62B2A353D366DCC908709D /* EditEventSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEventSheet.swift; sourceTree = "<group>"; };
+		723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreQuarantineTests.swift; sourceTree = "<group>"; };
 		7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
 		8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerWatchApp.swift; sourceTree = "<group>"; };
 		86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherBackfillService.swift; sourceTree = "<group>"; };
@@ -219,6 +231,7 @@
 			children = (
 				DE041BE3B5B6E822BC4C17D2 /* HeadacheLogger */,
 				58E0B70DD8BDD0AC07D0AFA0 /* HeadacheLoggerTests */,
+				980448A68DC4B082347C1FBC /* HeadacheLoggerUITests */,
 				12870099A3080103CBA93739 /* HeadacheLoggerWatch */,
 				780953528DFB90902E16AC6F /* HeadacheLoggerWidget */,
 				6D88C178D52B76CBD87FC7E8 /* SharedHeadache */,
@@ -231,6 +244,7 @@
 			children = (
 				F790B5264C2F84568B71E41B /* HeadacheLogger.app */,
 				254CAEEDC5A2E194D94ED45D /* HeadacheLoggerTests.xctest */,
+				579D4AF6B4274D41D22C9320 /* HeadacheLoggerUITests.xctest */,
 				929113AA327F62936E27766E /* HeadacheLoggerWatch.app */,
 				A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */,
 			);
@@ -242,6 +256,7 @@
 			children = (
 				A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */,
 				B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */,
+				723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */,
 			);
 			path = HeadacheLoggerTests;
 			sourceTree = "<group>";
@@ -266,6 +281,14 @@
 				0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */,
 			);
 			path = HeadacheLoggerWidget;
+			sourceTree = "<group>";
+		};
+		980448A68DC4B082347C1FBC /* HeadacheLoggerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1AFD3560B68D0BDD9D1CF965 /* PaywallFunnelUITests.swift */,
+			);
+			path = HeadacheLoggerUITests;
 			sourceTree = "<group>";
 		};
 		A660758C5C4FB2254EB12DEB /* Utilities */ = {
@@ -412,6 +435,24 @@
 			productReference = 929113AA327F62936E27766E /* HeadacheLoggerWatch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E5D606D9F2792D61EDE549E5 /* HeadacheLoggerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 053123917807FDB56A245F01 /* Build configuration list for PBXNativeTarget "HeadacheLoggerUITests" */;
+			buildPhases = (
+				75B67361297EA1267387BE34 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				74E24F3A8C24134670C16ECF /* PBXTargetDependency */,
+			);
+			name = HeadacheLoggerUITests;
+			packageProductDependencies = (
+			);
+			productName = HeadacheLoggerUITests;
+			productReference = 579D4AF6B4274D41D22C9320 /* HeadacheLoggerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		F455076FFCFCF8B2494EF2AF /* HeadacheLoggerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F2D2FBA6AA6BDF23F03482E8 /* Build configuration list for PBXNativeTarget "HeadacheLoggerTests" */;
@@ -451,6 +492,11 @@
 						DevelopmentTeam = YXG4MP6W39;
 						ProvisioningStyle = Automatic;
 					};
+					E5D606D9F2792D61EDE549E5 = {
+						DevelopmentTeam = YXG4MP6W39;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B04FF1B2716F4FF668CB3377;
+					};
 					F455076FFCFCF8B2494EF2AF = {
 						DevelopmentTeam = YXG4MP6W39;
 						ProvisioningStyle = Automatic;
@@ -476,6 +522,7 @@
 			targets = (
 				B04FF1B2716F4FF668CB3377 /* HeadacheLogger */,
 				F455076FFCFCF8B2494EF2AF /* HeadacheLoggerTests */,
+				E5D606D9F2792D61EDE549E5 /* HeadacheLoggerUITests */,
 				D5C1B40891CD144F38DCC318 /* HeadacheLoggerWatch */,
 				A9D986474FD34AFFCF121F5B /* HeadacheLoggerWidget */,
 			);
@@ -523,6 +570,14 @@
 				4FF1FFB5F23073C65650D156 /* HeadacheQuizStore.swift in Sources */,
 				551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */,
 				B55B7EFA7DE8405ACED3DAD6 /* LogHeadacheIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75B67361297EA1267387BE34 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6B1C68A73395D515BD99D4E /* PaywallFunnelUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,12 +648,18 @@
 			files = (
 				F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */,
 				B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */,
+				87B8E311F08EAEB44603CC3C /* StoreQuarantineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		74E24F3A8C24134670C16ECF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B04FF1B2716F4FF668CB3377 /* HeadacheLogger */;
+			targetProxy = 338EB869951412FEC609EC26 /* PBXContainerItemProxy */;
+		};
 		807AC39DA3576257C3E3745E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B04FF1B2716F4FF668CB3377 /* HeadacheLogger */;
@@ -702,7 +763,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -817,7 +878,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 97;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -843,6 +904,23 @@
 			};
 			name = Release;
 		};
+		D1BEC808E3EC1A900569121A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jackwallner.headachelogger.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HeadacheLogger;
+			};
+			name = Release;
+		};
 		F588D2E308BBC74A347F6FF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -857,6 +935,23 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OneTapHeadacheTracker.app/OneTapHeadacheTracker";
+			};
+			name = Debug;
+		};
+		F60129F17ABAC08E32562A42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jackwallner.headachelogger.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HeadacheLogger;
 			};
 			name = Debug;
 		};
@@ -879,6 +974,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		053123917807FDB56A245F01 /* Build configuration list for PBXNativeTarget "HeadacheLoggerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F60129F17ABAC08E32562A42 /* Debug */,
+				D1BEC808E3EC1A900569121A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		0D7BAB45833882A4E4E7C997 /* Build configuration list for PBXProject "HeadacheLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
