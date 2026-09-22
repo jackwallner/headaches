@@ -1,1 +1,1 @@
-barometric,pressure,forecast,weather,tension,cluster,chronic,aura,pain,simple,daily,symptom,sinus
+one,tap,diary,journal,aura,cluster,tension,trigger,pain,simple,weather,symptom,calendar,chronic
