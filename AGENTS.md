@@ -16,7 +16,7 @@ Store ID `6762074561`.
 - `HeadacheLogger`: `com.jackwallner.headachelogger`
 - `HeadacheLoggerWidget`: `.widget` (carries `LogHeadacheIntent`)
 - `HeadacheLoggerWatch`: `.watch`
-- `HeadacheLoggerTests`: `.tests`, `HeadacheLoggerUITests` — `.uitests`
+- `HeadacheLoggerTests`: `.tests`; `HeadacheLoggerUITests`: `.uitests`
 - App Group: `group.com.jackwallner.headachelogger`
 
 ## Architecture
@@ -30,7 +30,7 @@ dependencies. Everything else lives in `HeadacheLogger/`:
 - `Models/`: `HeadacheEvent`, `ProAlertPreferences`
 - `Services/`
   - `CaptureCoordinator`: the one-tap log path every surface goes through
-  - `HeadacheModelStore`, `DailyRecordStore` — persistence and the per-day rollup
+  - `HeadacheModelStore`, `DailyRecordStore`: persistence and the per-day rollup
   - `EnvironmentService`: one-shot location plus the Open-Meteo fetch
   - `ProactiveAlertsEngine`: value-typed 24-hour forecast evaluation that can run
     off the main actor from a background task; `BackgroundRefreshService`
