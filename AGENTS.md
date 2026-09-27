@@ -1,4 +1,4 @@
-# Migraine Headache Tracker — Project Guide
+# Migraine Headache Tracker Project Guide
 
 One-tap headache logging with weather and sleep context around each entry, plus
 pattern insights over what was logged. XcodeGen project/scheme: `HeadacheLogger`,
@@ -13,10 +13,10 @@ Store ID `6762074561`.
 - RevenueCat, gate is `StoreService.isProUnlocked`
 
 ## Targets / bundle IDs
-- `HeadacheLogger` — `com.jackwallner.headachelogger`
-- `HeadacheLoggerWidget` — `.widget` (carries `LogHeadacheIntent`)
-- `HeadacheLoggerWatch` — `.watch`
-- `HeadacheLoggerTests` — `.tests`, `HeadacheLoggerUITests` — `.uitests`
+- `HeadacheLogger`: `com.jackwallner.headachelogger`
+- `HeadacheLoggerWidget`: `.widget` (carries `LogHeadacheIntent`)
+- `HeadacheLoggerWatch`: `.watch`
+- `HeadacheLoggerTests`: `.tests`, `HeadacheLoggerUITests` — `.uitests`
 - App Group: `group.com.jackwallner.headachelogger`
 
 ## Architecture
@@ -27,21 +27,21 @@ The widget additionally compiles `HeadacheEvent` and `HeadacheModelStore`
 straight from the app target, so those two files must stay free of app-only
 dependencies. Everything else lives in `HeadacheLogger/`:
 
-- `Models/` — `HeadacheEvent`, `ProAlertPreferences`
+- `Models/`: `HeadacheEvent`, `ProAlertPreferences`
 - `Services/`
-  - `CaptureCoordinator` — the one-tap log path every surface goes through
+  - `CaptureCoordinator`: the one-tap log path every surface goes through
   - `HeadacheModelStore`, `DailyRecordStore` — persistence and the per-day rollup
-  - `EnvironmentService` — one-shot location plus the Open-Meteo fetch
-  - `ProactiveAlertsEngine` — value-typed 24-hour forecast evaluation that can run
+  - `EnvironmentService`: one-shot location plus the Open-Meteo fetch
+  - `ProactiveAlertsEngine`: value-typed 24-hour forecast evaluation that can run
     off the main actor from a background task; `BackgroundRefreshService`
     schedules it; `DailyWeatherBackfillService` fills gaps in past days
-  - `InsightsEngine` — pure analysis over logged events, on device
+  - `InsightsEngine`: pure analysis over logged events, on device
   - `ExportService` / `ImportService`, `HealthKitService`, `PhoneWatchSession`,
     `StoreService`, `ReviewPromptTracker`, `ConversionDiagnostics`
-- `Views/` — `RootTabView`, `HomeView`, `HistoryView`, `InsightsView`,
+- `Views/`: `RootTabView`, `HomeView`, `HistoryView`, `InsightsView`,
   `OnboardingView`, the headache quiz, `PaywallView`, `SettingsView`,
   `ProAlertsConfigView`
-- `Utilities/` — `AppStoreReviewLinks`, `OpenMeteoTimeParsing`,
+- `Utilities/`: `AppStoreReviewLinks`, `OpenMeteoTimeParsing`,
   `SleepIntervalMerge`, `PaywallScreenshotMode`, appearance
 
 ## Rules that hold everywhere
@@ -72,4 +72,4 @@ dependencies. Everything else lives in `HeadacheLogger/`:
 
 ---
 Shared iOS conventions (build, simulator, release/TestFlight, ASC key, signing,
-review funnel, gotchas): always-loaded global CLAUDE.md + the `ios-dev` skill.
+review funnel, gotchas): the global agent rules + the `ios-dev` skill.
