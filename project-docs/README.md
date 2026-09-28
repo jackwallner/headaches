@@ -4,9 +4,9 @@ Developer notes and historical audits for this repository. The published site re
 
 ## Audits
 
-- [aso827.md](audits/aso827.md)
-- [audit823.md](audits/audit823.md)
-- [ios27HeadacheLogger.md](audits/ios27HeadacheLogger.md)
+- [aso827.md](audits/aso827.md): Migraine Tracker ASO Audit
+- [audit823.md](audits/audit823.md): Migraine Headache Tracker audit823
+- [ios27HeadacheLogger.md](audits/ios27HeadacheLogger.md): iOS 27 compatibility audit: OneTap Headache Tracker
 
 ## Design
 
@@ -14,4 +14,4 @@ Developer notes and historical audits for this repository. The published site re
 
 ## Marketing
 
-- [aso-plan.md](marketing/aso-plan.md)
+- [aso-plan.md](marketing/aso-plan.md): aso-plan.md: HeadacheLogger ASO positioning + metadata
