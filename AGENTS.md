@@ -64,9 +64,9 @@ dependencies. Everything else lives in `HeadacheLogger/`:
 - **Review funnel:** `ReviewPromptTracker.recordPositiveMoment()` after a
   completed capture (`CaptureCoordinator`) and from History; the sheet is
   `ReviewPromptSheet`. App Store ID above.
-- `design.md` is the design system (brand `#F2405C`, high-contrast on system
+- `project-docs/design/design.md` is the design system (brand `#F2405C`, high-contrast on system
   grays). Read it before UI work.
-- ASO plan and keyword reasoning: `aso-plan.md`. The subtitle sells the one-tap
+- ASO plan and keyword reasoning: `project-docs/marketing/aso-plan.md`. The subtitle sells the one-tap
   log; barometric forecasting failed the SERP-intent guardrail and stays in the
   keyword field only.
 
