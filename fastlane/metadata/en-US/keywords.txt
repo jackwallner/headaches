@@ -1,1 +1,1 @@
-one,tap,diary,journal,aura,cluster,tension,trigger,pain,simple,weather,symptom,calendar,chronic
+one,tap,diary,journal,aura,cluster,tension,trigger,pain,simple,weather,symptom,calendar,barometer
