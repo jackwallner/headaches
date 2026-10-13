@@ -26,7 +26,6 @@
 		49AE2469750959923DB47B54 /* HeadacheLoggerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4B607C028DE8827ACBF9F1A8 /* PaywallScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C122FA1DCDD3C28ACD64DC8F /* PaywallScreenshotMode.swift */; };
 		4FF1FFB5F23073C65650D156 /* HeadacheQuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10255FE5700D35F1C3F78C7 /* HeadacheQuizStore.swift */; };
-		525E79C0B4C96B34042C3849 /* ReviewPromptSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */; };
 		551FA5665D6B551AAA68285F /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
 		5AC9907AC49938F12C167AA6 /* HeadacheModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F1E7C7BA481BDAA80CC8 /* HeadacheModelStore.swift */; };
 		60B9158044768AE58696968A /* HeadacheTemperatureFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86F4F8F49F49DB2FE47A976 /* HeadacheTemperatureFormatting.swift */; };
@@ -36,6 +35,7 @@
 		7D78EBD5BA76358D7D4F22AD /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D0A59FF265EBA9AB8F8D5 /* WatchRootView.swift */; };
 		8140D26D4D94F7E30B6B1F0A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9374226F8FD525B4B20127E /* OnboardingView.swift */; };
 		87B8E311F08EAEB44603CC3C /* StoreQuarantineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */; };
+		88DA032C60DFDA3F480E7A2F /* ReviewPromptTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */; };
 		91CDB6C33CBEDA295626BBF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C0026857E7B70CB3A1374 /* Assets.xcassets */; };
 		9464BD8B40A16D2F7896B2E4 /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */; };
 		9578D303D494735FB324CB8A /* HeadacheQuizRetakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6135BFE678ED652EFD5AD41E /* HeadacheQuizRetakeView.swift */; };
@@ -136,6 +136,7 @@
 		0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProactiveAlertsEngine.swift; sourceTree = "<group>"; };
 		0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheEvent.swift; sourceTree = "<group>"; };
 		0E4F0D960761F2FA07D66ED9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptTrackerTests.swift; sourceTree = "<group>"; };
 		1AFD3560B68D0BDD9D1CF965 /* PaywallFunnelUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallFunnelUITests.swift; sourceTree = "<group>"; };
 		228C7A2B35897EC80F7A321C /* InsightsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsEngine.swift; sourceTree = "<group>"; };
 		254CAEEDC5A2E194D94ED45D /* HeadacheLoggerTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HeadacheLoggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,7 +175,6 @@
 		9F9C78392E24C65D489A0719 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionDiagnosticsTests.swift; sourceTree = "<group>"; };
 		A8472C3F09A9A16899D362E3 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
-		A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptSheet.swift; sourceTree = "<group>"; };
 		A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HeadacheLoggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE39D707E377269384673F20 /* WatchConnectivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityController.swift; sourceTree = "<group>"; };
 		B10255FE5700D35F1C3F78C7 /* HeadacheQuizStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheQuizStore.swift; sourceTree = "<group>"; };
@@ -256,6 +256,7 @@
 			children = (
 				A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */,
 				B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */,
+				168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */,
 				723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */,
 			);
 			path = HeadacheLoggerTests;
@@ -364,7 +365,6 @@
 				D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */,
 				BE8412887F4E26C9B3CC85AC /* PaywallView.swift */,
 				93DCE63E131C76802F1F575B /* ProAlertsConfigView.swift */,
-				A947CB2DA2E50703CF5FED69 /* ReviewPromptSheet.swift */,
 				9B4F5DFE3F1B9280D66F7F8B /* RootTabView.swift */,
 				B769DAEFB80D24E6E5B23726 /* SettingsView.swift */,
 				9F9C78392E24C65D489A0719 /* ShareSheet.swift */,
@@ -632,7 +632,6 @@
 				FA8EFEC5D1F70EC66FAEF806 /* ProAlertPreferences.swift in Sources */,
 				3AD9AE844511D0CA7CCBD2B2 /* ProAlertsConfigView.swift in Sources */,
 				F4D36C76D423D4BEF2CA59FD /* ProactiveAlertsEngine.swift in Sources */,
-				525E79C0B4C96B34042C3849 /* ReviewPromptSheet.swift in Sources */,
 				ED337B817E473AD5A3D67020 /* ReviewPromptTracker.swift in Sources */,
 				15355C773AA6EC62A317CE4C /* RootTabView.swift in Sources */,
 				A2D71CF1BFC7D3DAD716F624 /* SettingsView.swift in Sources */,
@@ -648,6 +647,7 @@
 			files = (
 				F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */,
 				B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */,
+				88DA032C60DFDA3F480E7A2F /* ReviewPromptTrackerTests.swift in Sources */,
 				87B8E311F08EAEB44603CC3C /* StoreQuarantineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

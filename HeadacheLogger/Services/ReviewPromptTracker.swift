@@ -1,16 +1,32 @@
 import Foundation
 
 extension Notification.Name {
-    /// Posted when the user completes a successful one-tap log — host may present the enjoyment funnel after a short delay.
+    /// Posted when the user completes a successful one-tap log. The host may
+    /// call the system rating prompt after a short delay, with no question first.
     static let headachePositiveMomentForReview = Notification.Name("com.jackwallner.headachelogger.positiveMomentForReview")
 }
 
-/// How the user last resolved the in-app review / feedback prompt.
+/// What the user did about a review. Only opening the review page ends the
+/// passive asks: someone who sent feedback can still rate.
 enum ReviewPromptOutcome: String, Sendable {
-    /// Opened the App Store write-review page (explicit CTA).
+    /// Opened the App Store write-review page from Settings.
     case openedWriteReview
-    /// Opened the feedback mail composer with a message.
+    /// Sent feedback by mail. Never stops the asks.
     case submittedFeedback
+}
+
+/// Tells the host whether Home is visible and uncovered, so the delayed
+/// rating ask only fires there.
+@MainActor
+final class ReviewPromptCoordinator: ObservableObject {
+    static let shared = ReviewPromptCoordinator()
+
+    /// Updated by `RootTabView`.
+    @Published var isOnHomeTab = true
+    /// Set by `HomeView` while its notes sheet or paywall is up.
+    @Published var homeSheetIsPresented = false
+
+    private init() {}
 }
 
 /// Persists launch counts, positive moments, and review-prompt eligibility in the app group.
@@ -25,16 +41,12 @@ enum ReviewPromptTracker {
     private static let positiveMomentCountKey = "reviewPrompt.positiveMomentCount"
     private static let pendingPositiveMomentKey = "reviewPrompt.pendingPositiveMoment"
 
-    /// Minimum cold starts before passive prompts are considered.
-    static let minimumLaunchCount = 5
-    /// Minimum days since first open.
-    static let minimumDaysSinceFirstOpen = 7
-    /// Minimum successful, fully-enriched logs before the passive enjoyment prompt
-    /// surfaces. Repeated value delivery is our proxy for "likes the app" — we only
-    /// ask people who keep getting something out of it, never a one-time logger.
-    static let minimumPositiveMoments = 3
-    /// Days before "Not now" can surface the enjoyment prompt again.
-    static let cooldownDays = 120
+    /// Ask early. Most installs are gone within a week, so the only tenure
+    /// gate is "not the first session": a second cold start.
+    static let minimumLaunchCount = 2
+    /// Days between our calls. Apple shows the prompt at most three times a
+    /// year per device and decides each time, so this paces the asks.
+    static let cooldownDays = 30
 
     static var appLaunchCount: Int {
         get { max(defaults.integer(forKey: launchCountKey), 0) }
@@ -107,37 +119,27 @@ enum ReviewPromptTracker {
     }
 
     static func passivePromptAllowed(now: Date = .now) -> Bool {
-        guard outcome == nil else { return false }
+        guard outcome != .openedWriteReview else { return false }
         guard let last = lastShownDate else { return true }
         let cooldown = TimeInterval(cooldownDays) * 86_400
         return now.timeIntervalSince(last) >= cooldown
     }
 
-    /// Base eligibility for the enjoyment funnel (passive or Settings).
-    static func canPresentEnjoymentPrompt(
-        hasCompletedOnboarding: Bool,
-        now: Date = .now
-    ) -> Bool {
+    static func canRequestReview(hasCompletedOnboarding: Bool, now: Date = .now) -> Bool {
         guard !AppEnvironment.isUITesting else { return false }
         guard hasCompletedOnboarding else { return false }
         guard passivePromptAllowed(now: now) else { return false }
-        guard appLaunchCount >= minimumLaunchCount else { return false }
-        guard positiveMomentCount >= minimumPositiveMoments else { return false }
-        guard let first = firstAppOpenDate else { return false }
-        let minInterval = TimeInterval(minimumDaysSinceFirstOpen) * 86_400
-        guard now.timeIntervalSince(first) >= minInterval else { return false }
-        return true
+        return appLaunchCount >= minimumLaunchCount
     }
 
-    /// Passive prompt: eligibility, a recent positive moment, and enough total
-    /// positive moments to signal the user actually likes the app.
-    static func shouldShowAfterPositiveMoment(
+    /// A positive moment is pending and the gates allow an ask. A blocked ask
+    /// leaves the moment pending so the next one can ask.
+    static func shouldRequestAfterPositiveMoment(
         hasCompletedOnboarding: Bool,
         now: Date = .now
     ) -> Bool {
         guard hasPendingPositiveMoment else { return false }
-        guard positiveMomentCount >= minimumPositiveMoments else { return false }
-        return canPresentEnjoymentPrompt(hasCompletedOnboarding: hasCompletedOnboarding, now: now)
+        return canRequestReview(hasCompletedOnboarding: hasCompletedOnboarding, now: now)
     }
 
     static func markShown(now: Date = .now) {
@@ -150,8 +152,11 @@ enum ReviewPromptTracker {
         markShown()
     }
 
+    /// Never overwrites `.openedWriteReview`: feedback sent after the review
+    /// page must not reopen the asks that page ended.
     static func markFeedbackSubmitted() {
-        outcome = .submittedFeedback
-        markShown()
+        if outcome != .openedWriteReview {
+            outcome = .submittedFeedback
+        }
     }
 }

@@ -143,9 +143,7 @@ private struct HeadacheLoggerRootContent: View {
     /// runloop tick is racy in SwiftUI and frequently drops the second sheet.
     @State private var pendingPaywallAfterTrialDismiss = false
     @StateObject private var reviewPromptCoordinator = ReviewPromptCoordinator.shared
-    @State private var reviewPromptInitialStep: ReviewPromptSheet.Step = .enjoyment
     @State private var reviewPromptShownThisSession = false
-    @State private var pendingNativeReviewAfterDismiss = false
     /// Bumped every time the scene leaves the foreground. Delayed presentation tasks
     /// capture it before sleeping and abort if it changed: a timer that slept across a
     /// backgrounding would otherwise fire the instant the app resumes and present a
@@ -164,7 +162,6 @@ private struct HeadacheLoggerRootContent: View {
         case proIntro
         case trialOffer
         case trialPaywall
-        case reviewPrompt
         var id: String { rawValue }
     }
 
@@ -222,8 +219,6 @@ private struct HeadacheLoggerRootContent: View {
                             PaywallView()
                                 .environmentObject(storeService)
                                 .task { storeService.trackPaywallImpression(id: "headache_trial_sheet") }
-                        case .reviewPrompt:
-                            ReviewPromptSheet(initialStep: reviewPromptInitialStep, onFinish: handleReviewPromptFinish)
                         }
                     }
             } else {
@@ -310,56 +305,45 @@ private struct HeadacheLoggerRootContent: View {
         .onReceive(NotificationCenter.default.publisher(for: .headachePositiveMomentForReview)) { _ in
             scheduleReviewPromptAfterPositiveMoment()
         }
-        .onChange(of: reviewPromptCoordinator.pendingPresentation) { _, presentation in
-            guard let presentation else { return }
-            defer { reviewPromptCoordinator.clear() }
-            guard activeSheet == nil else { return }
-            switch presentation {
-            case .enjoymentPrompt:
-                presentReviewPrompt(step: .enjoyment)
-            case .feedbackOnly:
-                presentReviewPrompt(step: .feedback)
-            }
-        }
     }
 
-    /// Passive review ask after a successful log. Waits for the checkmark / snackbar to clear;
-    /// never fires on cold launch or alongside trial / Pro intro sheets.
+    /// The rating ask after a successful log: Apple's own prompt, no question
+    /// in front of it. Waits for the checkmark and snackbar to clear, then asks
+    /// only if Home is still clear. A blocked ask keeps the moment pending in
+    /// the tracker for the next log; it never retries off a sheet dismissal.
     private func scheduleReviewPromptAfterPositiveMoment() {
-        guard hasCompletedOnboarding,
-              ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true),
+        guard ReviewPromptTracker.shouldRequestAfterPositiveMoment(hasCompletedOnboarding: hasCompletedOnboarding),
               !reviewPromptShownThisSession,
-              reviewPromptCoordinator.isOnHomeTab,
-              activeSheet == nil,
-              !captureCoordinator.proPromptShownThisSession
+              isHomeClear
         else { return }
 
         let epoch = foregroundEpoch
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 3_500_000_000)
             guard epoch == foregroundEpoch, scenePhase == .active else { return }
-            guard hasCompletedOnboarding,
-                  reviewPromptCoordinator.isOnHomeTab,
-                  activeSheet == nil,
-                  !captureCoordinator.proPromptShownThisSession,
-                  ReviewPromptTracker.shouldShowAfterPositiveMoment(hasCompletedOnboarding: true)
+            guard isHomeClear,
+                  !reviewPromptShownThisSession,
+                  ReviewPromptTracker.shouldRequestAfterPositiveMoment(hasCompletedOnboarding: hasCompletedOnboarding)
             else { return }
-            ReviewPromptTracker.consumePendingPositiveMoment()
-            presentReviewPrompt(step: .enjoyment)
+            reviewPromptShownThisSession = true
+            ReviewPromptTracker.markShown()
+            requestReview()
         }
     }
 
-    private func handleReviewPromptFinish(_ outcome: ReviewPromptDismissOutcome) {
-        if outcome == .enjoyedMaybeLater {
-            pendingNativeReviewAfterDismiss = true
-        }
-        activeSheet = nil
+    /// Home is on screen with no promo, trial or paywall sheet over it.
+    private var isHomeClear: Bool {
+        hasCompletedOnboarding
+            && reviewPromptCoordinator.isOnHomeTab
+            && !reviewPromptCoordinator.homeSheetIsPresented
+            && activeSheet == nil
+            && !pendingPaywallAfterTrialDismiss
+            && !captureCoordinator.proPromptShownThisSession
     }
 
-    /// Single dismissal handler for the root promo / review sheet. Runs trial-purchase
-    /// cleanup and the two deferred follow-ups (chained paywall, native review prompt)
-    /// that must fire only after the sheet has fully dismissed. Both follow-ups are
-    /// gated on flags that only their own flow sets, so this is safe to run for any sheet.
+    /// Single dismissal handler for the root promo sheet. Runs trial-purchase
+    /// cleanup and the chained paywall, which must present only after the
+    /// sheet has fully dismissed.
     private func handleRootSheetDismiss() {
         trialPurchaseInFlight = false
         trialPurchaseError = nil
@@ -367,16 +351,6 @@ private struct HeadacheLoggerRootContent: View {
             pendingPaywallAfterTrialDismiss = false
             activeSheet = .trialPaywall
         }
-        if pendingNativeReviewAfterDismiss {
-            pendingNativeReviewAfterDismiss = false
-            requestReview()
-        }
-    }
-
-    private func presentReviewPrompt(step: ReviewPromptSheet.Step) {
-        reviewPromptInitialStep = step
-        reviewPromptShownThisSession = true
-        activeSheet = .reviewPrompt
     }
 
     private func runWidgetEnrichmentIfReady() {

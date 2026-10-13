@@ -211,13 +211,20 @@ struct HomeView: View {
         .onChange(of: captureCoordinator.lastCapturedEventID) { _, newValue in
             if newValue == nil { dismissUndoSnackbar() }
         }
-        .sheet(item: $severityNotesTarget) { target in
+        .sheet(item: $severityNotesTarget, onDismiss: {
+            // The notes sheet opens right after a log, so the log's rating ask
+            // usually finds it up and stays pending. Ask again once it closes.
+            NotificationCenter.default.post(name: .headachePositiveMomentForReview, object: nil)
+        }) { target in
             SeverityNotesSheet(eventID: target.id)
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
                 .environmentObject(store)
                 .task { store.trackPaywallImpression(id: "headache_home_sheet") }
+        }
+        .onChange(of: severityNotesTarget != nil || showPaywall, initial: true) { _, covered in
+            ReviewPromptCoordinator.shared.homeSheetIsPresented = covered
         }
     }
 

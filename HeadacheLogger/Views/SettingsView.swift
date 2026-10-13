@@ -16,6 +16,7 @@ struct SettingsView: View {
 
     private let privacyPolicyURL = URL(string: "https://jackwallner.github.io/headaches/privacy-policy.html")
     private let supportURL = URL(string: "https://jackwallner.github.io/headaches/support.html")
+    private let feedbackURL = URL(string: "mailto:jackwallner+ha@gmail.com?subject=One%20Tap%20Headache%20Tracker%20feedback")
     private let termsURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
 
     var body: some View {
@@ -102,8 +103,16 @@ struct SettingsView: View {
             }
 
             Section("About & Support") {
-                Button("Rate or Send Feedback") {
-                    ReviewPromptCoordinator.shared.requestEnjoymentPrompt()
+                // Two separate rows, no question in front of either (App
+                // Review 5.6.1). The rating row deep-links to the review page.
+                Button("Rate One Tap Headache Tracker") {
+                    ReviewPromptTracker.markOpenedWriteReview()
+                    openURL(AppStoreReviewLinks.writeReviewURL)
+                }
+                Button("Send Feedback") {
+                    guard let feedbackURL else { return }
+                    ReviewPromptTracker.markFeedbackSubmitted()
+                    openURL(feedbackURL)
                 }
                 Button("Privacy Policy") {
                     guard let privacyPolicyURL else { return }

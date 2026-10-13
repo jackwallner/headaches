@@ -61,9 +61,12 @@ dependencies. Everything else lives in `HeadacheLogger/`:
   `HeadacheLoggerApp` gates every sheet on `hasResolvedEntitlements` and
   `!isProUnlocked`, because a pending renewal can flip Pro on a beat after launch
   and yank a sheet mid-layout.
-- **Review funnel:** `ReviewPromptTracker.recordPositiveMoment()` after a
-  completed capture (`CaptureCoordinator`) and from History; the sheet is
-  `ReviewPromptSheet`. App Store ID above.
+- **Ratings:** no in-app rating question (App Review 5.6.1). A completed
+  capture (`CaptureCoordinator`), an export and unlocked Patterns record a
+  positive moment; after a log, `HeadacheLoggerApp` calls the system
+  `requestReview()` about 3s later if Home is clear (from the 2nd launch, 30-day
+  cooldown). Settings has separate "Rate One Tap Headache Tracker" (write-review
+  link) and "Send Feedback" rows. App Store ID above.
 - `project-docs/design/design.md` is the design system (brand `#F2405C`, high-contrast on system
   grays). Read it before UI work.
 - ASO plan and keyword reasoning: `project-docs/marketing/aso-plan.md`. The subtitle sells the one-tap
