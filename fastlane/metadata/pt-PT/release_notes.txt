@@ -1,1 +1,1 @@
-Correções de erros e melhorias de desempenho.
+Melhorias nos bastidores e correções de erros para o Migraine Headache Tracker funcionar melhor. Obrigado por estar aqui.

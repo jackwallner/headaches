@@ -1,1 +1,1 @@
-Opravy chyb a vylepšení výkonu.
+Vylepšení na pozadí a opravy chyb, aby Migraine Headache Tracker běžel hladce. Děkujeme, že jste tu.

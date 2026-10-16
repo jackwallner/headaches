@@ -1,1 +1,1 @@
-错误修复与性能改进。
+进行了后台优化和错误修复，让 Migraine Headache Tracker 运行更顺畅。感谢一路有你。

@@ -1,1 +1,1 @@
-Correccions d'errors i millores de rendiment.
+Millores internes i correccions d'errors perquè Migraine Headache Tracker funcioni bé. Gràcies per ser aquí.

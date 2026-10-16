@@ -1,1 +1,1 @@
-Ispravci grešaka i poboljšanja performansi.
+Poboljšanja u pozadini i ispravci grešaka kako bi Migraine Headache Tracker radio glatko. Hvala što ste tu.

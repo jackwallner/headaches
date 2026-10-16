@@ -1,1 +1,1 @@
-Popravki napak in izboljšave zmogljivosti.
+Izboljšave v ozadju in popravki napak, da Migraine Headache Tracker deluje gladko. Hvala, da ste z nami.

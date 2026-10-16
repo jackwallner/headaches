@@ -1,1 +1,1 @@
-Virhekorjauksia ja suorituskykyparannuksia.
+Taustaparannuksia ja virhekorjauksia, jotta Migraine Headache Tracker toimii sujuvasti. Kiitos, että olet mukana.

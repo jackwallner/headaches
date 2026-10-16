@@ -1,1 +1,1 @@
-Fejlrettelser og ydeevneforbedringer.
+Forbedringer bag kulisserne og fejlrettelser, så Migraine Headache Tracker kører glat. Tak fordi du er her.

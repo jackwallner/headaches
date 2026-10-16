@@ -1,1 +1,1 @@
-Corrections de bugs et améliorations des performances.
+Améliorations en coulisses et corrections de bugs pour que Migraine Headache Tracker reste fluide. Merci d'être là.

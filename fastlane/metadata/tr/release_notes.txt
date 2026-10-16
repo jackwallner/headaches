@@ -1,1 +1,1 @@
-Hata düzeltmeleri ve performans iyileştirmeleri.
+Migraine Headache Tracker'ın sorunsuz çalışması için arka planda iyileştirmeler ve hata düzeltmeleri. Burada olduğun için teşekkürler.

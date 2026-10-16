@@ -1,1 +1,1 @@
-Hibajavítások és teljesítményjavítások.
+Háttérbeli fejlesztések és hibajavítások, hogy a Migraine Headache Tracker gördülékenyen működjön. Köszönjük, hogy itt vagy.
