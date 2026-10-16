@@ -73,6 +73,10 @@ dependencies. Everything else lives in `HeadacheLogger/`:
   log; barometric forecasting failed the SERP-intent guardrail and stays in the
   keyword field only.
 
+## Rules index
+- `.claude/rules/android.md`: the native Android port in `android/`, Play
+  billing, the remote Pro emulator, store assets and Play Console answers.
+
 ---
 Shared iOS conventions (build, simulator, release/TestFlight, ASC key, signing,
 review funnel, gotchas): the global agent rules + the `ios-dev` skill.

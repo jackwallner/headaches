@@ -1,0 +1,31 @@
+One Tap Headache Tracker turns a single tap into a clear headache diary, then shows which weather, pressure and sleep patterns line up with your own history.
+
+When a headache starts, tap once in the app or on the home-screen widget. The entry is timestamped instantly and the context around it is filled in for you. No forms, no typing, no account.
+
+EVERY ENTRY CAN INCLUDE
+- Time, weekday and part of day
+- Local weather, temperature, humidity, barometric pressure and its trend, and air quality (from your approximate location, only when you log)
+- How long you slept the night before, read from Health Connect if you allow it
+- An optional severity rating and your own notes about medication, aura or suspected triggers
+
+FREE
+- One-tap logging in the app and from the home-screen widget
+- Full history with a calendar heatmap, yearly view and entry editing
+- CSV export and import to keep a backup or share your log with your doctor
+
+HEADACHE PRO
+- Personal patterns: sleep, pressure drops, time of day, weekdays and weather, each with a chart and a plain-English explanation
+- Proactive Alerts: the app checks your local forecast every few hours and only notifies you when conditions match a pattern found in your own logs. Quiet hours and custom thresholds included.
+- Pattern predictions: a heads-up about an hour before the times your history says headaches are most likely
+- A daily risk forecast built from your own data
+- A one-page doctor PDF with a summary, a 90-day heatmap and your top patterns
+
+Headache Pro is available as a monthly or yearly subscription, with a free trial for eligible new subscribers, or as a one-time lifetime purchase. Prices are shown in the app before you buy.
+
+PRIVATE BY DESIGN
+- No account and no ads
+- Your headache log stays on your phone. It is never uploaded.
+- Weather requests send only approximate coordinates to Open-Meteo
+- Sleep is read from Health Connect only with your permission, and nothing is ever written back
+
+One Tap Headache Tracker is a personal record-keeping tool. It is not a medical device and does not give medical advice. Talk to a qualified clinician about your headaches.

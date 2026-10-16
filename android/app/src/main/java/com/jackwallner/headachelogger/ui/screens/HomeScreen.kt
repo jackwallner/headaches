@@ -281,7 +281,7 @@ private fun LatestEventCard(event: HeadacheEvent, useCelsius: Boolean) {
         Text(latestSummary(event, useCelsius), style = Type.subhead, color = palette.textPrimary, modifier = Modifier.testTag("latestEventSummary"))
         Spacer(Modifier.heightIn(min = 12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            MetricChip("Steps", event.stepsToday?.let(Format::grouped) ?: "–", Tint.teal, Modifier.weight(1f))
+            MetricChip("Pressure", event.pressureHpa?.let { String.format(java.util.Locale.US, "%.0f", it) } ?: "–", Tint.teal, Modifier.weight(1f))
             MetricChip("Sleep", event.sleepHoursLastNight?.let { "${Format.oneDecimal(it)} h" } ?: "–", Tint.indigo, Modifier.weight(1f))
             MetricChip("AQI", event.usAQI?.let { String.format(java.util.Locale.US, "%.0f", it) } ?: "–", Tint.mint, Modifier.weight(1f))
         }

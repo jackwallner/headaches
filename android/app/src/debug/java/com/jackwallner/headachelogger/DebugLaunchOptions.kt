@@ -78,7 +78,7 @@ object DebugLaunchOptions {
         val sleep: Double, val pressure: Double, val weather: String, val note: String,
     )
 
-    /** `HeadacheScreenshotSeed` from iOS, entry for entry. */
+    /** `HeadacheScreenshotSeed` from iOS, minus steps (Android reads sleep only) and with AQI filled in. */
     private fun seed(graph: AppGraph) {
         val entries = listOf(
             Seed(0, 8, HeadacheSeverity.SLIGHT, 7_420, 7.4, 1016.0, "Partly cloudy", "Started after a screen-heavy morning. Added context for my private record."),
@@ -109,7 +109,7 @@ object DebugLaunchOptions {
                 temperatureC = 15.0
                 pressureHpa = e.pressure
                 pressureTrend = trends[index % 3]
-                stepsToday = e.steps
+                usAQI = 24.0 + (index * 7) % 30
                 sleepHoursLastNight = e.sleep
                 severity = e.severity
                 userNotes = e.note

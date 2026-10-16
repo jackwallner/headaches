@@ -495,9 +495,9 @@ private fun DetailedEventRow(event: HeadacheEvent, useCelsius: Boolean, onEdit: 
             Text(listOfNotNull(event.locationLabel.ifEmpty { null }, weather).joinToString(" • "), style = Type.subhead, color = palette.textSecondary)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            DataPill("Steps", event.stepsToday?.let(Format::grouped) ?: "–")
             DataPill("Sleep", event.sleepHoursLastNight?.let { "${Format.oneDecimal(it)}h" } ?: "–")
             DataPill("hPa", event.pressureHpa?.let { String.format(java.util.Locale.US, "%.0f", it) } ?: "–")
+            DataPill("AQI", event.usAQI?.let { String.format(java.util.Locale.US, "%.0f", it) } ?: "–")
         }
     }
 }
