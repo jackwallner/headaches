@@ -162,6 +162,8 @@ class HeadacheSettings(private val defaults: KeyValueStore) {
             if (value == null) defaults.remove(StorageKey.PRO_ALERT_LAST_FIRED_AT) else defaults.putLong(StorageKey.PRO_ALERT_LAST_FIRED_AT, value)
         }
 
+    val alertLastFiredKind: String? get() = defaults.getString(StorageKey.PRO_ALERT_LAST_FIRED_KIND)
+
     fun recordAlertFired(kind: String, at: Long) {
         alertLastFiredAt = at
         defaults.putString(StorageKey.PRO_ALERT_LAST_FIRED_KIND, kind)

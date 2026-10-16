@@ -60,8 +60,9 @@ class EventStore(
     /** Widget logs and interrupted captures, oldest first, as iOS `pendingCaptureFetchDescriptor`. */
     fun pendingCaptures(): List<HeadacheEvent> = events.filter(::isPendingCapture).sortedBy { it.timestamp }
 
-    fun importCsv(contents: String, strategy: ImportStrategy): ImportResult {
-        val rows = EventCsv.parse(contents)
+    fun importCsv(contents: String, strategy: ImportStrategy): ImportResult = importRows(EventCsv.parse(contents), strategy)
+
+    fun importRows(rows: List<Map<String, String>>, strategy: ImportStrategy): ImportResult {
         val working = events.toMutableList()
         val result = EventCsv.importInto(working, rows, strategy, zone())
         if (result.imported > 0 || result.overwritten > 0) commit(working)

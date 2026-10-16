@@ -68,6 +68,10 @@ class StoreService(
 ) {
     private val reviewAccess = ReviewAccess(defaults, BuildConfig.PLAY_REVIEW_CODE_SHA256)
     private var entitlementActive by mutableStateOf(false)
+
+    /** The Play subscription behind the active entitlement, for the manage-subscription link; null for lifetime. */
+    var activeSubscriptionProductId by mutableStateOf<String?>(null)
+        private set
     private var overrideActive by mutableStateOf(BuildConfig.DEBUG && defaults.getBoolean(LOCAL_OVERRIDE))
     private var reviewGranted by mutableStateOf(reviewAccess.isGranted)
 
@@ -324,6 +328,7 @@ class StoreService(
         hasSubscriptionHistory = info.allExpirationDatesByProduct.isNotEmpty()
         introEligibilityResolved = plans.isNotEmpty() || packages.isNotEmpty()
         entitlementActive = info.entitlements.active.isNotEmpty()
+        activeSubscriptionProductId = info.entitlements.active.values.firstOrNull { it.expirationDate != null }?.productIdentifier?.substringBefore(":")
     }
 
     private fun configureIfNeeded(): Boolean {

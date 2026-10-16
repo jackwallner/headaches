@@ -88,6 +88,28 @@ class AppGraph(context: Context) {
         Alerts.updateForecastSchedule(appContext, store.isPro && settings.alertsEnabled)
     }
 
+    /** Onboarding's `initializeDailyRecords`: seed today, or rebuild from imported events, then backfill weather. */
+    fun initializeDailyRecords() {
+        if (events.events.isEmpty()) {
+            dailyRecords.save(listOf(com.jackwallner.headachelogger.model.DailyRecord(java.time.LocalDate.now())))
+        } else {
+            dailyRecords.sync(events.events)
+        }
+        maintainDailyRecords()
+    }
+
+    /** `DailyRecordStore.backfillSleep`: fill last-night sleep from Health Connect for days that have none yet. */
+    suspend fun backfillSleep(): List<com.jackwallner.headachelogger.model.DailyRecord> {
+        val records = dailyRecords.load()
+        if (records.none { !it.sleepFetched && it.weatherFetched }) return records
+        val updated = records.map { record ->
+            if (record.sleepFetched) record
+            else health.sleepHoursForNightBefore(record.date)?.let { record.copy(sleepHoursLastNight = it, sleepFetched = true) } ?: record
+        }
+        dailyRecords.save(updated)
+        return updated
+    }
+
     /** Port of `maintainDailyRecordsIfNeeded`: archive weather for days with no log. */
     fun maintainDailyRecords() {
         if (!settings.hasCompletedOnboarding) return
