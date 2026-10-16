@@ -264,6 +264,8 @@ struct OnboardingView: View {
             // exact spot the user has been tapping "Continue". Rev A: labeled
             // "Get Started" (StatScout soft-exit label), visually secondary.
             Button("Get Started") {
+                ConversionDiagnostics.record(.freeVersionChosen)
+                store.syncConversionAttributes()
                 finishOnboarding()
             }
             .font(.subheadline.weight(.semibold))
@@ -293,6 +295,7 @@ struct OnboardingView: View {
     /// after onboarding, and report the impression.
     private func handleTrialStepAppear() {
         hasSeenTrialOffer = true
+        ConversionDiagnostics.record(.trialOfferReached)
         store.trackPaywallImpression(id: "headache_onboarding_trial", oncePerSession: true)
     }
 
@@ -307,13 +310,19 @@ struct OnboardingView: View {
         }
         trialError = nil
         isPurchasing = true
+        ConversionDiagnostics.record(.trialCTATapped)
         Task { @MainActor in
-            defer { isPurchasing = false }
+            defer {
+                isPurchasing = false
+                store.syncConversionAttributes()
+            }
             do {
                 switch try await store.purchase(package) {
                 case .purchased, .pending:
+                    ConversionDiagnostics.record(.purchaseSucceeded)
                     finishOnboarding()
                 case .cancelled:
+                    ConversionDiagnostics.record(.purchaseCancelled)
                     // Dismissing Apple's sheet is a choice, not a failure. Rendering a
                     // red error on it makes a working screen look broken, which is the
                     // state App Review captured. Stay silent and leave both the trial
@@ -321,6 +330,7 @@ struct OnboardingView: View {
                     trialError = nil
                 }
             } catch {
+                ConversionDiagnostics.record(.purchaseFailed)
                 trialError = store.lastError ?? "Couldn't start your trial. Please try again."
             }
         }

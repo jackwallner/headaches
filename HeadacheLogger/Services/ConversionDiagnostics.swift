@@ -22,6 +22,19 @@ import os
 ///
 /// Nothing here may carry health data, free text, or anything the user typed.
 /// Counts, dates, and short surface names only.
+/// Onboarding trial steps, mirrored to RevenueCat as `funnel_<step>` counts:
+/// the same keys Sober and Quit Zyn send, so one query reads the whole fleet.
+/// Without them a walkout, a skip and a cancelled Apple sheet all look like
+/// "saw the pitch, no trial".
+enum FunnelStep: String, CaseIterable {
+    case trialOfferReached
+    case trialCTATapped
+    case freeVersionChosen
+    case purchaseCancelled
+    case purchaseFailed
+    case purchaseSucceeded
+}
+
 enum ConversionDiagnostics {
     private static let logger = Logger(subsystem: "com.jackwallner.headachelogger", category: "Conversion")
 
@@ -74,6 +87,11 @@ enum ConversionDiagnostics {
     /// after updating becomes day zero. That undercounts age for existing users
     /// and cannot be helped; `days_since_install` is only trustworthy for
     /// installs that started on a build containing this file.
+    static func record(_ step: FunnelStep) {
+        let key = "conv.funnel.\(step.rawValue)"
+        defaults.set(defaults.integer(forKey: key) + 1, forKey: key)
+    }
+
     static func recordAppOpen() {
         let d = defaults
         if d.object(forKey: Key.installedAt) == nil {
@@ -205,6 +223,10 @@ enum ConversionDiagnostics {
             if let offering = d.string(forKey: Key.convertedOffering) {
                 attributes["converted_offering"] = offering
             }
+        }
+        for step in FunnelStep.allCases {
+            let count = d.integer(forKey: "conv.funnel.\(step.rawValue)")
+            if count > 0 { attributes["funnel_\(step.rawValue)"] = String(count) }
         }
         return attributes
     }

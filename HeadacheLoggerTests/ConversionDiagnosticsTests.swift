@@ -37,6 +37,20 @@ final class ConversionDiagnosticsTests: XCTestCase {
         )
     }
 
+    func testFunnelStepsAreSentAsFleetKeys() {
+        ConversionDiagnostics.recordPitchView(impressionID: "headache_onboarding_trial")
+        ConversionDiagnostics.record(.trialOfferReached)
+        ConversionDiagnostics.record(.trialCTATapped)
+        ConversionDiagnostics.record(.purchaseCancelled)
+        ConversionDiagnostics.record(.trialCTATapped)
+
+        let attributes = ConversionDiagnostics.subscriberAttributes
+        XCTAssertEqual(attributes["funnel_trialOfferReached"], "1")
+        XCTAssertEqual(attributes["funnel_trialCTATapped"], "2")
+        XCTAssertEqual(attributes["funnel_purchaseCancelled"], "1")
+        XCTAssertNil(attributes["funnel_freeVersionChosen"])
+    }
+
     func testCountsPitchesPerSurfaceAndInTotal() {
         ConversionDiagnostics.recordPitchView(impressionID: "headache_home_sheet")
         ConversionDiagnostics.recordPitchView(impressionID: "headache_home_sheet")
