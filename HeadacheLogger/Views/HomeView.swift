@@ -188,6 +188,8 @@ struct HomeView: View {
                 UndoSnackbar(
                     onAddDetails: { showDetails(for: eventID) },
                     onUndo: {
+                        // The log is gone, so its rating moment goes with it.
+                        ReviewPromptTracker.consumePendingPositiveMoment()
                         captureCoordinator.undoLastCapture(in: modelContext)
                         dismissUndoSnackbar()
                     },
@@ -225,6 +227,13 @@ struct HomeView: View {
         }
         .onChange(of: severityNotesTarget != nil || showPaywall, initial: true) { _, covered in
             ReviewPromptCoordinator.shared.homeSheetIsPresented = covered
+        }
+        .onChange(of: undoSnackbarVisible, initial: true) { wasVisible, visible in
+            ReviewPromptCoordinator.shared.undoBarIsVisible = visible
+            // The log's rating ask waits out the Undo bar. Ask again once it closes.
+            if wasVisible, !visible {
+                NotificationCenter.default.post(name: .headachePositiveMomentForReview, object: nil)
+            }
         }
     }
 

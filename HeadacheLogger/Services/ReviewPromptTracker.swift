@@ -25,6 +25,14 @@ final class ReviewPromptCoordinator: ObservableObject {
     @Published var isOnHomeTab = true
     /// Set by `HomeView` while its notes sheet or paywall is up.
     @Published var homeSheetIsPresented = false
+    /// Set by `HomeView` while the Undo / Add Details bar from the last log is
+    /// up. The user may still be acting on that log, so the ask waits.
+    @Published var undoBarIsVisible = false
+
+    /// Home is the visible tab with no sheet and no Undo bar over it.
+    var homeIsUncovered: Bool {
+        isOnHomeTab && !homeSheetIsPresented && !undoBarIsVisible
+    }
 
     private init() {}
 }

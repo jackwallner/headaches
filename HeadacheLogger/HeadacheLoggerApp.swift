@@ -308,9 +308,10 @@ private struct HeadacheLoggerRootContent: View {
     }
 
     /// The rating ask after a successful log: Apple's own prompt, no question
-    /// in front of it. Waits for the checkmark and snackbar to clear, then asks
-    /// only if Home is still clear. A blocked ask keeps the moment pending in
-    /// the tracker for the next log; it never retries off a sheet dismissal.
+    /// in front of it. Asks 3.5 s after the moment only if Home is still clear,
+    /// which includes the log's Undo bar being gone. A blocked ask keeps the
+    /// moment pending in the tracker; HomeView posts the moment again when the
+    /// Undo bar or the notes sheet closes, so the ask lands after the log is done.
     private func scheduleReviewPromptAfterPositiveMoment() {
         guard ReviewPromptTracker.shouldRequestAfterPositiveMoment(hasCompletedOnboarding: hasCompletedOnboarding),
               !reviewPromptShownThisSession,
@@ -331,11 +332,10 @@ private struct HeadacheLoggerRootContent: View {
         }
     }
 
-    /// Home is on screen with no promo, trial or paywall sheet over it.
+    /// Home is on screen with no promo, trial or paywall sheet and no Undo bar over it.
     private var isHomeClear: Bool {
         hasCompletedOnboarding
-            && reviewPromptCoordinator.isOnHomeTab
-            && !reviewPromptCoordinator.homeSheetIsPresented
+            && reviewPromptCoordinator.homeIsUncovered
             && activeSheet == nil
             && !pendingPaywallAfterTrialDismiss
             && !captureCoordinator.proPromptShownThisSession

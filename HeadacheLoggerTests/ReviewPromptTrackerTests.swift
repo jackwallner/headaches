@@ -87,3 +87,50 @@ final class ReviewPromptTrackerTests: XCTestCase {
         XCTAssertFalse(ReviewPromptTracker.shouldRequestAfterPositiveMoment(hasCompletedOnboarding: true))
     }
 }
+
+/// The clear-screen check behind the rating ask: the Undo / Add Details bar
+/// from the log that just finished holds the ask the same way a sheet does.
+@MainActor
+final class ReviewPromptHomeGuardTests: XCTestCase {
+    private let coordinator = ReviewPromptCoordinator.shared
+    private var saved: (Bool, Bool, Bool)!
+
+    override func setUp() async throws {
+        saved = (coordinator.isOnHomeTab, coordinator.homeSheetIsPresented, coordinator.undoBarIsVisible)
+        coordinator.isOnHomeTab = true
+        coordinator.homeSheetIsPresented = false
+        coordinator.undoBarIsVisible = false
+    }
+
+    override func tearDown() async throws {
+        coordinator.isOnHomeTab = saved.0
+        coordinator.homeSheetIsPresented = saved.1
+        coordinator.undoBarIsVisible = saved.2
+    }
+
+    func testHomeWithNothingOverItIsClear() {
+        XCTAssertTrue(coordinator.homeIsUncovered)
+    }
+
+    func testUndoBarHoldsTheAsk() {
+        coordinator.undoBarIsVisible = true
+        XCTAssertFalse(coordinator.homeIsUncovered)
+        coordinator.undoBarIsVisible = false
+        XCTAssertTrue(coordinator.homeIsUncovered)
+    }
+
+    func testSheetAndOtherTabsStillHoldTheAsk() {
+        coordinator.homeSheetIsPresented = true
+        XCTAssertFalse(coordinator.homeIsUncovered)
+        coordinator.homeSheetIsPresented = false
+        coordinator.isOnHomeTab = false
+        XCTAssertFalse(coordinator.homeIsUncovered)
+    }
+
+    func testUndoBarOutlastsTheNotesSheet() {
+        coordinator.undoBarIsVisible = true
+        coordinator.homeSheetIsPresented = true
+        coordinator.homeSheetIsPresented = false
+        XCTAssertFalse(coordinator.homeIsUncovered)
+    }
+}
