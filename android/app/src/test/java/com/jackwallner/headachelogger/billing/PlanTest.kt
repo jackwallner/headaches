@@ -15,8 +15,8 @@ class PlanTest {
 
     @Test fun productIdsMatchTheIosCatalog() {
         assertEquals("com.jackwallner.headachelogger", HeadacheProProduct.LIFETIME)
-        assertEquals("com.jackwallner.headachelogger.pro.yearly", HeadacheProProduct.YEARLY)
-        assertEquals("com.jackwallner.headachelogger.pro.monthly", HeadacheProProduct.MONTHLY)
+        assertEquals("com.jackwallner.headachelogger.yearly", HeadacheProProduct.YEARLY)
+        assertEquals("com.jackwallner.headachelogger.monthly", HeadacheProProduct.MONTHLY)
     }
 
     @Test fun packageKindsComeFromTheIdentifiers() {

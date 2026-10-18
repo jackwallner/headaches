@@ -21,8 +21,8 @@ REGIONS_VERSION = "2025/03"
 # Android ladder: about 20% under iOS ($9.99 / $39.99 / $89.99), see .claude/rules/android.md.
 # Product IDs match iOS so RevenueCat maps both stores to the same entitlement.
 SUBSCRIPTIONS = [
-    ("com.jackwallner.headachelogger.pro.monthly", "monthly", "P1M", ("7", 990_000_000), "Headache Pro Monthly"),
-    ("com.jackwallner.headachelogger.pro.yearly", "yearly", "P1Y", ("31", 990_000_000), "Headache Pro Yearly"),
+    ("com.jackwallner.headachelogger.monthly", "monthly", "P1M", ("7", 990_000_000), "Headache Pro Monthly"),
+    ("com.jackwallner.headachelogger.yearly", "yearly", "P1Y", ("31", 990_000_000), "Headache Pro Yearly"),
 ]
 LIFETIME = ("com.jackwallner.headachelogger", ("71", 990_000_000), "Headache Pro Lifetime")
 DESCRIPTION = "Proactive pressure and air-quality alerts, personal patterns, a daily risk forecast and a doctor-ready PDF."

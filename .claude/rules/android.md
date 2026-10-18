@@ -124,7 +124,7 @@ text is in `android/play-assets/metadata/android/en-US/` (no prices, no em
 dashes, never treat/cure/diagnose claims). Privacy and terms pages are
 `docs/android-privacy.html` and `docs/android-terms.html` on GitHub Pages.
 
-## Play Console answers to enter (app does not exist yet)
+## Play Console answers (entered 2026-10-17)
 
 - App content > Health apps declaration: health and fitness features, a
   personal headache log (symptom tracking and wellness). Not a medical device,
@@ -153,8 +153,21 @@ dashes, never treat/cure/diagnose claims). Privacy and terms pages are
 - Store listing: category Health & Fitness, contact `jackwallner+ha@gmail.com`,
   website `https://jackwallner.github.io/headaches/`.
 
-## Play state (2026-10-16)
+## Play state (2026-10-17)
 
-Not yet created. Signed AAB vc1 1.5.3 is built and verified locally. The app
-record, listing, App content declarations, products, service account access and
-every upload are still to do in Play Console.
+Staged, not sent for review. Play app id `4972263284314495960` (E3 Apps). versionCode 1
+(1.5.3) uploaded with `~/docs/android/tools/play_stage.py`; listing, icon,
+feature graphic and 5 screenshots committed by API; draft releases on
+internal and production, production targets all 178 countries. Products from
+`scripts/play-products.py` are active (two subscriptions with `trial-7d`, one
+lifetime). App content is complete: privacy policy, no ads, no ad ID, not a
+government app, no financial features, App access (instructions only),
+18 and over, data safety (approximate location for weather; RevenueCat: purchase history,
+app interactions, device IDs), IARC, category Health & Fitness. Health apps and Health Connect `READ_SLEEP` declarations are filled. Publishing overview shows
+"Submit 11 changes for review".
+
+Left for Jack: paste `HEADACHES_PLAY_REVIEW_CODE` from `~/.headaches_credentials`
+into App access > Headache Pro review unlock > Password, then press Send for review
+when this app's pacing slot comes. Grant the RevenueCat service account
+access to this app and upload the Play credentials JSON in RevenueCat
+(console-recipes play.md 2, revenuecat-developer.md B) if not yet done.
