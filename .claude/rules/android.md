@@ -64,8 +64,8 @@ paths:
 
 ## Build
 
-- JDK 17 (`/Library/Java/JavaVirtualMachines/temurin-17.jdk`), checked-in Gradle
-  wrapper 9.7.0, AGP 9.4.1, Kotlin 2.4.20, minSdk 26, target/compile 36.
+- JDK 17 (`/Library/Java/JavaVirtualMachines/temurin-17.jdk` for signed
+  release builds only), checked-in Gradle wrapper 9.7.0, AGP 9.4.1, Kotlin 2.4.20, minSdk 26, target/compile 36.
 - `android/local.properties` (ignored, mode 600) holds `REVENUECAT_TEST_KEY`,
   `REVENUECAT_PLAY_KEY`, `PLAY_REVIEW_CODE_SHA256` and `PLAY_UPLOAD_*` (upload
   keystore `~/.android/keystores/headaches-upload.p12`, backup in
@@ -73,7 +73,11 @@ paths:
   `HEADACHES_PLAY_UPLOAD_PASSWORD` in `~/.headaches_credentials`). Release
   builds fail without them. Upload cert SHA-256
   `3D:5E:A9:11:46:D8:3A:30:2E:75:F8:7E:9A:BB:EB:03:82:61:10:76:A2:B9:19:12:F3:34:82:DF:5A:6F:B7:4B`.
-- Unit tests: `cd android && ./gradlew testDebugUnitTest` (76 tests, parity with
+- Non-release Gradle runs on jmbp: from `android/`, `fm-gradle <tasks>`
+  (copies build outputs, reports and test results back). Only signed
+  `bundleRelease`/`assembleRelease` run here with `./gradlew`, because the
+  upload keystore never leaves this Mac.
+- Unit tests: `cd android && fm-gradle testDebugUnitTest` (76 tests, parity with
   the iOS tests for CSV, insights, alerts, daily records, plans, conversion
   copy and the review tracker).
 - `scripts/make_android_icon.py` derives the adaptive icon layers and
@@ -99,8 +103,8 @@ never touch `small_phone` (emulator-5554) or other agents' AVDs.
   first instrumentation run after boot can ANR).
 - Disable Digital Wellbeing (`pm disable-user --user 0
   com.google.android.apps.wellbeing`) and the three animation scales first.
-- Pro has no JDK 17: build both APKs here (`./gradlew assembleDebug
-  assembleDebugAndroidTest`), then `scripts/android-pro.sh install | test
+- Build both APKs on jmbp (`fm-gradle assembleDebug
+  assembleDebugAndroidTest` from `android/`), then `scripts/android-pro.sh install | test
   [class] | shot <png> | adb <args>`. `AppSmokeTest` is 8 connected tests.
 - Stop with `adb -s emulator-5570 emu kill`, wait for the qemu process to
   exit, then delete only `~/.android/avd/headaches_agent_test.{avd,ini}` and
