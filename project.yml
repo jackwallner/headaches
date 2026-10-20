@@ -72,6 +72,8 @@ targets:
       base:
         PRODUCT_NAME: OneTapHeadacheTracker
         PRODUCT_BUNDLE_IDENTIFIER: com.jackwallner.headachelogger
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIcon-A AppIcon-B AppIcon-C"
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
         INFOPLIST_FILE: HeadacheLogger/Info.plist
         CODE_SIGN_ENTITLEMENTS: HeadacheLogger/HeadacheLogger.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
