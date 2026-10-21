@@ -1,0 +1,27 @@
+One Tap Headache Tracker gör ett enda tryck till en tydlig huvudvärksdagbok och visar vilka mönster i väder, lufttryck och sömn som stämmer med din egen historik. Inga formulär, ingen text, inget konto.
+
+VARJE POST KAN INNEHÅLLA
+• Tid, veckodag och tid på dagen
+• Väder, temperatur, luftfuktighet, lufttryck och luftkvalitet (ungefärlig plats, bara när du loggar)
+• Gårdagens sömn, från Health Connect om du tillåter det
+• Valfri styrka och dina egna anteckningar
+
+GRATIS
+• Logga med ett tryck i appen och från widgeten på startskärmen
+• Historik med kalender-värmekarta och redigering av poster
+• CSV-export och import
+
+HEADACHE PRO (VALFRITT)
+• Personliga mönster för sömn, lufttryck, tid på dagen och väder, med diagram
+• Proaktiva aviseringar utifrån din lokala prognos och dina egna loggar
+• Daglig riskprognos byggd på dina egna data
+• En sida PDF-sammanfattning till din läkare
+
+PRIVAT
+• Inget konto, inga annonser
+• Din logg stannar på din telefon
+• Bara ungefärliga koordinater skickas till Open-Meteo för vädret
+
+Ett personligt verktyg för anteckningar, ingen medicinteknisk produkt och inget medicinskt råd. Prata med vårdpersonal om din huvudvärk.
+
+Appen är på engelska.

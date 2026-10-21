@@ -1,0 +1,27 @@
+One Tap Headache Tracker muuttaa yhden napautuksen selkeäksi päänsärkypäiväkirjaksi ja näyttää, mitkä sään, ilmanpaineen ja unen kuviot vastaavat omaa historiaasi. Ei lomakkeita, ei kirjoittamista, ei tiliä.
+
+JOKAISEEN MERKINTÄÄN VOI KUULUA
+• Aika, viikonpäivä ja vuorokaudenaika
+• Sää, lämpötila, ilmankosteus, ilmanpaine ja ilmanlaatu (likimääräinen sijainti, vain kirjatessasi)
+• Edellisyön uni Health Connectista, jos sallit sen
+• Valinnainen voimakkuus ja omat muistiinpanot
+
+ILMAINEN
+• Kirjaus yhdellä napautuksella sovelluksessa ja aloitusnäytön widgetistä
+• Historia kalenterin lämpökartalla ja merkintöjen muokkaus
+• CSV-vienti ja -tuonti
+
+HEADACHE PRO (VALINNAINEN)
+• Henkilökohtaiset kuviot unesta, ilmanpaineesta, vuorokaudenajasta ja säästä kaavioineen
+• Ennakoivat ilmoitukset paikallisen ennusteen ja omien kirjausten perusteella
+• Päivittäinen riskiennuste omasta datastasi
+• Yhden sivun PDF-yhteenveto lääkärillesi
+
+YKSITYINEN
+• Ei tiliä, ei mainoksia
+• Kirjauksesi pysyvät puhelimessasi
+• Säätä varten Open-Meteolle lähetetään vain likimääräiset koordinaatit
+
+Henkilökohtainen muistiinpanotyökalu, ei lääkinnällinen laite eikä lääketieteellinen neuvo. Keskustele päänsärystäsi terveydenhuollon ammattilaisen kanssa.
+
+Sovellus on englanninkielinen.

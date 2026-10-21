@@ -1,0 +1,27 @@
+One Tap Headache Tracker gjør ett enkelt trykk om til en tydelig hodepinedagbok og viser hvilke mønstre i vær, lufttrykk og søvn som passer med din egen historikk. Ingen skjemaer, ingen skriving, ingen konto.
+
+HVER OPPFØRING KAN INNEHOLDE
+• Tid, ukedag og tid på dagen
+• Vær, temperatur, luftfuktighet, lufttrykk og luftkvalitet (omtrentlig posisjon, bare når du logger)
+• Gårsdagens søvn, fra Health Connect hvis du tillater det
+• Valgfri styrke og dine egne notater
+
+GRATIS
+• Logg med ett trykk i appen og fra widgeten på startskjermen
+• Historikk med kalender-varmekart og redigering av oppføringer
+• CSV-eksport og import
+
+HEADACHE PRO (VALGFRITT)
+• Personlige mønstre for søvn, lufttrykk, tid på dagen og vær, med diagrammer
+• Proaktive varsler basert på din lokale prognose og dine egne logger
+• Daglig risikoprognose bygd på dine egne data
+• Én side PDF-sammendrag til legen din
+
+PRIVAT
+• Ingen konto, ingen annonser
+• Loggen blir på telefonen din
+• Bare omtrentlige koordinater sendes til Open-Meteo for været
+
+Et personlig notatverktøy, ikke medisinsk utstyr og ikke medisinsk råd. Snakk med helsepersonell om hodepinen din.
+
+Appen er på engelsk.

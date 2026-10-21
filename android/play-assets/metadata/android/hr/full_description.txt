@@ -1,0 +1,27 @@
+One Tap Headache Tracker pretvara jedan dodir u pregledan dnevnik glavobolja i pokazuje koji se obrasci vremena, tlaka i sna poklapaju s vašom vlastitom poviješću. Bez obrazaca, bez tipkanja, bez računa.
+
+SVAKI ZAPIS MOŽE SADRŽAVATI
+• Vrijeme, dan u tjednu i doba dana
+• Vrijeme, temperaturu, vlažnost, tlak zraka i kvalitetu zraka (približna lokacija, samo pri zapisu)
+• San iz prošle noći iz aplikacije Health Connect, ako to dopustite
+• Po želji jačinu i vlastite bilješke
+
+BESPLATNO
+• Zapis jednim dodirom u aplikaciji i s widgeta na početnom zaslonu
+• Povijest s kalendarom kao toplinskom kartom i uređivanjem zapisa
+• Izvoz i uvoz CSV-a
+
+HEADACHE PRO (NEOBVEZNO)
+• Osobni obrasci sna, tlaka, doba dana i vremena s grafikonima
+• Proaktivna upozorenja prema lokalnoj prognozi i vašim vlastitim zapisima
+• Dnevna prognoza rizika iz vaših vlastitih podataka
+• Jednostrani PDF sažetak za liječnika
+
+PRIVATNO
+• Bez računa i bez oglasa
+• Vaš dnevnik ostaje na telefonu
+• Za vrijeme se servisu Open-Meteo šalju samo približne koordinate
+
+Osobni alat za bilježenje, a ne medicinski proizvod ni liječnički savjet. O glavoboljama razgovarajte sa zdravstvenim stručnjakom.
+
+Aplikacija je na engleskom.

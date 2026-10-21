@@ -1,0 +1,27 @@
+One Tap Headache Tracker zamienia jedno dotknięcie w czytelny dziennik bólu głowy i pokazuje, które wzorce pogody, ciśnienia i snu pasują do Twojej własnej historii. Bez formularzy, bez pisania, bez konta.
+
+KAŻDY WPIS MOŻE ZAWIERAĆ
+• Godzinę, dzień tygodnia i porę dnia
+• Pogodę, temperaturę, wilgotność, ciśnienie atmosferyczne i jakość powietrza (przybliżona lokalizacja, tylko przy zapisie)
+• Sen z poprzedniej nocy z Health Connect, jeśli na to pozwolisz
+• Opcjonalnie nasilenie i własne notatki
+
+ZA DARMO
+• Zapis jednym dotknięciem w aplikacji i z widżetu na ekranie głównym
+• Historia z kalendarzem w formie mapy cieplnej i edycją wpisów
+• Eksport i import CSV
+
+HEADACHE PRO (OPCJONALNIE)
+• Osobiste wzorce snu, ciśnienia, pory dnia i pogody z wykresami
+• Proaktywne alerty na podstawie lokalnej prognozy i Twoich własnych zapisów
+• Dzienna prognoza ryzyka oparta na Twoich danych
+• Jednostronicowe podsumowanie PDF dla lekarza
+
+PRYWATNIE
+• Bez konta i bez reklam
+• Dziennik zostaje w Twoim telefonie
+• Do Open-Meteo trafiają tylko przybliżone współrzędne, by pobrać pogodę
+
+Osobiste narzędzie do prowadzenia zapisów, a nie wyrób medyczny ani porada lekarska. Porozmawiaj o swoich bólach głowy z pracownikiem ochrony zdrowia.
+
+Aplikacja jest w języku angielskim.

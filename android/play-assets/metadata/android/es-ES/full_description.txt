@@ -1,0 +1,27 @@
+One Tap Headache Tracker convierte un solo toque en un diario de dolor de cabeza claro y muestra qué patrones de clima, presión y sueño coinciden con tu propio historial. Sin formularios, sin escribir, sin cuenta.
+
+CADA REGISTRO PUEDE INCLUIR
+• Hora, día de la semana y momento del día
+• Clima, temperatura, humedad, presión atmosférica y calidad del aire (ubicación aproximada, solo al registrar)
+• El sueño de la noche anterior, leído de Health Connect si lo permites
+• Intensidad opcional y tus propias notas
+
+GRATIS
+• Registro con un toque en la app y desde el widget de la pantalla de inicio
+• Historial con calendario de calor y edición de registros
+• Exportar e importar CSV
+
+HEADACHE PRO (OPCIONAL)
+• Patrones personales de sueño, presión, hora del día y clima, con gráficos
+• Alertas proactivas según tu previsión local y tus propios registros
+• Previsión diaria de riesgo hecha con tus datos
+• Resumen en PDF de una página para tu médico
+
+PRIVADO
+• Sin cuenta ni anuncios
+• Tu registro se queda en tu teléfono
+• Solo se envían coordenadas aproximadas a Open-Meteo para el clima
+
+Una herramienta de registro personal, no un producto sanitario ni consejo médico. Habla de tus dolores de cabeza con un profesional sanitario.
+
+La app está en inglés.

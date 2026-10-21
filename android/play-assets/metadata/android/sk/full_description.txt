@@ -1,0 +1,27 @@
+One Tap Headache Tracker zmení jedno ťuknutie na prehľadný denník bolestí hlavy a ukáže, ktoré vzorce počasia, tlaku a spánku zodpovedajú vašej vlastnej histórii. Žiadne formuláre, žiadne písanie, žiadny účet.
+
+KAŽDÝ ZÁZNAM MÔŽE OBSAHOVAŤ
+• Čas, deň v týždni a časť dňa
+• Počasie, teplotu, vlhkosť, tlak vzduchu a kvalitu ovzdušia (približná poloha, len pri zápise)
+• Spánok z minulej noci z Health Connect, ak to povolíte
+• Voliteľne intenzitu a vlastné poznámky
+
+ZADARMO
+• Zápis jedným ťuknutím v aplikácii aj z widgetu na ploche
+• História s kalendárom ako teplotná mapa a úpravou záznamov
+• Export a import CSV
+
+HEADACHE PRO (VOLITEĽNE)
+• Osobné vzorce spánku, tlaku, dennej doby a počasia s grafmi
+• Proaktívne upozornenia podľa miestnej predpovede a vašich vlastných záznamov
+• Denná predpoveď rizika z vašich vlastných dát
+• Jednostranové PDF zhrnutie pre lekára
+
+SÚKROMNE
+• Bez účtu a bez reklám
+• Váš denník zostáva v telefóne
+• Pre počasie sa do Open-Meteo posielajú len približné súradnice
+
+Osobný nástroj na vedenie záznamov, nie zdravotnícka pomôcka ani lekárska rada. O bolestiach hlavy sa poraďte s odborníkom na zdravie.
+
+Aplikácia je v angličtine.

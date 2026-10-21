@@ -1,0 +1,27 @@
+One Tap Headache Tracker transforme un seul geste en journal de maux de tête clair et montre quels schémas de météo, de pression et de sommeil correspondent à votre propre historique. Pas de formulaire, pas de saisie, pas de compte.
+
+CHAQUE ENTRÉE PEUT CONTENIR
+• Heure, jour de la semaine et moment de la journée
+• Météo, température, humidité, pression atmosphérique et qualité de l'air (position approximative, seulement au moment de la saisie)
+• Le sommeil de la nuit précédente, lu dans Health Connect si vous l'autorisez
+• Une intensité facultative et vos propres notes
+
+GRATUIT
+• Saisie en un geste dans l'appli et depuis le widget de l'écran d'accueil
+• Historique avec calendrier en carte thermique et modification des entrées
+• Exportation et importation CSV
+
+HEADACHE PRO (OPTION)
+• Tendances personnelles sur le sommeil, la pression, l'heure et la météo, avec graphiques
+• Alertes proactives à partir de vos prévisions locales et de vos propres données
+• Prévision quotidienne du risque basée sur vos données
+• Résumé PDF d'une page pour votre médecin
+
+CONFIDENTIEL
+• Pas de compte, pas de publicité
+• Votre journal reste sur votre téléphone
+• Seules des coordonnées approximatives sont envoyées à Open-Meteo pour la météo
+
+Un outil de suivi personnel, pas un appareil médical ni un avis médical. Parlez de vos maux de tête à un professionnel de la santé.
+
+L'application est en anglais.

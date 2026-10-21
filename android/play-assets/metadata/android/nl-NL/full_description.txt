@@ -1,0 +1,27 @@
+One Tap Headache Tracker maakt van één tik een helder hoofdpijndagboek en laat zien welke patronen in weer, luchtdruk en slaap passen bij je eigen geschiedenis. Geen formulieren, geen typen, geen account.
+
+ELKE NOTITIE KAN BEVATTEN
+• Tijd, weekdag en dagdeel
+• Weer, temperatuur, luchtvochtigheid, luchtdruk en luchtkwaliteit (geschatte locatie, alleen als je noteert)
+• Je slaap van de afgelopen nacht, uit Health Connect als je dat toestaat
+• Optioneel een ernstscore en je eigen aantekeningen
+
+GRATIS
+• Noteren met één tik in de app en via de widget op het beginscherm
+• Geschiedenis met kalender-heatmap en bewerken van notities
+• CSV-export en -import
+
+HEADACHE PRO (OPTIONEEL)
+• Persoonlijke patronen in slaap, luchtdruk, tijdstip en weer, met grafieken
+• Proactieve meldingen op basis van je lokale voorspelling en je eigen notities
+• Dagelijkse risicovoorspelling op basis van je eigen gegevens
+• Een pdf-samenvatting van één pagina voor je arts
+
+PRIVÉ
+• Geen account, geen advertenties
+• Je dagboek blijft op je telefoon
+• Voor het weer gaan alleen geschatte coördinaten naar Open-Meteo
+
+Een persoonlijk hulpmiddel om bij te houden, geen medisch hulpmiddel en geen medisch advies. Bespreek je hoofdpijn met een zorgverlener.
+
+De app is in het Engels.

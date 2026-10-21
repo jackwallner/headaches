@@ -1,0 +1,1 @@
+Logga huvudvärk med ett tryck. Väder, lufttryck och sömn läggs till åt dig.

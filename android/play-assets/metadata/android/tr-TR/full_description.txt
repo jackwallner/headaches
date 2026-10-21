@@ -1,0 +1,27 @@
+One Tap Headache Tracker tek bir dokunuşu net bir baş ağrısı günlüğüne dönüştürür ve hangi hava, basınç ve uyku örüntülerinin kendi geçmişinle örtüştüğünü gösterir. Form yok, yazmak yok, hesap yok.
+
+HER KAYIT ŞUNLARI İÇEREBİLİR
+• Saat, haftanın günü ve günün bölümü
+• Hava durumu, sıcaklık, nem, hava basıncı ve hava kalitesi (yaklaşık konum, yalnızca kayıt sırasında)
+• İzin verirsen Health Connect'ten önceki gecenin uykusu
+• İsteğe bağlı şiddet puanı ve kendi notların
+
+ÜCRETSİZ
+• Uygulamada ve ana ekran widget'ında tek dokunuşla kayıt
+• Takvim ısı haritalı geçmiş ve kayıt düzenleme
+• CSV dışa ve içe aktarma
+
+HEADACHE PRO (İSTEĞE BAĞLI)
+• Uyku, basınç, günün saati ve havaya dair kişisel örüntüler, grafiklerle
+• Yerel tahmine ve kendi kayıtlarına dayalı proaktif uyarılar
+• Kendi verilerinden oluşan günlük risk tahmini
+• Doktorun için tek sayfalık PDF özeti
+
+GİZLİ
+• Hesap yok, reklam yok
+• Günlüğün telefonunda kalır
+• Hava durumu için Open-Meteo'ya yalnızca yaklaşık koordinatlar gönderilir
+
+Kişisel bir kayıt aracıdır, tıbbi cihaz değildir ve tıbbi tavsiye vermez. Baş ağrıların hakkında bir sağlık uzmanıyla konuş.
+
+Uygulama İngilizcedir.

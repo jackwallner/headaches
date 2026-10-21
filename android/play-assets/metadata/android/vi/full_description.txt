@@ -1,0 +1,27 @@
+One Tap Headache Tracker biến một lần chạm thành nhật ký đau đầu rõ ràng và cho thấy mẫu thời tiết, áp suất khí quyển và giấc ngủ nào trùng với lịch sử của chính bạn. Không biểu mẫu, không gõ chữ, không cần tài khoản.
+
+MỖI LẦN GHI CÓ THỂ GỒM
+• Giờ, thứ trong tuần và buổi trong ngày
+• Thời tiết, nhiệt độ, độ ẩm, áp suất khí quyển và chất lượng không khí (vị trí gần đúng, chỉ khi bạn ghi)
+• Giấc ngủ đêm qua từ Health Connect nếu bạn cho phép
+• Mức độ đau tùy chọn và ghi chú của riêng bạn
+
+MIỄN PHÍ
+• Ghi bằng một chạm trong ứng dụng và từ widget màn hình chính
+• Lịch sử với lịch bản đồ nhiệt và chỉnh sửa mục đã ghi
+• Xuất và nhập CSV
+
+HEADACHE PRO (TÙY CHỌN)
+• Mẫu cá nhân về giấc ngủ, áp suất, giờ trong ngày và thời tiết, kèm biểu đồ
+• Cảnh báo chủ động dựa trên dự báo tại chỗ và các lần ghi của bạn
+• Dự báo rủi ro hằng ngày từ dữ liệu của bạn
+• Bản tóm tắt PDF một trang cho bác sĩ
+
+RIÊNG TƯ
+• Không tài khoản, không quảng cáo
+• Nhật ký ở lại trên điện thoại của bạn
+• Chỉ tọa độ gần đúng được gửi tới Open-Meteo để lấy thời tiết
+
+Đây là công cụ ghi chép cá nhân, không phải thiết bị y tế và không phải lời khuyên y tế. Hãy trao đổi về chứng đau đầu của bạn với chuyên gia y tế.
+
+Ứng dụng bằng tiếng Anh.

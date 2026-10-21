@@ -1,0 +1,27 @@
+One Tap Headache Tracker converteix un sol toc en un diari de mal de cap clar i mostra quins patrons de temps, pressió i son coincideixen amb el teu propi historial. Sense formularis, sense escriure, sense compte.
+
+CADA REGISTRE POT INCLOURE
+• Hora, dia de la setmana i moment del dia
+• Temps, temperatura, humitat, pressió atmosfèrica i qualitat de l'aire (ubicació aproximada, només en registrar)
+• El son de la nit anterior, llegit de Health Connect si ho permets
+• Intensitat opcional i les teves pròpies notes
+
+GRATUÏT
+• Registre amb un toc a l'app i des del widget de la pantalla d'inici
+• Historial amb calendari de calor i edició de registres
+• Exportació i importació CSV
+
+HEADACHE PRO (OPCIONAL)
+• Patrons personals de son, pressió, hora del dia i temps, amb gràfics
+• Alertes proactives segons la previsió local i els teus propis registres
+• Previsió diària de risc feta amb les teves dades
+• Resum en PDF d'una pàgina per al teu metge
+
+PRIVAT
+• Sense compte ni anuncis
+• El teu registre es queda al teu telèfon
+• Només s'envien coordenades aproximades a Open-Meteo per al temps
+
+Una eina de registre personal, no un producte sanitari ni consell mèdic. Parla dels teus mals de cap amb un professional de la salut.
+
+L'app està en anglès.

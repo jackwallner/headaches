@@ -1,0 +1,27 @@
+One Tap Headache Tracker macht aus einem Tippen ein übersichtliches Kopfschmerz-Tagebuch und zeigt, welche Wetter-, Luftdruck- und Schlafmuster zu deinen eigenen Einträgen passen. Keine Formulare, kein Tippen, kein Konto.
+
+JEDER EINTRAG ENTHÄLT
+• Uhrzeit, Wochentag und Tageszeit
+• Wetter, Temperatur, Luftfeuchte, Luftdruck und Luftqualität (ungefährer Standort, nur beim Eintragen)
+• Schlaf der letzten Nacht aus Health Connect, wenn du es erlaubst
+• Optional Stärke und eigene Notizen
+
+KOSTENLOS
+• Ein-Tipp-Eintrag in der App und per Startbildschirm-Widget
+• Verlauf mit Kalender-Heatmap und Bearbeiten
+• CSV-Export und -Import
+
+HEADACHE PRO (OPTIONAL)
+• Persönliche Muster zu Schlaf, Luftdruck, Tageszeit und Wetter mit Diagrammen
+• Proaktive Hinweise aus deiner lokalen Vorhersage und deinen eigenen Einträgen
+• Tägliche Risikoprognose aus deinen eigenen Daten
+• PDF-Zusammenfassung auf einer Seite für deine Ärztin oder deinen Arzt
+
+PRIVAT
+• Kein Konto, keine Werbung
+• Dein Tagebuch bleibt auf deinem Handy
+• Für das Wetter gehen nur ungefähre Koordinaten an Open-Meteo
+
+Ein persönliches Aufzeichnungswerkzeug, kein Medizinprodukt und keine medizinische Beratung. Sprich mit medizinischem Fachpersonal über deine Kopfschmerzen.
+
+Die App ist auf Englisch.

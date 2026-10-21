@@ -1,0 +1,27 @@
+A One Tap Headache Tracker egyetlen érintésből átlátható fejfájásnaplót csinál, és megmutatja, mely időjárási, légnyomás- és alvásminták egyeznek a saját előzményeiddel. Nincs űrlap, nincs gépelés, nincs fiók.
+
+MINDEN BEJEGYZÉS TARTALMAZHATJA
+• Az időt, a hét napját és a napszakot
+• Az időjárást, hőmérsékletet, páratartalmat, légnyomást és levegőminőséget (hozzávetőleges hely, csak rögzítéskor)
+• Az előző éjszaka alvását a Health Connect appból, ha engedélyezed
+• Opcionálisan az erősséget és saját jegyzeteidet
+
+INGYENES
+• Rögzítés egy érintéssel az appban és a kezdőképernyő-widgetről
+• Előzmények naptáras hőtérképpel és a bejegyzések szerkesztésével
+• CSV-export és -import
+
+HEADACHE PRO (OPCIONÁLIS)
+• Személyes minták az alvásról, légnyomásról, napszakról és időjárásról, diagramokkal
+• Proaktív értesítések a helyi előrejelzés és a saját naplód alapján
+• Napi kockázati előrejelzés a saját adataidból
+• Egyoldalas PDF-összefoglaló az orvosodnak
+
+MAGÁNÜGY
+• Nincs fiók, nincs hirdetés
+• A naplód a telefonodon marad
+• Az időjáráshoz csak hozzávetőleges koordináták kerülnek az Open-Meteo szolgáltatáshoz
+
+Személyes feljegyzőeszköz, nem orvosi eszköz és nem orvosi tanács. A fejfájásodról beszélj egészségügyi szakemberrel.
+
+Az alkalmazás angol nyelvű.

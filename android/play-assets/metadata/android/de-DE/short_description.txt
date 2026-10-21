@@ -1,0 +1,1 @@
+Migräne mit einem Tippen loggen. Wetter, Luftdruck und Schlaf werden ergänzt.

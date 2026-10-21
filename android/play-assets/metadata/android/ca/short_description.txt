@@ -1,0 +1,1 @@
+Registra el mal de cap amb un toc. Temps, pressió i son s'afegeixen sols.

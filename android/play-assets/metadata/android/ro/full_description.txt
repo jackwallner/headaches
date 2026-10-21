@@ -1,0 +1,27 @@
+One Tap Headache Tracker transformă o singură atingere într-un jurnal clar al durerilor de cap și arată ce tipare de vreme, presiune și somn se potrivesc cu propriul tău istoric. Fără formulare, fără scris, fără cont.
+
+FIECARE ÎNREGISTRARE POATE CONȚINE
+• Ora, ziua săptămânii și momentul zilei
+• Vremea, temperatura, umiditatea, presiunea atmosferică și calitatea aerului (locație aproximativă, doar când notezi)
+• Somnul din noaptea trecută, citit din Health Connect dacă permiți
+• Opțional intensitatea și notițele tale
+
+GRATUIT
+• Notare dintr-o atingere în aplicație și din widgetul de pe ecranul principal
+• Istoric cu calendar tip hartă termică și editarea înregistrărilor
+• Export și import CSV
+
+HEADACHE PRO (OPȚIONAL)
+• Tipare personale de somn, presiune, moment al zilei și vreme, cu grafice
+• Alerte proactive pe baza prognozei locale și a propriilor tale înregistrări
+• Prognoză zilnică de risc făcută din datele tale
+• Rezumat PDF de o pagină pentru medicul tău
+
+PRIVAT
+• Fără cont, fără reclame
+• Jurnalul rămâne pe telefonul tău
+• Pentru vreme se trimit către Open-Meteo doar coordonate aproximative
+
+Un instrument personal de evidență, nu un dispozitiv medical și nu un sfat medical. Discută despre durerile tale de cap cu un specialist în sănătate.
+
+Aplicația este în limba engleză.
