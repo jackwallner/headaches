@@ -173,9 +173,9 @@ government app, no financial features, App access (instructions only),
 app interactions, device IDs), IARC, category Health & Fitness. Health apps and Health Connect `READ_SLEEP` declarations are filled. Publishing overview shows
 "Submit 11 changes for review".
 
-Left for Jack: paste `HEADACHES_PLAY_REVIEW_CODE` from `~/.headaches_credentials`
-into App access > Headache Pro review unlock > Password, then press Send for review
-when this app's pacing slot comes. Review codes: `~/docs/android/tools/play_handoff.py review-codes`. RevenueCat Play
+Left for Jack: press Send for review when this app's pacing slot comes (the review
+code is already saved in App access; `HEADACHES_PLAY_REVIEW_CODE` in
+`~/.headaches_credentials`, refill with `~/docs/android/tools/play_handoff.py review-codes --auto`). RevenueCat Play
 credentials were uploaded with `play_handoff.py rc-credentials --apply`
 on  2026-10-17. The RevenueCat service account already has
 account-wide Play permissions, so no per-app grant is needed.
