@@ -223,6 +223,7 @@ private struct HeadacheLoggerRootContent: View {
                     }
             } else {
                 OnboardingView()
+                    .unfoldedLeadingPane { OnboardingFoldPanel() }
             }
         }
         .onAppear {

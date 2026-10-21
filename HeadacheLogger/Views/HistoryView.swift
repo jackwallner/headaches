@@ -9,7 +9,9 @@ struct HistoryView: View {
     // SwiftUI historically exhibited and keeps sheet presentation deterministic under test.
     @State private var activeSheet: ActiveSheet?
     @State private var showExportError = false
-    @State private var selectedYear: Int? = nil
+    /// Owned by `RootTabView`, so the filter survives History moving between
+    /// its tab and its unfolded pane.
+    @Binding var selectedYear: Int?
     /// Tracked separately from `activeSheet` because SwiftUI nils the binding before `onDismiss` fires,
     /// and we still need the temp file URL to clean it up.
     @State private var pendingExportURL: URL?

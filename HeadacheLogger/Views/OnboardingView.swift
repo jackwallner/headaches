@@ -365,3 +365,43 @@ struct OnboardingView: View {
         DailyRecordStore.save(records)
     }
 }
+
+/// The pane beside onboarding on the unfolded iPhone Duo: the Log Headache
+/// button the setup leads to, so the second half of the display previews the
+/// app rather than sitting empty.
+struct OnboardingFoldPanel: View {
+    var body: some View {
+        VStack(spacing: 28) {
+            VStack(spacing: 14) {
+                Image(systemName: "brain.head.profile")
+                    .font(.system(size: 56, weight: .bold))
+                Text("Log Headache")
+                    .font(.system(size: 28, weight: .heavy))
+            }
+            .foregroundStyle(.white)
+            .frame(maxWidth: 320)
+            .padding(.vertical, 44)
+            .background(
+                LinearGradient(
+                    colors: [Color(red: 0.95, green: 0.25, blue: 0.36), Color(red: 0.86, green: 0.16, blue: 0.43)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 28, style: .continuous)
+            )
+            .shadow(color: Color(red: 0.86, green: 0.16, blue: 0.43).opacity(0.30), radius: 18, x: 0, y: 10)
+            VStack(spacing: 8) {
+                Text("One tap. Logged.")
+                    .font(.title2.weight(.semibold))
+                Text("Weather, sleep and steps are saved with every entry.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .accessibilityElement(children: .combine)
+    }
+}

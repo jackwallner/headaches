@@ -1,6 +1,14 @@
 import Charts
 import SwiftData
 import SwiftUI
+
+#if DEBUG
+extension Notification.Name {
+    /// Posted by the Duo capture tour to push the top pattern's detail.
+    static let headacheDebugShowFirstPattern = Notification.Name("headacheDebugShowFirstPattern")
+}
+#endif
+
 struct InsightsView: View {
     @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
@@ -11,6 +19,10 @@ struct InsightsView: View {
     @State private var riskLocationMissing = false
     /// Guards the insights value-moment so it counts at most once per view appearance.
     @State private var notedInsightsMoment = false
+    #if DEBUG
+    /// The Duo capture tour's push into the top pattern (`-HeadacheDuoTour`).
+    @State private var debugShowsFirstPattern = false
+    #endif
 
     private var summary: InsightsEngine.Summary {
         InsightsEngine.summarize(events, dailyRecords: dailyRecords)
@@ -43,6 +55,16 @@ struct InsightsView: View {
             // Second-touch trial offer hook. Root content evaluates the gates.
             NotificationCenter.default.post(name: .headachePatternsDidAppear, object: nil)
         }
+        #if DEBUG
+        .navigationDestination(isPresented: $debugShowsFirstPattern) {
+            if let insight = summary.insights.first {
+                InsightDetailView(insight: insight, totalEvents: summary.totalEvents)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .headacheDebugShowFirstPattern)) { _ in
+            debugShowsFirstPattern = store.isProUnlocked && !summary.insights.isEmpty
+        }
+        #endif
     }
 
     @ViewBuilder
