@@ -157,6 +157,12 @@ dashes, never treat/cure/diagnose claims). Privacy and terms pages are
 - Store listing: category Health & Fitness, contact `jackwallner+ha@gmail.com`,
   website `https://jackwallner.github.io/headaches/`.
 
+## Play state (2026-10-21)
+
+vc1 (1.5.3) sent for production review from Publishing overview on
+2026-10-21 about 13:15 PDT (178 countries, full rollout, managed publishing
+off). Next: confirm it is live (public listing returns 200).
+
 ## Play state (2026-10-17)
 
 Ready to send (verified 2026-10-17): review code saved in App access, RevenueCat
