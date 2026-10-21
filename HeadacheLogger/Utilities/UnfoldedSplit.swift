@@ -52,6 +52,20 @@ extension GeometryProxy {
     }
 }
 
+extension View {
+    /// Unfolded, the tab bar floats along the bottom of the leading pane, and
+    /// with the soft edge the list rows behind it read through the glass. The
+    /// hard edge backs the bar instead. Folded keeps the system default.
+    @ViewBuilder
+    func unfoldedBarEdge(isSplit: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            scrollEdgeEffectStyle(isSplit ? .hard : nil, for: .bottom)
+        } else {
+            self
+        }
+    }
+}
+
 /// Keeps a single-column screen (onboarding) on the leading side of the fold
 /// and puts `trailing` in the other pane. Every other width shows the screen as
 /// it is. Only frames change, so a fold mid-step keeps the screen's state.

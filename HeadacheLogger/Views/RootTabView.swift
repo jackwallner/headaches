@@ -42,6 +42,7 @@ struct RootTabView: View {
         // never rebuilt. History's year lives here for its move between tab and pane.
         ZStack(alignment: .topLeading) {
             tabs
+                .unfoldedBarEdge(isSplit: split != nil)
                 .frame(maxWidth: split?.primaryWidth ?? .infinity, maxHeight: .infinity)
             if let split {
                 NavigationStack { HistoryView(selectedYear: $historyYear) }
