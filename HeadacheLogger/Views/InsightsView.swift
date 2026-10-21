@@ -659,7 +659,13 @@ private struct BreakdownChart: View {
                 RuleMark(y: .value("Even baseline", baseline))
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
                     .foregroundStyle(.secondary)
-                    .annotation(position: .topTrailing, alignment: .trailing) {
+                    // Kept inside the plot: past it, the label ran over the
+                    // axis and off the card's trailing edge.
+                    .annotation(
+                        position: .topTrailing,
+                        alignment: .trailing,
+                        overflowResolution: .init(x: .fit(to: .plot), y: .disabled)
+                    ) {
                         Text("Even baseline")
                             .font(.caption2)
                             .foregroundStyle(.secondary)

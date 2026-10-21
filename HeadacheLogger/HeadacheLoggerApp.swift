@@ -610,6 +610,7 @@ private enum HeadacheScreenshotSeed {
             event.pressureHpa = entry.pressure
             event.pressureTrend = [.steady, .rising, .falling][index % 3]
             event.stepsToday = entry.steps
+            event.usAQI = Double(22 + (index * 7) % 24)
             event.sleepHoursLastNight = entry.sleep
             event.severity = entry.severity
             event.userNotes = entry.note
