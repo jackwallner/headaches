@@ -38,6 +38,18 @@ final class ExperiencedUserAuditUITests: XCTestCase {
         add(attachment)
     }
 
+    /// Taps through the system location alert (it covers Home right after the first log).
+    @discardableResult
+    private func allowLocationIfShown(timeout: TimeInterval = 8) -> Bool {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = springboard.alerts.buttons["Allow While Using App"]
+        if allow.waitForExistence(timeout: timeout) {
+            allow.tap()
+            return true
+        }
+        return false
+    }
+
     private func tab(_ title: String) {
         let bar = app.tabBars.buttons[title]
         if bar.waitForExistence(timeout: 5) { bar.tap() } else { app.buttons[title].firstMatch.tap() }
@@ -68,6 +80,9 @@ final class ExperiencedUserAuditUITests: XCTestCase {
         usleep(300_000)
         shot("log-plus-0.3s")
         note("log button enabled 0.3s after tap=\(log.isEnabled)")
+        let sawAlert = allowLocationIfShown()
+        note("system location alert appeared after first log=\(sawAlert) at \(String(format: "%.1f", Date().timeIntervalSince(start)))s")
+        shot("after-location-alert")
 
         let undo = app.buttons["undoLastTapButton"]
         let appeared = undo.waitForExistence(timeout: 40)
@@ -303,6 +318,7 @@ final class ExperiencedUserAuditUITests: XCTestCase {
         let start = Date()
         app.buttons["logHeadacheButton"].tap()
         let sheet = app.navigationBars["Headache Details"]
+        allowLocationIfShown()
         let shown = sheet.waitForExistence(timeout: 20)
         note("details sheet shown=\(shown) after \(String(format: "%.1f", Date().timeIntervalSince(start)))s from tap while context capture is still running")
         shot("details-sheet-prompted")
