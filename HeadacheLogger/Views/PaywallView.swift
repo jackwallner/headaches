@@ -33,7 +33,7 @@ struct PaywallView: View {
         ZStack {
             Color(.systemGroupedBackground).ignoresSafeArea()
 
-            if store.isLoadingProducts && store.products.isEmpty {
+            if store.isCheckingEntitlements || (store.isLoadingProducts && store.products.isEmpty) {
                 loadingState
             } else if store.products.isEmpty {
                 emptyState
@@ -45,7 +45,7 @@ struct PaywallView: View {
                 closeButton
             }
         }
-        .onChange(of: store.isProUnlocked) { _, isPro in
+        .onChange(of: store.isProUnlocked, initial: true) { _, isPro in
             if isPro { dismiss() }
         }
         .task {
