@@ -1,4 +1,8 @@
+import Foundation
 import XCTest
+
+import RevenueCat
+
 @testable import OneTapHeadacheTracker
 
 /// The funnel record that answers "where did this customer convert, how early
@@ -178,5 +182,157 @@ final class ConversionDiagnosticsTests: XCTestCase {
             XCTAssertFalse(value.contains(" "), "\(key) looks like free text: \(value)")
             XCTAssertLessThanOrEqual(value.count, 64, "\(key) is too long to be a label")
         }
+    }
+}
+
+@MainActor
+private final class MockPurchases: RevenueCatClient {
+    var cachedCustomerInfo: CustomerInfo?
+    var info = makeInfo(active: false)
+    var fetchError: Error?
+    var fetchHandler: ((CacheFetchPolicy) async throws -> CustomerInfo)?
+    var purchaseCalls = 0
+    var restoreCalls = 0
+    var cancelPurchase = false
+    var policies: [CacheFetchPolicy] = []
+    var eligibility: [String: IntroEligibilityStatus] = [:]
+
+    func customerInfo(fetchPolicy: CacheFetchPolicy) async throws -> CustomerInfo {
+        policies.append(fetchPolicy)
+        if let fetchHandler { return try await fetchHandler(fetchPolicy) }
+        if let fetchError { throw fetchError }
+        return info
+    }
+    var offering: Offering?
+    func paywallOffering(forceRefresh: Bool) async throws -> Offering? {
+        if let fetchError { throw fetchError }
+        return offering
+    }
+    func purchase(package: Package) async throws -> PurchaseResultData {
+        purchaseCalls += 1
+        return (nil, info, cancelPurchase)
+    }
+    func restorePurchases() async throws -> CustomerInfo {
+        restoreCalls += 1
+        if let fetchError { throw fetchError }
+        return info
+    }
+    func introEligibility(productIdentifiers: [String]) async -> [String: IntroEligibilityStatus] { eligibility }
+    func setSubscriberAttributes(_ attributes: [String: String]) {}
+    func recordImpression(_ params: CustomPaywallImpressionParams) {}
+}
+
+@MainActor
+private func makeInfo(active: Bool, date: Date = .now, lifetime: Bool = false, identifier: String = RevenueCatConfig.proEntitlement) -> CustomerInfo {
+    let entitlement = EntitlementInfo(
+        identifier: identifier, isActive: active, willRenew: active && !lifetime,
+        periodType: .normal, latestPurchaseDate: date, originalPurchaseDate: date,
+        expirationDate: lifetime ? nil : date.addingTimeInterval(active ? 86_400 : -86_400),
+        store: .appStore, productIdentifier: lifetime ? HeadacheProProduct.lifetime : HeadacheProProduct.monthly,
+        isSandbox: true, ownershipType: .purchased
+    )
+    return CustomerInfo(entitlements: EntitlementInfos(entitlements: [identifier: entitlement]),
+                        requestDate: date, firstSeen: date, originalAppUserId: "purchase-unit-test")
+}
+
+@MainActor
+private func makePackage() -> Package {
+    let product = TestStoreProduct(
+        localizedTitle: "Monthly", price: 3.99, currencyCode: "USD",
+        localizedPriceString: "$3.99", productIdentifier: HeadacheProProduct.monthly,
+        productType: .autoRenewableSubscription, localizedDescription: "Monthly access",
+        subscriptionPeriod: .init(value: 1, unit: .month), locale: Locale(identifier: "en_US")
+    ).toStoreProduct()
+    return Package(identifier: "$rc_monthly", packageType: .monthly, storeProduct: product,
+                   offeringIdentifier: "default", webCheckoutUrl: nil)
+}
+
+@MainActor
+final class PurchaseEntitlementTests: XCTestCase {
+    func testDebugAndSimulatorNeverSelectProductionKey() {
+        for simulator in [true, false] {
+            XCTAssertNil(RevenueCatEnvironment.key(production: "appl_prod", isDebug: true, isSimulator: simulator, testKey: nil))
+            XCTAssertNil(RevenueCatEnvironment.key(production: "appl_prod", isDebug: true, isSimulator: simulator, testKey: "appl_prod"))
+            XCTAssertEqual(RevenueCatEnvironment.key(production: "appl_prod", isDebug: true, isSimulator: simulator, testKey: "test_qa"), "test_qa")
+        }
+        XCTAssertNil(RevenueCatEnvironment.key(production: "appl_prod", isDebug: false, isSimulator: true, testKey: "test_qa"))
+        XCTAssertEqual(RevenueCatEnvironment.key(production: "appl_prod", isDebug: false, isSimulator: false, testKey: "test_qa"), "appl_prod")
+    }
+
+    func testCachedPremiumUnlocksBeforeNetworkRespondsAndSurvivesOffline() async {
+        let mock = MockPurchases()
+        mock.cachedCustomerInfo = makeInfo(active: true)
+        mock.fetchError = URLError(.notConnectedToInternet)
+        let service = StoreService(client: mock)
+        service.start()
+        XCTAssertTrue(service.isProUnlocked)
+        await service.updateCustomerProductStatus(fetchPolicy: .fetchCurrent)
+        XCTAssertTrue(service.isProUnlocked)
+    }
+
+    func testUnresolvedMembershipCannotStartAnotherPurchase() async {
+        let mock = MockPurchases()
+        mock.fetchError = URLError(.notConnectedToInternet)
+        let service = StoreService(client: mock)
+        XCTAssertTrue(service.isCheckingEntitlements)
+        _ = try? await service.purchase(makePackage())
+        XCTAssertEqual(mock.purchaseCalls, 0)
+        XCTAssertFalse(service.isCheckingEntitlements)
+    }
+
+    func testRestoreUnlocksLifetimeWithoutBuyingAgain() async throws {
+        let mock = MockPurchases()
+        mock.info = makeInfo(active: true, lifetime: true)
+        let service = StoreService(client: mock)
+        await service.restorePurchases()
+        XCTAssertTrue(service.isProUnlocked)
+        XCTAssertEqual(mock.restoreCalls, 1)
+        _ = try await service.purchase(makePackage())
+        XCTAssertEqual(mock.purchaseCalls, 0)
+
+    }
+
+    func testPurchaseAndCancellationUseRevenueCatResult() async throws {
+        let mock = MockPurchases()
+        mock.info = makeInfo(active: false)
+        let service = StoreService(client: mock)
+        await service.updateCustomerProductStatus()
+        mock.cancelPurchase = true
+        let cancelled = try await service.purchase(makePackage())
+        XCTAssertEqual(cancelled, .cancelled)
+        XCTAssertFalse(service.isProUnlocked)
+        mock.cancelPurchase = false
+        mock.info = makeInfo(active: true)
+        let purchased = try await service.purchase(makePackage())
+        XCTAssertEqual(purchased, .purchased)
+        XCTAssertTrue(service.isProUnlocked)
+        XCTAssertEqual(mock.purchaseCalls, 2)
+    }
+
+    func testDelayedFreeFetchCannotRelockACompletedRestore() async throws {
+        let mock = MockPurchases()
+        let old = makeInfo(active: false, date: Date(timeIntervalSinceNow: -60))
+        mock.info = makeInfo(active: true)
+        let service = StoreService(client: mock)
+        var continuation: CheckedContinuation<CustomerInfo, Never>?
+        mock.fetchHandler = { _ in await withCheckedContinuation { continuation = $0 } }
+        let fetch = Task { await service.updateCustomerProductStatus(fetchPolicy: .fetchCurrent) }
+        while continuation == nil { await Task.yield() }
+        await service.restorePurchases()
+        continuation?.resume(returning: old)
+        await fetch.value
+        XCTAssertTrue(service.isProUnlocked)
+    }
+
+    func testListenerUpdatesItsOwnServiceAndIgnoresOlderRecords() async throws {
+        let mock = MockPurchases()
+        let now = Date()
+        let service = StoreService(client: mock)
+        await service.receive(makeInfo(active: true, date: now)).value
+        XCTAssertTrue(service.isProUnlocked)
+        await service.receive(makeInfo(active: false, date: now.addingTimeInterval(-60))).value
+        XCTAssertTrue(service.isProUnlocked)
+        await service.receive(makeInfo(active: false, date: now.addingTimeInterval(60))).value
+        XCTAssertFalse(service.isProUnlocked)
     }
 }
