@@ -98,7 +98,10 @@ object ProactiveAlertsEngine {
         sleepLastNightHours: Double?,
         profile: PersonalAlertProfile = PersonalAlertProfile.EMPTY,
         now: Instant = Instant.now(),
-    ): RiskForecast {
+    ): RiskForecast? {
+        // Missing inputs cannot establish a low-risk forecast, even when sleep is available.
+        val aqiPeak = forecast?.usAqi?.filterNotNull()?.maxOrNull() ?: return null
+        if (forecast.pressureMsl.filterNotNull().size < 2) return null
         var score = 0
         val factors = mutableListOf<RiskFactor>()
         if (forecast != null) {
@@ -113,7 +116,6 @@ object ProactiveAlertsEngine {
                 score += 1
                 factors += RiskFactor("pressure-mild", "barometer", "Mild pressure shift", String.format(Locale.US, "%.1f hPa drop forecast.", maxDrop))
             }
-            val aqiPeak = forecast.usAqi.filterNotNull().maxOrNull() ?: 0.0
             if (aqiPeak >= 150) {
                 score += 3
                 factors += RiskFactor("aqi-high", "aqi.high", "Unhealthy air", "AQI is forecast to reach ${aqiPeak.toInt()}.")

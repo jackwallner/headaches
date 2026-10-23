@@ -1041,24 +1041,24 @@ final class HeadacheLoggerTests: XCTestCase {
 
     // MARK: - Daily risk forecast
 
-    func testDailyRiskLowWhenNoSignals() {
+    func testDailyRiskLowWhenNoSignals() throws {
         let forecast = HourlyForecast(
             times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
             pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015],
             usAqi: [20, 25, 30, 20, 15, 10]
         )
-        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 8, profile: .empty)
+        let risk = try XCTUnwrap(ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 8, profile: .empty))
         XCTAssertEqual(risk.level, .low)
         XCTAssertTrue(risk.factors.isEmpty)
     }
 
-    func testDailyRiskHighOnPressureDropAirQualityAndShortSleep() {
+    func testDailyRiskHighOnPressureDropAirQualityAndShortSleep() throws {
         let forecast = HourlyForecast(
             times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
             pressureMsl: [1018, 1016, 1013, 1011, 1010, 1010], // 8 hPa drop
             usAqi: [60, 90, 120, 160, 140, 100] // peak 160 → unhealthy
         )
-        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 4.5, profile: .empty)
+        let risk = try XCTUnwrap(ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 4.5, profile: .empty))
         XCTAssertEqual(risk.level, .high)
         XCTAssertTrue(risk.factors.contains { $0.id == "pressure" })
         XCTAssertTrue(risk.factors.contains { $0.id == "aqi-high" })
@@ -1066,9 +1066,24 @@ final class HeadacheLoggerTests: XCTestCase {
     }
 
     func testDailyRiskHandlesMissingForecast() {
-        let risk = ProactiveAlertsEngine.dailyRiskForecast(forecast: nil, sleepLastNightHours: 5.5, profile: .empty)
-        XCTAssertEqual(risk.level, .moderate)
-        XCTAssertEqual(risk.factors.map(\.id), ["sleep-low"])
+        for sleep: Double? in [nil, 8, 5.5, 4.5] {
+            XCTAssertNil(ProactiveAlertsEngine.dailyRiskForecast(forecast: nil, sleepLastNightHours: sleep, profile: .empty))
+        }
+    }
+
+    func testDailyRiskUnavailableWithoutWeatherOrAirQuality() {
+        let times = (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) }
+        let missing: [Double?] = Array(repeating: nil, count: times.count)
+        let forecasts = [
+            HourlyForecast(times: [], pressureMsl: [], usAqi: []),
+            HourlyForecast(times: times, pressureMsl: missing, usAqi: [20, 25, 30, 20, 15, 10]),
+            HourlyForecast(times: times, pressureMsl: [1015, nil, nil, nil, nil, nil], usAqi: [20, 25, 30, 20, 15, 10]),
+            HourlyForecast(times: times, pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015], usAqi: missing),
+            HourlyForecast(times: times, pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015], usAqi: []),
+        ]
+        for forecast in forecasts {
+            XCTAssertNil(ProactiveAlertsEngine.dailyRiskForecast(forecast: forecast, sleepLastNightHours: 8, profile: .empty))
+        }
     }
 
     // MARK: - Headache-free (protective) patterns
@@ -1115,13 +1130,13 @@ final class HeadacheLoggerTests: XCTestCase {
                      "Protective insight needs the daily baseline; event-only callers stay silent")
     }
 
-    func testDailyRiskRecommendationIsTailored() {
+    func testDailyRiskRecommendationIsTailored() throws {
         let calm = HourlyForecast(
             times: (0..<6).map { Date(timeIntervalSince1970: Double($0 * 3600)) },
             pressureMsl: [1015, 1015, 1014, 1015, 1015, 1015],
             usAqi: [20, 25, 30, 20, 15, 10]
         )
-        let low = ProactiveAlertsEngine.dailyRiskForecast(forecast: calm, sleepLastNightHours: 8, profile: .empty)
+        let low = try XCTUnwrap(ProactiveAlertsEngine.dailyRiskForecast(forecast: calm, sleepLastNightHours: 8, profile: .empty))
         XCTAssertFalse(low.recommendation.isEmpty)
         XCTAssertTrue(low.recommendation.lowercased().contains("favor"),
                       "Good sleep on a calm day should be reflected as protective")
@@ -1131,7 +1146,7 @@ final class HeadacheLoggerTests: XCTestCase {
             pressureMsl: [1018, 1016, 1013, 1011, 1010, 1010],
             usAqi: [60, 90, 120, 160, 140, 100]
         )
-        let high = ProactiveAlertsEngine.dailyRiskForecast(forecast: stormy, sleepLastNightHours: 4.5, profile: .empty)
+        let high = try XCTUnwrap(ProactiveAlertsEngine.dailyRiskForecast(forecast: stormy, sleepLastNightHours: 4.5, profile: .empty))
         XCTAssertEqual(high.level, .high)
         XCTAssertTrue(high.recommendation.lowercased().contains("high-risk"))
         XCTAssertFalse(high.recommendation.contains("—"), "Copy must not use em dashes")

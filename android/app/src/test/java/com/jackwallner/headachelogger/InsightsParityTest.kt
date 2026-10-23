@@ -203,21 +203,33 @@ class InsightsParityTest {
     private val stormy = forecast(listOf(1018.0, 1016.0, 1013.0, 1011.0, 1010.0, 1010.0), listOf(60.0, 90.0, 120.0, 160.0, 140.0, 100.0))
 
     @Test fun dailyRiskLowWhenNoSignals() {
-        val risk = ProactiveAlertsEngine.dailyRiskForecast(calm, 8.0)
+        val risk = requireNotNull(ProactiveAlertsEngine.dailyRiskForecast(calm, 8.0))
         assertEquals(RiskLevel.LOW, risk.level)
         assertTrue(risk.factors.isEmpty())
     }
 
     @Test fun dailyRiskHighOnPressureDropAirQualityAndShortSleep() {
-        val risk = ProactiveAlertsEngine.dailyRiskForecast(stormy, 4.5)
+        val risk = requireNotNull(ProactiveAlertsEngine.dailyRiskForecast(stormy, 4.5))
         assertEquals(RiskLevel.HIGH, risk.level)
         listOf("pressure", "aqi-high", "sleep-very-low").forEach { id -> assertTrue(id, risk.factors.any { it.id == id }) }
     }
 
     @Test fun dailyRiskHandlesMissingForecast() {
-        val risk = ProactiveAlertsEngine.dailyRiskForecast(null, 5.5)
-        assertEquals(RiskLevel.MODERATE, risk.level)
-        assertEquals(listOf("sleep-low"), risk.factors.map { it.id })
+        listOf(null, 8.0, 5.5, 4.5).forEach { sleep ->
+            assertNull(ProactiveAlertsEngine.dailyRiskForecast(null, sleep))
+        }
+    }
+
+    @Test fun dailyRiskUnavailableWithoutWeatherOrAirQuality() {
+        val missing = List<Double?>(calm.times.size) { null }
+        val forecasts = listOf(
+            HourlyForecast(emptyList(), emptyList(), emptyList()),
+            calm.copy(pressureMsl = missing),
+            calm.copy(pressureMsl = listOf(1015.0, null, null, null, null, null)),
+            calm.copy(usAqi = missing),
+            calm.copy(usAqi = emptyList()),
+        )
+        forecasts.forEach { assertNull(ProactiveAlertsEngine.dailyRiskForecast(it, 8.0)) }
     }
 
     @Test fun headacheFreeDayInsightFiresOnProtectiveSleep() {
@@ -236,10 +248,10 @@ class InsightsParityTest {
     }
 
     @Test fun dailyRiskRecommendationIsTailored() {
-        val low = ProactiveAlertsEngine.dailyRiskForecast(calm, 8.0)
+        val low = requireNotNull(ProactiveAlertsEngine.dailyRiskForecast(calm, 8.0))
         assertTrue(low.recommendation.isNotEmpty())
         assertTrue(low.recommendation.lowercase().contains("favor"))
-        val high = ProactiveAlertsEngine.dailyRiskForecast(stormy, 4.5)
+        val high = requireNotNull(ProactiveAlertsEngine.dailyRiskForecast(stormy, 4.5))
         assertEquals(RiskLevel.HIGH, high.level)
         assertTrue(high.recommendation.lowercase().contains("high-risk"))
         assertFalse(high.recommendation.contains("—"))
