@@ -217,16 +217,20 @@ struct HistoryView: View {
                     .listSectionSeparator(.hidden)
                 }
 
+                // Cards, like the heatmap above: a plain list's separator
+                // ran past the card's edge under them.
                 if !quizCompleted {
                     quizPromptCard(prominent: false)
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                         .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                 }
 
                 if !store.isProUnlocked, filteredEvents.count >= InsightsEngine.minimumSampleSize {
                     proUpsellRow
                         .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                         .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                 }
 
                 Section("Entries") {
