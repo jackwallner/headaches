@@ -162,7 +162,7 @@ fun PatternsScreen(graph: AppGraph) {
         val air = Http.get(OpenMeteo.forecastAirUrl(coord.latitude, coord.longitude), 10_000)
         val forecast = weather?.let { OpenMeteo.parseForecastWindow(it, air, now) }
         val sleep = graph.health.sleepHoursForNightBefore(LocalDate.now())
-        risk = if (forecast == null && sleep == null) null else ProactiveAlertsEngine.dailyRiskForecast(forecast, sleep, graph.settings.personalAlertProfile)
+        risk = ProactiveAlertsEngine.dailyRiskForecast(forecast, sleep, graph.settings.personalAlertProfile)
         riskLoading = false
     }
 

@@ -139,7 +139,14 @@ enum ProactiveAlertsEngine {
         sleepLastNightHours: Double?,
         profile: PersonalAlertProfile = .current(),
         now: Date = .now
-    ) -> RiskForecast {
+    ) -> RiskForecast? {
+        // Missing inputs cannot establish a low-risk forecast, even when sleep is available.
+        guard let pressureCount = forecast?.pressureMsl.compactMap({ $0 }).count,
+              pressureCount >= 2,
+              let aqiPeak = forecast?.usAqi.compactMap({ $0 }).max() else {
+            return nil
+        }
+
         var score = 0
         var factors: [RiskFactor] = []
 
@@ -173,7 +180,6 @@ enum ProactiveAlertsEngine {
                 ))
             }
 
-            let aqiPeak = forecast.usAqi.compactMap { $0 }.max() ?? 0
             if aqiPeak >= 150 {
                 score += 3
                 factors.append(RiskFactor(
