@@ -26,12 +26,17 @@ paths:
   Zyn that flipped the Duo's vertical bar to a bottom bar on a tab switch).
 - Unfolded, every leading tab keeps the phone's bottom tab bar
   (`horizontalBarsInPane`: `toolbarVerticalBehavior(.disabled)` while split,
-  else iOS 27.1 picks a vertical rail on some launches). Each screen calls
-  `.clearsFloatingTabBar(backdrop:)` with its own page colour: in a pane
-  (`\.isUnfoldedPane`) its content dissolves 8 pt above the bar, or above the
-  home indicator in the History pane, and a bottom content margin lets the last
-  row scroll clear (`TabBarClearance`, tested). A hard scroll edge was not
-  enough: rows were sliced at the edge of its backdrop. Folded, it is a no-op.
+  else iOS 27.1 picks a vertical rail on some launches). Each leading screen
+  calls `.clearsFloatingTabBar(backdrop:)` with its own page colour: in the
+  pane (`\.isUnfoldedPane`) content stops at a hard edge 16 pt above the bar,
+  and a row marked `.keepsWholeAboveTabBar()` that would cross it is hidden
+  whole (`TabBarClearance.edge`, tested). Mark every new row, card, section
+  header and footer on a leading screen, or it is cut at the edge. A fade
+  (attempt 2) and a hard scroll edge (attempt 1) both sliced rows and were
+  rejected. `.compactChromeInPane()` gives Patterns and Settings an inline
+  title and compact sections in the 669 pt pane. Folded, all of it is a no-op.
+- The History pane has no bar, so it gets no clearance: its list runs to the
+  screen edge as on a phone (a fade there cut the quiz card mid-glyph).
 - Onboarding uses `.unfoldedLeadingPane`, with `OnboardingFoldPanel` in the
   trailing pane. Sheets (paywall, trial offer, details, edit) are still system
   form sheets centred on the inner display.
@@ -39,8 +44,7 @@ paths:
   first log are outlined). Its cells are square `Grid` cells that share the
   card's width (`HeatmapLayout.weekColumns`); measuring the width instead let the
   card overflow its row in the History pane. Title, legend and caption live
-  inside the card (a plain list footer drew a white band), so the whole card
-  ends above the pane's bottom fade.
+  inside the card (a plain list footer drew a white band).
 - Captures: `gh-sim all --device 'iPhone Duo' --scheme HeadacheLogger --wait 10
   --args "-uitesting -HeadacheScreenshotSeed -HeadacheProOverride
   -HeadacheScreenshotBrand"` plus one `--screen "-HeadacheDuoScreen <name>"`

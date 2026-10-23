@@ -52,21 +52,39 @@ final class UnfoldedSplitTests: XCTestCase {
 
     // MARK: - Tab bar clearance
 
-    func testFoldedKeepsNoClearance() {
-        XCTAssertEqual(TabBarClearance.make(isSplit: false, barInset: 83),
-                       TabBarClearance(fade: 0, hidden: 0, contentPadding: 0))
+    func testFoldedHidesNothing() {
+        XCTAssertNil(TabBarClearance.edge(isSplit: false, safeBottom: 592, rows: [560...600]))
     }
 
-    func testSplitHidesEverythingUnderTheBar() {
-        let clearance = TabBarClearance.make(isSplit: true, barInset: 83)
-        // Content is gone a gap above the bar's top edge and fades out above that.
-        XCTAssertEqual(clearance.hidden, 83 + TabBarClearance.gap)
-        XCTAssertGreaterThan(clearance.fade, 0)
-        // The last row can scroll fully above the fade, so it is never cut.
-        XCTAssertGreaterThanOrEqual(clearance.contentPadding, clearance.fade + TabBarClearance.gap)
+    func testEdgeSitsAGapAboveTheBar() {
+        XCTAssertEqual(TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: []), 592 - TabBarClearance.gap)
     }
 
-    func testNegativeInsetNeverUncoversTheBar() {
-        XCTAssertEqual(TabBarClearance.make(isSplit: true, barInset: -4).hidden, TabBarClearance.gap)
+    func testRowCrossingTheEdgeIsHiddenWhole() {
+        // A pattern row from 548 to 648 would be sliced at 576: the edge moves to its top.
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [300...400, 548...648])
+        XCTAssertEqual(edge, 548)
+    }
+
+    func testRowsClearOfTheEdgeLeaveIt() {
+        let line = 592 - TabBarClearance.gap
+        // One row ends exactly on the line, one starts there: neither is sliced.
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [500...line, line...(line + 80)])
+        XCTAssertEqual(edge, line)
+    }
+
+    func testNestedRowsHideTheirOuterBlock() {
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [520...640, 560...600])
+        XCTAssertEqual(edge, 520)
+    }
+
+    func testTallRowIsCutAtTheLineInsteadOfEmptyingTheScreen() {
+        let line = 592 - TabBarClearance.gap
+        let tallTop = line - TabBarClearance.maximumSnap - 1
+        XCTAssertEqual(TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [tallTop...700]), line)
+    }
+
+    func testLastRowCanScrollClearOfTheEdge() {
+        XCTAssertGreaterThan(TabBarClearance.contentPadding, TabBarClearance.gap)
     }
 }

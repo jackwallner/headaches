@@ -101,6 +101,7 @@ struct HomeView: View {
 
                 if let latestEvent {
                     LatestEventCard(event: latestEvent, useCelsius: useCelsius)
+                        .keepsWholeAboveTabBar()
                         .id("\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(latestEvent.captureCompletedAt?.timeIntervalSince1970 ?? 0)")
 
                     if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
@@ -111,12 +112,14 @@ struct HomeView: View {
                                 captureCoordinator.retryCapture(eventID: latestEvent.id, in: modelContext)
                             }
                         )
+                        .keepsWholeAboveTabBar()
                         .id("recovery-\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(captureCoordinator.isCapturing)")
                     }
                 }
 
                 if let milestone = activeMilestone {
                     MilestoneProPrompt(milestone: milestone, showPaywall: $showPaywall, onDismiss: markMilestoneShown)
+                        .keepsWholeAboveTabBar()
                         .onAppear { captureCoordinator.proPromptShownThisSession = true }
                 }
 
@@ -130,9 +133,11 @@ struct HomeView: View {
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
+                        .keepsWholeAboveTabBar()
 
                         ForEach(recentEvents, id: \.id) { event in
                             RecentEventRow(event: event)
+                                .keepsWholeAboveTabBar()
                                 .id("recent-\(event.id)-\(event.captureStatus.rawValue)")
                         }
                     }
@@ -142,9 +147,11 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("What Gets Captured")
                             .font(.headline)
+                            .keepsWholeAboveTabBar()
                         Text("Press once when a headache starts; the app records the moment and fills in as much health and environmental context as it can.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
+                            .keepsWholeAboveTabBar()
 
                         CaptureItem(
                             icon: "clock",
@@ -471,6 +478,7 @@ private struct CaptureItem: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .keepsWholeAboveTabBar()
     }
 }
 

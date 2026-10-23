@@ -52,31 +52,47 @@ extension GeometryProxy {
     }
 }
 
-/// How far content stays clear of the floating tab bar in the unfolded split.
-/// Content dissolves over `fade` and is hidden for `hidden` points above the
-/// bottom edge (the bar's inset plus a gap), so no row is sliced by the bar or
-/// reads through its glass; `contentPadding` lets the last row scroll clear.
-struct TabBarClearance: Equatable, Sendable {
-    var fade: CGFloat
-    var hidden: CGFloat
-    var contentPadding: CGFloat
+/// Where a leading-pane screen stops above the floating tab bar in the
+/// unfolded split. Content ends at a hard edge `gap` points above the bar, and a
+/// row that would cross that line is hidden whole, so no row is sliced and
+/// nothing reads through the bar's glass. A row taller than `maximumSnap` is
+/// cut at the line instead, so one tall card never empties the screen.
+enum TabBarClearance {
+    static let gap: CGFloat = 16
+    static let maximumSnap: CGFloat = 140
+    /// Lets the last row scroll fully above the edge.
+    static let contentPadding: CGFloat = 28
 
-    static let fadeHeight: CGFloat = 36
-    static let gap: CGFloat = 8
+    /// The edge below which nothing draws, in the rows' coordinate space, or
+    /// `nil` off the split (folded, nothing is hidden).
+    /// - Parameters:
+    ///   - safeBottom: the bottom of the screen's safe area, which the bar sits on.
+    ///   - rows: the vertical extent of each row marked `keepsWholeAboveTabBar()`.
+    static func edge(isSplit: Bool, safeBottom: CGFloat, rows: [ClosedRange<CGFloat>]) -> CGFloat? {
+        guard isSplit else { return nil }
+        let line = safeBottom - gap
+        let crossing = rows.filter {
+            $0.lowerBound < line && $0.upperBound > line && line - $0.lowerBound <= maximumSnap
+        }
+        return crossing.map(\.lowerBound).min() ?? line
+    }
+}
 
-    static func make(isSplit: Bool, barInset: CGFloat) -> TabBarClearance {
-        guard isSplit else { return TabBarClearance(fade: 0, hidden: 0, contentPadding: 0) }
-        return TabBarClearance(
-            fade: fadeHeight,
-            hidden: max(barInset, 0) + gap,
-            contentPadding: fadeHeight + gap
-        )
+/// The rows one screen has marked `keepsWholeAboveTabBar()`, in global space.
+@MainActor @Observable
+final class TabBarClearanceRows {
+    private(set) var spans: [UUID: ClosedRange<CGFloat>] = [:]
+
+    func set(_ span: ClosedRange<CGFloat>?, for id: UUID) {
+        guard spans[id] != span else { return }
+        spans[id] = span
     }
 }
 
 extension EnvironmentValues {
-    /// True inside a pane of the unfolded split, where screens keep clear of
-    /// the floating tab bar (or the home indicator in the History pane).
+    /// True inside the leading pane of the unfolded split, where screens keep
+    /// clear of the floating tab bar. The History pane has no bar, so its list
+    /// runs to the screen edge as on a phone.
     @Entry var isUnfoldedPane: Bool = false
 }
 
@@ -93,49 +109,79 @@ extension View {
         }
     }
 
-    /// See `TabBarClearance`. Applied by each screen with its own page colour,
-    /// which shows under the bar. Off the split the mask is fully open, so
-    /// folding never rebuilds the screen.
+    /// See `TabBarClearance`. Applied by each leading-pane screen with its own
+    /// page colour, which shows under the bar. Off the split nothing is
+    /// hidden, so folding never rebuilds the screen.
     func clearsFloatingTabBar(backdrop: Color = Color(.systemGroupedBackground)) -> some View {
         modifier(ClearsFloatingTabBar(backdrop: backdrop))
+    }
+
+    /// Marks a row (a card, a list row, a header or footer) that is shown whole
+    /// or not at all above the floating tab bar. A no-op outside a screen that
+    /// calls `clearsFloatingTabBar`.
+    func keepsWholeAboveTabBar() -> some View {
+        modifier(KeepsWholeAboveTabBar())
+    }
+
+    /// The pane is only 669 pt tall, so a leading-pane list uses the inline
+    /// title Home already has and compact section spacing, instead of spending
+    /// a row's height on a large title. Folded, the phone's large title.
+    func compactChromeInPane() -> some View {
+        modifier(CompactChromeInPane())
     }
 }
 
 private struct ClearsFloatingTabBar: ViewModifier {
     @Environment(\.isUnfoldedPane) private var isSplit
-    @State private var barInset: CGFloat = 0
+    @State private var rows = TabBarClearanceRows()
+    @State private var safeBottom: CGFloat = 0
     let backdrop: Color
 
-    private var clearance: TabBarClearance {
-        .make(isSplit: isSplit, barInset: barInset)
+    private var edge: CGFloat? {
+        TabBarClearance.edge(isSplit: isSplit, safeBottom: safeBottom, rows: Array(rows.spans.values))
     }
 
     func body(content: Content) -> some View {
-        content
-            .contentMargins(.bottom, isSplit ? clearance.contentPadding : nil, for: .scrollContent)
+        let edge = edge
+        return content
+            .environment(rows)
+            .contentMargins(.bottom, isSplit ? TabBarClearance.contentPadding : nil, for: .scrollContent)
             .bottomScrollEdgeEffectHidden(isSplit)
             .mask {
-                VStack(spacing: 0) {
+                GeometryReader { proxy in
                     Rectangle()
-                    // Ink is gone within the first 16 pt, so no faint glyphs
-                    // linger above the bar.
-                    LinearGradient(
-                        stops: [
-                            .init(color: .black, location: 0),
-                            .init(color: .black.opacity(0.4), location: 0.2),
-                            .init(color: .black.opacity(0.06), location: 0.35),
-                            .init(color: .clear, location: 0.45),
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: clearance.fade)
-                    Color.clear.frame(height: clearance.hidden)
+                        .frame(height: edge.map { max($0 - proxy.frame(in: .global).minY, 0) })
                 }
                 .ignoresSafeArea()
             }
             .background(backdrop.ignoresSafeArea())
-            .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { barInset = $0 }
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.frame(in: .global).maxY - proxy.safeAreaInsets.bottom
+            } action: { safeBottom = $0 }
+    }
+}
+
+private struct KeepsWholeAboveTabBar: ViewModifier {
+    @Environment(TabBarClearanceRows.self) private var rows: TabBarClearanceRows?
+    @State private var id = UUID()
+
+    func body(content: Content) -> some View {
+        content
+            .onGeometryChange(for: ClosedRange<CGFloat>.self) { proxy in
+                let frame = proxy.frame(in: .global)
+                return frame.minY...max(frame.minY, frame.maxY)
+            } action: { rows?.set($0, for: id) }
+            .onDisappear { rows?.set(nil, for: id) }
+    }
+}
+
+private struct CompactChromeInPane: ViewModifier {
+    @Environment(\.isUnfoldedPane) private var isSplit
+
+    func body(content: Content) -> some View {
+        content
+            .navigationBarTitleDisplayMode(isSplit ? .inline : .automatic)
+            .listSectionSpacing(isSplit ? .compact : .default)
     }
 }
 

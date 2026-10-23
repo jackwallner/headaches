@@ -45,9 +45,10 @@ struct RootTabView: View {
             tabs
                 .frame(maxWidth: split?.primaryWidth ?? .infinity, maxHeight: .infinity)
             if let split {
+                // No tab bar on this side, so History's list runs to the
+                // screen edge as it does on a phone.
                 NavigationStack { HistoryView(selectedYear: $historyYear) }
                     .environment(\.horizontalSizeClass, .compact)
-                    .environment(\.isUnfoldedPane, true)
                     .frame(width: split.secondaryWidth)
                     .frame(maxHeight: .infinity)
                     .padding(.leading, split.secondaryX)

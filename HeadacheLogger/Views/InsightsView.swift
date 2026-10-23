@@ -69,6 +69,7 @@ struct InsightsView: View {
         List {
             Section {
                 InsightsHeader(summary: summary)
+                    .keepsWholeAboveTabBar()
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4))
             }
@@ -83,29 +84,36 @@ struct InsightsView: View {
                         locationMissing: riskLocationMissing,
                         onRetry: { Task { await refreshRiskForecast(forceRefresh: true) } }
                     )
+                    .keepsWholeAboveTabBar()
                     .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                     .listRowBackground(Color.clear)
                 } header: {
                     Text("Today's risk")
+                        .keepsWholeAboveTabBar()
                 } footer: {
                     Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
                         .font(.footnote)
+                        .keepsWholeAboveTabBar()
                 }
             }
 
             if !HeadacheBrand.isScreenshotMode {
                 Section {
                     ProactiveAlertsCard()
+                        .keepsWholeAboveTabBar()
                         .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                         .listRowBackground(Color.clear)
                 } header: {
                     Text("Get ahead of triggers")
+                        .keepsWholeAboveTabBar()
                 } footer: {
                     Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
                         .font(.footnote)
+                        .keepsWholeAboveTabBar()
                 }
             }
         }
+        .compactChromeInPane()
         .clearsFloatingTabBar()
     }
 
@@ -139,12 +147,15 @@ struct InsightsView: View {
                     } label: {
                         InsightRow(insight: insight)
                     }
+                    .keepsWholeAboveTabBar()
                 }
             } header: {
                 Text("Your patterns")
+                    .keepsWholeAboveTabBar()
             } footer: {
                 Text("Patterns are computed locally from your logged events. They describe your data, not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
                     .font(.footnote)
+                    .keepsWholeAboveTabBar()
             }
         }
     }
@@ -505,17 +516,21 @@ struct InsightDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 heroBlock
+                    .keepsWholeAboveTabBar()
                 chartBlock
+                    .keepsWholeAboveTabBar()
                 sectionBlock(
                     title: "Your pattern",
                     body: insight.yourPattern,
                     icon: "person.crop.circle.fill"
                 )
+                .keepsWholeAboveTabBar()
                 sectionBlock(
                     title: "Why this matters",
                     body: insight.whyItMatters,
                     icon: "lightbulb.fill"
                 )
+                .keepsWholeAboveTabBar()
                 if shouldShowAlertsCTA {
                     NavigationLink {
                         ProAlertsConfigView()
@@ -523,8 +538,10 @@ struct InsightDetailView: View {
                         alertsCTAContent
                     }
                     .buttonStyle(.plain)
+                    .keepsWholeAboveTabBar()
                 }
                 disclaimer
+                    .keepsWholeAboveTabBar()
             }
             .padding(.horizontal, 20)
             .padding(.top, 16)

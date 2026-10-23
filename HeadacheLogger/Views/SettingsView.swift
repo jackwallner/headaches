@@ -54,29 +54,41 @@ struct SettingsView: View {
                     .disabled(isRestoring)
                 } header: {
                     Text("Headache Pro")
+                        .keepsWholeAboveTabBar()
                 } footer: {
                     Text("Pro checks your local forecast and only pings when your logs support the pressure, AQI, or timing pattern behind the alert.")
+                        .keepsWholeAboveTabBar()
                 }
             }
 
-            Section("Logging") {
+            Section {
                 Toggle("Prompt for severity and notes", isOn: $promptForSeverityNotes)
+                    .keepsWholeAboveTabBar()
                 if HeadacheQuizStore.hasCompletedQuiz {
                     NavigationLink {
                         HeadacheQuizRetakeView()
                     } label: {
                         Label("Headache Pattern Quiz", systemImage: "questionmark.circle")
                     }
+                    .keepsWholeAboveTabBar()
                 }
+            } header: {
+                Text("Logging")
+                    .keepsWholeAboveTabBar()
             }
 
-            Section("Display") {
+            Section {
                 Picker("Color scheme", selection: $appearanceRaw) {
                     ForEach(AppAppearance.allCases) { mode in
                         Text(mode.title).tag(mode.rawValue)
                     }
                 }
+                .keepsWholeAboveTabBar()
                 Toggle("Use Celsius", isOn: $useCelsius)
+                    .keepsWholeAboveTabBar()
+            } header: {
+                Text("Display")
+                    .keepsWholeAboveTabBar()
             }
 
             Section {
@@ -85,49 +97,63 @@ struct SettingsView: View {
                     value: healthStatus,
                     valueIdentifier: "healthPermissionValue"
                 )
+                .keepsWholeAboveTabBar()
                 if !HeadacheBrand.isScreenshotMode {
                     PermissionRow(
                         label: "Location",
                         value: locationStatus,
                         valueIdentifier: "locationPermissionValue"
                     )
+                    .keepsWholeAboveTabBar()
                     Button("Open iPhone Settings") {
                         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                         openURL(url)
                     }
+                    .keepsWholeAboveTabBar()
                 }
             } header: {
                 Text("Permissions")
+                    .keepsWholeAboveTabBar()
             } footer: {
                 Text("Health and location are read-only and only used to enrich logs with context.")
+                    .keepsWholeAboveTabBar()
             }
 
-            Section("About & Support") {
+            Section {
                 // Two separate rows, no question in front of either (App
                 // Review 5.6.1). The rating row deep-links to the review page.
                 Button("Rate One Tap Headache Tracker") {
                     ReviewPromptTracker.markOpenedWriteReview()
                     openURL(AppStoreReviewLinks.writeReviewURL)
                 }
+                .keepsWholeAboveTabBar()
                 Button("Send Feedback") {
                     guard let feedbackURL else { return }
                     ReviewPromptTracker.markFeedbackSubmitted()
                     openURL(feedbackURL)
                 }
+                .keepsWholeAboveTabBar()
                 Button("Privacy Policy") {
                     guard let privacyPolicyURL else { return }
                     openURL(privacyPolicyURL)
                 }
+                .keepsWholeAboveTabBar()
                 Button("Terms of Use") {
                     guard let termsURL else { return }
                     openURL(termsURL)
                 }
+                .keepsWholeAboveTabBar()
                 Button("Support") {
                     guard let supportURL else { return }
                     openURL(supportURL)
                 }
+                .keepsWholeAboveTabBar()
+            } header: {
+                Text("About & Support")
+                    .keepsWholeAboveTabBar()
             }
         }
+        .compactChromeInPane()
         .clearsFloatingTabBar()
         .navigationTitle("Settings")
         .onAppear {

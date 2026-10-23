@@ -86,7 +86,6 @@ struct HistoryView: View {
         historyList
             .listStyle(.plain)
             .background(Color(.systemGroupedBackground))
-            .clearsFloatingTabBar()
             .navigationTitle("History")
             .accessibilityIdentifier("historyView")
             .onChange(of: scenePhase) { _, phase in
