@@ -53,20 +53,26 @@ extension GeometryProxy {
 }
 
 /// Where a leading-pane screen stops above the floating tab bar in the
-/// unfolded split. Content ends at a hard edge `gap` points above the bar, and a
-/// row that would cross that line is hidden whole, so no row is sliced and
-/// nothing reads through the bar's glass. A row taller than `maximumSnap` is
-/// cut at the line instead, so one tall card never empties the screen.
+/// unfolded split. Content ends `gap` points above the bar, and a row that
+/// would cross that line is hidden whole, so no row is sliced and nothing
+/// reads through the bar's glass. The edge sits halfway between the last whole
+/// row and the first hidden one, above the separator between them, and is
+/// drawn with the cards' rounded corners, so a card ends on a whole row. A row
+/// taller than `maximumSnap` is cut at the line instead, so one tall card
+/// never empties the screen.
 enum TabBarClearance {
     static let gap: CGFloat = 16
     static let maximumSnap: CGFloat = 140
     /// Lets the last row scroll fully above the edge.
     static let contentPadding: CGFloat = 28
+    /// The inset-grouped cards' margin and corner radius in a phone-width pane.
+    static let cardInset: CGFloat = 20
+    static let cornerRadius: CGFloat = 26
 
     /// The edge below which nothing draws, in the rows' coordinate space, or
     /// `nil` off the split (folded, nothing is hidden).
     /// - Parameters:
-    ///   - safeBottom: the bottom of the screen's safe area, which the bar sits on.
+    ///   - safeBottom: the bottom of the screen's safe area, the bar's top edge.
     ///   - rows: the vertical extent of each row marked `keepsWholeAboveTabBar()`.
     static func edge(isSplit: Bool, safeBottom: CGFloat, rows: [ClosedRange<CGFloat>]) -> CGFloat? {
         guard isSplit else { return nil }
@@ -74,7 +80,15 @@ enum TabBarClearance {
         let crossing = rows.filter {
             $0.lowerBound < line && $0.upperBound > line && line - $0.lowerBound <= maximumSnap
         }
-        return crossing.map(\.lowerBound).min() ?? line
+        // The first row not shown: one the line would slice, else the next below it.
+        let firstCrossing = crossing.map(\.lowerBound).min()
+        guard let hidden = firstCrossing ?? rows.map(\.lowerBound).filter({ $0 >= line }).min() else {
+            return line
+        }
+        guard let shown = rows.map(\.upperBound).filter({ $0 <= hidden }).max() else {
+            return firstCrossing ?? line
+        }
+        return min(line, max(shown, ((shown + hidden) / 2).rounded(.down) - 1))
     }
 }
 
@@ -149,15 +163,41 @@ private struct ClearsFloatingTabBar: ViewModifier {
             .bottomScrollEdgeEffectHidden(isSplit)
             .mask {
                 GeometryReader { proxy in
-                    Rectangle()
-                        .frame(height: edge.map { max($0 - proxy.frame(in: .global).minY, 0) })
+                    if let edge {
+                        ClearanceMask(height: max(edge - proxy.frame(in: .global).minY, 0))
+                    } else {
+                        Rectangle()
+                    }
                 }
                 .ignoresSafeArea()
             }
             .background(backdrop.ignoresSafeArea())
+            // The list's frame already stops at the safe area, so its bottom
+            // is the bar's top edge; subtracting the inset again counts the bar twice.
             .onGeometryChange(for: CGFloat.self) { proxy in
-                proxy.frame(in: .global).maxY - proxy.safeAreaInsets.bottom
+                proxy.frame(in: .global).maxY
             } action: { safeBottom = $0 }
+    }
+}
+
+/// Everything above the edge, with a card's rounded bottom corners at the card
+/// margins. Outside the cards the page colour shows either way.
+private struct ClearanceMask: View {
+    let height: CGFloat
+
+    var body: some View {
+        let radius = min(TabBarClearance.cornerRadius, height)
+        ZStack(alignment: .top) {
+            Rectangle()
+                .frame(height: height - radius)
+            UnevenRoundedRectangle(
+                bottomLeadingRadius: radius,
+                bottomTrailingRadius: radius,
+                style: .continuous
+            )
+            .padding(.horizontal, TabBarClearance.cardInset)
+            .frame(height: height)
+        }
     }
 }
 

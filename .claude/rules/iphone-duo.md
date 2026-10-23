@@ -28,9 +28,12 @@ paths:
   (`horizontalBarsInPane`: `toolbarVerticalBehavior(.disabled)` while split,
   else iOS 27.1 picks a vertical rail on some launches). Each leading screen
   calls `.clearsFloatingTabBar(backdrop:)` with its own page colour: in the
-  pane (`\.isUnfoldedPane`) content stops at a hard edge 16 pt above the bar,
-  and a row marked `.keepsWholeAboveTabBar()` that would cross it is hidden
-  whole (`TabBarClearance.edge`, tested). Mark every new row, card, section
+  pane (`\.isUnfoldedPane`) content stops 16 pt above the bar, and a row
+  marked `.keepsWholeAboveTabBar()` that would cross it is hidden whole; the
+  edge sits halfway between the last whole row and the first hidden one, with
+  the cards' rounded corners (`TabBarClearance.edge`, tested). The list's
+  frame already ends at the safe area: never subtract `safeAreaInsets.bottom`
+  from it again (R2 of 2026-10-23 put the edge 84 pt too high that way). Mark every new row, card, section
   header and footer on a leading screen, or it is cut at the edge. A fade
   (attempt 2) and a hard scroll edge (attempt 1) both sliced rows and were
   rejected. `.compactChromeInPane()` gives Patterns and Settings an inline

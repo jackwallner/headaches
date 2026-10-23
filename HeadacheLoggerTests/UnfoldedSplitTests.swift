@@ -61,9 +61,19 @@ final class UnfoldedSplitTests: XCTestCase {
     }
 
     func testRowCrossingTheEdgeIsHiddenWhole() {
-        // A pattern row from 548 to 648 would be sliced at 576: the edge moves to its top.
-        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [300...400, 548...648])
-        XCTAssertEqual(edge, 548)
+        // A pattern row from 520 would be sliced at 570: it is hidden, and the
+        // edge sits halfway back to the row above, over the separator's gap.
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 586, rows: [440...496, 520...596])
+        XCTAssertEqual(edge, 507)
+    }
+
+    func testFirstRowCrossingTheEdgeHidesFromItsTop() {
+        XCTAssertEqual(TabBarClearance.edge(isSplit: true, safeBottom: 586, rows: [548...648]), 548)
+    }
+
+    func testTightGapNeverCutsTheRowAbove() {
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 586, rows: [500...519.5, 520...600])
+        XCTAssertEqual(edge, 519.5)
     }
 
     func testRowsClearOfTheEdgeLeaveIt() {
@@ -71,6 +81,12 @@ final class UnfoldedSplitTests: XCTestCase {
         // One row ends exactly on the line, one starts there: neither is sliced.
         let edge = TabBarClearance.edge(isSplit: true, safeBottom: 592, rows: [500...line, line...(line + 80)])
         XCTAssertEqual(edge, line)
+    }
+
+    func testEdgeInAGapSitsHalfwayBetweenTheRows() {
+        // A card ends at 549 and the next block starts at 573, under the 569 line.
+        let edge = TabBarClearance.edge(isSplit: true, safeBottom: 585, rows: [400...549, 573...640])
+        XCTAssertEqual(edge, 560)
     }
 
     func testNestedRowsHideTheirOuterBlock() {
