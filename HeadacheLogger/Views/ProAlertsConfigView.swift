@@ -169,6 +169,7 @@ struct ProAlertsConfigView: View {
                 )
             }
         }
+        .clearsFloatingTabBar()
         .navigationTitle("Proactive Alerts")
         .task {
             ProactiveAlertsEngine.refreshPersonalAlertProfile(in: modelContext)

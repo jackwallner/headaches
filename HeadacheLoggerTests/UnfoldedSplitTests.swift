@@ -49,4 +49,24 @@ final class UnfoldedSplitTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - Tab bar clearance
+
+    func testFoldedKeepsNoClearance() {
+        XCTAssertEqual(TabBarClearance.make(isSplit: false, barInset: 83),
+                       TabBarClearance(fade: 0, hidden: 0, contentPadding: 0))
+    }
+
+    func testSplitHidesEverythingUnderTheBar() {
+        let clearance = TabBarClearance.make(isSplit: true, barInset: 83)
+        // Content is gone a gap above the bar's top edge and fades out above that.
+        XCTAssertEqual(clearance.hidden, 83 + TabBarClearance.gap)
+        XCTAssertGreaterThan(clearance.fade, 0)
+        // The last row can scroll fully above the fade, so it is never cut.
+        XCTAssertGreaterThanOrEqual(clearance.contentPadding, clearance.fade + TabBarClearance.gap)
+    }
+
+    func testNegativeInsetNeverUncoversTheBar() {
+        XCTAssertEqual(TabBarClearance.make(isSplit: true, barInset: -4).hidden, TabBarClearance.gap)
+    }
 }

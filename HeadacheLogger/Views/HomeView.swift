@@ -167,6 +167,7 @@ struct HomeView: View {
             .padding(20)
         }
         .background(Color(.systemGroupedBackground))
+        .clearsFloatingTabBar()
         .navigationTitle(HeadacheBrand.name)
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("homeView")

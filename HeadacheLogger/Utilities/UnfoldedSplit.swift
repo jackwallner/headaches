@@ -52,14 +52,98 @@ extension GeometryProxy {
     }
 }
 
+/// How far content stays clear of the floating tab bar in the unfolded split.
+/// Content dissolves over `fade` and is hidden for `hidden` points above the
+/// bottom edge (the bar's inset plus a gap), so no row is sliced by the bar or
+/// reads through its glass; `contentPadding` lets the last row scroll clear.
+struct TabBarClearance: Equatable, Sendable {
+    var fade: CGFloat
+    var hidden: CGFloat
+    var contentPadding: CGFloat
+
+    static let fadeHeight: CGFloat = 36
+    static let gap: CGFloat = 8
+
+    static func make(isSplit: Bool, barInset: CGFloat) -> TabBarClearance {
+        guard isSplit else { return TabBarClearance(fade: 0, hidden: 0, contentPadding: 0) }
+        return TabBarClearance(
+            fade: fadeHeight,
+            hidden: max(barInset, 0) + gap,
+            contentPadding: fadeHeight + gap
+        )
+    }
+}
+
+extension EnvironmentValues {
+    /// True inside a pane of the unfolded split, where screens keep clear of
+    /// the floating tab bar (or the home indicator in the History pane).
+    @Entry var isUnfoldedPane: Bool = false
+}
+
 extension View {
-    /// Unfolded, the tab bar floats along the bottom of the leading pane, and
-    /// with the soft edge the list rows behind it read through the glass. The
-    /// hard edge backs the bar instead. Folded keeps the system default.
+    /// A leading-pane tab keeps the phone's horizontal bars while split. iOS
+    /// 27.1 otherwise moves a tab's toolbar, and the tab bar with it, into a
+    /// vertical rail on some launches and not others. Folded, the default.
     @ViewBuilder
-    func unfoldedBarEdge(isSplit: Bool) -> some View {
+    func horizontalBarsInPane(_ isSplit: Bool) -> some View {
+        if #available(iOS 27.1, *) {
+            toolbarVerticalBehavior(isSplit ? .disabled : .automatic)
+        } else {
+            self
+        }
+    }
+
+    /// See `TabBarClearance`. Applied by each screen with its own page colour,
+    /// which shows under the bar. Off the split the mask is fully open, so
+    /// folding never rebuilds the screen.
+    func clearsFloatingTabBar(backdrop: Color = Color(.systemGroupedBackground)) -> some View {
+        modifier(ClearsFloatingTabBar(backdrop: backdrop))
+    }
+}
+
+private struct ClearsFloatingTabBar: ViewModifier {
+    @Environment(\.isUnfoldedPane) private var isSplit
+    @State private var barInset: CGFloat = 0
+    let backdrop: Color
+
+    private var clearance: TabBarClearance {
+        .make(isSplit: isSplit, barInset: barInset)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .contentMargins(.bottom, isSplit ? clearance.contentPadding : nil, for: .scrollContent)
+            .bottomScrollEdgeEffectHidden(isSplit)
+            .mask {
+                VStack(spacing: 0) {
+                    Rectangle()
+                    // Ink is gone within the first 16 pt, so no faint glyphs
+                    // linger above the bar.
+                    LinearGradient(
+                        stops: [
+                            .init(color: .black, location: 0),
+                            .init(color: .black.opacity(0.4), location: 0.2),
+                            .init(color: .black.opacity(0.06), location: 0.35),
+                            .init(color: .clear, location: 0.45),
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: clearance.fade)
+                    Color.clear.frame(height: clearance.hidden)
+                }
+                .ignoresSafeArea()
+            }
+            .background(backdrop.ignoresSafeArea())
+            .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { barInset = $0 }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func bottomScrollEdgeEffectHidden(_ hidden: Bool) -> some View {
         if #available(iOS 26.0, *) {
-            scrollEdgeEffectStyle(isSplit ? .hard : nil, for: .bottom)
+            scrollEdgeEffectHidden(hidden, for: .bottom)
         } else {
             self
         }

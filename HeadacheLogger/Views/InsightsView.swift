@@ -2,13 +2,6 @@ import Charts
 import SwiftData
 import SwiftUI
 
-#if DEBUG
-extension Notification.Name {
-    /// Posted by the Duo capture tour to push the top pattern's detail.
-    static let headacheDebugShowFirstPattern = Notification.Name("headacheDebugShowFirstPattern")
-}
-#endif
-
 struct InsightsView: View {
     @EnvironmentObject private var store: StoreService
     @Query(sort: \HeadacheEvent.timestamp, order: .reverse) private var events: [HeadacheEvent]
@@ -20,8 +13,9 @@ struct InsightsView: View {
     /// Guards the insights value-moment so it counts at most once per view appearance.
     @State private var notedInsightsMoment = false
     #if DEBUG
-    /// The Duo capture tour's push into the top pattern (`-HeadacheDuoTour`).
+    /// `-HeadacheDuoScreen pattern` pushes the top pattern's detail at launch.
     @State private var debugShowsFirstPattern = false
+    @State private var debugDidPushFirstPattern = false
     #endif
 
     private var summary: InsightsEngine.Summary {
@@ -61,7 +55,10 @@ struct InsightsView: View {
                 InsightDetailView(insight: insight, totalEvents: summary.totalEvents)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .headacheDebugShowFirstPattern)) { _ in
+        .task {
+            guard DuoScreen.requested == .pattern, !debugDidPushFirstPattern else { return }
+            debugDidPushFirstPattern = true
+            try? await Task.sleep(for: .milliseconds(600))
             debugShowsFirstPattern = store.isProUnlocked && !summary.insights.isEmpty
         }
         #endif
@@ -109,6 +106,7 @@ struct InsightsView: View {
                 }
             }
         }
+        .clearsFloatingTabBar()
     }
 
     @ViewBuilder
@@ -532,6 +530,7 @@ struct InsightDetailView: View {
             .padding(.top, 16)
             .padding(.bottom, 32)
         }
+        .clearsFloatingTabBar(backdrop: Color(.systemBackground))
         .navigationTitle(insight.title)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -563,10 +562,8 @@ struct InsightDetailView: View {
             BreakdownChart(breakdown: insight.breakdown, accent: brandColor)
                 .frame(height: 220)
             if let baseline = insight.breakdown.evenBaseline {
-                HStack(spacing: 6) {
-                    Rectangle()
-                        .frame(width: 18, height: 2)
-                        .foregroundStyle(.secondary)
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    BaselineSwatch()
                     Text("Even baseline (\(percentString(baseline))): what you'd see if headaches were spread evenly across these buckets.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -656,35 +653,16 @@ private struct BreakdownChart: View {
                 .cornerRadius(4)
             }
             if let baseline = breakdown.evenBaseline {
+                // Explained by the legend under the chart, which draws the
+                // same dashed line.
                 RuleMark(y: .value("Even baseline", baseline))
-                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
-                    .foregroundStyle(.secondary)
-                    // Kept inside the plot: past it, the label ran over the
-                    // axis and off the card's trailing edge.
-                    .annotation(
-                        position: .topTrailing,
-                        alignment: .trailing,
-                        overflowResolution: .init(x: .fit(to: .plot), y: .disabled)
-                    ) {
-                        Text("Even baseline")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 4)
-                    }
+                    .lineStyle(BaselineSwatch.stroke)
+                    .foregroundStyle(BaselineSwatch.color)
             }
         }
-        .chartYAxis {
-            AxisMarks(values: .automatic(desiredCount: 5)) { value in
-                AxisGridLine()
-                AxisTick()
-                AxisValueLabel {
-                    if let d = value.as(Double.self) {
-                        Text(percentLabel(d))
-                            .font(.caption2)
-                    }
-                }
-            }
-        }
+        // Every bar carries its own value, so there are no gridlines for the
+        // value labels to collide with.
+        .chartYAxis(.hidden)
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisValueLabel()
@@ -699,17 +677,46 @@ private struct BreakdownChart: View {
     }
 }
 
+/// The even-baseline rule as it appears in the chart, for its legend.
+private struct BaselineSwatch: View {
+    static var color: Color { Color.primary.opacity(0.5) }
+    static var stroke: StrokeStyle { StrokeStyle(lineWidth: 1.5, dash: [4, 3]) }
+
+    var body: some View {
+        Path { path in
+            path.move(to: CGPoint(x: 0, y: 1))
+            path.addLine(to: CGPoint(x: 18, y: 1))
+        }
+        .stroke(Self.color, style: Self.stroke)
+        .frame(width: 18, height: 2)
+        .alignmentGuide(.firstTextBaseline) { $0[.bottom] + 4 }
+    }
+}
+
 // MARK: - Calendar heatmap
 
 struct CalendarHeatmapCard: View {
     let days: [HeatmapDay]
+    @State private var gridWidth: CGFloat = 0
 
+    private var window: [HeatmapDay] { HeatmapData.padded(days) }
     private var headacheDayCount: Int { days.filter { $0.count > 0 }.count }
     private var freeDayCount: Int { days.count - headacheDayCount }
 
+    private var caption: String {
+        let base = "Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated."
+        return days.count < window.count ? base + " Outlined days come before your first log." : base
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HeatmapGrid(days: days)
+            HeatmapGrid(
+                days: window,
+                cellSize: HeatmapLayout.cellSize(fitting: gridWidth, columns: HeatmapLayout.columnCount(for: window)),
+                cellSpacing: HeatmapLayout.fittedSpacing
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { gridWidth = $0 }
 
             HStack(spacing: 14) {
                 summaryChip(value: headacheDayCount, label: "headache days")
@@ -720,6 +727,11 @@ struct CalendarHeatmapCard: View {
             .foregroundStyle(.secondary)
 
             HeatmapLegend()
+
+            Text(caption)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
@@ -730,6 +742,27 @@ struct CalendarHeatmapCard: View {
             Text("\(value)").fontWeight(.semibold).foregroundStyle(.primary)
             Text(label)
         }
+    }
+}
+
+/// Sizes the heatmap's cells to its card. Kept off the view so tests can call
+/// it without the main actor.
+enum HeatmapLayout {
+    static let fittedSpacing: CGFloat = 4
+
+    /// Week columns, Sunday on top, so the first column is padded to its weekday.
+    static func columnCount(for days: [HeatmapDay], calendar: Calendar = .current) -> Int {
+        guard let first = days.first else { return 0 }
+        let leadingPad = calendar.component(.weekday, from: first.date) - 1
+        return (leadingPad + days.count + 6) / 7
+    }
+
+    /// The largest cell, in half points, that fits `columns` across `width`.
+    /// Before the width is known it falls back to the phone size.
+    static func cellSize(fitting width: CGFloat, columns: Int, spacing: CGFloat = fittedSpacing) -> CGFloat {
+        guard width > 0, columns > 0 else { return 14 }
+        let fitted = (width - spacing * CGFloat(columns - 1)) / CGFloat(columns)
+        return min(max((fitted * 2).rounded(.down) / 2, 8), 26)
     }
 }
 
@@ -764,14 +797,24 @@ struct HeatmapGrid: View {
                 ForEach(Array(columns.enumerated()), id: \.offset) { _, col in
                     VStack(spacing: cellSpacing) {
                         ForEach(Array(col.enumerated()), id: \.offset) { _, day in
-                            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                                .fill(heatmapColor(for: day))
-                                .frame(width: cellSize, height: cellSize)
+                            cell(for: day)
                         }
                     }
                 }
             }
         }
+    }
+
+    private func cell(for day: HeatmapDay) -> some View {
+        let shape = RoundedRectangle(cornerRadius: max(3, cellSize * 0.2), style: .continuous)
+        return shape
+            .fill(heatmapColor(for: day))
+            .overlay {
+                if !day.isTracked {
+                    shape.strokeBorder(Color.secondary.opacity(0.3), lineWidth: 1)
+                }
+            }
+            .frame(width: cellSize, height: cellSize)
     }
 }
 
@@ -802,7 +845,7 @@ struct HeatmapLegend: View {
 
 func heatmapColor(for day: HeatmapDay) -> Color {
     let placeholder = day.date == .distantPast
-    if placeholder { return Color.clear }
+    if placeholder || !day.isTracked { return Color.clear }
     if day.count == 0 { return Color.secondary.opacity(0.15) }
     let brand = Color(red: 0.95, green: 0.25, blue: 0.36)
     if let severity = day.peakSeverity {

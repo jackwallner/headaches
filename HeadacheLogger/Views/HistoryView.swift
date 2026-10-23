@@ -86,6 +86,7 @@ struct HistoryView: View {
         historyList
             .listStyle(.plain)
             .background(Color(.systemGroupedBackground))
+            .clearsFloatingTabBar()
             .navigationTitle("History")
             .accessibilityIdentifier("historyView")
             .onChange(of: scenePhase) { _, phase in
@@ -202,18 +203,21 @@ struct HistoryView: View {
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listSectionSeparator(.hidden)
 
                 if !heatmapDays.isEmpty {
                     Section {
+                        // The caption sits inside the card: a plain list's footer
+                        // drew it on a white band past the card's margins.
                         CalendarHeatmapCard(days: heatmapDays)
                             .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
                             .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     } header: {
                         Text("Last 90 days")
-                    } footer: {
-                        Text("Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated.")
-                            .font(.footnote)
                     }
+                    .listSectionSeparator(.hidden)
                 }
 
                 if !quizCompleted {

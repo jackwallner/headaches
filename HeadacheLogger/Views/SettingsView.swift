@@ -128,6 +128,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .clearsFloatingTabBar()
         .navigationTitle("Settings")
         .onAppear {
             refreshLocationStatus()

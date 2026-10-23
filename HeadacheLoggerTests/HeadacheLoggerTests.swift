@@ -1039,6 +1039,37 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(days.allSatisfy { $0.count == 0 })
     }
 
+    func testHeatmapPaddingFillsTheWholeWindowWithUntrackedDays() {
+        let days = HeatmapData.build(from: [makeEvent(daysAgo: 10, hour: 9)], days: 90)
+        let window = HeatmapData.padded(days, to: 90)
+        XCTAssertEqual(window.count, 90)
+        XCTAssertEqual(window.filter { !$0.isTracked }.count, 79)
+        XCTAssertTrue(window.suffix(11).allSatisfy(\.isTracked), "Tracked days keep their place at the end")
+        XCTAssertEqual(window.last?.date, Calendar.current.startOfDay(for: .now))
+        for (earlier, later) in zip(window, window.dropFirst()) {
+            XCTAssertEqual(Calendar.current.dateComponents([.day], from: earlier.date, to: later.date).day, 1)
+        }
+    }
+
+    func testHeatmapPaddingLeavesAFullOrEmptyWindowAlone() {
+        let full = HeatmapData.build(from: [makeEvent(daysAgo: 120, hour: 9)], days: 90)
+        XCTAssertEqual(HeatmapData.padded(full, to: 90).count, 90)
+        XCTAssertTrue(HeatmapData.padded(full, to: 90).allSatisfy(\.isTracked))
+        XCTAssertTrue(HeatmapData.padded([], to: 90).isEmpty)
+    }
+
+    func testHeatmapCellsFillTheCardWidth() {
+        let window = HeatmapData.padded(HeatmapData.build(from: [makeEvent(daysAgo: 30, hour: 9)], days: 90), to: 90)
+        let columns = HeatmapLayout.columnCount(for: window)
+        XCTAssertTrue((13...14).contains(columns), "90 days span 13 or 14 week columns")
+        // A pane's card leaves about 395 pt for the grid.
+        let cell = HeatmapLayout.cellSize(fitting: 395, columns: columns)
+        let used = cell * CGFloat(columns) + HeatmapLayout.fittedSpacing * CGFloat(columns - 1)
+        XCTAssertLessThanOrEqual(used, 395)
+        XCTAssertGreaterThan(used, 395 - CGFloat(columns), "No more than a point a column left over")
+        XCTAssertEqual(HeatmapLayout.cellSize(fitting: 0, columns: columns), 14, "Phone size until the width is known")
+    }
+
     // MARK: - Daily risk forecast
 
     func testDailyRiskLowWhenNoSignals() throws {

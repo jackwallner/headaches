@@ -24,18 +24,24 @@ paths:
 - Each tab's content and the History pane get `horizontalSizeClass = .compact`,
   so they lay out as on a phone. Never set it on the `TabView` itself (in Quit
   Zyn that flipped the Duo's vertical bar to a bottom bar on a tab switch).
-- Unfolded, the system draws the tab bar as a floating bottom bar across the
-  leading pane (folded it is the vertical bar), so the tabs get a hard bottom
-  scroll edge (`unfoldedBarEdge`) to stop list rows reading through it.
+- Unfolded, every leading tab keeps the phone's bottom tab bar
+  (`horizontalBarsInPane`: `toolbarVerticalBehavior(.disabled)` while split,
+  else iOS 27.1 picks a vertical rail on some launches). Each screen calls
+  `.clearsFloatingTabBar(backdrop:)` with its own page colour: in a pane
+  (`\.isUnfoldedPane`) its content dissolves 8 pt above the bar, or above the
+  home indicator in the History pane, and a bottom content margin lets the last
+  row scroll clear (`TabBarClearance`, tested). A hard scroll edge was not
+  enough: rows were sliced at the edge of its backdrop. Folded, it is a no-op.
 - Onboarding uses `.unfoldedLeadingPane`, with `OnboardingFoldPanel` in the
   trailing pane. Sheets (paywall, trial offer, details, edit) are still system
   form sheets centred on the inner display.
+- History's heatmap always spans 90 days (`HeatmapData.padded`; days before the
+  first log are outlined) with cells sized to the card (`HeatmapLayout`), and its
+  caption lives inside the card (a plain list footer drew a white band).
 - Captures: `gh-sim all --device 'iPhone Duo' --scheme HeadacheLogger --wait 10
-  --record-seconds 120 --args "-uitesting -HeadacheScreenshotSeed
-  -HeadacheProOverride -HeadacheScreenshotBrand -HeadacheDuoTour"` plus
-  `--url noop://1` through `noop://9`. The noop URLs fail fast and only pace
-  shots (`simctl openurl` to a real scheme raises an alert on iOS 27).
-  `-HeadacheDuoTour` (DEBUG) moves one stop every 22 s from launch, since
-  gh-sim relaunches after unfolding: folded History, Patterns, the top
-  pattern's detail, Settings; unfolded Patterns, the detail, Settings, then
-  back to One Tap. `HEADACHEDUOTOUR` lines in app.log map shots to stops.
+  --args "-uitesting -HeadacheScreenshotSeed -HeadacheProOverride
+  -HeadacheScreenshotBrand"` plus one `--screen "-HeadacheDuoScreen <name>"`
+  per surface: `log`, `history`, `patterns`, `pattern` (pushes the top
+  pattern's detail) and `settings` (DEBUG, read once at launch). Never `--url`:
+  iOS 27.1 raises an "Open in" alert for every openurl. The seed's first log is
+  past the 90-day window, so History's counts hold across midnight.

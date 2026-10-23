@@ -14,6 +14,7 @@ struct RootTabView: View {
 
     private static var initialTab: Int {
         #if DEBUG
+        if let screen = DuoScreen.requested { return screen.tab }
         if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotPatterns") {
             return 2
         }
@@ -42,11 +43,11 @@ struct RootTabView: View {
         // never rebuilt. History's year lives here for its move between tab and pane.
         ZStack(alignment: .topLeading) {
             tabs
-                .unfoldedBarEdge(isSplit: split != nil)
                 .frame(maxWidth: split?.primaryWidth ?? .infinity, maxHeight: .infinity)
             if let split {
                 NavigationStack { HistoryView(selectedYear: $historyYear) }
                     .environment(\.horizontalSizeClass, .compact)
+                    .environment(\.isUnfoldedPane, true)
                     .frame(width: split.secondaryWidth)
                     .frame(maxHeight: .infinity)
                     .padding(.leading, split.secondaryX)
@@ -59,9 +60,6 @@ struct RootTabView: View {
         .onChange(of: split != nil) { _, isSplit in
             if isSplit, selectedTab == 1 { selectedTab = 0 }
         }
-        #if DEBUG
-        .task { await runDuoTour() }
-        #endif
         .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
         .preferredColorScheme(AppAppearance.from(storageValue: appearanceRaw).preferredColorScheme)
         .onAppear { reviewPromptCoordinator.isOnHomeTab = selectedTab == 0 }
@@ -75,7 +73,7 @@ struct RootTabView: View {
             NavigationStack {
                 HomeView()
             }
-            .environment(\.horizontalSizeClass, paneSizeClass)
+            .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(0)
             .tabItem {
                 Label(HeadacheBrand.name, systemImage: "brain.head.profile")
@@ -95,7 +93,7 @@ struct RootTabView: View {
             NavigationStack {
                 InsightsView()
             }
-            .environment(\.horizontalSizeClass, paneSizeClass)
+            .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(2)
             .tabItem {
                 Label("Patterns", systemImage: "chart.bar.xaxis")
@@ -104,40 +102,41 @@ struct RootTabView: View {
             NavigationStack {
                 SettingsView()
             }
-            .environment(\.horizontalSizeClass, paneSizeClass)
+            .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(3)
             .tabItem {
                 Label("Settings", systemImage: "slider.horizontal.3")
             }
         }
     }
+}
 
-    #if DEBUG
-    /// `-HeadacheDuoTour`: walks the main screens for headless capture runs,
-    /// which can't tap and whose `simctl openurl` stops on a confirmation alert.
-    /// Moves one stop every 22 s from launch (gh-sim relaunches after
-    /// unfolding): folded History, Patterns, a pattern's detail and Settings;
-    /// unfolded, where History already has its own pane, Patterns, the detail,
-    /// Settings and back to One Tap. `HEADACHEDUOTOUR` lines map shots to stops.
-    private func runDuoTour() async {
-        guard ProcessInfo.processInfo.arguments.contains("-HeadacheDuoTour") else { return }
-        let start = ContinuousClock.now
-        for step in 0..<4 {
-            try? await Task.sleep(until: start + .seconds(22 * (step + 1)), clock: .continuous)
-            guard !Task.isCancelled else { return }
-            let isSplit = split != nil
-            NSLog("HEADACHEDUOTOUR t=%ld split=%ld step=%ld", 22 * (step + 1), isSplit ? 1 : 0, step)
-            withAnimation(.easeInOut(duration: 0.3)) {
-                switch (isSplit, step) {
-                case (false, 0): selectedTab = 1
-                case (false, 1), (true, 0): selectedTab = 2
-                case (false, 2), (true, 1):
-                    NotificationCenter.default.post(name: .headacheDebugShowFirstPattern, object: nil)
-                case (true, 3): selectedTab = 0
-                default: selectedTab = 3
-                }
-            }
+private extension View {
+    /// A tab in the leading pane: a phone layout and phone bars, with its
+    /// screens clear of the floating tab bar while split.
+    func leadingPaneTab(sizeClass: UserInterfaceSizeClass?, isSplit: Bool) -> some View {
+        environment(\.horizontalSizeClass, sizeClass)
+            .environment(\.isUnfoldedPane, isSplit)
+            .horizontalBarsInPane(isSplit)
+    }
+}
+
+#if DEBUG
+/// `-HeadacheDuoScreen <name>`: the surface a capture run opens at launch, read
+/// once (gh-sim relaunches per `--screen`, folded and unfolded). `pattern`
+/// opens Patterns and pushes the top pattern's detail.
+enum DuoScreen: String {
+    case log, history, patterns, pattern, settings
+
+    static let requested = UserDefaults.standard.string(forKey: "HeadacheDuoScreen").flatMap(DuoScreen.init)
+
+    var tab: Int {
+        switch self {
+        case .log: 0
+        case .history: 1
+        case .patterns, .pattern: 2
+        case .settings: 3
         }
     }
-    #endif
 }
+#endif

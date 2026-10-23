@@ -1560,12 +1560,17 @@ struct HeatmapDay: Identifiable, Sendable {
     let date: Date
     let count: Int
     let peakSeverity: HeadacheSeverity?
+    /// False for a day before the first logged headache, shown only to fill
+    /// out the window.
+    var isTracked = true
 
     var id: Date { date }
 }
 
 enum HeatmapData {
-    static func build(from events: [HeadacheEvent], days: Int = 90, endingAt end: Date = .now, calendar: Calendar = .current) -> [HeatmapDay] {
+    static let windowDays = 90
+
+    static func build(from events: [HeadacheEvent], days: Int = windowDays, endingAt end: Date = .now, calendar: Calendar = .current) -> [HeatmapDay] {
         let today = calendar.startOfDay(for: end)
         guard let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today) else { return [] }
         // Don't render days before the first logged headache; that would imply data we don't have.
@@ -1591,6 +1596,17 @@ enum HeatmapData {
             cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
         }
         return out
+    }
+
+    /// `days` preceded by untracked days, so the grid always spans the whole
+    /// window. The counts still come from `days` alone.
+    static func padded(_ days: [HeatmapDay], to count: Int = windowDays, calendar: Calendar = .current) -> [HeatmapDay] {
+        guard let first = days.first, days.count < count else { return days }
+        let leading = (1...(count - days.count)).reversed().compactMap { offset in
+            calendar.date(byAdding: .day, value: -offset, to: first.date)
+                .map { HeatmapDay(date: $0, count: 0, peakSeverity: nil, isTracked: false) }
+        }
+        return leading + days
     }
 }
 

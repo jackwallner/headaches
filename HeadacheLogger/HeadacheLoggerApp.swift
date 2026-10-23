@@ -580,7 +580,10 @@ private enum HeadacheScreenshotSeed {
         let calendar = Calendar.current
         let now = Date()
         // No ties for the busiest part of day or weekday: History and Patterns
-        // each break a tie their own way, and the shots would disagree.
+        // each break a tie their own way, and the shots would disagree. The
+        // first log is past the heatmap's 90-day window and none sits near its
+        // edge, so the window is fully tracked and its counts hold across a
+        // midnight during a capture run.
         let entries: [(daysAgo: Int, hour: Int, severity: HeadacheSeverity, steps: Int, sleep: Double, pressure: Double, weather: String, note: String)] = [
             (0, 8, .slight, 7_420, 7.4, 1016, "Partly cloudy", "Started after a screen-heavy morning. Added context for my private record."),
             (1, 18, .medium, 9_180, 6.8, 1013, "Clear", "After a long workday"),
@@ -592,7 +595,19 @@ private enum HeadacheScreenshotSeed {
             (16, 20, .medium, 6_710, 6.9, 1015, "Cloudy", "Evening check-in"),
             (20, 14, .slight, 8_640, 7.3, 1016, "Clear", "Afternoon note"),
             (24, 10, .medium, 7_110, 6.6, 1012, "Partly cloudy", "Morning check-in"),
-            (28, 19, .slight, 9_520, 7.9, 1018, "Clear", "Evening check-in")
+            (28, 19, .slight, 9_520, 7.9, 1018, "Clear", "Evening check-in"),
+            (33, 19, .medium, 8_050, 6.7, 1013, "Cloudy", "Evening check-in"),
+            (37, 9, .slight, 7_340, 7.6, 1017, "Clear", "Morning note"),
+            (42, 13, .slight, 9_870, 7.2, 1016, "Partly cloudy", "Lunch break"),
+            (47, 20, .medium, 6_420, 6.4, 1012, "Light rain", "Evening check-in"),
+            (52, 8, .slight, 8_810, 7.8, 1018, "Clear", "Morning check-in"),
+            (57, 2, .medium, 4_960, 5.9, 1010, "Rain", "Woke up with it"),
+            (63, 15, .slight, 7_690, 7.4, 1016, "Clear", "Afternoon note"),
+            (68, 21, .medium, 8_420, 6.6, 1013, "Cloudy", "Evening check-in"),
+            (74, 10, .slight, 6_980, 7.7, 1019, "Clear", "Morning note"),
+            (80, 19, .slight, 9_140, 7.5, 1015, "Partly cloudy", "Evening check-in"),
+            (86, 12, .medium, 7_560, 6.8, 1014, "Cloudy", "Afternoon check-in"),
+            (95, 20, .slight, 8_270, 7.6, 1017, "Clear", "First log")
         ]
 
         for (index, entry) in entries.enumerated() {
