@@ -1058,16 +1058,16 @@ final class HeadacheLoggerTests: XCTestCase {
         XCTAssertTrue(HeatmapData.padded([], to: 90).isEmpty)
     }
 
-    func testHeatmapCellsFillTheCardWidth() {
+    func testHeatmapWeekColumnsAreFullWeeks() {
         let window = HeatmapData.padded(HeatmapData.build(from: [makeEvent(daysAgo: 30, hour: 9)], days: 90), to: 90)
-        let columns = HeatmapLayout.columnCount(for: window)
-        XCTAssertTrue((13...14).contains(columns), "90 days span 13 or 14 week columns")
-        // A pane's card leaves about 395 pt for the grid.
-        let cell = HeatmapLayout.cellSize(fitting: 395, columns: columns)
-        let used = cell * CGFloat(columns) + HeatmapLayout.fittedSpacing * CGFloat(columns - 1)
-        XCTAssertLessThanOrEqual(used, 395)
-        XCTAssertGreaterThan(used, 395 - CGFloat(columns), "No more than a point a column left over")
-        XCTAssertEqual(HeatmapLayout.cellSize(fitting: 0, columns: columns), 14, "Phone size until the width is known")
+        let columns = HeatmapLayout.weekColumns(for: window)
+        XCTAssertTrue((13...14).contains(columns.count), "90 days span 13 or 14 weeks")
+        XCTAssertTrue(columns.allSatisfy { $0.count == 7 }, "Every week column has a cell per weekday")
+        let real = columns.joined().filter { $0.date != .distantPast }
+        XCTAssertEqual(real.map(\.date), window.map(\.date), "Days keep their order, none lost or doubled")
+        let firstWeekday = Calendar.current.component(.weekday, from: window[0].date)
+        XCTAssertEqual(columns[0][firstWeekday - 1].date, window[0].date, "The first day sits on its weekday row")
+        XCTAssertTrue(HeatmapLayout.weekColumns(for: []).isEmpty)
     }
 
     // MARK: - Daily risk forecast

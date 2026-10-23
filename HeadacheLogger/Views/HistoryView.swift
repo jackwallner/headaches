@@ -207,15 +207,13 @@ struct HistoryView: View {
                 .listSectionSeparator(.hidden)
 
                 if !heatmapDays.isEmpty {
+                    // Title and caption sit inside the card: a plain list's
+                    // footer drew the caption on a white band past the margins.
                     Section {
-                        // The caption sits inside the card: a plain list's footer
-                        // drew it on a white band past the card's margins.
                         CalendarHeatmapCard(days: heatmapDays)
                             .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
                             .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
-                    } header: {
-                        Text("Last 90 days")
                     }
                     .listSectionSeparator(.hidden)
                 }

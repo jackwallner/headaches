@@ -697,26 +697,26 @@ private struct BaselineSwatch: View {
 
 struct CalendarHeatmapCard: View {
     let days: [HeatmapDay]
-    @State private var gridWidth: CGFloat = 0
+    var title = "Last 90 days"
 
     private var window: [HeatmapDay] { HeatmapData.padded(days) }
     private var headacheDayCount: Int { days.filter { $0.count > 0 }.count }
     private var freeDayCount: Int { days.count - headacheDayCount }
 
     private var caption: String {
-        let base = "Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated."
+        let base = "Coloured days have a logged headache. Darker means more severe."
         return days.count < window.count ? base + " Outlined days come before your first log." : base
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HeatmapGrid(
-                days: window,
-                cellSize: HeatmapLayout.cellSize(fitting: gridWidth, columns: HeatmapLayout.columnCount(for: window)),
-                cellSpacing: HeatmapLayout.fittedSpacing
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { gridWidth = $0 }
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(title).font(.headline)
+                Spacer(minLength: 8)
+                HeatmapLegend()
+            }
+
+            HeatmapGrid(days: window)
 
             HStack(spacing: 14) {
                 summaryChip(value: headacheDayCount, label: "headache days")
@@ -725,8 +725,6 @@ struct CalendarHeatmapCard: View {
             }
             .font(.caption.monospacedDigit())
             .foregroundStyle(.secondary)
-
-            HeatmapLegend()
 
             Text(caption)
                 .font(.footnote)
@@ -745,60 +743,34 @@ struct CalendarHeatmapCard: View {
     }
 }
 
-/// Sizes the heatmap's cells to its card. Kept off the view so tests can call
-/// it without the main actor.
+/// Arranges heatmap days into week columns, Sunday on top. Kept off the view
+/// so tests can call it without the main actor.
 enum HeatmapLayout {
-    static let fittedSpacing: CGFloat = 4
-
-    /// Week columns, Sunday on top, so the first column is padded to its weekday.
-    static func columnCount(for days: [HeatmapDay], calendar: Calendar = .current) -> Int {
-        guard let first = days.first else { return 0 }
+    /// One column per week, each exactly seven cells: the first column is
+    /// padded to its weekday and the last to Saturday with placeholders.
+    static func weekColumns(for days: [HeatmapDay], calendar: Calendar = .current) -> [[HeatmapDay]] {
+        guard let first = days.first else { return [] }
+        let placeholder = HeatmapDay(date: .distantPast, count: 0, peakSeverity: nil)
         let leadingPad = calendar.component(.weekday, from: first.date) - 1
-        return (leadingPad + days.count + 6) / 7
-    }
-
-    /// The largest cell, in half points, that fits `columns` across `width`.
-    /// Before the width is known it falls back to the phone size.
-    static func cellSize(fitting width: CGFloat, columns: Int, spacing: CGFloat = fittedSpacing) -> CGFloat {
-        guard width > 0, columns > 0 else { return 14 }
-        let fitted = (width - spacing * CGFloat(columns - 1)) / CGFloat(columns)
-        return min(max((fitted * 2).rounded(.down) / 2, 8), 26)
+        var cells = Array(repeating: placeholder, count: leadingPad) + days
+        cells += Array(repeating: placeholder, count: (7 - cells.count % 7) % 7)
+        return stride(from: 0, to: cells.count, by: 7).map { Array(cells[$0..<$0 + 7]) }
     }
 }
 
-/// Pure visual grid — also used inside the PDF renderer so it has no SwiftData dependencies.
+/// The heatmap's cells. Square cells share the width it is given, so the grid
+/// spans its card at any width without measuring it.
 struct HeatmapGrid: View {
     let days: [HeatmapDay]
-    var cellSize: CGFloat = 14
-    var cellSpacing: CGFloat = 3
-
-    private var columns: [[HeatmapDay]] {
-        guard let first = days.first else { return [] }
-        let weekday = Calendar.current.component(.weekday, from: first.date) // 1 = Sunday
-        let leadingPad = weekday - 1
-        var cells: [HeatmapDay?] = Array(repeating: nil, count: leadingPad)
-        cells.append(contentsOf: days.map { Optional($0) })
-        var out: [[HeatmapDay]] = []
-        var current: [HeatmapDay] = []
-        for (i, day) in cells.enumerated() {
-            if let day { current.append(day) } else { current.append(HeatmapDay(date: .distantPast, count: 0, peakSeverity: nil)) }
-            if (i + 1) % 7 == 0 {
-                out.append(current)
-                current = []
-            }
-        }
-        if !current.isEmpty { out.append(current) }
-        return out
-    }
+    var cellSpacing: CGFloat = 4
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(alignment: .top, spacing: cellSpacing) {
-                ForEach(Array(columns.enumerated()), id: \.offset) { _, col in
-                    VStack(spacing: cellSpacing) {
-                        ForEach(Array(col.enumerated()), id: \.offset) { _, day in
-                            cell(for: day)
-                        }
+        let columns = HeatmapLayout.weekColumns(for: days)
+        Grid(horizontalSpacing: cellSpacing, verticalSpacing: cellSpacing) {
+            ForEach(0..<7, id: \.self) { weekday in
+                GridRow {
+                    ForEach(columns.indices, id: \.self) { week in
+                        cell(for: columns[week][weekday])
                     }
                 }
             }
@@ -806,7 +778,7 @@ struct HeatmapGrid: View {
     }
 
     private func cell(for day: HeatmapDay) -> some View {
-        let shape = RoundedRectangle(cornerRadius: max(3, cellSize * 0.2), style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: 4, style: .continuous)
         return shape
             .fill(heatmapColor(for: day))
             .overlay {
@@ -814,13 +786,13 @@ struct HeatmapGrid: View {
                     shape.strokeBorder(Color.secondary.opacity(0.3), lineWidth: 1)
                 }
             }
-            .frame(width: cellSize, height: cellSize)
+            .aspectRatio(1, contentMode: .fit)
     }
 }
 
 struct HeatmapLegend: View {
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             Text("Less").font(.caption2).foregroundStyle(.secondary)
             ForEach(0..<5) { i in
                 RoundedRectangle(cornerRadius: 3, style: .continuous)
@@ -828,7 +800,6 @@ struct HeatmapLegend: View {
                     .frame(width: 12, height: 12)
             }
             Text("More").font(.caption2).foregroundStyle(.secondary)
-            Spacer(minLength: 0)
         }
     }
 

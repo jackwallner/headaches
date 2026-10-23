@@ -36,8 +36,11 @@ paths:
   trailing pane. Sheets (paywall, trial offer, details, edit) are still system
   form sheets centred on the inner display.
 - History's heatmap always spans 90 days (`HeatmapData.padded`; days before the
-  first log are outlined) with cells sized to the card (`HeatmapLayout`), and its
-  caption lives inside the card (a plain list footer drew a white band).
+  first log are outlined). Its cells are square `Grid` cells that share the
+  card's width (`HeatmapLayout.weekColumns`); measuring the width instead let the
+  card overflow its row in the History pane. Title, legend and caption live
+  inside the card (a plain list footer drew a white band), so the whole card
+  ends above the pane's bottom fade.
 - Captures: `gh-sim all --device 'iPhone Duo' --scheme HeadacheLogger --wait 10
   --args "-uitesting -HeadacheScreenshotSeed -HeadacheProOverride
   -HeadacheScreenshotBrand"` plus one `--screen "-HeadacheDuoScreen <name>"`
