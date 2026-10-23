@@ -240,7 +240,7 @@ final class InterruptedUserAuditUITests: XCTestCase {
         sleep(3)
         allowLocationIfShown(timeout: 4)
         shot("home-after-kill-relaunch")
-        note("log survives kill 0.4s after tap: undo snackbar=\(app.buttons["undoLastTapButton"].exists) banner texts=\(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'context' OR label CONTAINS[c] 'pending' OR label CONTAINS[c] 'Saved'")).allElementsBoundByIndex.map(\.label))")
+        note("log survives kill 0.4s after tap: undo snackbar=\(app.buttons["undoLastTapButton"].exists) banner texts=\(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'context' OR label CONTAINS[c] 'pending' OR label CONTAINS[c] 'Saved'")).allElementsBoundByIndex.map { $0.label })")
         tab("History")
         shot("history-after-kill")
         note("History rows before=\(before) after=\(app.descendants(matching: .any).matching(identifier: "historyEventRow").count)")
