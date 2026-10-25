@@ -596,10 +596,10 @@ private struct SummaryGrid: View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
                 SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink)
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "—", tint: .orange)
+                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .orange)
             }
             HStack(spacing: 12) {
-                SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "—", tint: .purple)
+                SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: .purple)
                 SummaryCard(title: "Avg Temp", value: averageTemperatureText, tint: .blue)
             }
         }
@@ -616,7 +616,7 @@ private struct SummaryGrid: View {
 
     private var averageTemperatureText: String {
         let temps = events.compactMap(\.temperatureC)
-        guard !temps.isEmpty else { return "—" }
+        guard !temps.isEmpty else { return "No data" }
         let avgC = temps.reduce(0, +) / Double(temps.count)
         if useCelsius {
             return "\(Int(avgC.rounded()))°C"
@@ -718,9 +718,9 @@ private struct DetailedEventRow: View {
             }
 
             HStack(spacing: 8) {
-                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "—")
-                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { String(format: "%.1fh", $0) } ?? "—")
-                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "—")
+                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
+                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { String(format: "%.1fh", $0) } ?? "No data")
+                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
             }
         }
         .padding(16)

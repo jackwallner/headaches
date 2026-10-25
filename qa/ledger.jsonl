@@ -1,0 +1,1 @@
+{"created": "2026-10-25T21:52:11+00:00", "id": "Q001", "match": "clipped|*|history*|entries", "reason": "the Entries header is scroll content resting partly below the floating tab bar; it scrolls fully into view and is not truncated text", "status": "accepted"}

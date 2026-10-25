@@ -346,17 +346,17 @@ private struct LatestEventCard: View {
             HStack(spacing: 12) {
                 MetricChip(
                     title: "Steps",
-                    value: event.stepsToday?.formatted(.number) ?? "—",
+                    value: event.stepsToday?.formatted(.number) ?? "No data",
                     tint: .teal
                 )
                 MetricChip(
                     title: "Sleep",
-                    value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "—",
+                    value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "No data",
                     tint: .indigo
                 )
                 MetricChip(
                     title: "AQI",
-                    value: event.usAQI.map { String(format: "%.0f", $0) } ?? "—",
+                    value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
                     tint: .mint
                 )
             }

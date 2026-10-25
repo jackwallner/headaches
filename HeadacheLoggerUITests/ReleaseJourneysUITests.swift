@@ -55,10 +55,15 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Know before the headache hits"].waitForExistence(timeout: 20), "paywall never rendered")
         QA.checkpoint(app, "pro-paywall", paywall: true)
 
+        // At large text sizes the Close button can sit above the scrolled
+        // content; swiping down scrolls back to it, then dismisses the sheet.
         let close = app.buttons["Close"]
-        if close.waitForExistence(timeout: 5) {
-            close.tap()
-        } else {
+        _ = close.waitForExistence(timeout: 5)
+        for _ in 0..<3 where !pro.exists {
+            if close.exists && close.isHittable {
+                close.tap()
+                break
+            }
             app.swipeDown(velocity: .fast)
         }
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "paywall never closed")
