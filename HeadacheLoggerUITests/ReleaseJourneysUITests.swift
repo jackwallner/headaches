@@ -59,7 +59,8 @@ final class ReleaseJourneysUITests: XCTestCase {
         // content; swiping down scrolls back to it, then dismisses the sheet.
         let close = app.buttons["Close"]
         _ = close.waitForExistence(timeout: 5)
-        for _ in 0..<3 where !pro.exists {
+        let title = app.staticTexts["Know before the headache hits"]
+        for _ in 0..<3 where title.exists {
             if close.exists && close.isHittable {
                 close.tap()
                 break
