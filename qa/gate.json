@@ -1,0 +1,17 @@
+{
+  "project": "HeadacheLogger.xcodeproj",
+  "scheme": "HeadacheLoggerUITests",
+  "uitests_dir": "HeadacheLoggerUITests",
+  "journeys": [
+    "HeadacheLoggerUITests/ReleaseJourneysUITests"
+  ],
+  "personas": [
+    "newcomer",
+    "accessibility",
+    "reduce-motion",
+    "german"
+  ],
+  "persona_overrides": {},
+  "slot": null,
+  "bundle_id": "com.jackwallner.headachelogger"
+}
