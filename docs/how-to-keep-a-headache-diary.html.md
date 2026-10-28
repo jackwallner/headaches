@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/how-to-keep-a-headache-diary.htm
 
 ## How to Keep a Headache Diary: What to Log and What to Skip
 
-By Jack Wallner · Last updated October 18, 2026
+By Jack Wallner · Last updated October 28, 2026
 
 A useful headache diary records five things for every attack: the date, the start time and how long it lasted, how severe it was, any other symptoms, and what medication you took. Add sleep, meals, stress and weather only if you can do it quickly. The Migraine Trust advises keeping it simple, and the American Migraine Foundation says the longer you track, the more patterns show up.
 

@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/best-headache-tracker-app.html
 
 ## Best Headache Tracker App for iPhone
 
-By Jack Wallner · Last updated October 18, 2026
+By Jack Wallner · Last updated October 28, 2026
 
 **Best for a detailed attack diary with a doctor export: Migraine Buddy. Best for weather and pressure forecasts: Pressure Pal. Best for a migraine disability (MIDAS) score: MiG. Best for logging in one tap with weather, sleep and Watch context filled in: Migraine Headache Tracker Log.** Relief is a newer option built around forecasts and reminders. Pick by how much you want to type during an attack.
 

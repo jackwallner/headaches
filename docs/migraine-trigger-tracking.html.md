@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html
 
 ## Migraine Trigger Tracking: How to Find Your Triggers With a Diary
 
-By Jack Wallner · Last updated October 18, 2026
+By Jack Wallner · Last updated October 28, 2026
 
 Migraine trigger tracking means logging each attack with what happened in the hours before it, such as sleep, meals, stress, your cycle and the weather, then looking for factors that come up more often before attacks than on other days. It usually takes a few months, and triggers are personal: a 90-day diary study found most people's trigger profiles were unique.
 

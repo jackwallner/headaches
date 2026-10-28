@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/barometric-pressure-headaches.ht
 
 ## Barometric Pressure Headaches: Studies and Tracking
 
-By Jack Wallner · Last updated October 25, 2026
+By Jack Wallner · Last updated October 28, 2026
 
 A barometric pressure headache is a headache or migraine attack that seems to start around a change in air pressure, usually a drop as a storm or low-pressure system arrives. Diary studies link pressure falls of about 5 to 10 hPa with migraine in some people, but not everyone reacts. To check your own link, record the pressure and its direction each time a headache starts.
 
