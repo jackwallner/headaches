@@ -586,8 +586,7 @@ enum InsightsEngine {
         let buckets = raw.map { Bucket(label: $0.label, share: $0.share, count: $0.count, isPeak: $0.label == topLabel) }
         let isExtreme = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Hot")
         let icon = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Cold") ? "thermometer.snowflake" : "thermometer.sun.fill"
-        let inlineTop = topLabel.replacingOccurrences(of: "\n", with: " ")
-        let displayTop = HeadacheTemperatureFormatting.localizedStoredText(inlineTop)
+        let displayTop = HeadacheTemperatureFormatting.localizedStoredText(topLabel).replacingOccurrences(of: "\n", with: " ")
         let title = isExtreme ? String(localized: "\(displayTop) weather cluster") : String(localized: "Temperature cluster: \(displayTop)")
         return Insight(
             id: "temperature",
@@ -597,7 +596,7 @@ enum InsightsEngine {
             detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches happened when it felt \(displayTop)."), subset: coverageSubset, of: events.count),
             strength: topShare,
             whyItMatters: Self.insightDisclaimer,
-            yourPattern: String(localized: "\(percent(topShare)) of your logged headaches happened in \(HeadacheTemperatureFormatting.localizedStoredText(inlineTop)) conditions."),
+            yourPattern: String(localized: "\(percent(topShare)) of your logged headaches happened in \(displayTop) conditions."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
@@ -698,10 +697,10 @@ enum InsightsEngine {
             category: .weather,
             icon: "wind",
             title: String(localized: "Windy conditions"),
-            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches happened with \(HeadacheTemperatureFormatting.localizedStoredText(topLabel.replacingOccurrences(of: "\n", with: " "))) wind speeds."), subset: coverageSubset, of: events.count),
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches happened with \(HeadacheTemperatureFormatting.localizedStoredText(topLabel).replacingOccurrences(of: "\n", with: " ")) wind speeds."), subset: coverageSubset, of: events.count),
             strength: topShare,
             whyItMatters: Self.insightDisclaimer,
-            yourPattern: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches occurred during \(HeadacheTemperatureFormatting.localizedStoredText(topLabel.replacingOccurrences(of: "\n", with: " "))) conditions."), subset: coverageSubset, of: events.count),
+            yourPattern: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches occurred during \(HeadacheTemperatureFormatting.localizedStoredText(topLabel).replacingOccurrences(of: "\n", with: " ")) conditions."), subset: coverageSubset, of: events.count),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,

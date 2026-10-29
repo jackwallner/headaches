@@ -103,7 +103,7 @@ enum ExportService {
                 csv(event.id.uuidString),
                 csv(timestampFormatter.string(from: event.timestamp)),
                 csv(event.timezoneIdentifier),
-                csv(HeadacheTemperatureFormatting.localizedStoredText(event.weekdayName)),
+                csv(event.weekdayName),
                 csv(String(event.weekdayIndex)),
                 csv(String(event.hourOfDay)),
                 csv(String(event.minuteOfHour)),
@@ -115,7 +115,7 @@ enum ExportService {
                 csv(event.locality),
                 csv(event.region),
                 csv(number(event.altitudeM, formatter: decimalFormatter)),
-                csv(event.weatherSummary.map(HeadacheTemperatureFormatting.localizedStoredText)),
+                csv(event.weatherSummary),
                 csv(event.weatherCode.map(String.init)),
                 csv(number(event.temperatureC, formatter: decimalFormatter)),
                 csv(number(event.apparentTemperatureC, formatter: decimalFormatter)),
@@ -180,7 +180,7 @@ enum ExportService {
                 csv(event.motionActivity?.rawValue),
                 csv(event.healthStatusMessage),
                 csv(event.environmentStatusMessage),
-                csv(event.severity?.displayName),
+                csv(event.severity?.rawValue),
                 csv(event.userNotes),
             ].joined(separator: ",")
         }

@@ -62,7 +62,7 @@ enum HeadacheTemperatureFormatting {
            let code = Int(String(value.dropFirst(weatherCodePrefix.count))) {
             return String(localized: "Weather code \(code)")
         }
-        switch value {
+        return switch value {
         case "Clear": String(localized: "Clear")
         case "Mainly clear to overcast": String(localized: "Mainly clear to overcast")
         case "Fog": String(localized: "Fog")

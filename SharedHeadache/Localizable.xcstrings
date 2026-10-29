@@ -19,7 +19,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "トライアルを開始できません。 お問い合わせ"
+            "value": "無料トライアルを開始できませんでした。もう一度お試しください。"
           }
         },
         "es": {
@@ -108,7 +108,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Headache Proはこちら"
+            "value": "Headache Proのご紹介"
           }
         },
         "es": {
@@ -191,13 +191,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prognoseprüfungen bleiben ruhig, bis Ihre Protokolle einen wiederkehrenden Druck, AQI, oder Timing-Muster zeigen. Alarme beschreiben das Prognosesignal und wie oft es in Ihren Protokollen erschien."
+            "value": "Die Vorhersage wird erst geprüft, wenn deine Einträge ein wiederkehrendes Muster bei Luftdruck, Luftqualität oder Tageszeit zeigen. Hinweise beschreiben die Vorhersage und wie oft die Bedingungen in deinen Einträgen auftraten."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログが再発圧力、AQI、またはタイミングパターンを示すまで、予報チェックは静かです。 アラートは、予報信号とログに表示される頻度を記述します。"
+            "value": "記録に気圧、空気質指数、時間帯の繰り返しのパターンが見られると、予報を確認します。通知には予報の内容と、その状況が記録に現れた頻度が表示されます。"
           }
         },
         "es": {
@@ -280,13 +280,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Druck-Drop und AQI Warnungen basierend auf Ihren eigenen Protokollen"
+            "value": "Hinweise zu Luftdruckabfall und Luftqualität anhand deiner Einträge"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "あなた自身のログに基づく圧力低下およびAQIの警報"
+            "value": "記録に基づく気圧低下と空気質指数の通知"
           }
         },
         "es": {
@@ -369,13 +369,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Personalisierte Muster aus Ihren vorhandenen Protokollen"
+            "value": "Persönliche Muster aus deinen bisherigen Einträgen"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "既存のログからパーソナライズされたパターン"
+            "value": "これまでの記録から見る自分のパターン"
           }
         },
         "es": {
@@ -458,13 +458,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Alle Verarbeitungen bleiben auf dem Gerät"
+            "value": "Alle Daten werden auf deinem Gerät verarbeitet"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "すべての処理は、オンデバイスにとどまります"
+            "value": "すべての処理はデバイス上で行われます"
           }
         },
         "es": {
@@ -547,7 +547,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Siehe Pro Pläne"
+            "value": "Pro-Abos ansehen"
           }
         },
         "ja": {
@@ -642,7 +642,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "今は今"
+            "value": "今はしない"
           }
         },
         "es": {
@@ -820,7 +820,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ふりがな"
+            "value": "閉じる"
           }
         },
         "es": {
@@ -903,13 +903,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Headache Pro ist kostenlos für %@."
+            "value": "Headache Pro ist %@ lang kostenlos."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Headache Proは%@のために自由です。"
+            "value": "Headache Proを%@無料でお試しいただけます。"
           }
         },
         "es": {
@@ -992,7 +992,7 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Versuchen Sie Headache Pro kostenlos."
+            "value": "Teste Headache Pro kostenlos."
           }
         },
         "ja": {
@@ -1081,13 +1081,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sehen Sie Muster in Ihren Protokollen und erhalten Sie Wetterwarnungen, wenn Ihre Daten sie unterstützen. Frei bis zum Ende des Prozesses."
+            "value": "Erkenne Muster in deinen Einträgen und erhalte Wetterhinweise, wenn deine Daten sie unterstützen. Bis zum Ende der Testphase kostenlos."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログのパターンを見て、データがサポートしたときに気象アラートを取得します。 トライアル終了まで無料。"
+            "value": "記録からパターンを確認し、データに基づく天気の通知を受け取れます。トライアル期間中は無料です。"
           }
         },
         "es": {
@@ -1170,13 +1170,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sehen Sie Muster in Ihren Protokollen und erhalten Sie Benachrichtigungen basierend auf Ihrer Historie, kostenlos für berechtigte neue Abonnenten."
+            "value": "Erkenne Muster in deinen Einträgen und erhalte darauf abgestimmte Hinweise. Für berechtigte neue Abonnenten kostenlos."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログのパターンを見て、あなたの履歴に基づいてアラートを取得する, 資格のある新しい加入者に無料で."
+            "value": "記録からパターンを確認し、履歴に基づく通知を受け取れます。対象となる新規登録者は無料でお試しいただけます。"
           }
         },
         "es": {
@@ -1265,7 +1265,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "あなたの個人的なパターン"
+            "value": "あなたのパターン"
           }
         },
         "es": {
@@ -1348,13 +1348,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Muster im Schlaf, Timing, Druck und Wetter aus Ihren Protokollen."
+            "value": "Muster zu Schlaf, Tageszeit, Luftdruck und Wetter in deinen Einträgen."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログからの睡眠、タイミング、圧力および天候のパターン。"
+            "value": "記録から睡眠、時間帯、気圧、天気のパターンを確認。"
           }
         },
         "es": {
@@ -1437,13 +1437,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Druck & AQI Warnungen"
+            "value": "Hinweise zu Luftdruck und Luftqualität"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "圧力とAQIアラート"
+            "value": "気圧と空気質指数の通知"
           }
         },
         "es": {
@@ -1526,13 +1526,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ein Wetter-Heads-up basierend auf Ihren Logs, 12 bis 24 Stunden im Voraus."
+            "value": "Wetterhinweise anhand deiner Einträge, 12 bis 24 Stunden im Voraus."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログに基づく気象ヘッドアップ、12～24時間前"
+            "value": "記録に基づく天気の情報を12〜24時間前にお知らせ。"
           }
         },
         "es": {
@@ -1615,13 +1615,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kostenlos für %@, dann %@. Auto-Erneuerung; Stornieren Sie jederzeit in den Einstellungen mindestens 24 Stunden vor dem Ende."
+            "value": "%@ kostenlos, danach %@. Verlängert sich automatisch. Kündige in den Einstellungen spätestens 24 Stunden vor Ablauf."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@、そして%@のために放して下さい。 自動更新; 終了の24時間前に設定でいつでもキャンセル。"
+            "value": "%@無料、その後は%@。自動更新されます。期間終了の24時間前までに設定からキャンセルできます。"
           }
         },
         "es": {
@@ -1704,13 +1704,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dann %@. Auto-Erneuerung; Stornieren Sie jederzeit in den Einstellungen mindestens 24 Stunden vor dem Ende."
+            "value": "Danach %@. Verlängert sich automatisch. Kündige in den Einstellungen spätestens 24 Stunden vor Ablauf."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "その後、%@. 自動更新; 終了の24時間前に設定でいつでもキャンセル。"
+            "value": "その後は%@。自動更新されます。期間終了の24時間前までに設定からキャンセルできます。"
           }
         },
         "es": {
@@ -1793,13 +1793,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "In Rechnung gestellt durch Apple. Keine Anklage während des Prozesses."
+            "value": "Abrechnung über Apple. Während der Testphase fallen keine Kosten an."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "アップルを通して請求. トライアル中は無料です。"
+            "value": "Appleを通じて請求されます。トライアル期間中は料金がかかりません。"
           }
         },
         "es": {
@@ -1882,13 +1882,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Alle On-Device. Ihre Logs verlassen Ihr Telefon nie."
+            "value": "Alles auf deinem Gerät. Deine Einträge verlassen dein Telefon nicht."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "すべてのオンデバイス。 ログは電話を離れません。"
+            "value": "すべてデバイス上で処理。記録が端末から送信されることはありません。"
           }
         },
         "es": {
@@ -2155,7 +2155,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "修復..."
+            "value": "復元中…"
           }
         },
         "es": {
@@ -2333,7 +2333,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "コンテンツ"
+            "value": "利用規約"
           }
         },
         "es": {
@@ -2600,7 +2600,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@の特長 %@の特長"
+            "value": "%@。%@"
           }
         },
         "es": {
@@ -2689,7 +2689,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "待ち合わせ"
+            "value": "待機中"
           }
         },
         "es": {
@@ -2867,7 +2867,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "カテゴリー"
+            "value": "一部取得"
           }
         },
         "es": {
@@ -3134,7 +3134,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ご利用案内"
+            "value": "利用不可"
           }
         },
         "es": {
@@ -3312,7 +3312,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "モーニング"
+            "value": "朝"
           }
         },
         "es": {
@@ -3490,7 +3490,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "イブニング"
+            "value": "夜"
           }
         },
         "es": {
@@ -3846,7 +3846,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "未知の"
+            "value": "不明"
           }
         },
         "es": {
@@ -4736,7 +4736,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ライトライト"
+            "value": "ライト"
           }
         },
         "es": {
@@ -4914,7 +4914,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "チェックイン"
+            "value": "確認中…"
           }
         },
         "es": {
@@ -5181,7 +5181,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Headache Proの特長"
+            "value": "Headache Pro"
           }
         },
         "es": {
@@ -5270,7 +5270,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "プロは、ログが圧力、AQI、またはアラートの背後にあるタイミングパターンをサポートしたときに、ローカルの予測とpingsだけをチェックします。"
+            "value": "Proは地域の予報を確認し、記録に気圧、空気質指数、時間帯のパターンが見られる場合に通知します。"
           }
         },
         "es": {
@@ -5359,7 +5359,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログイン"
+            "value": "記録"
           }
         },
         "es": {
@@ -5448,7 +5448,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "重症とノートのためのプロンプト"
+            "value": "重症度とメモの入力を促す"
           }
         },
         "es": {
@@ -5626,7 +5626,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ディスプレイ"
+            "value": "表示"
           }
         },
         "es": {
@@ -5715,7 +5715,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "カラースキーム"
+            "value": "外観"
           }
         },
         "es": {
@@ -5893,7 +5893,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Healthの特長"
+            "value": "Apple Health"
           }
         },
         "es": {
@@ -6160,7 +6160,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "パーミッション"
+            "value": "アクセス許可"
           }
         },
         "es": {
@@ -6249,7 +6249,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "健康と場所は読み取り専用であり、コンテキストでログを埋めるためにのみ使用されます。"
+            "value": "ヘルスケアと位置情報のデータは読み取り専用で、記録に情報を追加するためだけに使われます。"
           }
         },
         "es": {
@@ -6338,7 +6338,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "サポートについて"
+            "value": "アプリ情報とサポート"
           }
         },
         "es": {
@@ -6872,7 +6872,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "お問い合わせ"
+            "value": "OK"
           }
         },
         "es": {
@@ -6961,7 +6961,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Headache Proアクセスが有効です。"
+            "value": "Headache Proをご利用いただけます。"
           }
         },
         "es": {
@@ -7139,7 +7139,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "積極的なアラート"
+            "value": "事前通知"
           }
         },
         "es": {
@@ -7228,7 +7228,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "個人的な信号、しきい値、そして静かな時間の設定"
+            "value": "通知条件、しきい値、通知しない時間を設定"
           }
         },
         "es": {
@@ -7317,7 +7317,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "パーソナライズされた頭痛と気象アラートのためのProのロックを解除"
+            "value": "Proを有効にして、記録に基づく頭痛と天気の通知を受け取る"
           }
         },
         "es": {
@@ -7406,7 +7406,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "プロフィール"
+            "value": "Pro"
           }
         },
         "es": {
@@ -7495,7 +7495,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lldのステップ%lld"
+            "value": "ステップ %1$lld / %2$lld"
           }
         },
         "es": {
@@ -7673,7 +7673,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "フィニッシュ"
+            "value": "完了"
           }
         },
         "es": {
@@ -7940,7 +7940,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "回答は、パターンがログの領域を強調するのに役立ちます。 [設定] から後で戻ってきます。"
+            "value": "回答は、記録の中で注目する項目を見つけるのに役立ちます。設定からいつでも回答できます。"
           }
         },
         "es": {
@@ -8207,7 +8207,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "です。 お問い合わせ"
+            "value": "以上です。ありがとうございます！"
           }
         },
         "es": {
@@ -8296,7 +8296,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "あなたの答えは、あなたに最も関連性の高い頭痛パターンを強調するのに役立ちます。 設定でいつでも更新できます。"
+            "value": "回答は、あなたに関連する頭痛のパターンを見つけるのに役立ちます。設定からいつでも変更できます。"
           }
         },
         "es": {
@@ -8563,7 +8563,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログイン"
+            "value": "完了"
           }
         },
         "es": {
@@ -8652,7 +8652,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "回答更新"
+            "value": "回答を更新しました"
           }
         },
         "es": {
@@ -8741,7 +8741,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "お問い合わせ 回答は、将来のパターンのバージョンを改善するのに役立ちます。"
+            "value": "ありがとうございます。回答は今後のパターン機能の改善に役立ちます。"
           }
         },
         "es": {
@@ -8830,7 +8830,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ログされたパターンに基づいてアラートを予測"
+            "value": "記録のパターンに基づく予報通知"
           }
         },
         "es": {
@@ -8919,7 +8919,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "睡眠、タイミング、気象ログのパターン"
+            "value": "記録から見る睡眠、時間帯、天気のパターン"
           }
         },
         "es": {
@@ -9008,7 +9008,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "毎日の予報信号を自分のデータと一緒に"
+            "value": "予報とあなたの記録を比較"
           }
         },
         "es": {
@@ -9097,7 +9097,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ロードプラン..."
+            "value": "プランを読み込み中…"
           }
         },
         "es": {
@@ -9186,7 +9186,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "プランをロードできません"
+            "value": "プランを読み込めませんでした"
           }
         },
         "es": {
@@ -9364,7 +9364,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "お問い合わせ"
+            "value": "もう一度試す"
           }
         },
         "es": {
@@ -9542,7 +9542,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "すべてのHeadache Pro機能をロック解除します。 プライベート、オンデバイス、アカウントなし。"
+            "value": "Headache Proのすべての機能を利用。データはデバイス内に保存され、アカウントは不要です。"
           }
         },
         "es": {
@@ -9631,7 +9631,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ライフタイムのロック解除"
+            "value": "買い切りプランを購入"
           }
         },
         "es": {
@@ -9898,7 +9898,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ワンタイム決済 サブスクリプションはありません。"
+            "value": "一度限りのお支払い。サブスクリプションではありません。"
           }
         },
         "es": {
@@ -9987,7 +9987,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "当日のご予約"
+            "value": "本日の請求はありません。"
           }
         },
         "es": {
@@ -10076,7 +10076,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@。 ワンタイム購入 生涯アクセス、サブスクリプションなし。"
+            "value": "%@。一度限りの購入で、期限なくご利用いただけます。サブスクリプションではありません。"
           }
         },
         "es": {
@@ -10165,7 +10165,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@、そして%@のために放して下さい。 現在の期間の最後に24時間前にキャンセルされない限り、自動更新。 設定 → Apple ID → サブスクリプションの管理またはキャンセル。"
+            "value": "%@無料、その後は%@。期間終了の24時間前までにキャンセルしない限り自動更新されます。設定 → Apple ID → サブスクリプションで管理またはキャンセルできます。"
           }
         },
         "es": {
@@ -10254,7 +10254,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@。 現在の期間の最後に24時間前にキャンセルされない限り、自動更新。 設定 → Apple ID → サブスクリプションの管理またはキャンセル。"
+            "value": "%@。期間終了の24時間前までにキャンセルしない限り自動更新されます。設定 → Apple ID → サブスクリプションで管理またはキャンセルできます。"
           }
         },
         "es": {
@@ -10432,7 +10432,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "購入を完了できません。 お問い合わせ"
+            "value": "購入を完了できませんでした。もう一度お試しください。"
           }
         },
         "es": {
@@ -10610,7 +10610,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "セーブ %lld%%"
+            "value": "%lld%%お得"
           }
         },
         "es": {
@@ -10699,7 +10699,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ワンタイム購入"
+            "value": "買い切り"
           }
         },
         "es": {
@@ -10788,7 +10788,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "保存 %lld%%"
+            "value": "%lld%%お得"
           }
         },
         "es": {
@@ -10877,7 +10877,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@/moの特長"
+            "value": "%@/月"
           }
         },
         "es": {
@@ -11055,7 +11055,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "頭痛が発生した場合は?"
+            "value": "頭痛はいつ起きましたか？"
           }
         },
         "es": {
@@ -11233,7 +11233,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "セットなし"
+            "value": "未設定"
           }
         },
         "es": {
@@ -11322,7 +11322,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "インフォメーション"
+            "value": "メモ"
           }
         },
         "es": {
@@ -11678,7 +11678,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "積極的なアラートを有効にする"
+            "value": "事前通知を有効にする"
           }
         },
         "es": {
@@ -12034,7 +12034,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "最後の積極的な警告"
+            "value": "前回の事前通知"
           }
         },
         "es": {
@@ -12479,7 +12479,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "圧力信号"
+            "value": "気圧の条件"
           }
         },
         "es": {
@@ -12568,7 +12568,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "空気質の信号"
+            "value": "空気質の条件"
           }
         },
         "es": {
@@ -13013,7 +13013,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "圧力低下"
+            "value": "気圧低下"
           }
         },
         "es": {
@@ -13191,7 +13191,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@のhPa"
+            "value": "%@ hPa"
           }
         },
         "es": {
@@ -13547,7 +13547,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "パスワード"
+            "value": "しきい値"
           }
         },
         "es": {
@@ -13636,7 +13636,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "AQIの%lld"
+            "value": "AQI %lld"
           }
         },
         "es": {
@@ -13814,7 +13814,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "静かな時間"
+            "value": "通知しない時間"
           }
         },
         "es": {
@@ -13992,7 +13992,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "詳しくはこちら"
+            "value": "開始"
           }
         },
         "es": {
@@ -14170,7 +14170,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この作品について"
+            "value": "仕組み"
           }
         },
         "es": {
@@ -14437,7 +14437,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "フィードバック"
+            "value": "感度"
           }
         },
         "es": {
@@ -15060,7 +15060,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "レディー"
+            "value": "準備完了"
           }
         },
         "es": {
@@ -15594,7 +15594,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "お問い合わせ"
+            "value": "未確認"
           }
         },
         "es": {
@@ -15772,7 +15772,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "AQIの特長"
+            "value": "AQI"
           }
         },
         "es": {
@@ -15861,7 +15861,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "プレッシャー"
+            "value": "気圧"
           }
         },
         "es": {
@@ -16306,7 +16306,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "通知は消えます。 アラートは、設定を有効にするまで配信できません。"
+            "value": "通知がオフになっています。設定で有効にするまで通知は届きません。"
           }
         },
         "es": {
@@ -16751,7 +16751,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "通知が機能しています。 実際のアラートは、予測がログからサポートされている個人的な信号と一致する場合にのみ消火します。"
+            "value": "通知は正常に動作しています。実際の通知は、記録に見られる条件と予報が一致した場合にのみ送信されます。"
           }
         },
         "es": {
@@ -16840,7 +16840,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "送信されるテスト警報。"
+            "value": "テスト通知を送信しました。"
           }
         },
         "es": {
@@ -30457,7 +30457,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "最終確認の前のキャンセルは可能です。 応募作品は、承認なく変更されることはありません。"
+            "value": "最終確認まではいつでもキャンセルできます。承認なしに既存の記録が変更されることはありません。"
           }
         },
         "es": {
@@ -52078,19 +52078,19 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kostenlos für %@"
+            "value": "%@ kostenlos"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@のための放して下さい"
+            "value": "%@無料"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gratis para %@"
+            "value": "Gratis durante %@"
           }
         },
         "it": {
@@ -52102,55 +52102,55 @@
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Darmowe dla %@"
+            "value": "Bezpłatnie przez %@"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ingyenes %@"
+            "value": "Ingyenes %@ időtartamra"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vapaa %@:lle"
+            "value": "%@ maksutta"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gratis for %@"
+            "value": "Gratis i %@"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gratis for %@"
+            "value": "Gratis i %@"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Бесплатно для %@"
+            "value": "Бесплатно в течение %@"
           }
         },
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Grátis para %@"
+            "value": "Grátis durante %@"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Безкоштовно для %@"
+            "value": "Безкоштовно протягом %@"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gratuit pour %@"
+            "value": "Gratuit pendant %@"
           }
         }
       }
@@ -52351,7 +52351,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@、そして%@のために放して下さい。 現在の期間の最後に24時間前にキャンセルされない限り、自動更新。 設定で管理またはキャンセル › Apple ID › サブスクリプション."
+            "value": "%@無料、その後は%@。期間終了の24時間前までにキャンセルしない限り自動更新されます。設定 › Apple ID › サブスクリプションで管理またはキャンセルできます。"
           }
         },
         "es": {
@@ -52440,7 +52440,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@。 現在の期間の最後に24時間前にキャンセルされない限り、自動更新。 設定で管理またはキャンセル › Apple ID › サブスクリプション."
+            "value": "%@。期間終了の24時間前までにキャンセルしない限り自動更新されます。設定 › Apple ID › サブスクリプションで管理またはキャンセルできます。"
           }
         },
         "es": {
@@ -58485,79 +58485,79 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zu welcher Tageszeit bekommen Sie am häufigsten Kopfschmerzen?"
+            "value": "Zu welcher Tageszeit hast du am häufigsten Kopfschmerzen?"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ほとんどの場合、頭痛はいつ頃ですか?"
+            "value": "頭痛が最も多いのは一日のうちいつ頃ですか？"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "¿Qué hora del día con más frecuencia tienes dolores de cabeza?"
+            "value": "¿En qué momento del día tienes dolor de cabeza con más frecuencia?"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "A che ora del giorno si ottiene più spesso mal di testa?"
+            "value": "In quale momento della giornata hai più spesso mal di testa?"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "O której masz najczęściej bóle głowy?"
+            "value": "O jakiej porze dnia najczęściej boli Cię głowa?"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mikor szokott a legtöbb fejfájásod lenni?"
+            "value": "A nap melyik szakában fáj leggyakrabban a fejed?"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mihin aikaan päivästä saat useimmiten päänsärkyä?"
+            "value": "Mihin aikaan päivästä sinulla on useimmiten päänsärkyä?"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hvilken tid på dagen får du oftest hodepine?"
+            "value": "Når på dagen har du oftest hodepine?"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hvornår får du mest hovedpine?"
+            "value": "Hvornår på dagen har du oftest hovedpine?"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "В какое время суток чаще всего возникают головные боли?"
+            "value": "В какое время суток у вас чаще всего болит голова?"
           }
         },
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "A que horas do dia você costuma ter dores de cabeça?"
+            "value": "Em que altura do dia tem dores de cabeça com mais frequência?"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Який час доби ви найчастіше отримуєте головні болі?"
+            "value": "У який час доби у вас найчастіше болить голова?"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "A quelle heure de la journée avez-vous souvent des maux de tête?"
+            "value": "À quel moment de la journée avez-vous le plus souvent mal à la tête ?"
           }
         }
       }

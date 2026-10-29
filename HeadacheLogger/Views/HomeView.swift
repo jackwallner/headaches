@@ -481,7 +481,7 @@ private struct MetricChip: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title.uppercased())
+            Text(title)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
             Text(value)

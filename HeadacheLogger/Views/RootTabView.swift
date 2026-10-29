@@ -7,6 +7,9 @@ struct RootTabView: View {
 
     private static var initialTab: Int {
         #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotSettings") {
+            return 3
+        }
         if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotPatterns") {
             return 2
         }
