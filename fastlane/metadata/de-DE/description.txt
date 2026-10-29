@@ -1,45 +1,42 @@
-Migraine Tracker- Headache Log ist das schnellste Migräne- und Kopfschmerztagebuch auf dem iPhone – erfasse einen Kopfschmerz mit einem einzigen Tipp und lass Headache Pro die Muster in deinen Daten finden.
+Migräne und Kopfschmerzen mit einem Tipp auf dem iPhone oder der Apple Watch erfassen. Verfügbare Wetterdaten und optionale Apple-Health-Daten können zum Eintrag gespeichert werden.
 
-Sobald der Schmerz einsetzt, tippst du einmal auf dem iPhone oder der Apple Watch. Die App versieht den Eintrag sofort mit einem Zeitstempel und ergänzt automatisch den Kontext, nach dem Ärztinnen, Ärzte und Migränespezialistinnen wirklich fragen – kein Tippen, keine Formulare, keine Reibung.
+Sieh dir deinen Verlauf mit Zeitpunkt, Schweregrad und Notizen an. Exportiere eine übersichtliche CSV-Datei, um sie bei einem Arzttermin zu teilen.
 
-JEDER KOPFSCHMERZ WIRD ERFASST MIT:
+JEDER EINTRAG KANN ENTHALTEN:
 
-- Zeit und Rhythmus – Wochentag, Stunde, Minute, Zeitzone und Tageszeit
-- Apple Health-Signalen – Schritte, Aktivität, Schlafphasen, Herzfrequenz, HRV, Ruhepuls, SpO₂, VO₂max, Atemfrequenz, Lärmbelastung, Achtsamkeitsminuten und kürzliche Trainings
-- Wetter und Umgebung – Temperatur, Änderungen des Luftdrucks, Luftfeuchtigkeit, Luftqualität (AQI), UV-Index und pollenähnliche Signale, die seit Langem mit Migräneanfällen in Verbindung gebracht werden
-- Optionaler Schweregrad (1–10) und persönliche Notizen zu Medikamenten, Aura, Schmerzlokalisation oder vermuteten Auslösern
+- Datum, Uhrzeit, Wochentag, Zeitzone und Tageszeit
+- Apple-Health-Daten, falls du den Zugriff erlaubst: Schritte, Aktivität, Schlafphasen, Herzfrequenz, HRV, Ruhepuls, SpO₂, VO₂max, Atemfrequenz, Audioexposition, Achtsamkeitsminuten und kürzliche Workouts
+- Wetter und Umgebung, wenn verfügbar: Temperatur, Luftdruck, Luftfeuchtigkeit, Luftqualität (AQI), UV-Index und Pollenschätzungen
+- Eine optionale Schweregradskala von 1 bis 10 und Notizen zu Medikamenten, Aura, Schmerzort oder vermuteten Auslösern
 
-HEADACHE PRO – FINDE DEINE AUSLÖSER:
+HEADACHE PRO
 
-Ein paar einzelne Einträge sind für sich allein kaum hilfreich. Headache Pro liest deine komplette Historie und hebt die echten Signale hinter deinen Kopfschmerzen hervor.
+Headache Pro zeigt beschreibende Muster in deinen Einträgen. Das sind Beobachtungen in deinen Daten, keine medizinischen Schlussfolgerungen.
 
-- Personalisierte Mustereinblicke – Schlaf, Luftdruckabfälle, Tageszeit-Cluster, Wochentagsmuster, HRV-Einbrüche, Wetterumschwünge und mehr, jeweils mit Diagramm und verständlicher Erklärung
-- Über 15 Mustererkennungen plus multivariate Kookurrenzanalyse, um kombinierte Auslöser (z. B. Druckabfall + schlechter Schlaf) zu erkennen, die bei einer eindimensionalen Verfolgung verborgen bleiben
-- Proaktive Hinweise – Pro überwacht im Hintergrund deine lokale Vorhersage und meldet sich nur, wenn die Bedingungen einem Auslösermuster in DEINER Historie entsprechen. Kein generisches „Sturm kommt“-Spam.
-- Persönliche Schwellenwerte und Ruhezeiten, damit Hinweise zu deinem Tagesablauf passen
-- Exklusive Pro-Filter und Aufschlüsselungen in der Verlaufsansicht
+- Personalisierte Einblicke zu Schlaf, Luftdruckänderungen, Tageszeit, Wochentag, HRV, Wetter und weiteren aufgezeichneten Kontexten, mit Diagrammen und verständlichen Erklärungen
+- Über 15 Mustererkennungen und eine Analyse gemeinsam auftretender Faktoren, zum Beispiel Luftdruckänderungen und Schlaf
+- Proactive Alerts vergleicht die lokale Wettervorhersage mit Mustern in deinen bisherigen Einträgen. Ähneln die Bedingungen diesen Mustern, kann eine Mitteilung erscheinen. Die Hinweise sind informativ und sagen keine Kopfschmerzen voraus
+- Persönliche Schwellenwerte und Ruhezeiten für deine Mitteilungen
+- Pro-Filter und Aufschlüsselungen in der Verlaufsansicht
 
-FÜR DEN ALLTAG GEMACHT:
+FÜR DEN ALLTAG
 
-- Ein-Tipp-Erfassung auf der Apple Watch mit Synchronisation zu deinem gekoppelten iPhone
-- Home- und Sperrbildschirm-Widgets, um einen Kopfschmerz zu protokollieren, ohne die App zu öffnen
-- Siri-Kurzbefehle und Unterstützung für „Hey Siri, log a headache“
-- CSV-Export, um eine saubere Kopfschmerzhistorie mit deiner Neurologin, deinem Hausarzt oder deiner Migränespezialistin zu teilen
+- Einträge auf der Apple Watch erfassen und mit dem gekoppelten iPhone synchronisieren
+- Mit Widgets auf Home- oder Sperrbildschirm einen Kopfschmerz ohne Öffnen der App protokollieren
+- Siri-Kurzbefehle zum Erfassen eines Kopfschmerzes
+- CSV-Verlauf für einen Arzttermin exportieren
 
-DATENSCHUTZ VON ANFANG AN:
+DATENSCHUTZ
 
-Migraine Tracker- Headache Log ist ein lokal-first geführtes Kopfschmerztagebuch.
+Kein Konto erforderlich. Keine Werbung, keine Analyse-SDKs und keine Cloud-Synchronisierung. Deine Einträge bleiben auf dem Gerät, bis du sie selbst exportierst.
 
-- Kein Konto erforderlich
-- Keine Werbung
-- Keine Analyse-SDKs
-- Keine Cloudsynchronisation
-- Dein Kopfschmerztagebuch bleibt auf deinem Gerät – Export nur manuell, wenn du teilen möchtest
+Ein-Tipp-Erfassung, Verlauf, Widgets und Apple-Watch-Erfassung sind kostenlos. Die vollständigen Insights nach der kostenlosen Beispielansicht, der Arztbericht als PDF und Proactive Alerts benötigen Headache Pro.
 
-Ob du chronische Migräne, Clusterkopfschmerzen, Spannungskopfschmerzen, hormonelle Kopfschmerzen verfolgst oder nur gelegentliche Kopfweh-Muster verstehen willst: Migraine Tracker- Headache Log macht aus einem einzigen Tipp einen vollständigen, arztbereiten Verlauf – und Headache Pro verwandelt diesen Verlauf in Antworten.
+Diese App dient der Dokumentation und Information. Sie stellt keine Diagnose und behandelt oder verhindert keine Erkrankung. Muster und Hinweise ersetzen keine ärztliche Beratung. Bei gesundheitlichen Fragen wende dich an medizinisches Fachpersonal.
 
-Abonnementdetails
-Headache Pro ist als automatisch verlängerbares Abo (monatlich oder jährlich, beide mit 7 Tagen kostenlosem Test) oder als einmaliger Lifetime-Kauf erhältlich. Die Preise werden vor dem Kauf in der App angezeigt und unterscheiden sich je nach Region. Die Zahlung wird bei der Bestätigung über deine Apple-ID abgebucht. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des laufenden Zeitraums gekündigt werden. Verwalten oder kündigen kannst du jederzeit unter Einstellungen → Apple-ID → Abos.
+ABO-DETAILS
 
-Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
-Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Headache Pro gibt es als automatisch verlängerbares Monats- oder Jahresabo, jeweils mit einer 7-tägigen Testphase für berechtigte neue Abonnements, oder als einmaligen Lifetime-Kauf. Die Abodetails findest du vor dem Kauf in der App. Die Zahlung wird bei Bestätigung über deine Apple-ID abgebucht. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des laufenden Zeitraums gekündigt werden. Verwalten oder kündigen kannst du sie unter Einstellungen > Apple-ID > Abos.
+
+Datenschutzerklärung: https://jackwallner.github.io/headaches/privacy-policy.html
+Nutzungsbedingungen (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

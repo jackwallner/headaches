@@ -1,45 +1,47 @@
-Migraine Tracker- Headache Log turns one tap into a doctor-ready headache diary, then flags the barometric pressure and weather shifts that line up with your own attack history.
+Log a headache in one tap on iPhone or Apple Watch. Available weather and optional Apple Health context can be saved with each entry.
 
-The moment a headache hits, tap once on iPhone or Apple Watch. The app timestamps the event instantly and automatically attaches the surrounding context that doctors and migraine specialists actually ask about – no typing, no forms, no friction.
+Review your headache history over time. Add a severity rating and notes, then export a clear record to share with your doctor, GP or migraine specialist.
 
-EVERY HEADACHE IS LOGGED WITH:
+EACH ENTRY CAN INCLUDE:
 
-- Time and rhythm – weekday, hour, minute, time zone, and part of day
-- Apple Health signals – steps, activity, sleep stages, heart rate, HRV, resting heart rate, SpO₂, VO₂ max, respiratory rate, audio exposure, mindful minutes, and recent workouts
-- Weather and environment – temperature, barometric pressure changes, humidity, air quality (AQI), UV index, and pollen-style signals long associated with migraine attacks
-- Optional severity rating (1–10) and personal notes for medicines, aura, location of pain, or suspected triggers
+- Date, time, weekday, time zone and part of day
+- Apple Health data, if you grant access: steps, activity, sleep stages, heart rate, HRV, resting heart rate, SpO₂, VO₂ max, respiratory rate, audio exposure, mindful minutes and recent workouts
+- Local weather and environmental context, when available: temperature, barometric pressure, humidity, air quality (AQI), UV index and pollen estimates
+- An optional severity rating from 1 to 10 and notes about medication, aura, pain location or suspected triggers
 
-HEADACHE PRO – FIND YOUR TRIGGERS:
+HEADACHE PRO
 
-A few taps of data aren’t useful on their own. Headache Pro reads your full history and surfaces the real signals behind your headaches.
+Headache Pro shows descriptive patterns in the entries you record. These are observations in your data, not medical conclusions.
 
-- Personalised pattern insights – sleep, barometric pressure drops, time-of-day clusters, weekday patterns, HRV dips, weather shifts, and more, each shown with a chart and plain-English explanation
-- 15+ pattern detectors plus multivariate co-occurrence analysis to catch combined triggers (e.g. pressure drop + poor sleep) that single-variable tracking misses
-- Proactive Alerts – Pro watches your local forecast in the background and only pings you when the conditions match a trigger pattern in YOUR history. No generic “storm coming” spam.
-- Personalised thresholds and quiet hours so alerts respect your day
-- Pro-only filters and breakdowns in your history view
+- Personalised pattern insights across sleep, pressure changes, time of day, weekday, HRV, weather and other recorded context, shown with charts and plain explanations
+- More than 15 pattern detectors plus analysis of factors recorded together, such as a pressure change and sleep
+- Proactive Alerts compare your local forecast with patterns in your past entries. They can notify you when forecast conditions resemble those patterns. Alerts are informational and do not predict a headache
+- Personal thresholds and quiet hours let you choose when alerts arrive
+- Pro-only filters and breakdowns in your history
 
-BUILT FOR REAL LIFE:
+BUILT FOR EVERYDAY USE
 
-- One-tap Apple Watch logging that syncs back to your paired iPhone
-- Home Screen and Lock Screen widgets to log a headache without opening the app
-- Siri Shortcuts and “Hey Siri, log a headache” support
-- CSV export to share a clean headache history with your neurologist, GP, or migraine specialist
+- Log from your Apple Watch and sync entries to your paired iPhone
+- Use Home Screen and Lock Screen widgets to log without opening the app
+- Create Siri Shortcuts, including a shortcut to log a headache
+- Export a CSV record to share with your doctor, GP or migraine specialist
 
-PRIVATE BY DESIGN:
+PRIVATE BY DESIGN
 
-Migraine Tracker- Headache Log is a local-first headache journal.
+Migraine Tracker- Headache Log stores your log on your device.
 
 - No account required
-- No ads
-- No analytics SDKs
+- No ads or analytics SDKs
 - No cloud sync
-- Your headache log stays on your device – manual export only when you choose to share
+- Entries stay on your device unless you export them
 
-Whether you’re tracking chronic migraine, cluster headaches, tension headaches, hormonal headaches, or just trying to understand an occasional head pain pattern, Migraine Tracker- Headache Log turns a single tap into a complete, doctor-ready record – and Headache Pro turns that record into answers.
+One-tap logging, history, widgets and Apple Watch logging are free. The full Insights view beyond its free sample, doctor-report PDF export and Proactive Alerts require Headache Pro.
 
-Subscription details
-Headache Pro is available as an auto-renewing subscription (Monthly or Yearly, both with a 7-day free trial) or as a one-time Lifetime purchase. Prices are shown in the app before you buy and vary by region. Payment is charged to your Apple ID at confirmation. Subscriptions renew automatically unless cancelled at least 24 hours before the end of the current period. Manage or cancel anytime in Settings → Apple ID → Subscriptions.
+This app is for tracking and information. It does not diagnose, treat or prevent medical conditions. Patterns and alerts do not replace medical advice. Speak with a healthcare professional about medical concerns.
+
+SUBSCRIPTION DETAILS
+
+Headache Pro is available as automatically renewing monthly or yearly subscriptions, each with a 7-day free trial for eligible subscribers, or as a one-time Lifetime purchase. Subscription details are shown in the app before purchase. Payment is charged to your Apple ID at confirmation. Subscriptions renew automatically unless cancelled at least 24 hours before the current period ends. Manage or cancel in Settings > Apple ID > Subscriptions.
 
 Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

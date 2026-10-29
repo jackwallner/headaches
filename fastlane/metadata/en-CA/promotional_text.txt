@@ -1,1 +1,1 @@
-One tap on iPhone or Apple Watch logs a headache and saves the weather, pressure and Health data around it, so your history shows the context. Logging is free.
+Log a headache in one tap on iPhone or Apple Watch. Available weather and optional Apple Health context can be saved with each entry. Logging is free.
