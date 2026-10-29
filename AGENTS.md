@@ -74,6 +74,7 @@ dependencies. Everything else lives in `HeadacheLogger/`:
   keyword field only.
 
 ## Rules index
+- `.claude/rules/localization.md`: app, widget, Watch, App Intent and permission-copy localization.
 - `.claude/rules/android.md`: the native Android port in `android/`, Play
   billing, the remote Pro emulator, store assets and Play Console answers.
 

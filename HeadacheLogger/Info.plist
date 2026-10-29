@@ -4,6 +4,23 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>de</string>
+		<string>ja</string>
+		<string>es</string>
+		<string>it</string>
+		<string>pl</string>
+		<string>hu</string>
+		<string>fi</string>
+		<string>nb</string>
+		<string>da</string>
+		<string>ru</string>
+		<string>pt-PT</string>
+		<string>uk</string>
+		<string>fr</string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -41,7 +58,7 @@
 		<string>fetch</string>
 	</array>
 	<key>NSMotionUsageDescription</key>
-	<string>One Tap Headache Tracker uses motion and activity data from Apple Health (such as step counts and activity levels) to provide insight into potential headache triggers.</string>
+	<string>One Tap Headache Tracker reads motion and activity data from Apple Health, such as step counts and activity levels, to show context alongside logged headaches.</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.jackwallner.headachelogger.weatherCheck</string>

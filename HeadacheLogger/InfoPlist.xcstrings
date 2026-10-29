@@ -1,0 +1,362 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "NSHealthShareUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker reads activity, sleep, heart, and related metrics from Apple Health to attach context when you log an event. The app never writes Health data."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker liest Aktivitäts-, Schlaf-, Herz- und weitere Messwerte aus Apple Health aus, um deinen Einträgen Kontext hinzuzufügen. Die App schreibt keine Daten in Health."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Trackerは、記録時に状況情報を追加するため、Apple Healthからアクティビティ、睡眠、心拍数などの指標を読み取ります。Healthにデータを書き込むことはありません。"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lee de Apple Health datos de actividad, sueño, corazón y otras métricas para añadir contexto cuando registras un episodio. La app nunca escribe datos en Health."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker legge da Apple Health i dati relativi ad attività, sonno, cuore e altre metriche per aggiungere contesto alle registrazioni. L’app non scrive mai dati in Health."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker odczytuje z Apple Health dane o aktywności, śnie, pracy serca i inne pomiary, aby dodać kontekst do zapisanych wpisów. Aplikacja nigdy nie zapisuje danych w Health."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A One Tap Headache Tracker aktivitási, alvási, szívvel kapcsolatos és egyéb adatokat olvas be az Apple Healthből, hogy kiegészítse a bejegyzéseidet. Az app soha nem ír adatot a Healthbe."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lukee Apple Healthista aktiivisuus-, uni-, sydän- ja muita mittaustietoja lisätäkseen kirjauksiin kontekstia. Appi ei koskaan kirjoita tietoja Healthiin."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker leser aktivitets-, søvn-, hjerte- og andre målinger fra Apple Health for å legge til kontekst når du logger en hendelse. Appen skriver aldri data til Health."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker læser aktivitets-, søvn-, hjerte- og andre målinger fra Apple Health for at tilføje kontekst, når du registrerer en hændelse. Appen skriver aldrig data til Health."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker считывает из Apple Health данные об активности, сне, работе сердца и другие показатели, чтобы добавить контекст к вашим записям. Приложение никогда не записывает данные в Health."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O One Tap Headache Tracker lê dados de atividade, sono, coração e outras métricas da Apple Health para acrescentar contexto aos registos. A app nunca escreve dados na Health."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker зчитує з Apple Health дані про активність, сон, роботу серця та інші показники, щоб додати контекст до ваших записів. Застосунок ніколи не записує дані в Health."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lit dans Apple Health les données d’activité, de sommeil, cardiaques et d’autres mesures pour ajouter du contexte à vos saisies. L’app n’écrit jamais de données dans Health."
+          }
+        }
+      }
+    },
+    "NSHealthUpdateUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker does not write data to Apple Health."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker schreibt keine Daten in Apple Health."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache TrackerはApple Healthにデータを書き込みません。"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker no escribe datos en Apple Health."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker non scrive dati in Apple Health."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker nie zapisuje danych w Apple Health."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A One Tap Headache Tracker nem ír adatot az Apple Healthbe."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker ei kirjoita tietoja Apple Healthiin."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker skriver ikke data til Apple Health."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker skriver ikke data til Apple Health."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker не записывает данные в Apple Health."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O One Tap Headache Tracker não escreve dados na Apple Health."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker не записує дані в Apple Health."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker n’écrit pas de données dans Apple Health."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker uses your approximate location to fetch local weather and place context when you log an event."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker verwendet deinen ungefähren Standort, um beim Erfassen eines Eintrags lokale Wetter- und Ortsinformationen abzurufen."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Trackerは、記録時に地域の天気や場所の情報を取得するため、おおよその位置情報を使用します。"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker usa tu ubicación aproximada para consultar el tiempo local y datos del lugar cuando registras un episodio."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker usa la tua posizione approssimativa per ottenere il meteo locale e informazioni sul luogo quando registri un evento."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker używa przybliżonej lokalizacji, aby podczas zapisywania wpisu pobrać lokalną pogodę i informacje o miejscu."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A One Tap Headache Tracker a hozzávetőleges helyadatodat használja, hogy bejegyzéskor lekérje a helyi időjárást és a helyszín adatait."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker käyttää likimääräistä sijaintiasi paikallisen sään ja paikkatietojen hakemiseen kirjauksen yhteydessä."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker bruker den omtrentlige posisjonen din til å hente lokalt vær og stedsinformasjon når du logger en hendelse."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker bruger din omtrentlige position til at hente lokalt vejr og stedoplysninger, når du registrerer en hændelse."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker использует ваше приблизительное местоположение, чтобы получать местный прогноз погоды и сведения о месте во время записи события."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O One Tap Headache Tracker utiliza a sua localização aproximada para obter a previsão meteorológica local e informações do local quando regista um episódio."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker використовує ваше приблизне місцезнаходження, щоб отримувати місцевий прогноз погоди та відомості про місце під час запису події."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker utilise votre position approximative pour obtenir la météo locale et des informations sur le lieu lorsque vous consignez un événement."
+          }
+        }
+      }
+    },
+    "NSMotionUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker reads motion and activity data from Apple Health, such as step counts and activity levels, to show context alongside logged headaches."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker liest Bewegungs- und Aktivitätsdaten aus Apple Health, etwa Schrittzahl und Aktivitätsniveau, um erfassten Kopfschmerzen Kontext hinzuzufügen."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Trackerは、記録した頭痛の状況を示すため、歩数や活動レベルなどの動作・アクティビティデータをApple Healthから読み取ります。"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lee de Apple Health datos de movimiento y actividad, como los pasos y el nivel de actividad, para añadir contexto a los dolores de cabeza registrados."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker legge da Apple Health i dati di movimento e attività, come i passi e il livello di attività, per aggiungere contesto ai mal di testa registrati."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker odczytuje z Apple Health dane o ruchu i aktywności, takie jak liczba kroków i poziom aktywności, aby dodać kontekst do zapisanych bólów głowy."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A One Tap Headache Tracker mozgási és aktivitási adatokat, például lépésszámot és aktivitási szintet olvas be az Apple Healthből, hogy kiegészítse a rögzített fejfájások adatait."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lukee Apple Healthista liikkumis- ja aktiivisuustietoja, kuten askelmäärän ja aktiivisuustason, lisätäkseen kontekstia kirjattuihin päänsärkyihin."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker leser bevegelses- og aktivitetsdata fra Apple Health, som skritt og aktivitetsnivå, for å legge til kontekst rundt loggført hodepine."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker læser bevægelses- og aktivitetsdata fra Apple Health, f.eks. antal skridt og aktivitetsniveau, for at føje kontekst til registreret hovedpine."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker считывает из Apple Health данные о движении и активности, например число шагов и уровень активности, чтобы добавить контекст к записям о головной боли."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O One Tap Headache Tracker lê dados de movimento e atividade da Apple Health, como passos e nível de atividade, para acrescentar contexto às dores de cabeça registadas."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker зчитує з Apple Health дані про рух і активність, наприклад кількість кроків і рівень активності, щоб додати контекст до записів про головний біль."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One Tap Headache Tracker lit dans Apple Health les données de mouvement et d’activité, comme le nombre de pas et le niveau d’activité, pour ajouter du contexte aux maux de tête consignés."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

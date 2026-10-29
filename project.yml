@@ -5,7 +5,8 @@ options:
     iOS: "17.0"
     watchOS: "10.0"
   xcodeVersion: "16.0"
-  minimumXcodeGenVersion: "2.38"
+  minimumXcodeGenVersion: "2.39.0"
+  developmentLanguage: en
 
 packages:
   RevenueCat:
