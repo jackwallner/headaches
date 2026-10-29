@@ -44,6 +44,8 @@ def validate(locale: str) -> list[str]:
             continue
 
         fields[field] = value
+        if not value.strip():
+            errors.append(f"{field}: empty")
         if value != value.strip():
             errors.append(f"{field}: leading or trailing whitespace")
         if chr(0x2014) in value:
@@ -58,7 +60,7 @@ def validate(locale: str) -> list[str]:
     ]
     if any(not token for token in keyword_tokens):
         errors.append("keywords: empty comma-separated token")
-    if any(any(char.isspace() for char in token) for token in keyword_tokens):
+    if any(any(char.isspace() for char in token) for token in keywords.split(",")):
         errors.append("keywords: spaces inside a token")
     if re.search(r",\s", keywords):
         errors.append("keywords: whitespace after a comma")

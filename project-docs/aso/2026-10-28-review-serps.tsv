@@ -1,0 +1,156 @@
+rank	storefront	query
+85	US	headache symptom tracker
+46	US	symptom headache log
+5	US	cluster headache tracker
+118	US	headache pain diary
+4	US	headache watch
+17	US	healthkit headache
+125	US	symptom migraine tracker
+152	US	migraine symptom diary
+59	US	migraine symptom log
+11	US	headache export
+45	US	headache cluster tracker
+41	US	migraine cluster tracker
+74	US	headache diary
+138	US	migraine diary
+86	US	headache pain tracker
+71	US	migraine pain log
+26	GB	headache pal
+37	GB	migraine pal
+32	GB	headache buddy
+71	GB	migraine buddy
+29	GB	headache relief
+75	GB	migraine relief
+2	GB	one tap headache
+59	GB	headache calendar
+61	AU	migraine risk
+17	AU	headache risk
+138	AU	weather migraine risk
+27	AU	headache pal
+57	AU	migraine pal
+28	AU	headache buddy
+64	AU	migraine buddy
+44	AU	headache relief
+out/160	AU	migraine relief
+2	AU	one tap headache
+58	CA	migraine forecast
+34	CA	barometric migraine forecast
+37	CA	headache forecast
+30	CA	headache pal
+75	CA	migraine pal
+28	CA	headache buddy
+133	CA	migraine buddy
+64	CA	headache relief
+out/155	CA	migraine relief
+2	CA	one tap headache
+10	DE	migräne vorhersage
+6	DE	luftdruck migräne vorhersage
+4	DE	kopfschmerz vorhersage
+99	DE	migräne gesundheit
+72	DE	kopfschmerz gesundheit
+20	DE	migräne log
+6	DE	kopfschmerz log
+11	DE	migräne linderung
+7	DE	kopfschmerz linderung
+59	DE	migräne diary
+33	DE	migräne pain
+30	JP	気圧 片頭痛 予測
+22	JP	天気 片頭痛 予測
+30	JP	頭痛 予測
+13	JP	ホルモン 頭痛
+9	JP	ホルモン 片頭痛
+116	JP	気圧頭痛
+6	JP	頭痛 ワンタップ
+5	MX	dolor cluster
+3	MX	dolor cluster tracker
+out/191	MX	dolor diary
+145	MX	migraña diary
+7	BR	dor cluster
+14	BR	cluster tracker
+out/193	BR	cabeça diary
+83	BR	enxaqueca diary
+6	FR	douleur cluster
+72	FR	migraine cluster
+out/180	FR	migraine diary
+out/180	FR	migraine pain
+73	FR	douleur pain
+out/1	RU	головная боль cluster
+2	RU	мигрень cluster
+4	RU	мигрень облегчение
+out/6	RU	головная боль облегчение
+3	SA	صداع pain
+16	SA	صداع diary
+25	SA	ألم pain
+76	SA	ألم diary
+39	US	headache symptom log
+107	US	migraine symptom tracker
+65	US	headache symptoms
+110	US	migraine symptoms
+51	US	headache symptoms log
+76	US	migraine symptoms log
+55	GB	headache pal tracker
+47	GB	migraine pal tracker
+54	GB	headache buddy tracker
+58	GB	migraine buddy tracker
+75	GB	headache relief tracker
+79	GB	migraine relief tracker
+82	AU	headache pal tracker
+99	AU	migraine pal tracker
+77	AU	headache buddy tracker
+108	AU	migraine buddy tracker
+117	AU	headache relief tracker
+165	AU	migraine relief tracker
+59	AU	headache risk tracker
+13	AU	migraine risk tracker
+75	CA	headache pal tracker
+105	CA	migraine pal tracker
+76	CA	headache buddy tracker
+116	CA	migraine buddy tracker
+114	CA	headache relief tracker
+out/173	CA	migraine relief tracker
+33	CA	headache migraine forecast
+4	DE	migräne vorhersage tracker
+5	DE	kopfschmerz log tracker
+5	DE	kopfschmerz linderung tracker
+84	DE	migräne gesundheit tracker
+22	DE	kopfschmerz diary tracker
+11	DE	kopfschmerz pain tracker
+out/184	DE	migräne kalender
+out/70	DE	kopfschmerz tagebuch wetter
+15	JP	ホルモン 頭痛 記録
+23	JP	片頭痛 予測 記録
+26	JP	天気 気圧 片頭痛 予測
+102	JP	頭痛 記録 気圧
+64	JP	気圧 片頭痛
+49	JP	天気 片頭痛
+136	JP	気圧 頭痛
+158	JP	天気 頭痛
+15	JP	片頭痛 予測
+155	JP	片頭痛 天気 記録
+113	JP	片頭痛 気圧 記録
+out/183	US	cluster diary tracker
+165	US	cluster watch tracker
+10	US	headache watch tracker
+out/178	US	migraine hrv tracker
+37	US	migraine healthkit tracker
+117	US	headache hrv
+153	US	migraine hrv
+3	US	headache watch log
+19	US	migraine watch tracker
+73	US	pain watch tracker
+out/188	US	pain diary tracker
+40	DE	kopfschmerz diary
+41	DE	migräne diary tracker
+11	DE	kopfschmerz wetter diary
+12	DE	migräne wetter diary
+21	DE	migräne gesundheit log
+58	DE	kopfschmerz gesundheit tracker
+19	JP	花粉 頭痛
+5	JP	花粉 片頭痛
+8	JP	花粉 頭痛 記録
+4	JP	CSV 頭痛
+2	JP	CSV 片頭痛
+1	JP	空気質 頭痛
+1	JP	空気質 片頭痛
+23	JP	医師 頭痛
+12	JP	医師 片頭痛

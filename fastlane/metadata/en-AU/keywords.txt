@@ -1,1 +1,1 @@
-simple,track,cluster,tension,trigger,pain,forecast,chronic,aura,diary,one,tap,calendar,export,doctor
+simple,track,cluster,tension,trigger,pain,forecast,chronic,aura,diary,one,tap,export,doctor,risk

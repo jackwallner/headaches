@@ -1,4 +1,4 @@
-Migräne und Kopfschmerzen mit einem Tipp auf dem iPhone oder der Apple Watch erfassen. Verfügbare Wetterdaten und optionale Apple-Health-Daten können zum Eintrag gespeichert werden.
+Migräne und Kopfschmerzen mit einem Tipp auf dem iPhone oder der Apple Watch erfassen. Verfügbare Wetterdaten und optionale Apple-Health-Daten können den Eintrag ergänzen.
 
 Sieh dir deinen Verlauf mit Zeitpunkt, Schweregrad und Notizen an. Exportiere eine übersichtliche CSV-Datei, um sie bei einem Arzttermin zu teilen.
 
@@ -14,10 +14,9 @@ HEADACHE PRO
 Headache Pro zeigt beschreibende Muster in deinen Einträgen. Das sind Beobachtungen in deinen Daten, keine medizinischen Schlussfolgerungen.
 
 - Personalisierte Einblicke zu Schlaf, Luftdruckänderungen, Tageszeit, Wochentag, HRV, Wetter und weiteren aufgezeichneten Kontexten, mit Diagrammen und verständlichen Erklärungen
-- Über 15 Mustererkennungen und eine Analyse gemeinsam auftretender Faktoren, zum Beispiel Luftdruckänderungen und Schlaf
-- Proactive Alerts vergleicht die lokale Wettervorhersage mit Mustern in deinen bisherigen Einträgen. Ähneln die Bedingungen diesen Mustern, kann eine Mitteilung erscheinen. Die Hinweise sind informativ und sagen keine Kopfschmerzen voraus
+- Über 15 Musteranalysen und eine Analyse gemeinsam auftretender Faktoren, zum Beispiel Luftdruckänderungen und Schlaf
+- Proactive Alerts vergleichen die lokale Wettervorhersage mit Mustern in deinen bisherigen Einträgen. Ähneln die Bedingungen diesen Mustern, kann eine Mitteilung erscheinen. Die Hinweise sind informativ und sagen keine Kopfschmerzen voraus
 - Persönliche Schwellenwerte und Ruhezeiten für deine Mitteilungen
-- Pro-Filter und Aufschlüsselungen in der Verlaufsansicht
 
 FÜR DEN ALLTAG
 
@@ -36,7 +35,7 @@ Diese App dient der Dokumentation und Information. Sie stellt keine Diagnose und
 
 ABO-DETAILS
 
-Headache Pro gibt es als automatisch verlängerbares Monats- oder Jahresabo, jeweils mit einer 7-tägigen Testphase für berechtigte neue Abonnements, oder als einmaligen Lifetime-Kauf. Die Abodetails findest du vor dem Kauf in der App. Die Zahlung wird bei Bestätigung über deine Apple-ID abgebucht. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des laufenden Zeitraums gekündigt werden. Verwalten oder kündigen kannst du sie unter Einstellungen > Apple-ID > Abos.
+Headache Pro gibt es als automatisch verlängerbares Monats- oder Jahresabo, jeweils mit einer 7-tägigen Testphase für berechtigte Abonnenten, oder als einmaligen Lifetime-Kauf. Die Abodetails findest du vor dem Kauf in der App. Die Zahlung wird bei Bestätigung über deine Apple-ID abgebucht. Abos verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ende des laufenden Zeitraums gekündigt werden. Verwalten oder kündigen kannst du sie unter Einstellungen > Apple-ID > Abos.
 
 Datenschutzerklärung: https://jackwallner.github.io/headaches/privacy-policy.html
 Nutzungsbedingungen (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

@@ -1,1 +1,1 @@
-uhr,widget,cluster,export,auslöser,arzt,logbuch,aura,luftdruck,kalender,schlaf,herzfrequenz,druck
+uhr,widget,cluster,export,auslöser,arzt,aura,luftdruck,vorhersage,log,linderung,kalender,pain,diary

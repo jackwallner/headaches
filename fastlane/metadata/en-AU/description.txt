@@ -17,7 +17,6 @@ Headache Pro shows descriptive patterns in the entries you record. These are obs
 - More than 15 pattern detectors plus analysis of factors recorded together, such as a pressure change and sleep
 - Proactive Alerts compare your local forecast with patterns in your past entries. They can notify you when forecast conditions resemble those patterns. Alerts are informational and do not predict a headache
 - Personal thresholds and quiet hours let you choose when alerts arrive
-- Pro-only filters and breakdowns in your history
 
 BUILT FOR EVERYDAY USE
 
