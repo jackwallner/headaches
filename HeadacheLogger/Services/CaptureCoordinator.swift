@@ -51,7 +51,7 @@ final class CaptureCoordinator: ObservableObject {
                 }
             }
             if updated > 0 {
-                bannerMessage = updated == 1 ? "Updated context for a pending log." : "Updated context for \(updated) pending logs."
+                bannerMessage = String(localized: "Updated context for \(updated) pending logs.")
                 bannerIsError = false
                 await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context)
             }
@@ -105,13 +105,13 @@ final class CaptureCoordinator: ObservableObject {
             // the next successful save writes both.
             context.rollback()
             lastCapturedEventID = nil
-            bannerMessage = "Could not save event. Try again."
+            bannerMessage = String(localized: "Could not save event. Try again.")
             bannerIsError = true
             return false
         }
 
         isCapturing = true
-        bannerMessage = "Saving and collecting context…"
+        bannerMessage = String(localized: "Saving and collecting context…")
         bannerIsError = false
 
         let eventID = event.id
@@ -129,7 +129,7 @@ final class CaptureCoordinator: ObservableObject {
 
             guard let found = try? context.fetch(descriptor).first else {
                 isCapturing = false
-                bannerMessage = "Could not update event."
+                bannerMessage = String(localized: "Could not update event.")
                 bannerIsError = true
                 consoleError("CaptureCoordinator: fetch after capture failed", error: nil, trace: ["eventID": "\(eventID)"])
                 return
@@ -144,7 +144,7 @@ final class CaptureCoordinator: ObservableObject {
             } catch {
                 consoleError("CaptureCoordinator: finalize save failed", error: error, trace: ["eventID": "\(eventID)"])
                 isCapturing = false
-                bannerMessage = "Context captured but save failed. Reopen to retry."
+                bannerMessage = String(localized: "Context captured but save failed. Reopen to retry.")
                 bannerIsError = true
                 return
             }
@@ -154,13 +154,13 @@ final class CaptureCoordinator: ObservableObject {
             bannerIsError = false
             switch found.captureStatus {
             case .complete:
-                bannerMessage = "Context saved."
+                bannerMessage = String(localized: "Context saved.")
                 ReviewPromptTracker.recordPositiveMoment()
                 NotificationCenter.default.post(name: .headachePositiveMomentForReview, object: nil)
             case .partial:
-                bannerMessage = "Saved with partial context."
+                bannerMessage = String(localized: "Saved with partial context.")
             case .failed:
-                bannerMessage = "Saved; some context unavailable."
+                bannerMessage = String(localized: "Saved; some context unavailable.")
             case .pending:
                 bannerMessage = nil
             }
@@ -180,12 +180,12 @@ final class CaptureCoordinator: ObservableObject {
         var descriptor = FetchDescriptor<HeadacheEvent>(predicate: #Predicate { $0.id == eventID })
         descriptor.fetchLimit = 1
         guard let event = try? context.fetch(descriptor).first else {
-            bannerMessage = "Could not find event to retry."
+            bannerMessage = String(localized: "Could not find event to retry.")
             return
         }
 
         isCapturing = true
-        bannerMessage = "Retrying context capture…"
+        bannerMessage = String(localized: "Retrying context capture…")
         bannerIsError = false
         let timestamp = event.timestamp
 
@@ -197,7 +197,7 @@ final class CaptureCoordinator: ObservableObject {
             refetch.fetchLimit = 1
             guard let found = try? context.fetch(refetch).first else {
                 isCapturing = false
-                bannerMessage = "Retry failed. Event missing."
+                bannerMessage = String(localized: "Retry failed. Event missing.")
                 bannerIsError = true
                 return
             }
@@ -211,7 +211,7 @@ final class CaptureCoordinator: ObservableObject {
             } catch {
                 consoleError("CaptureCoordinator: retry save failed", error: error, trace: ["eventID": "\(eventID)"])
                 isCapturing = false
-                bannerMessage = "Retry captured context but save failed."
+                bannerMessage = String(localized: "Retry captured context but save failed.")
                 bannerIsError = true
                 return
             }
@@ -220,13 +220,13 @@ final class CaptureCoordinator: ObservableObject {
 
             switch found.captureStatus {
             case .complete:
-                bannerMessage = "Context saved."
+                bannerMessage = String(localized: "Context saved.")
                 bannerIsError = false
             case .partial:
-                bannerMessage = "Still partial. You can email the developer from the event card."
+                bannerMessage = String(localized: "Still partial. You can email the developer from the event card.")
                 bannerIsError = true
             case .failed:
-                bannerMessage = "Retry still failed. Email the developer from the event card."
+                bannerMessage = String(localized: "Retry still failed. Email the developer from the event card.")
                 bannerIsError = true
             case .pending:
                 bannerMessage = nil
@@ -248,11 +248,11 @@ final class CaptureCoordinator: ObservableObject {
             do {
                 try context.save()
                 lastCapturedEventID = nil
-                bannerMessage = "Last entry undone."
+                bannerMessage = String(localized: "Last entry undone.")
                 bannerIsError = false
             } catch {
                 consoleError("CaptureCoordinator: undo save failed", error: error, trace: ["eventID": "\(eventID)"])
-                bannerMessage = "Undo failed. Try again."
+                bannerMessage = String(localized: "Undo failed. Try again.")
                 bannerIsError = true
             }
         } else {

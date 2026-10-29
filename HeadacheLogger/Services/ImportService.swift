@@ -320,11 +320,11 @@ enum ImportError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyFile:
-            "The file is empty or contains no valid data rows."
+            String(localized: "The file is empty or contains no valid data rows.")
         case .invalidHeader:
-            "The file doesn't appear to be a valid headache event export."
+            String(localized: "The file doesn't appear to be a valid headache event export.")
         case .parseError(let message):
-            "Parse error: \(message)"
+            String(localized: "Could not read the CSV: \(message)")
         }
     }
 }

@@ -19,7 +19,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
     func activate() {
         guard !didActivate else { return }
         guard WCSession.isSupported() else {
-            statusMessage = "Watch Connectivity unavailable."
+            statusMessage = String(localized: "Watch Connectivity unavailable.")
             return
         }
         WCSession.default.delegate = self
@@ -33,7 +33,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
 
         let session = WCSession.default
         guard session.activationState == .activated else {
-            statusMessage = "Connecting to iPhone…"
+            statusMessage = String(localized: "Connecting to iPhone…")
             return
         }
 
@@ -46,28 +46,28 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         ]
 
         if session.isReachable {
-            statusMessage = "Sending…"
+            statusMessage = String(localized: "Sending…")
             session.sendMessage(payload, replyHandler: { [weak self] reply in
                 Task { @MainActor in
                     guard let self else { return }
                     self.cancelSendTimeout()
                     self.isSending = false
                     if reply["status"] as? String == "ok" {
-                        self.confirmLogged(message: "Logged.", showsConfirmation: true)
+                        self.confirmLogged(message: String(localized: "Logged."), showsConfirmation: true)
                     } else {
                         self.clearTask?.cancel()
                         self.showConfirmation = false
-                        self.statusMessage = "Could not save event. Try again."
+                        self.statusMessage = String(localized: "Could not save event. Try again.")
                     }
                 }
-            }, errorHandler: { [weak self] error in
+            }, errorHandler: { [weak self] _ in
                 Task { @MainActor in
                     guard let self else { return }
                     self.cancelSendTimeout()
                     self.isSending = false
                     self.clearTask?.cancel()
                     self.showConfirmation = false
-                    self.statusMessage = error.localizedDescription
+                    self.statusMessage = String(localized: "Couldn't reach your iPhone. Try again.")
                     let fallbackSession = WCSession.default
                     if fallbackSession.activationState == .activated {
                         fallbackSession.transferUserInfo(payload)
@@ -91,7 +91,7 @@ final class WatchConnectivityController: NSObject, ObservableObject {
             self.isSending = false
             self.clearTask?.cancel()
             self.showConfirmation = false
-            self.statusMessage = "Timed out. Try again."
+            self.statusMessage = String(localized: "Timed out. Try again.")
         }
     }
 
@@ -104,12 +104,14 @@ final class WatchConnectivityController: NSObject, ObservableObject {
         guard session.activationState == .activated else {
             clearTask?.cancel()
             showConfirmation = false
-            statusMessage = fallbackError?.localizedDescription ?? "Connecting to iPhone…"
+            statusMessage = fallbackError == nil
+                ? String(localized: "Connecting to iPhone…")
+                : String(localized: "Couldn't reach your iPhone. Try again.")
             return
         }
 
         session.transferUserInfo(payload)
-        confirmLogged(message: "Queued, will sync when iPhone is nearby.", showsConfirmation: false)
+        confirmLogged(message: String(localized: "Queued. It will sync when your iPhone is nearby."), showsConfirmation: false)
     }
 
     private func confirmLogged(message: String, showsConfirmation: Bool) {
@@ -147,12 +149,12 @@ extension WatchConnectivityController: WCSessionDelegate {
         let isActivated = activationState == .activated
         Task { @MainActor [weak self] in
             guard let self else { return }
-            if let error {
-                self.statusMessage = error.localizedDescription
+            if error != nil {
+                self.statusMessage = String(localized: "Couldn't reach your iPhone. Try again.")
                 return
             }
             // M14: clear any stale "Connecting to iPhone…" once the session is actually activated.
-            if isActivated, self.statusMessage == "Connecting to iPhone…" {
+            if isActivated, self.statusMessage == String(localized: "Connecting to iPhone…") {
                 self.statusMessage = nil
             }
         }

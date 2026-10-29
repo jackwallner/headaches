@@ -49,18 +49,18 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
     }
 
     func locationAuthorizationSummary() -> String {
-        guard CLLocationManager.locationServicesEnabled() else { return "Off" }
+        guard CLLocationManager.locationServicesEnabled() else { return String(localized: "Off") }
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
-            return "While Using / Always"
+            return String(localized: "While Using / Always")
         case .denied:
-            return "Denied"
+            return String(localized: "Denied")
         case .restricted:
-            return "Restricted"
+            return String(localized: "Restricted")
         case .notDetermined:
-            return "Not Yet Asked"
+            return String(localized: "Not Yet Asked")
         @unknown default:
-            return "Unknown"
+            return String(localized: "Unknown")
         }
     }
 
@@ -148,7 +148,7 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
             ])
             return EnvironmentCaptureResult(
                 status: .failed,
-                message: error.localizedDescription,
+                message: String(localized: "Could not fetch local weather. Try again."),
                 snapshot: nil
             )
         }

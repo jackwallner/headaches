@@ -55,9 +55,9 @@ struct WatchRootView: View {
     }
 
     private var buttonLabel: String {
-        if session.showConfirmation { return "Logged" }
-        if session.isSending { return "Sending…" }
-        return "Headache"
+        if session.showConfirmation { return String(localized: "Logged") }
+        if session.isSending { return String(localized: "Sending…") }
+        return String(localized: "Headache")
     }
 
     private var buttonTint: Color {
@@ -73,9 +73,6 @@ struct WatchRootView: View {
                 .foregroundStyle(.secondary)
             Text(date, style: .relative)
                 .font(.caption2.monospacedDigit())
-                .foregroundStyle(.secondary)
-            + Text(" ago")
-                .font(.caption2)
                 .foregroundStyle(.secondary)
         }
     }

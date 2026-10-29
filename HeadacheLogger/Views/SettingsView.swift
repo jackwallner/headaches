@@ -9,7 +9,7 @@ struct SettingsView: View {
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
-    @State private var healthStatus = HKHealthStore.isHealthDataAvailable() ? "Checking…" : "Unavailable on this device"
+    @State private var healthStatus = HKHealthStore.isHealthDataAvailable() ? String(localized: "Checking…") : String(localized: "Unavailable on this device")
     @State private var showPaywall = false
     @State private var isRestoring = false
     @State private var restoreMessage: String?
@@ -81,13 +81,13 @@ struct SettingsView: View {
 
             Section {
                 PermissionRow(
-                    label: "Apple Health",
+                    label: String(localized: "Apple Health"),
                     value: healthStatus,
                     valueIdentifier: "healthPermissionValue"
                 )
                 if !HeadacheBrand.isScreenshotMode {
                     PermissionRow(
-                        label: "Location",
+                        label: String(localized: "Location"),
                         value: locationStatus,
                         valueIdentifier: "locationPermissionValue"
                     )
@@ -179,9 +179,9 @@ struct SettingsView: View {
         defer { isRestoring = false }
         await store.restorePurchases()
         if store.isProUnlocked {
-            restoreMessage = "Your Headache Pro access is active."
+            restoreMessage = String(localized: "Your Headache Pro access is active.")
         } else {
-            restoreMessage = store.lastError ?? "No previous Headache Pro purchase was found on this Apple ID."
+            restoreMessage = store.lastError ?? String(localized: "No previous Headache Pro purchase was found on this Apple ID.")
         }
     }
 
@@ -192,7 +192,7 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Proactive Alerts")
                     .foregroundStyle(.primary)
-                Text(unlocked ? "Configure personal triggers, thresholds, and quiet hours" : "Unlock Pro to get personalized headache-weather warnings")
+                Text(unlocked ? String(localized: "Configure personal signals, thresholds, and quiet hours") : String(localized: "Unlock Pro for personalized headache and weather alerts"))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

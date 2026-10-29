@@ -62,11 +62,11 @@ struct HistoryView: View {
 
     private var emptyStateView: some View {
         let title = events.isEmpty
-            ? "No Headaches Logged Yet"
-            : "No Entries for \(selectedYear ?? 0)"
+            ? String(localized: "No Headaches Logged Yet")
+            : String(localized: "No Entries for \((selectedYear ?? 0).formatted(.number))")
         let descriptionText = events.isEmpty
-            ? "Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor."
-            : "Try selecting a different year or tap All Years."
+            ? String(localized: "Use the Headache button on the One Tap tab and the app will start building a timeline you can share with your doctor.")
+            : String(localized: "Try selecting a different year or tap All Years.")
         return ContentUnavailableView(
             title,
             systemImage: "waveform.path.ecg",
@@ -118,7 +118,7 @@ struct HistoryView: View {
                     pendingDeleteEvents = []
                 }
             } message: {
-                Text("This permanently removes the entr\(pendingDeleteEvents.count == 1 ? "y" : "ies") from your history. Export a CSV first if you need a backup.")
+                Text("This permanently removes the selected entries from your history. Export a CSV first if you need a backup.")
             }
             .fileImporter(
                 isPresented: $showFileImporter,
@@ -242,25 +242,25 @@ struct HistoryView: View {
             Section {
                 ImportExportActionCard(
                     icon: "doc.richtext.fill",
-                    title: store.isProUnlocked ? "Doctor PDF report" : "Doctor PDF report (Pro)",
-                    subtitle: "One-page report covering the last 90 days: attack count, severity mix, calendar heatmap, and your top patterns.",
-                    actionLabel: store.isProUnlocked ? "Export PDF" : "Unlock Pro",
+                    title: store.isProUnlocked ? String(localized: "Doctor PDF report") : String(localized: "Doctor PDF report (Pro)"),
+                    subtitle: String(localized: "One-page report covering the last 90 days: headache count, severity mix, calendar heatmap, and your top patterns."),
+                    actionLabel: store.isProUnlocked ? String(localized: "Export PDF") : String(localized: "Unlock Pro"),
                     action: { exportDoctorPDF() }
                 )
                 ImportExportActionCard(
                     icon: "square.and.arrow.up.fill",
-                    title: "Export to CSV",
+                    title: String(localized: "Export to CSV"),
                     subtitle: exportSubtitle,
                     actionLabel: exportActionLabel,
                     action: { export() },
-                    secondaryLabel: selectedYear != nil ? "Export all years" : nil,
+                    secondaryLabel: selectedYear != nil ? String(localized: "Export all years") : nil,
                     secondaryAction: selectedYear != nil ? { exportAllYears() } : nil
                 )
                 ImportExportActionCard(
                     icon: "square.and.arrow.down.fill",
-                    title: "Import from CSV",
-                    subtitle: "Restore a backup or merge events from another device. You'll see exactly what was found and choose how to handle duplicates.",
-                    actionLabel: "Start Import",
+                    title: String(localized: "Import from CSV"),
+                    subtitle: String(localized: "Restore a backup or merge events from another device. You'll see what was found and choose how to handle duplicates."),
+                    actionLabel: String(localized: "Start Import"),
                     action: { showImportIntro = true }
                 )
             } header: {
@@ -283,7 +283,7 @@ struct HistoryView: View {
                 Button {
                     exportDoctorPDF()
                 } label: {
-                    Label(store.isProUnlocked ? "Doctor PDF…" : "Doctor PDF… (Pro)", systemImage: "doc.richtext")
+                    Label(store.isProUnlocked ? String(localized: "Doctor PDF…") : String(localized: "Doctor PDF… (Pro)"), systemImage: "doc.richtext")
                 }
                 .accessibilityIdentifier("exportPDFButton")
                 Button {
@@ -320,7 +320,7 @@ struct HistoryView: View {
             }
         } label: {
             Label(
-                selectedYear.map(String.init) ?? "All Years",
+                selectedYear.map { $0.formatted(.number) } ?? String(localized: "All Years"),
                 systemImage: "calendar"
             )
             .labelStyle(.titleAndIcon)
@@ -333,19 +333,19 @@ struct HistoryView: View {
 
     private var exportSubtitle: String {
         if events.isEmpty {
-            return "Export your headache history to a CSV file you can share with a doctor or open in Numbers."
+            return String(localized: "Export your headache history to a CSV file you can share with a doctor or open in Numbers.")
         }
         if let selectedYear {
-            return "Exports \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") from \(selectedYear), or export all years below. The CSV opens in Numbers and works for your doctor."
+            return String(localized: "Export selected entries from \(selectedYear), or export all years below. The CSV opens in Numbers and can be shared with your doctor.")
         }
-        return "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up."
+        return String(localized: "Save all selected entries to a CSV file you can share with a doctor, open in Numbers, or back up.")
     }
 
     private var exportActionLabel: String {
         if let selectedYear {
-            return "Export \(filteredEvents.count) (\(selectedYear))"
+            return String(localized: "Export \(filteredEvents.count) (\(selectedYear))")
         }
-        return "Export CSV"
+        return String(localized: "Export CSV")
     }
 
     private func export() {
@@ -402,8 +402,8 @@ struct HistoryView: View {
 
     private var deleteConfirmationTitle: String {
         pendingDeleteEvents.count == 1
-            ? "Delete this entry?"
-            : "Delete \(pendingDeleteEvents.count) entries?"
+            ? String(localized: "Delete this entry?")
+            : HeadacheTemperatureFormatting.deleteEntryCountTitle(pendingDeleteEvents.count)
     }
 
     private func commitDelete(_ targets: [HeadacheEvent]) {
@@ -433,12 +433,12 @@ struct HistoryView: View {
         switch result {
         case .success(let urls):
             guard let url = urls.first else {
-                importErrorMessage = "No file was selected."
+                importErrorMessage = String(localized: "No file was selected.")
                 showImportError = true
                 return
             }
             guard url.startAccessingSecurityScopedResource() else {
-                importErrorMessage = "Cannot access the selected file."
+                importErrorMessage = String(localized: "Cannot access the selected file.")
                 showImportError = true
                 return
             }
@@ -447,18 +447,20 @@ struct HistoryView: View {
             do {
                 let rows = try ImportService.parseCSV(from: url)
                 guard !rows.isEmpty else {
-                    importErrorMessage = "No valid headache events found in the file."
+                    importErrorMessage = String(localized: "No valid headache events found in the file.")
                     showImportError = true
                     return
                 }
                 pendingImportRows = rows
                 showImportConfirmation = true
             } catch {
-                importErrorMessage = error.localizedDescription
+                importErrorMessage = error as? ImportError != nil
+                    ? error.localizedDescription
+                    : String(localized: "Could not read the selected CSV file. Try again.")
                 showImportError = true
             }
         case .failure(let error):
-            importErrorMessage = error.localizedDescription
+            importErrorMessage = String(localized: "Could not open the selected file. Try again.")
             showImportError = true
         }
     }
@@ -474,12 +476,10 @@ struct HistoryView: View {
     }
 
     private func summaryMessage(from result: ImportResult) -> String {
-        var parts: [String] = []
-        if result.imported > 0 { parts.append("\(result.imported) imported") }
-        if result.overwritten > 0 { parts.append("\(result.overwritten) overwritten") }
-        if result.skipped > 0 { parts.append("\(result.skipped) skipped") }
-        if result.errors > 0 { parts.append("\(result.errors) errors") }
-        return parts.isEmpty ? "No events were imported." : parts.joined(separator: ", ") + "."
+        guard result.imported + result.overwritten + result.skipped + result.errors > 0 else {
+            return String(localized: "No events were imported.")
+        }
+        return String(localized: "Import complete. Imported: \(result.imported). Replaced: \(result.overwritten). Skipped: \(result.skipped). Errors: \(result.errors).")
     }
 
     @ViewBuilder
@@ -498,7 +498,7 @@ struct HistoryView: View {
                             .font(.headline)
                             .foregroundStyle(.primary)
                     }
-                    Text("A few quick questions so Patterns can surface the triggers most relevant to you. Take it anytime.")
+                    Text("A few quick questions help Patterns highlight areas you may want to explore. Take it anytime.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
@@ -526,7 +526,7 @@ struct HistoryView: View {
                         Text("Take the headache quiz")
                             .font(.headline)
                             .foregroundStyle(.primary)
-                        Text("Optional. Helps Patterns surface the triggers most relevant to you.")
+                        Text("Optional. Helps Patterns highlight areas you may want to explore.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -563,7 +563,7 @@ struct HistoryView: View {
                             .background(brandColor.opacity(0.15), in: Capsule())
                             .foregroundStyle(brandColor)
                     }
-                    Text("See what time, sleep, and weather patterns emerge from your \(filteredEvents.count) logged headache\(filteredEvents.count == 1 ? "" : "s").")
+                        Text("See what time, sleep, and weather patterns emerge from your logged headaches.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -588,34 +588,30 @@ private struct SummaryGrid: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
-                SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink)
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "—", tint: .orange)
+                SummaryCard(title: String(localized: "Total Logs"), value: events.count.formatted(.number), tint: .pink)
+                SummaryCard(title: String(localized: "Most Common Day"), value: mostCommonWeekday ?? "-", tint: .orange)
             }
             HStack(spacing: 12) {
-                SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "—", tint: .purple)
-                SummaryCard(title: "Avg Temp", value: averageTemperatureText, tint: .blue)
+                SummaryCard(title: String(localized: "Most Common Time"), value: mostCommonPartOfDay ?? "-", tint: .purple)
+                SummaryCard(title: String(localized: "Avg Temp"), value: averageTemperatureText, tint: .blue)
             }
         }
         .padding(.horizontal)
     }
 
     private var mostCommonWeekday: String? {
-        groupedMax(from: events.map(\.weekdayName))
+        groupedMax(from: events.map(\.weekdayName)).map(HeadacheTemperatureFormatting.localizedStoredText)
     }
 
     private var mostCommonPartOfDay: String? {
-        groupedMax(from: events.map { $0.partOfDay.rawValue.capitalized })
+        groupedMax(from: events.map(\.partOfDayRaw)).flatMap { PartOfDay(rawValue: $0)?.displayName }
     }
 
     private var averageTemperatureText: String {
         let temps = events.compactMap(\.temperatureC)
-        guard !temps.isEmpty else { return "—" }
+        guard !temps.isEmpty else { return "-" }
         let avgC = temps.reduce(0, +) / Double(temps.count)
-        if useCelsius {
-            return "\(Int(avgC.rounded()))°C"
-        }
-        let avgF = HeadacheTemperatureFormatting.celsiusToFahrenheit(avgC)
-        return "\(Int(avgF.rounded()))°F"
+        return HeadacheTemperatureFormatting.displayInteger(celsius: avgC, useCelsius: useCelsius) ?? "-"
     }
 
     private func groupedMax(from values: [String]) -> String? {
@@ -660,13 +656,13 @@ private struct DetailedEventRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(.headline)
-                    Text("\(event.weekdayName) • \(event.partOfDay.rawValue.capitalized)")
+                    Text(String(localized: "\(HeadacheTemperatureFormatting.localizedStoredText(event.weekdayName)) • \(event.partOfDay.displayName)"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 8)
 
-                Text(event.captureStatus.rawValue.capitalized)
+                Text(event.captureStatus.displayName)
                     .font(.caption.weight(.semibold))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
@@ -674,7 +670,7 @@ private struct DetailedEventRow: View {
                     .foregroundStyle(statusColor)
 
                 if let severity = event.severity {
-                    Text(severity.rawValue.capitalized)
+                    Text(severity.displayName)
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
@@ -690,7 +686,7 @@ private struct DetailedEventRow: View {
                 }
                 .buttonStyle(.borderless)
                 .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
-                .accessibilityLabel((event.userNotes?.isEmpty == false) ? "Edit note" : "Add note")
+                .accessibilityLabel((event.userNotes?.isEmpty == false) ? String(localized: "Edit note") : String(localized: "Add note"))
                 .accessibilityIdentifier("historyEntryNotesButton")
             }
 
@@ -711,9 +707,9 @@ private struct DetailedEventRow: View {
             }
 
             HStack(spacing: 8) {
-                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "—")
-                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { String(format: "%.1fh", $0) } ?? "—")
-                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "—")
+                DataPill(title: String(localized: "Steps"), value: event.stepsToday?.formatted(.number) ?? "-")
+                DataPill(title: String(localized: "Sleep"), value: event.sleepHoursLastNight.map { Measurement(value: $0, unit: UnitDuration.hours).formatted(.measurement(width: .abbreviated)) } ?? "-")
+                DataPill(title: "hPa", value: event.pressureHpa.map { $0.formatted(.number.precision(.fractionLength(0))) } ?? "-")
             }
         }
         .padding(16)
@@ -838,9 +834,9 @@ private struct ImportIntroSheet: View {
                     VStack(alignment: .leading, spacing: 14) {
                         Text("How it works")
                             .font(.headline)
-                        ImportStep(number: "1", title: "Pick a CSV file", detail: "On the next screen, choose a file from Files, iCloud Drive, or anywhere else you saved it.")
-                        ImportStep(number: "2", title: "Review what was found", detail: "We'll tell you how many entries are in the file before saving anything.")
-                        ImportStep(number: "3", title: "Choose how to handle duplicates", detail: "Skip entries that already exist, or overwrite them with values from the file.")
+                        ImportStep(number: "1", title: String(localized: "Pick a CSV file"), detail: String(localized: "On the next screen, choose a file from Files, iCloud Drive, or anywhere else you saved it."))
+                        ImportStep(number: "2", title: String(localized: "Review what was found"), detail: String(localized: "We'll tell you how many entries are in the file before saving anything."))
+                        ImportStep(number: "3", title: String(localized: "Choose how to handle duplicates"), detail: String(localized: "Skip entries that already exist, or overwrite them with values from the file."))
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -933,12 +929,12 @@ private struct ImportAlertModifier: ViewModifier {
                     pendingRows = []
                 }
             } message: {
-                Text("Found \(pendingRows.count) event\(pendingRows.count == 1 ? "" : "s") in the file. How would you like to handle events that already exist?")
+                Text("This file may contain events that are already in your history. How would you like to handle them?")
             }
             .alert("Import Failed", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
             } message: {
-                Text(errorMessage ?? "The import could not be completed.")
+                Text(errorMessage ?? String(localized: "The import could not be completed."))
             }
             .alert("Import Complete", isPresented: resultBinding) {
                 Button("OK", role: .cancel) { resultMessage = nil }

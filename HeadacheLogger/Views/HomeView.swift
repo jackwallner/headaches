@@ -148,18 +148,18 @@ struct HomeView: View {
 
                         CaptureItem(
                             icon: "clock",
-                            title: "Time context",
-                            subtitle: "Date, weekday, hour, minute, timezone, and part of day."
+                            title: String(localized: "Time context"),
+                            subtitle: String(localized: "Date, weekday, hour, minute, timezone, and part of day.")
                         )
                         CaptureItem(
                             icon: "heart.text.square",
-                            title: "Apple Health context",
-                            subtitle: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts, all without typing."
+                            title: String(localized: "Apple Health context"),
+                            subtitle: String(localized: "Activity (including stand time and flights), sleep duration plus inferred wake time, heart metrics (including SpO₂ and VO₂ max when logged), audio exposure, mindful minutes, barometric change, breathing, and recent workouts, all without typing.")
                         )
                         CaptureItem(
                             icon: "cloud.sun",
-                            title: "Weather and environment",
-                            subtitle: "Location-based weather, pressure, air quality, UV, and pollen-style signals when available."
+                            title: String(localized: "Weather and environment"),
+                            subtitle: String(localized: "Location-based weather, pressure, air quality, UV, and pollen-style signals when available.")
                         )
                     }
                 }
@@ -270,17 +270,17 @@ struct HomeView: View {
 
         var title: String {
             switch self {
-            case .threeLogs: return "You've logged \(rawValue) headaches"
-            case .fiveLogs: return "\(rawValue) headaches logged, enough for patterns"
-            case .tenLogs: return "\(rawValue) headaches, meaningful data"
+            case .threeLogs: return HeadacheTemperatureFormatting.loggedCountDescription(rawValue)
+            case .fiveLogs: return String(localized: "\(rawValue) headaches logged, enough for patterns")
+            case .tenLogs: return String(localized: "\(rawValue) headaches logged, building a useful history")
             }
         }
 
         var detail: String {
             switch self {
-            case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more."
-            case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches."
-            case .tenLogs: return "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
+            case .threeLogs: return String(localized: "Great start! Pro highlights patterns in your logs across time, sleep, weather, and more.")
+            case .fiveLogs: return String(localized: "You have enough data for personalized pattern analysis. Pro shows how logged events relate to sleep, weather, and timing.")
+            case .tenLogs: return String(localized: "You've built a useful history. Unlock Pro to see your patterns and get proactive alerts.")
             }
         }
 
@@ -325,7 +325,7 @@ private struct LatestEventCard: View {
                     .font(.headline)
                 Spacer()
                 if let severity = event.severity {
-                    StatusBadge(label: severity.rawValue.capitalized, tint: severityColor(severity))
+                    StatusBadge(label: severity.displayName, tint: severityColor(severity))
                 }
             }
 
@@ -337,18 +337,18 @@ private struct LatestEventCard: View {
 
             HStack(spacing: 12) {
                 MetricChip(
-                    title: "Steps",
-                    value: event.stepsToday?.formatted(.number) ?? "—",
+                    title: String(localized: "Steps"),
+                    value: event.stepsToday?.formatted(.number) ?? "-",
                     tint: .teal
                 )
                 MetricChip(
-                    title: "Sleep",
-                    value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "—",
+                    title: String(localized: "Sleep"),
+                    value: event.sleepHoursLastNight.map { Measurement(value: $0, unit: UnitDuration.hours).formatted(.measurement(width: .abbreviated)) } ?? "-",
                     tint: .indigo
                 )
                 MetricChip(
-                    title: "AQI",
-                    value: event.usAQI.map { String(format: "%.0f", $0) } ?? "—",
+                    title: String(localized: "AQI"),
+                    value: event.usAQI.map { $0.formatted(.number.precision(.fractionLength(0))) } ?? "-",
                     tint: .mint
                 )
             }
@@ -356,8 +356,8 @@ private struct LatestEventCard: View {
             if hasMissingContext {
                 DisclosureGroup(isExpanded: $showDetails) {
                     VStack(alignment: .leading, spacing: 6) {
-                        StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? .green : .orange)
-                        StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? .blue : .orange)
+                        StatusBadge(label: String(localized: "Health: \(event.healthStatus.displayName)"), tint: event.healthStatus == .captured ? .green : .orange)
+                        StatusBadge(label: String(localized: "Environment: \(event.environmentStatus.displayName)"), tint: event.environmentStatus == .captured ? .blue : .orange)
                     }
                     .padding(.top, 8)
                 } label: {
@@ -380,14 +380,15 @@ private struct LatestEventCard: View {
         let dateTime = event.timestamp.formatted(
             .dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute()
         )
-        parts.append("\(dateTime) · \(event.partOfDay.rawValue.capitalized)")
+        parts.append(String(localized: "\(dateTime) · \(event.partOfDay.displayName)"))
 
         if let weather = weatherHeadline { parts.append(weather) }
         else if !event.locationLabel.isEmpty { parts.append(event.locationLabel) }
 
         if let pressureWord = pressureSummary { parts.append(pressureWord) }
         if let sleep = event.sleepHoursLastNight {
-            parts.append("slept \(String(format: "%.1f", sleep))h")
+            let duration = Measurement(value: sleep, unit: UnitDuration.hours).formatted(.measurement(width: .abbreviated))
+            parts.append(String(localized: "Sleep: \(duration)"))
         }
         return parts.joined(separator: " · ")
     }
@@ -402,8 +403,8 @@ private struct LatestEventCard: View {
 
     private var pressureSummary: String? {
         switch event.pressureTrend {
-        case .falling: return "pressure falling"
-        case .rising: return "pressure rising"
+        case .falling: return String(localized: "Pressure is falling")
+        case .rising: return String(localized: "Pressure is rising")
         case .steady, .unavailable: return nil
         }
     }
@@ -430,7 +431,7 @@ private struct RecentEventRow: View {
                 Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Text(event.partOfDay.rawValue.capitalized)
+                Text(event.partOfDay.displayName)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
@@ -438,7 +439,7 @@ private struct RecentEventRow: View {
             HStack(spacing: 8) {
                 Label(event.locationLabel.isEmpty ? "Location unavailable" : event.locationLabel, systemImage: "location")
                 Spacer()
-                Label(event.weatherSummary ?? "No weather", systemImage: "cloud")
+                Label(event.weatherSummary.map(HeadacheTemperatureFormatting.localizedStoredText) ?? String(localized: "No weather"), systemImage: "cloud")
             }
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -502,14 +503,14 @@ private struct CaptureRecoveryCard: View {
 
     private var healthIssue: String? {
         guard event.healthStatus != .captured else { return nil }
-        let detail = event.healthStatusMessage ?? "no detail"
-        return "Health \(event.healthStatus.rawValue): \(detail)"
+        let detail = event.healthStatusMessage.map(HeadacheTemperatureFormatting.localizedStoredText) ?? String(localized: "No details available.")
+        return String(localized: "Health: \(event.healthStatus.displayName). \(detail)")
     }
 
     private var environmentIssue: String? {
         guard event.environmentStatus != .captured else { return nil }
-        let detail = event.environmentStatusMessage ?? "no detail"
-        return "Environment \(event.environmentStatus.rawValue): \(detail)"
+        let detail = event.environmentStatusMessage.map(HeadacheTemperatureFormatting.localizedStoredText) ?? String(localized: "No details available.")
+        return String(localized: "Environment: \(event.environmentStatus.displayName). \(detail)")
     }
 
     var body: some View {
@@ -628,7 +629,7 @@ private struct SeverityNotesSheet: View {
                     Picker("Severity", selection: $selectedSeverity) {
                         Text("Not set").tag(Optional<HeadacheSeverity>.none)
                         ForEach(HeadacheSeverity.allCases, id: \.self) { severity in
-                            Text(severity.rawValue.capitalized).tag(Optional(severity))
+                            Text(severity.displayName).tag(Optional(severity))
                         }
                     }
                     .pickerStyle(.segmented)

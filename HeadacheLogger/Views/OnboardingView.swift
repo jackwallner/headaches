@@ -16,6 +16,13 @@ struct OnboardingView: View {
 
     private static let totalSteps = 4
     private static let brandColor = Color(red: 0.95, green: 0.25, blue: 0.36)
+    private static var fallbackTrialDuration: String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day]
+        formatter.unitsStyle = .full
+        formatter.maximumUnitCount = 1
+        return formatter.string(from: 7 * 24 * 60 * 60) ?? ""
+    }
 
     var body: some View {
         NavigationStack {
@@ -123,14 +130,14 @@ struct OnboardingView: View {
             icon: Image(systemName: "brain.head.profile")
                 .font(.system(size: 56, weight: .bold))
                 .foregroundStyle(Self.brandColor),
-            title: "One Tap Headache Tracker",
+            title: String(localized: "One Tap Headache Tracker"),
             body: {
                 Text("Log a headache with a single tap. The app quietly captures time, optional Apple Health context, and optional local weather so you can spot patterns.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             },
-            primaryLabel: "Get Started",
+            primaryLabel: String(localized: "Get Started"),
             busy: false,
             action: { step = 1 }
         )
@@ -141,14 +148,14 @@ struct OnboardingView: View {
             icon: Image(systemName: "heart.text.square.fill")
                 .font(.system(size: 56, weight: .bold))
                 .foregroundStyle(.pink),
-            title: "Apple Health",
+            title: String(localized: "Apple Health"),
             body: {
                 Text("Next, iOS will ask whether to allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             },
-            primaryLabel: "Continue",
+            primaryLabel: String(localized: "Continue"),
             busy: isWorking,
             action: { Task { await enableHealthTapped() } }
         )
@@ -159,14 +166,14 @@ struct OnboardingView: View {
             icon: Image(systemName: "location.fill")
                 .font(.system(size: 56, weight: .bold))
                 .foregroundStyle(.blue),
-            title: "Location",
+            title: String(localized: "Location"),
             body: {
                 Text("Next, iOS will ask whether to share your location. It's used only to fetch approximate weather and place labels when you log. We don't track you in the background.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             },
-            primaryLabel: "Continue",
+            primaryLabel: String(localized: "Continue"),
             busy: isWorking,
             action: { Task { await enableLocationTapped() } }
         )
@@ -220,20 +227,22 @@ struct OnboardingView: View {
             icon: Image(systemName: "sparkles")
                 .font(.system(size: 56, weight: .bold))
                 .foregroundStyle(Self.brandColor),
-            title: "Get ahead of your headaches",
+            title: String(localized: "A clearer picture of your headaches"),
             body: {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
+                    Text("Headache Pro summarizes patterns in your logs and gives you a heads-up about forecast changes.")
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
-                    trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
-                    trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
-                    trialBullet(icon: "lock.shield", text: "All processing stays on your device")
+                    trialBullet(icon: "chart.bar.xaxis", text: String(localized: "Spot your personal patterns across sleep, timing, and weather"))
+                    trialBullet(icon: "barometer", text: String(localized: "Pressure and air-quality forecast alerts based on your logs"))
+                    trialBullet(icon: "lock.shield", text: String(localized: "All processing stays on your device"))
                 }
             },
             aboveButton: { trialAboveButton },
-            primaryLabel: store.onboardingTrialPackage != nil ? store.onboardingCTALabel : "Start 7-day free trial",
+            primaryLabel: store.onboardingTrialPackage != nil
+                ? store.onboardingCTALabel
+                : String(localized: "Start a free trial for \(Self.fallbackTrialDuration)"),
             busy: isPurchasing,
             showLegalFooter: true,
             action: { startTrialPurchase() }

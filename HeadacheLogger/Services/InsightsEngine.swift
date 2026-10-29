@@ -6,6 +6,8 @@ import Foundation
 /// All output is descriptive — "what does the data show?" rather than "what causes a headache?".
 /// Nothing here leaves the device.
 enum InsightsEngine {
+    private static let insightDisclaimer = String(localized: "This is a pattern in your logged data. It does not show what caused a headache. It is not medical advice or a diagnosis.")
+
     /// Minimum sample size for any single insight to be surfaced. Below this the dataset is too
     /// noisy to be useful and we'd risk telling the user something untrue.
     static let minimumSampleSize: Int = 5
@@ -26,6 +28,10 @@ enum InsightsEngine {
         let share: Double
         let count: Int
         let isPeak: Bool
+
+        var displayLabel: String {
+            HeadacheTemperatureFormatting.localizedStoredText(label)
+        }
     }
 
     struct Breakdown: Sendable {
@@ -45,7 +51,7 @@ enum InsightsEngine {
         let detail: String
         /// 0...1 strength used to rank insights — higher means a more concentrated pattern.
         let strength: Double
-        /// Generalized explanation of why this signal correlates with headaches in the literature.
+        /// Reminder that the observed pattern does not establish a cause or provide medical advice.
         let whyItMatters: String
         /// Narrative comparing the user's distribution against the baseline ("evenings 40% vs 25% baseline").
         let yourPattern: String
@@ -126,20 +132,20 @@ enum InsightsEngine {
         }
         let baseline = 1.0 / Double(order.count)
         let multiple = topShare / baseline
-        let yourPattern = "\(percent(topShare)) of your headaches happen in the \(label(for: top).lowercased()), about \(String(format: "%.1fx", multiple)) what you'd expect if they were evenly spread across the day (\(percent(baseline)) per period). " + othersSummary(buckets, excluding: top.rawValue, label: { $0.label })
+        let yourPattern = String(localized: "\(percent(topShare)) of your logged headaches happened \(narrativeLabel(for: top)).")
         return Insight(
             id: "part-of-day",
             category: .time,
             icon: icon(for: top),
-            title: "Most common time: \(label(for: top))",
-            detail: "\(percent(topShare)) of your logged headaches were logged in the \(label(for: top).lowercased()).",
+            title: String(localized: "Most common time: \(label(for: top))"),
+            detail: String(localized: "\(percent(topShare)) of your logged headaches were logged \(narrativeLabel(for: top))."),
             strength: topShare,
-            whyItMatters: "Headaches that cluster at a specific time of day often point to circadian or behavioural triggers: caffeine timing, screen exposure, dehydration, posture, or letdown after stress. Knowing your peak window lets you preload water, breaks, or rescue meds before you'd normally feel it coming.",
+            whyItMatters: Self.insightDisclaimer,
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Share of your headaches by part of day"
+                axisCaption: String(localized: "Share of your headaches by part of day")
             )
         )
     }
@@ -159,7 +165,7 @@ enum InsightsEngine {
         let fullSymbols = calendar.standaloneWeekdaySymbols
         let topName: String = {
             let i = topIndex - 1
-            return (i >= 0 && i < fullSymbols.count) ? fullSymbols[i] : "a weekday"
+            return (i >= 0 && i < fullSymbols.count) ? fullSymbols[i] : String(localized: "a weekday")
         }()
         let buckets: [Bucket] = (1...7).map { idx -> Bucket in
             let c = counts[idx] ?? 0
@@ -173,20 +179,20 @@ enum InsightsEngine {
         }
         let baseline = 1.0 / 7.0
         let multiple = topShare / baseline
-        let yourPattern = "\(percent(topShare)) of your headaches fall on \(topName), about \(String(format: "%.1fx", multiple)) the even baseline of \(percent(baseline)) per day."
+        let yourPattern = String(localized: "\(percent(topShare)) of your headaches fall on \(topName), about \(formatMultiple(multiple)) the even baseline of \(percent(baseline)) per day.")
         return Insight(
             id: "weekday",
             category: .time,
             icon: "calendar",
-            title: "Headache day: \(topName)",
-            detail: "\(percent(topShare)) of your headaches were logged on \(topName).",
+            title: String(localized: "Headache day: \(topName)"),
+            detail: String(localized: "\(percent(topShare)) of your headaches were logged on \(topName)."),
             strength: topShare - baseline,
-            whyItMatters: "Weekday clusters often signal a routine trigger: stress build-up, irregular sleep on transition days, alcohol after work, or letdown on a recurring rest day. Spotting the pattern points to behavioural changes (steady sleep windows, caffeine timing, scheduled breaks) rather than medication-only fixes.",
+            whyItMatters: Self.insightDisclaimer,
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Share of your headaches by weekday"
+                axisCaption: String(localized: "Share of your headaches by weekday")
             )
         )
     }
@@ -265,26 +271,27 @@ enum InsightsEngine {
         if let headline = headlineBucket, headline.lift >= 1.3 {
             let pct = Int((headline.lift - 1.0) * 100)
             let bucket = liftBuckets[headline.bucketIndex]
+            let headlineLabel = HeadacheTemperatureFormatting.localizedStoredText(headline.label)
             let ratePct = Int(bucket.headacheRate * 100)
             let overallPct = Int(overallRate * 100)
             let moreLikely = headline.lift >= 2.0
-                ? "\(String(format: "%.1f", headline.lift))×"
-                : "\(pct)%"
-            detail = "Headaches are \(moreLikely) more likely after \(headline.label) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med))."
+                ? "\(formatNumber(headline.lift, fractionDigits: 1))×"
+                : formatWholePercent(pct)
+            detail = String(localized: "Headaches were logged \(moreLikely) more often after \(headlineLabel) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med)).")
             strength = 0.5 + min((headline.lift - 1.0) / 2.0, 0.5)
-            title = "Low sleep: \(headline.label)"
-            yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)%, compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
+            title = String(localized: "Low sleep: \(headlineLabel)")
+            yourPattern = String(localized: "After \(headlineLabel) of sleep, headaches were logged on \(ratePct)% of days, compared with \(overallPct)% across days with sleep data. Median sleep before a headache: \(formatHours(med)).")
         } else {
             let lowSleepShare = Double(headacheSleepValues.filter { $0 < 6 }.count) / Double(total)
             if lowSleepShare >= 0.4 {
-                detail = "\(percent(lowSleepShare)) of your headaches followed a night with under 6 hours of sleep. Median: \(formatHours(med))."
+                detail = String(localized: "\(percent(lowSleepShare)) of your headaches followed a night with under 6 hours of sleep. Median: \(formatHours(med)).")
                 strength = 0.5 + lowSleepShare * 0.4
             } else {
-                detail = "Median sleep the night before a headache: \(formatHours(med))."
+                detail = String(localized: "Median sleep the night before a headache: \(formatHours(med)).")
                 strength = 0.35
             }
-            title = "Sleep before a headache"
-            yourPattern = "Median sleep the night before a headache: \(formatHours(med)). \(percent(lowSleepShare)) of your headaches followed a night under 6 hours."
+            title = String(localized: "Sleep before a headache")
+            yourPattern = String(localized: "Median sleep the night before a headache: \(formatHours(med)). \(percent(lowSleepShare)) of your headaches followed a night under 6 hours.")
         }
 
         return Insight(
@@ -294,12 +301,12 @@ enum InsightsEngine {
             title: title,
             detail: detail,
             strength: strength,
-            whyItMatters: "Sleep deprivation is one of the most consistently documented headache triggers in the migraine literature. Both too little (<6h) and too much (>9h) sleep, and especially irregular timing, can precipitate attacks. Wake-time consistency, including weekends, is the single highest-leverage behavioural change for many people.",
+            whyItMatters: Self.insightDisclaimer,
             yourPattern: yourPattern,
             breakdown: Breakdown(
                 buckets: chartBuckets,
                 evenBaseline: nil,
-                axisCaption: "Sleep duration the night before each headache"
+                axisCaption: String(localized: "Sleep duration the night before each headache")
             )
         )
     }
@@ -309,7 +316,7 @@ enum InsightsEngine {
         guard trends.count >= minimumSampleSize else { return nil }
         let order: [PressureTrend] = [.falling, .steady, .rising]
         let total = trends.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         var counts: [PressureTrend: Int] = [:]
         for t in trends { counts[t, default: 0] += 1 }
         guard let (top, topCount) = counts.max(by: { $0.value < $1.value }) else { return nil }
@@ -325,36 +332,26 @@ enum InsightsEngine {
             )
         }
         let baseline = 1.0 / 3.0
-        let topLabel = label(for: top)
         let title: String
         let icon: String
         switch top {
-        case .falling: title = "Falling pressure pattern"; icon = "arrow.down.right.circle.fill"
-        case .rising: title = "Rising pressure pattern"; icon = "arrow.up.right.circle.fill"
-        default: title = "Steady pressure"; icon = "minus.circle.fill"
-        }
-        let why: String
-        switch top {
-        case .falling:
-            why = "Falling barometric pressure is the most replicated weather trigger in the migraine literature; drops typically arrive 6–24 hours before a storm and correlate with attack onset. Because it's forecastable, this is a signal you can prepare for."
-        case .rising:
-            why = "Pressure rises (high-pressure systems building in) trigger fewer people than drops, but a clear cluster on rises still represents a forecastable signal, meaning hydration, caffeine, or rescue meds can be timed."
-        default:
-            why = "A 'steady' cluster suggests pressure isn't your dominant weather trigger. Other environmental signals (humidity, AQI) or non-weather factors are likelier drivers, worth checking those screens."
+        case .falling: title = String(localized: "Falling pressure pattern"); icon = "arrow.down.right.circle.fill"
+        case .rising: title = String(localized: "Rising pressure pattern"); icon = "arrow.up.right.circle.fill"
+        default: title = String(localized: "Steady pressure"); icon = "minus.circle.fill"
         }
         return Insight(
             id: "pressure-trend",
             category: .pressure,
             icon: icon,
             title: title,
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) were logged during \(topLabel.lowercased()) barometric pressure.",
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches were logged on days when barometric pressure \(narrativeLabel(for: top))."), subset: coverageSubset, of: events.count),
             strength: topShare,
-            whyItMatters: why,
-                yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) were logged during \(topLabel.lowercased()) pressure, \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches were logged on days when barometric pressure \(narrativeLabel(for: top)), \(formatMultiple(topShare / baseline)) the even baseline of \(percent(baseline))."), subset: coverageSubset, of: events.count),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Pressure trend at headache onset"
+                axisCaption: String(localized: "Pressure trend at headache onset")
             )
         )
     }
@@ -366,7 +363,7 @@ enum InsightsEngine {
         // Drops/rises under ~3 hPa over 6h are within typical daily noise — filter them out so
         // the insight only surfaces when the user's pre-headache pressure shift is actually notable.
         guard abs(med) >= 3.0 else { return nil }
-        let direction = med < 0 ? "drop" : "rise"
+        let direction = med < 0 ? String(localized: "drop") : String(localized: "rise")
         let bins: [(label: String, range: Range<Double>)] = [
             ("≤−6", -100..<(-6)),
             ("−6 to −3", -6..<(-3)),
@@ -391,15 +388,15 @@ enum InsightsEngine {
             id: "pressure-delta",
             category: .pressure,
             icon: "barometer",
-            title: "Typical 6h pressure shift",
-            detail: "Median pressure change in the 6 hours before your headaches: \(String(format: "%+.1f hPa", med)), a typical \(direction).",
+            title: String(localized: "Typical 6h pressure shift"),
+            detail: String(localized: "Median pressure change in the 6 hours before your headaches: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitPressure.hectopascals, fractionDigits: 1)), a typical \(direction)."),
             strength: min(1.0, abs(med) / 6),
-            whyItMatters: "The size of pressure swings tends to matter more than the absolute level. Drops of 5+ hPa within 24 hours are commonly cited thresholds for triggering migraine in sensitive people. The bigger your typical pre-headache shift, the more useful Proactive Alerts will be at giving you a heads-up.",
-            yourPattern: "Median 6-hour pressure change before your headaches: \(String(format: "%+.1f hPa", med)). The histogram on the right shows the full distribution.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "Median 6-hour pressure change before your headaches: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitPressure.hectopascals, fractionDigits: 1)). The histogram on the right shows the full distribution."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "6-hour pressure change (hPa) before each headache"
+                axisCaption: String(localized: "6-hour pressure change (hPa) before each headache")
             )
         )
     }
@@ -409,7 +406,7 @@ enum InsightsEngine {
         guard aqi.count >= minimumSampleSize else { return nil }
         let elevated = Double(aqi.filter { $0 >= 75 }.count) / Double(aqi.count)
         guard elevated >= 0.30 else { return nil }
-        let coveragePhrase = coverageQualifier(subset: aqi.count, of: events.count)
+        let coverageSubset = aqi.count
         let bins: [(label: String, range: Range<Double>)] = [
             ("Good\n0–50", 0..<51),
             ("Moderate\n51–100", 51..<101),
@@ -431,15 +428,15 @@ enum InsightsEngine {
             id: "aqi",
             category: .airQuality,
             icon: "aqi.medium",
-            title: "Elevated air quality",
-            detail: "\(percent(elevated)) of your headaches\(coveragePhrase) happened with US AQI ≥ 75.",
+            title: String(localized: "Elevated air quality"),
+            detail: includingCoverageNote(String(localized: "\(percent(elevated)) of your headaches happened with US AQI ≥ 75."), subset: coverageSubset, of: events.count),
             strength: elevated,
-            whyItMatters: "Particulate matter and ozone can trigger or amplify headaches via inflammatory pathways. AQI of 75–100 is where sensitive groups typically start to feel effects; 150+ is unhealthy for everyone. On bad-air days, indoor mitigations (HEPA filters, closed windows, masks outdoors) can meaningfully reduce exposure.",
-            yourPattern: "\(percent(elevated)) of your headaches\(coveragePhrase) occurred with US AQI at or above 75, the threshold where sensitive groups commonly start to feel effects.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: includingCoverageNote(String(localized: "\(percent(elevated)) of your headaches occurred with US AQI at or above 75, the threshold where sensitive groups commonly start to feel effects."), subset: coverageSubset, of: events.count),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Air quality at headache onset (US AQI)"
+                axisCaption: String(localized: "Air quality at headache onset (US AQI)")
             )
         )
     }
@@ -472,15 +469,15 @@ enum InsightsEngine {
             id: "hrv",
             category: .heart,
             icon: "waveform.path.ecg",
-            title: "HRV around your headaches",
-            detail: "Median HRV (SDNN) when you've logged a headache: \(String(format: "%.0f ms", med)).",
+            title: String(localized: "HRV around your headaches"),
+            detail: String(localized: "Median HRV (SDNN) when you've logged a headache: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitDuration.milliseconds, fractionDigits: 0))."),
             strength: 0.30,
-            whyItMatters: "Heart-rate variability tracks autonomic nervous-system balance. Lower HRV is associated with stress, poor recovery, and, for many migraine sufferers, the prodrome window 12–24 hours before an attack. Watching multi-day HRV trends can give an early warning that your threshold is dropping.",
-            yourPattern: "Your median pre-headache HRV (SDNN) is \(String(format: "%.0f ms", med)). The chart shows where your HRV typically sat at the moment you logged.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "Your median pre-headache HRV (SDNN) is \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitDuration.milliseconds, fractionDigits: 0)). The chart shows where your HRV typically sat at the moment you logged."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "HRV (SDNN, ms) at headache onset"
+                axisCaption: String(localized: "HRV (SDNN, ms) at headache onset")
             )
         )
     }
@@ -510,15 +507,15 @@ enum InsightsEngine {
             id: "humidity",
             category: .weather,
             icon: "humidity.fill",
-            title: "High humidity pattern",
-            detail: "\(percent(high)) of your headaches happened with humidity at or above 70%.",
+            title: String(localized: "High humidity pattern"),
+            detail: String(localized: "\(percent(high)) of your headaches happened with humidity at or above 70%."),
             strength: high * 0.7,
-            whyItMatters: "High humidity reduces evaporative cooling and often co-occurs with the pressure drops that precede storms, a one-two punch flagged in many migraine-trigger studies. Air conditioning, hydration, and electrolyte salts are commonly suggested mitigations on muggy days.",
-            yourPattern: "\(percent(high)) of your headaches occurred with humidity ≥ 70%. The chart shows the full breakdown.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(high)) of your headaches occurred with humidity ≥ 70%. The chart shows the full breakdown."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Relative humidity at headache onset"
+                axisCaption: String(localized: "Relative humidity at headache onset")
             )
         )
     }
@@ -553,15 +550,15 @@ enum InsightsEngine {
             id: "severity",
             category: .severity,
             icon: "exclamationmark.triangle.fill",
-            title: "Most often: \(label(for: top))",
-            detail: "\(percent(topShare)) of headaches you've rated were \(label(for: top).lowercased()).",
+            title: String(localized: "Most often: \(label(for: top))"),
+            detail: String(localized: "\(percent(topShare)) of headaches you've rated were rated \(narrativeLabel(for: top))."),
             strength: topShare - baseline,
-            whyItMatters: "Knowing your typical severity distribution helps frame conversations with a clinician. Frequent extreme attacks, even if they're not your most common bucket, often justify a preventive treatment plan rather than rescue meds alone.",
-            yourPattern: "\(percent(topShare)) of your rated headaches were \(label(for: top).lowercased()), \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(topShare)) of your rated headaches were rated \(narrativeLabel(for: top)), \(formatMultiple(topShare / baseline)) the even baseline of \(percent(baseline))."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Severity distribution across rated headaches"
+                axisCaption: String(localized: "Severity distribution across rated headaches")
             )
         )
     }
@@ -574,7 +571,7 @@ enum InsightsEngine {
         let useCelsius = HeadacheAppGroup.userDefaults.bool(forKey: HeadacheStorageKey.useCelsiusTemperature.rawValue)
         let bins: [(label: String, range: Range<Double>)] = temperatureBins(useCelsius: useCelsius)
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         var topShare = 0.0
         var topLabel = ""
         let raw = bins.map { bin -> (label: String, count: Int, share: Double) in
@@ -590,20 +587,21 @@ enum InsightsEngine {
         let isExtreme = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Hot")
         let icon = topLabel.hasPrefix("Very cold") || topLabel.hasPrefix("Cold") ? "thermometer.snowflake" : "thermometer.sun.fill"
         let inlineTop = topLabel.replacingOccurrences(of: "\n", with: " ")
-        let title = isExtreme ? "\(inlineTop) weather cluster" : "Temperature cluster: \(inlineTop)"
+        let displayTop = HeadacheTemperatureFormatting.localizedStoredText(inlineTop)
+        let title = isExtreme ? String(localized: "\(displayTop) weather cluster") : String(localized: "Temperature cluster: \(displayTop)")
         return Insight(
             id: "temperature",
             category: .weather,
             icon: icon,
             title: title,
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened when it felt \(inlineTop.lowercased()).",
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches happened when it felt \(displayTop)."), subset: coverageSubset, of: events.count),
             strength: topShare,
-            whyItMatters: "Extreme temperatures, both hot and cold, are well-documented migraine triggers. Heat causes vasodilation and dehydration; cold triggers vasoconstriction and muscle tension. The apparent temperature (feels-like) accounts for wind chill and humidity, making it more relevant than raw air temperature.",
-            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred in \(inlineTop.lowercased()) conditions, \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)). " + othersSummary(buckets, excluding: topLabel, label: { $0.label.replacingOccurrences(of: "\n", with: " ") }),
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(topShare)) of your logged headaches happened in \(HeadacheTemperatureFormatting.localizedStoredText(inlineTop)) conditions."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Apparent temperature at headache onset"
+                axisCaption: String(localized: "Apparent temperature at headache onset")
             )
         )
     }
@@ -645,7 +643,7 @@ enum InsightsEngine {
         let dryShare = Double(dry) / Double(total)
         let rainShare = 1.0 - dryShare
         guard rainShare >= 0.35, dryShare > 0 else { return nil }
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let buckets = [
             Bucket(label: "Dry", share: Double(dry) / Double(total), count: dry, isPeak: false),
             Bucket(label: "Light\n<2.5mm", share: Double(light) / Double(total), count: light, isPeak: false),
@@ -658,15 +656,15 @@ enum InsightsEngine {
             id: "precipitation",
             category: .weather,
             icon: "cloud.rain.fill",
-            title: "Rainy-day cluster",
-            detail: "\(percent(rainShare)) of your headaches\(coveragePhrase) happened during rain (\(percent(topBucket.share)) in the \(topBucket.label.lowercased()) band).",
+            title: String(localized: "Rainy-day cluster"),
+            detail: includingCoverageNote(String(localized: "\(percent(rainShare)) of your headaches happened during rain (\(percent(topBucket.share)) in the \(HeadacheTemperatureFormatting.localizedStoredText(topBucket.label)) band)."), subset: coverageSubset, of: events.count),
             strength: rainShare,
-            whyItMatters: "Rainy weather often co-occurs with falling barometric pressure, high humidity, and reduced light, a multi-factor trigger cocktail. The relationship may be indirect: people tend to stay indoors, sleep differently, or alter caffeine habits on rainy days.",
-            yourPattern: "\(percent(rainShare)) of your headaches\(coveragePhrase) occurred during active precipitation, with the most common intensity being \(topBucket.label.lowercased()).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: includingCoverageNote(String(localized: "\(percent(rainShare)) of your headaches occurred during active precipitation, with the most common intensity being \(HeadacheTemperatureFormatting.localizedStoredText(topBucket.label))."), subset: coverageSubset, of: events.count),
             breakdown: Breakdown(
                 buckets: peaked,
                 evenBaseline: nil,
-                axisCaption: "Precipitation at headache onset"
+                axisCaption: String(localized: "Precipitation at headache onset")
             )
         )
     }
@@ -683,7 +681,7 @@ enum InsightsEngine {
             ("Windy\n30+", 30..<500)
         ]
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         var topShare = 0.0
         var topLabel = ""
         let raw = bins.map { bin -> (label: String, count: Int, share: Double) in
@@ -699,15 +697,15 @@ enum InsightsEngine {
             id: "wind",
             category: .weather,
             icon: "wind",
-            title: "Windy conditions",
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) happened with \(topLabel.lowercased().replacingOccurrences(of: "\n", with: " ")) wind speeds.",
+            title: String(localized: "Windy conditions"),
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches happened with \(HeadacheTemperatureFormatting.localizedStoredText(topLabel.replacingOccurrences(of: "\n", with: " "))) wind speeds."), subset: coverageSubset, of: events.count),
             strength: topShare,
-            whyItMatters: "Strong winds can trigger headaches through several mechanisms: drying of mucous membranes, airborne pollen and particulate matter, barometric pressure fluctuations, and even the physical strain of bracing against gusts. Chinook and Santa Ana winds have documented associations with migraine onset.",
-            yourPattern: "\(percent(topShare)) of your headaches\(coveragePhrase) occurred during \(topLabel.lowercased().replacingOccurrences(of: "\n", with: " ")) conditions.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches occurred during \(HeadacheTemperatureFormatting.localizedStoredText(topLabel.replacingOccurrences(of: "\n", with: " "))) conditions."), subset: coverageSubset, of: events.count),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Wind speed at headache onset (km/h)"
+                axisCaption: String(localized: "Wind speed at headache onset (km/h)")
             )
         )
     }
@@ -719,7 +717,7 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let med = median(values)
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let none = values.filter { $0 == 0 }.count
         let high = values.filter { $0 >= 200 }.count
         let veryHigh = values.filter { $0 >= 400 }.count
@@ -755,15 +753,15 @@ enum InsightsEngine {
                 id: "caffeine-none",
                 category: .heart,
                 icon: "cup.and.saucer.fill",
-                title: "Low-caffeine days",
-                detail: "\(percent(noneShare)) of your headaches\(coveragePhrase) happened on days with zero caffeine (\(percent(highShare)) high-caffeine days). Median: \(String(format: "%.0f mg", med)).",
+                title: String(localized: "Low-caffeine days"),
+                detail: includingCoverageNote(String(localized: "\(percent(noneShare)) of your headaches happened on days with zero caffeine (\(percent(highShare)) high-caffeine days). Median: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitMass.milligrams, fractionDigits: 0))."), subset: coverageSubset, of: events.count),
                 strength: noneShare,
-                whyItMatters: "Caffeine withdrawal is a well-recognized headache trigger; even skipping your usual morning coffee can precipitate a headache within hours. The relationship is U-shaped: both zero and excess caffeine can trigger attacks. Tracking your individual threshold is key.",
-                yourPattern: "\(percent(noneShare)) of your headaches occurred on zero-caffeine days, with only \(percent(highShare)) on high-caffeine days (≥200mg).",
+                whyItMatters: Self.insightDisclaimer,
+                yourPattern: String(localized: "\(percent(noneShare)) of your headaches occurred on zero-caffeine days, with only \(percent(highShare)) on high-caffeine days (≥200mg)."),
                 breakdown: Breakdown(
                     buckets: buckets,
                     evenBaseline: nil,
-                    axisCaption: "Daily caffeine consumption before headaches"
+                    axisCaption: String(localized: "Daily caffeine consumption before headaches")
                 )
             )
         } else {
@@ -771,15 +769,15 @@ enum InsightsEngine {
                 id: "caffeine-high",
                 category: .heart,
                 icon: "cup.and.saucer.fill",
-                title: "High-caffeine days",
-                detail: "\(percent(highShare)) of your headaches\(coveragePhrase) happened on days with 200mg+ caffeine (\(percent(veryHighShare)) above 400mg). Median: \(String(format: "%.0f mg", med)).",
+                title: String(localized: "High-caffeine days"),
+                detail: includingCoverageNote(String(localized: "\(percent(highShare)) of your headaches happened on days with 200mg+ caffeine (\(percent(veryHighShare)) above 400mg). Median: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitMass.milligrams, fractionDigits: 0))."), subset: coverageSubset, of: events.count),
                 strength: highShare,
-                whyItMatters: "Caffeine is a double-edged sword for headache sufferers: it can provide acute relief (it's in many rescue medications), but daily high intake can lead to medication-overuse headache and withdrawal cycles. The U-shaped risk curve means both too much and too little can trigger attacks.",
-                yourPattern: "\(percent(highShare)) of your headaches occurred on high-caffeine days (≥200mg), including \(percent(veryHighShare)) on very high days (≥400mg).",
+                whyItMatters: Self.insightDisclaimer,
+                yourPattern: String(localized: "\(percent(highShare)) of your headaches occurred on high-caffeine days (≥200mg), including \(percent(veryHighShare)) on very high days (≥400mg)."),
                 breakdown: Breakdown(
                     buckets: buckets,
                     evenBaseline: nil,
-                    axisCaption: "Daily caffeine consumption before headaches"
+                    axisCaption: String(localized: "Daily caffeine consumption before headaches")
                 )
             )
         }
@@ -792,7 +790,7 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let med = median(values)
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let low = values.filter { $0 < 1000 }.count
         let veryLow = values.filter { $0 < 500 }.count
         let lowShare = Double(low) / Double(total)
@@ -816,15 +814,15 @@ enum InsightsEngine {
             id: "hydration",
             category: .weather,
             icon: "drop.fill",
-            title: "Low hydration pattern",
-            detail: "\(percent(lowShare)) of your headaches\(coveragePhrase) happened with under 1L of water that day (\(percent(Double(veryLow) / Double(total))) under 500mL). Median: \(String(format: "%.0f mL", med)).",
+            title: String(localized: "Low hydration pattern"),
+            detail: includingCoverageNote(String(localized: "\(percent(lowShare)) of your headaches happened with under 1L of water that day (\(percent(Double(veryLow) / Double(total))) under 500mL). Median: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitVolume.milliliters, fractionDigits: 0))."), subset: coverageSubset, of: events.count),
             strength: lowShare,
-            whyItMatters: "Even mild dehydration (1–2% body water loss) can trigger headaches and impair concentration, one of the most easily preventable triggers. The brain is highly sensitive to fluid balance; reduced blood volume can lower oxygen delivery and trigger pain pathways.",
-            yourPattern: "\(percent(lowShare)) of your headaches occurred on days with below 1,000 mL water intake, including \(percent(Double(veryLow) / Double(total))) under 500 mL. Your median intake on headache days was \(String(format: "%.0f mL", med)).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(lowShare)) of your headaches occurred on days with below 1,000 mL water intake, including \(percent(Double(veryLow) / Double(total))) under 500 mL. Your median intake on headache days was \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitVolume.milliliters, fractionDigits: 0))."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Daily water intake before headaches"
+                axisCaption: String(localized: "Daily water intake before headaches")
             )
         )
     }
@@ -835,7 +833,7 @@ enum InsightsEngine {
         let values = events.compactMap(\.exerciseMinutesToday)
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         // Check for exertion pattern — headaches after exercise
         let moderate = values.filter { $0 >= 15 }.count
         let moderateShare = Double(moderate) / Double(total)
@@ -859,15 +857,15 @@ enum InsightsEngine {
             id: "exercise-exertion",
             category: .heart,
             icon: "figure.run",
-            title: "Exertion-linked",
-            detail: "\(percent(moderateShare)) of your headaches\(coveragePhrase) followed 15+ minutes of exercise.",
+            title: String(localized: "Exertion-linked"),
+            detail: includingCoverageNote(String(localized: "\(percent(moderateShare)) of your headaches followed 15+ minutes of exercise."), subset: coverageSubset, of: events.count),
             strength: moderateShare,
-            whyItMatters: "Exercise-induced headaches can occur during or after strenuous activity, likely from venous pressure spikes and cranial vasodilation. The distinction from 'protective' exercise effects depends on individual conditioning and hydration status before activity.",
-            yourPattern: "\(percent(moderateShare)) of your headaches occurred on days with 15+ minutes of exercise.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(moderateShare)) of your headaches occurred on days with 15+ minutes of exercise."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Exercise minutes on headache days"
+                axisCaption: String(localized: "Exercise minutes on headache days")
             )
         )
     }
@@ -907,27 +905,30 @@ enum InsightsEngine {
         guard totalWithData >= minimumSampleSize else { return nil }
         let elevatedShare = Double(elevatedCount) / Double(totalWithData)
         guard elevatedShare >= 0.30 else { return nil }
-        let coveragePhrase = coverageQualifier(subset: totalWithData, of: events.count)
+        let coverageSubset = totalWithData
         let topType = typeElevated.max(by: { $0.value < $1.value })
-        let topTypePhrase = topType.map { "\($0.key) (\(percent(Double($0.value) / Double(elevatedCount))))" } ?? "various types"
+        let topTypePhrase = topType.map {
+            String(localized: "\(HeadacheTemperatureFormatting.localizedStoredText($0.key)) (\(percent(Double($0.value) / Double(elevatedCount))))")
+        } ?? String(localized: "various pollen types")
         let hasMultiple = typeElevated.count >= 3
-        let title = hasMultiple ? "Multi-pollen elevation" : "Elevated \(topType?.key ?? "pollen")"
+        let pollenType = HeadacheTemperatureFormatting.localizedStoredText(topType?.key ?? "pollen")
+        let title = hasMultiple ? String(localized: "Multi-pollen elevation") : String(localized: "Elevated \(pollenType)")
         return Insight(
             id: "pollen",
             category: .weather,
             icon: "leaf.fill",
             title: title,
-            detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) occurred when at least one pollen type was elevated. Most common: \(topTypePhrase).",
+            detail: includingCoverageNote(String(localized: "\(percent(elevatedShare)) of your headaches occurred when at least one pollen type was elevated. Most common: \(topTypePhrase)."), subset: coverageSubset, of: events.count),
             strength: elevatedShare,
-            whyItMatters: "Pollen triggers allergic rhinitis, which causes sinus congestion and inflammation, a known headache precipitant. The relationship may be seasonal: tree pollen in spring, grass in summer, ragweed in autumn. Indoor air filtration can help during high-pollen periods.",
-            yourPattern: "\(percent(elevatedShare)) of your headaches with pollen data occurred on days with elevated pollen levels, most commonly \(topTypePhrase).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(elevatedShare)) of your headaches with pollen data occurred on days with elevated pollen levels, most commonly \(topTypePhrase)."),
             breakdown: Breakdown(
                 buckets: [
                     Bucket(label: "No elevation", share: 1.0 - elevatedShare, count: totalWithData - elevatedCount, isPeak: false),
                     Bucket(label: "Elevated", share: elevatedShare, count: elevatedCount, isPeak: true),
                 ],
                 evenBaseline: nil,
-                axisCaption: "Pollen elevation at headache onset"
+                axisCaption: String(localized: "Pollen elevation at headache onset")
             )
         )
     }
@@ -939,7 +940,7 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let med = median(values)
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let elevated = values.filter { $0 >= 130 }.count
         let elevatedShare = Double(elevated) / Double(total)
         let high = values.filter { $0 >= 140 }.count
@@ -964,15 +965,15 @@ enum InsightsEngine {
             id: "blood-pressure",
             category: .heart,
             icon: "heart.text.square.fill",
-            title: "Elevated blood pressure",
-            detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) showed systolic BP ≥130 (\(percent(highShare)) ≥140). Median: \(String(format: "%.0f mmHg", med)).",
+            title: String(localized: "Elevated blood pressure"),
+            detail: includingCoverageNote(String(localized: "\(percent(elevatedShare)) of your headaches showed systolic BP ≥130 (\(percent(highShare)) ≥140). Median: \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitPressure.millimetersOfMercury, fractionDigits: 0))."), subset: coverageSubset, of: events.count),
             strength: elevatedShare,
-            whyItMatters: "Hypertension is a known headache risk factor, particularly for morning headaches and posterior-head pain. The relationship may be bidirectional: pain elevates BP, and elevated BP can trigger headache. Sustained readings ≥130/80 warrant clinical evaluation.",
-            yourPattern: "\(percent(elevatedShare)) of your headaches with BP data occurred with elevated systolic readings (≥130), including \(percent(highShare)) at hypertensive levels (≥140).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(elevatedShare)) of your headaches with BP data occurred with elevated systolic readings (≥130), including \(percent(highShare)) at hypertensive levels (≥140)."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Systolic BP at headache onset (mmHg)"
+                axisCaption: String(localized: "Systolic BP at headache onset (mmHg)")
             )
         )
     }
@@ -983,7 +984,7 @@ enum InsightsEngine {
         let values = events.compactMap(\.oxygenSaturationPercent)
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let low = values.filter { $0 < 95 }.count
         let lowShare = Double(low) / Double(total)
         guard lowShare >= 0.30 else { return nil }
@@ -991,18 +992,18 @@ enum InsightsEngine {
             id: "oxygen-saturation",
             category: .heart,
             icon: "lungs.fill",
-            title: "Lower oxygen saturation",
-            detail: "\(percent(lowShare)) of your headaches\(coveragePhrase) showed SpO₂ below 95%.",
+            title: String(localized: "Lower oxygen saturation"),
+            detail: includingCoverageNote(String(localized: "\(percent(lowShare)) of your headaches showed SpO₂ below 95%."), subset: coverageSubset, of: events.count),
             strength: lowShare * 0.8,
-            whyItMatters: "Low blood oxygen can trigger headaches through cerebral vasodilation, as the brain increases blood flow to compensate for reduced oxygen delivery. Sustained readings below 92% are clinically significant and may warrant discussing sleep apnea screening with a doctor.",
-            yourPattern: "\(percent(lowShare)) of your headaches with oxygen data occurred with SpO₂ below 95%.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(lowShare)) of your headaches with oxygen data occurred with SpO₂ below 95%."),
             breakdown: Breakdown(
                 buckets: [
                     Bucket(label: "Normal\n95–100%", share: 1.0 - lowShare, count: total - low, isPeak: false),
                     Bucket(label: "Low\n<95%", share: lowShare, count: low, isPeak: true),
                 ],
                 evenBaseline: nil,
-                axisCaption: "Oxygen saturation at headache onset"
+                axisCaption: String(localized: "Oxygen saturation at headache onset")
             )
         )
     }
@@ -1014,7 +1015,7 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let med = median(values)
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let veryLow = values.filter { $0 < 15 }.count
         let high = values.filter { $0 >= 120 }.count
         let veryLowShare = Double(veryLow) / Double(total)
@@ -1042,15 +1043,15 @@ enum InsightsEngine {
                 id: "daylight-low",
                 category: .weather,
                 icon: "moon.fill",
-                title: "Low daylight exposure",
-                detail: "\(percent(veryLowShare)) of your headaches\(coveragePhrase) happened on days with under 15 minutes of daylight exposure.",
+                title: String(localized: "Low daylight exposure"),
+                detail: includingCoverageNote(String(localized: "\(percent(veryLowShare)) of your headaches happened on days with under 15 minutes of daylight exposure."), subset: coverageSubset, of: events.count),
                 strength: veryLowShare,
-                whyItMatters: "Low daylight exposure may reflect more time indoors, which correlates with screen use, artificial lighting, reduced movement, and irregular sleep-wake cycles, all potential headache contributors. It can also disrupt circadian rhythm via reduced morning light.",
-                yourPattern: "\(percent(veryLowShare)) of your headaches occurred on days with under 15 minutes of daylight, median \(String(format: "%.0f min", med)).",
+                whyItMatters: Self.insightDisclaimer,
+                yourPattern: String(localized: "\(percent(veryLowShare)) of your headaches occurred on days with under 15 minutes of daylight, median \(HeadacheTemperatureFormatting.localizedMeasurement(value: med, unit: UnitDuration.minutes, fractionDigits: 0))."),
                 breakdown: Breakdown(
                     buckets: buckets,
                     evenBaseline: nil,
-                    axisCaption: "Daylight exposure on headache days"
+                    axisCaption: String(localized: "Daylight exposure on headache days")
                 )
             )
         } else {
@@ -1058,15 +1059,15 @@ enum InsightsEngine {
                 id: "daylight-high",
                 category: .weather,
                 icon: "sun.max.fill",
-                title: "High daylight exposure",
-                detail: "\(percent(highShare)) of your headaches\(coveragePhrase) happened on days with 2+ hours of daylight exposure.",
+                title: String(localized: "High daylight exposure"),
+                detail: includingCoverageNote(String(localized: "\(percent(highShare)) of your headaches happened on days with 2+ hours of daylight exposure."), subset: coverageSubset, of: events.count),
                 strength: highShare,
-                whyItMatters: "Bright sunlight is a well-known migraine trigger, likely through the trigeminal-autonomic reflex and glare sensitivity. Photophobia is one of the diagnostic criteria for migraine; many sufferers are more sensitive to light between attacks, not just during them.",
-                yourPattern: "\(percent(highShare)) of your headaches occurred on days with 2+ hours of daylight exposure.",
+                whyItMatters: Self.insightDisclaimer,
+                yourPattern: String(localized: "\(percent(highShare)) of your headaches occurred on days with 2+ hours of daylight exposure."),
                 breakdown: Breakdown(
                     buckets: buckets,
                     evenBaseline: nil,
-                    axisCaption: "Daylight exposure on headache days"
+                    axisCaption: String(localized: "Daylight exposure on headache days")
                 )
             )
         }
@@ -1078,7 +1079,7 @@ enum InsightsEngine {
         let values = events.compactMap(\.environmentalAudioExposureDbA)
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let elevated = values.filter { $0 >= 70 }.count
         let elevatedShare = Double(elevated) / Double(total)
         guard elevatedShare >= 0.30 else { return nil }
@@ -1101,15 +1102,15 @@ enum InsightsEngine {
             id: "audio-exposure",
             category: .weather,
             icon: "ear.fill",
-            title: "Elevated noise environment",
-            detail: "\(percent(elevatedShare)) of your headaches\(coveragePhrase) happened in noisy environments (≥70 dBA).",
+            title: String(localized: "Elevated noise environment"),
+            detail: includingCoverageNote(String(localized: "\(percent(elevatedShare)) of your headaches happened in noisy environments (≥70 dBA)."), subset: coverageSubset, of: events.count),
             strength: elevatedShare * 0.7,
-            whyItMatters: "Sustained noise exposure is both a trigger (sensory overload) and a consequence (phonophobia during prodrome) of migraine. Levels above 70 dBA are comparable to busy street traffic, enough to raise stress hormones and muscle tension even if you're not consciously aware of it.",
-            yourPattern: "\(percent(elevatedShare)) of your headaches with audio data occurred in environments at or above 70 decibels.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(elevatedShare)) of your headaches with audio data occurred in environments at or above 70 decibels."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Environmental audio level at headache onset"
+                axisCaption: String(localized: "Environmental audio level at headache onset")
             )
         )
     }
@@ -1121,7 +1122,7 @@ enum InsightsEngine {
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
         let med = median(values)
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let bins: [(label: String, range: Range<Double>)] = [
             ("0–2h", 0..<2),
             ("2–4h", 2..<4),
@@ -1148,14 +1149,14 @@ enum InsightsEngine {
             category: .time,
             icon: earlyCluster ? "sunrise.fill" : "clock.fill",
             title: earlyCluster ? "Early post-wake cluster" : "Hours since waking",
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) hit \(topLabel.lowercased()) after waking (median: \(formatHours(med))).",
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches hit \(HeadacheTemperatureFormatting.localizedStoredText(topLabel)) after waking (median: \(formatHours(med)))."), subset: coverageSubset, of: events.count),
             strength: topShare,
-            whyItMatters: "The time between waking and headache onset can help identify specific triggers: early-morning headaches may relate to sleep quality, caffeine withdrawal, or blood pressure morning surge; late-day headaches often track accumulated triggers: screen time, skipped meals, stress build-up, or eye strain.",
-            yourPattern: "\(percent(topShare)) of your headaches occur \(topLabel.lowercased()) after waking, \(String(format: "%.1fx", multiple)) the even baseline. Median: \(formatHours(med)).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(topShare)) of your headaches occur \(HeadacheTemperatureFormatting.localizedStoredText(topLabel)) after waking, \(formatMultiple(multiple)) the even baseline. Median: \(formatHours(med))."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: baseline,
-                axisCaption: "Hours since waking at headache onset"
+                axisCaption: String(localized: "Hours since waking at headache onset")
             )
         )
     }
@@ -1166,7 +1167,7 @@ enum InsightsEngine {
         let values = events.compactMap(\.daysSinceLastPeriodStart)
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         // Standard cycle phases: follicular (0–13), ovulation (~14), luteal (14–28), extended (28+)
         let follicular = values.filter { $0 >= 0 && $0 < 14 }.count
         let luteal = values.filter { $0 >= 14 && $0 < 28 }.count
@@ -1185,15 +1186,15 @@ enum InsightsEngine {
             id: "menstrual-cycle",
             category: .severity,
             icon: "facemask.fill",
-            title: "Luteal phase link",
-            detail: "\(percent(lutealShare)) of logged headaches\(coveragePhrase) landed in the luteal phase (days 14–28).",
+            title: String(localized: "Luteal phase link"),
+            detail: includingCoverageNote(String(localized: "\(percent(lutealShare)) of logged headaches landed in the luteal phase (days 14–28)."), subset: coverageSubset, of: events.count),
             strength: lutealShare - follicularShare,
-            whyItMatters: "Menstrual migraine is a well-characterized subtype linked to the natural drop in estrogen during the late luteal phase. These headaches tend to be longer, more severe, and less responsive to standard rescue meds. Tracking across cycles can help time preventive treatment.",
-            yourPattern: "\(percent(lutealShare)) of your headaches with cycle data occurred in the luteal phase, compared to \(percent(follicularShare)) in the follicular phase.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(lutealShare)) of your headaches with cycle data occurred in the luteal phase, compared to \(percent(follicularShare)) in the follicular phase."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Cycle phase at headache onset"
+                axisCaption: String(localized: "Cycle phase at headache onset")
             )
         )
     }
@@ -1204,7 +1205,7 @@ enum InsightsEngine {
         let values = events.compactMap(\.motionActivity)
         guard values.count >= minimumSampleSize else { return nil }
         let total = values.count
-        let coveragePhrase = coverageQualifier(subset: total, of: events.count)
+        let coverageSubset = total
         let order: [MotionActivity] = [.stationary, .walking, .running, .automotive, .cycling, .unknown]
         var counts: [MotionActivity: Int] = [:]
         for v in values { counts[v, default: 0] += 1 }
@@ -1227,15 +1228,15 @@ enum InsightsEngine {
             id: "motion-activity",
             category: .time,
             icon: "figure.walk",
-            title: "Active when headaches hit",
-            detail: "\(percent(topShare)) of your headaches\(coveragePhrase) were logged while \(label(for: top).lowercased()).",
+            title: String(localized: "Active when headaches hit"),
+            detail: includingCoverageNote(String(localized: "\(percent(topShare)) of your headaches were logged while \(narrativeLabel(for: top))."), subset: coverageSubset, of: events.count),
             strength: topShare,
-            whyItMatters: "Some people experience exertion-triggered headaches from increased cranial pressure during activity. If this pattern is strong, consider whether onset consistently follows specific movements or postures.",
-            yourPattern: "\(percent(topShare)) of your headaches were logged while \(label(for: top).lowercased()).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(topShare)) of your headaches were logged while \(narrativeLabel(for: top))."),
             breakdown: Breakdown(
                 buckets: buckets,
                 evenBaseline: nil,
-                axisCaption: "Activity at headache onset"
+                axisCaption: String(localized: "Activity at headache onset")
             )
         )
     }
@@ -1250,13 +1251,13 @@ enum InsightsEngine {
             let label: String
         }
         let conditions: [(Condition, (HeadacheEvent) -> Bool)] = [
-            (Condition(id: "low-sleep", label: "Less than 6h sleep"), { $0.sleepHoursLastNight ?? 8 < 6 }),
-            (Condition(id: "falling-pressure", label: "Falling pressure"), { $0.pressureTrend == .falling }),
-            (Condition(id: "high-aqi", label: "US AQI ≥ 75"), { ($0.usAQI ?? 0) >= 75 }),
-            (Condition(id: "high-humidity", label: "Humidity ≥ 70%"), { ($0.humidityPercent ?? 0) >= 70 }),
-            (Condition(id: "high-caffeine", label: "Caffeine ≥ 200 mg"), { ($0.caffeineMgToday ?? 0) >= 200 }),
-            (Condition(id: "low-water", label: "Water < 1 L"), { ($0.waterMlToday ?? 2000) < 1000 }),
-            (Condition(id: "no-exercise", label: "Zero exercise"), { ($0.exerciseMinutesToday ?? 1) == 0 }),
+            (Condition(id: "low-sleep", label: String(localized: "Less than 6h sleep")), { $0.sleepHoursLastNight ?? 8 < 6 }),
+            (Condition(id: "falling-pressure", label: String(localized: "Falling pressure")), { $0.pressureTrend == .falling }),
+            (Condition(id: "high-aqi", label: String(localized: "US AQI ≥ 75")), { ($0.usAQI ?? 0) >= 75 }),
+            (Condition(id: "high-humidity", label: String(localized: "Humidity ≥ 70%")), { ($0.humidityPercent ?? 0) >= 70 }),
+            (Condition(id: "high-caffeine", label: String(localized: "Caffeine ≥ 200 mg")), { ($0.caffeineMgToday ?? 0) >= 200 }),
+            (Condition(id: "low-water", label: String(localized: "Water < 1 L")), { ($0.waterMlToday ?? 2000) < 1000 }),
+            (Condition(id: "no-exercise", label: String(localized: "Zero exercise")), { ($0.exerciseMinutesToday ?? 1) == 0 }),
         ]
         // Find all pairs that co-occur significantly
         let total = events.count
@@ -1286,11 +1287,11 @@ enum InsightsEngine {
             id: "multivariate-\(cond1.id)-\(cond2.id)",
             category: .severity,
             icon: "link.circle.fill",
-            title: "Trigger combination: \(cond1.label) & \(cond2.label.lowercased())",
-            detail: "\(percent(coShare)) of your headaches hit when both occurred together, \(String(format: "%.1fx", lift)) more often than if they were independent.",
+            title: String(localized: "Signal combination: \(cond1.label) & \(cond2.label)"),
+            detail: String(localized: "\(percent(coShare)) of your headaches hit when both occurred together, \(formatMultiple(lift)) more often than if they were independent."),
             strength: min(1.0, coShare * (1.0 + lift / 3.0)),
-            whyItMatters: "Migraine triggers rarely act in isolation; most attacks result from a cumulative threshold being crossed ('bucket theory'). Identifying the specific combinations that precede your worst headache days is more actionable than looking at single factors alone, because it points to which protective measures matter most on a given day.",
-            yourPattern: "\(percent(coShare)) of your headaches occurred when \(cond1.label.lowercased()) and \(cond2.label.lowercased()) coincided, \(String(format: "%.1fx", lift)) the rate expected by chance (\(percent(expectedShare))).",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "\(percent(coShare)) of your headaches occurred when \(cond1.label) and \(cond2.label) coincided, \(formatMultiple(lift)) the rate expected by chance (\(percent(expectedShare)))."),
             breakdown: Breakdown(
                 buckets: [
                     Bucket(label: "Neither", share: 1.0 - (Double(c1Count) + Double(c2Count) - Double(coCount)) / Double(total), count: total - c1Count - c2Count + coCount, isPeak: false),
@@ -1299,7 +1300,7 @@ enum InsightsEngine {
                     Bucket(label: "Both", share: coShare, count: coCount, isPeak: true),
                 ],
                 evenBaseline: nil,
-                axisCaption: "Co-occurrence pattern"
+                axisCaption: String(localized: "Co-occurrence pattern")
             )
         )
     }
@@ -1347,11 +1348,11 @@ enum InsightsEngine {
             id: "headache-free-days",
             category: best.category,
             icon: best.icon,
-            title: "Your headache-free days",
-            detail: "You stay headache-free on \(freePct) of days with \(best.conditionLabel), the best of any condition tracked. Overall you log a headache on \(overallHeadachePct) of days.",
+            title: String(localized: "Your headache-free days"),
+            detail: String(localized: "You stay headache-free on \(freePct) of days with \(best.conditionLabel), the best of any condition tracked. Overall you log a headache on \(overallHeadachePct) of days."),
             strength: min(0.85, 0.4 + best.gap),
-            whyItMatters: "Knowing what your clear days have in common is as useful as knowing your triggers. It points to the habits and conditions worth protecting on a high-risk day. This is the flip side of your trigger patterns, not medical advice.",
-            yourPattern: "On the \(best.conditionDays) days with \(best.conditionLabel), you logged a headache \(best.conditionHeadacheDays) time\(best.conditionHeadacheDays == 1 ? "" : "s") (\(conditionHeadachePct)), well below your overall rate of \(overallHeadachePct). The chart shows how headache-free each band tends to be.",
+            whyItMatters: Self.insightDisclaimer,
+            yourPattern: String(localized: "Across \(best.conditionDays) days with \(best.conditionLabel), headaches were logged on \(conditionHeadachePct) of days, below the overall rate of \(overallHeadachePct)."),
             breakdown: Breakdown(
                 buckets: best.buckets,
                 evenBaseline: nil,
@@ -1383,13 +1384,13 @@ enum InsightsEngine {
             category: .sleep,
             icon: "bed.double.fill",
             factorName: "sleep",
-            conditionLabel: "\(best.label) of sleep",
+            conditionLabel: String(localized: "\(HeadacheTemperatureFormatting.localizedStoredText(best.label)) of sleep"),
             conditionRate: best.headacheRate,
             overallRate: overall,
             conditionDays: best.totalDays,
             conditionHeadacheDays: best.headacheDays,
             buckets: buckets,
-            axisCaption: "Share of days that stayed headache-free, by sleep duration"
+            axisCaption: String(localized: "Share of days that stayed headache-free, by sleep duration")
         )
     }
 
@@ -1423,13 +1424,13 @@ enum InsightsEngine {
             category: .pressure,
             icon: "barometer",
             factorName: "barometric pressure",
-            conditionLabel: "\(best.label.lowercased()) pressure",
+            conditionLabel: String(localized: "\(HeadacheTemperatureFormatting.localizedStoredText(best.label)) pressure"),
             conditionRate: bestRate,
             overallRate: overall,
             conditionDays: best.total,
             conditionHeadacheDays: best.headache,
             buckets: buckets,
-            axisCaption: "Share of days that stayed headache-free, by pressure trend"
+            axisCaption: String(localized: "Share of days that stayed headache-free, by pressure trend")
         )
     }
 
@@ -1460,13 +1461,13 @@ enum InsightsEngine {
             category: .airQuality,
             icon: "aqi.low",
             factorName: "air quality",
-            conditionLabel: "clean air (US AQI under 75)",
+            conditionLabel: String(localized: "Clean air (US AQI under 75)"),
             conditionRate: goodRate,
             overallRate: overall,
             conditionDays: good.count,
             conditionHeadacheDays: goodHeadache,
             buckets: buckets,
-            axisCaption: "Share of days that stayed headache-free, by air quality"
+            axisCaption: String(localized: "Share of days that stayed headache-free, by air quality")
         )
     }
 
@@ -1479,38 +1480,46 @@ enum InsightsEngine {
         return sorted.count % 2 == 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid]
     }
 
-    private static func percent(_ value: Double) -> String {
-        "\(Int((value * 100).rounded()))%"
+    private static func formatNumber(_ value: Double, fractionDigits: Int) -> String {
+        value.formatted(.number.precision(.fractionLength(fractionDigits)))
     }
 
-    /// Returns " (of the N with weather/health data)" when we're computing a percentage over a
-    /// strict subset of events, so users don't read the headline as "X% of every headache I've logged".
-    /// Empty string when coverage is full.
-    private static func coverageQualifier(subset: Int, of total: Int) -> String {
-        guard subset > 0, subset < total else { return "" }
-        return " (of the \(subset) with available data)"
+    private static func formatMultiple(_ value: Double) -> String {
+        "\(formatNumber(value, fractionDigits: 1))×"
+    }
+
+    private static func formatWholePercent(_ value: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        formatter.minimumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: Double(value) / 100)) ?? "\(value)%"
+    }
+
+    private static func percent(_ value: Double) -> String {
+        value.formatted(.percent.precision(.fractionLength(0)))
+    }
+
+    private static func includingCoverageNote(_ sentence: String, subset: Int, of total: Int) -> String {
+        guard subset < total else { return sentence }
+        let note = String(localized: "Some logged entries do not include this data.")
+        return "\(sentence) \(note)"
     }
 
     private static func formatHours(_ hours: Double) -> String {
-        let total = max(0, hours)
-        let h = Int(total)
-        let m = Int((total - Double(h)) * 60)
-        if m == 0 { return "\(h)h" }
-        return "\(h)h \(m)m"
-    }
-
-    private static func othersSummary(_ buckets: [Bucket], excluding peakLabel: String, label: (Bucket) -> String) -> String {
-        let rest = buckets.filter { $0.label != peakLabel }
-        let parts = rest.map { "\(label($0)) \(Int(($0.share * 100).rounded()))%" }
-        return "Others: " + parts.joined(separator: ", ") + "."
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+        return formatter.string(from: max(0, hours) * 3_600) ?? String(localized: "0 hours")
     }
 
     private static func label(for part: PartOfDay) -> String {
         switch part {
-        case .overnight: return "Overnight"
-        case .morning: return "Morning"
-        case .afternoon: return "Afternoon"
-        case .evening: return "Evening"
+        case .overnight: return String(localized: "Overnight")
+        case .morning: return String(localized: "Morning")
+        case .afternoon: return String(localized: "Afternoon")
+        case .evening: return String(localized: "Evening")
         }
     }
 
@@ -1525,29 +1534,66 @@ enum InsightsEngine {
 
     private static func label(for severity: HeadacheSeverity) -> String {
         switch severity {
-        case .slight: return "Slight"
-        case .medium: return "Medium"
-        case .extreme: return "Extreme"
+        case .slight: return String(localized: "Mild")
+        case .medium: return String(localized: "Moderate")
+        case .extreme: return String(localized: "Severe")
         }
     }
 
     private static func label(for trend: PressureTrend) -> String {
         switch trend {
-        case .falling: return "Falling"
-        case .rising: return "Rising"
-        case .steady: return "Steady"
-        case .unavailable: return "Unknown"
+        case .falling: return String(localized: "Falling")
+        case .rising: return String(localized: "Rising")
+        case .steady: return String(localized: "Steady")
+        case .unavailable: return String(localized: "Unknown")
         }
     }
 
     private static func label(for activity: MotionActivity) -> String {
         switch activity {
-        case .stationary: return "Stationary"
-        case .walking: return "Walking"
-        case .running: return "Running"
-        case .automotive: return "In a vehicle"
-        case .cycling: return "Cycling"
-        case .unknown: return "Unknown"
+        case .stationary: return String(localized: "Stationary")
+        case .walking: return String(localized: "Walking")
+        case .running: return String(localized: "Running")
+        case .automotive: return String(localized: "In a vehicle")
+        case .cycling: return String(localized: "Cycling")
+        case .unknown: return String(localized: "Unknown")
+        }
+    }
+
+    private static func narrativeLabel(for part: PartOfDay) -> String {
+        switch part {
+        case .overnight: return String(localized: "at night")
+        case .morning: return String(localized: "in the morning")
+        case .afternoon: return String(localized: "in the afternoon")
+        case .evening: return String(localized: "in the evening")
+        }
+    }
+
+    private static func narrativeLabel(for severity: HeadacheSeverity) -> String {
+        switch severity {
+        case .slight: return String(localized: "mild")
+        case .medium: return String(localized: "moderate")
+        case .extreme: return String(localized: "severe")
+        }
+    }
+
+    private static func narrativeLabel(for trend: PressureTrend) -> String {
+        switch trend {
+        case .falling: return String(localized: "falling")
+        case .rising: return String(localized: "rising")
+        case .steady: return String(localized: "steady")
+        case .unavailable: return String(localized: "unknown")
+        }
+    }
+
+    private static func narrativeLabel(for activity: MotionActivity) -> String {
+        switch activity {
+        case .stationary: return String(localized: "stationary")
+        case .walking: return String(localized: "walking")
+        case .running: return String(localized: "running")
+        case .automotive: return String(localized: "in a vehicle")
+        case .cycling: return String(localized: "cycling")
+        case .unknown: return String(localized: "unknown")
         }
     }
 }

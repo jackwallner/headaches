@@ -6,6 +6,15 @@ enum CaptureStatus: String, Codable, CaseIterable, Sendable {
     case complete
     case partial
     case failed
+
+    var displayName: String {
+        switch self {
+        case .pending: String(localized: "Waiting")
+        case .complete: String(localized: "Logged")
+        case .partial: String(localized: "Partial")
+        case .failed: String(localized: "Failed")
+        }
+    }
 }
 
 enum CaptureSourceStatus: String, Codable, CaseIterable, Sendable {
@@ -13,6 +22,15 @@ enum CaptureSourceStatus: String, Codable, CaseIterable, Sendable {
     case captured
     case unavailable
     case failed
+
+    var displayName: String {
+        switch self {
+        case .pending: String(localized: "Waiting")
+        case .captured: String(localized: "Available")
+        case .unavailable: String(localized: "Unavailable")
+        case .failed: String(localized: "Failed")
+        }
+    }
 }
 
 enum PartOfDay: String, Codable, CaseIterable, Sendable {
@@ -20,6 +38,15 @@ enum PartOfDay: String, Codable, CaseIterable, Sendable {
     case morning
     case afternoon
     case evening
+
+    var displayName: String {
+        switch self {
+        case .overnight: String(localized: "Overnight")
+        case .morning: String(localized: "Morning")
+        case .afternoon: String(localized: "Afternoon")
+        case .evening: String(localized: "Evening")
+        }
+    }
 
     static func from(_ date: Date, calendar: Calendar = .current) -> PartOfDay {
         switch calendar.component(.hour, from: date) {
@@ -36,12 +63,29 @@ enum PressureTrend: String, Codable, CaseIterable, Sendable {
     case falling
     case steady
     case unavailable
+
+    var displayName: String {
+        switch self {
+        case .rising: String(localized: "Rising")
+        case .falling: String(localized: "Falling")
+        case .steady: String(localized: "Steady")
+        case .unavailable: String(localized: "Unknown")
+        }
+    }
 }
 
 enum HeadacheSeverity: String, Codable, CaseIterable, Sendable {
     case slight
     case medium
     case extreme
+
+    var displayName: String {
+        switch self {
+        case .slight: String(localized: "Mild")
+        case .medium: String(localized: "Moderate")
+        case .extreme: String(localized: "Severe")
+        }
+    }
 }
 
 enum MotionActivity: String, Codable, CaseIterable, Sendable {
@@ -51,6 +95,17 @@ enum MotionActivity: String, Codable, CaseIterable, Sendable {
     case automotive
     case cycling
     case unknown
+
+    var displayName: String {
+        switch self {
+        case .stationary: String(localized: "Stationary")
+        case .walking: String(localized: "Walking")
+        case .running: String(localized: "Running")
+        case .automotive: String(localized: "In a vehicle")
+        case .cycling: String(localized: "Cycling")
+        case .unknown: String(localized: "Unknown")
+        }
+    }
 }
 
 struct HealthSnapshot: Sendable {

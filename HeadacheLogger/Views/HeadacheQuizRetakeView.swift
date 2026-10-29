@@ -34,7 +34,7 @@ struct HeadacheQuizRetakeView: View {
             }
 
             VStack(alignment: .leading, spacing: 20) {
-                Text(q.question)
+                Text(HeadacheTemperatureFormatting.localizedStoredText(q.question))
                     .font(.title3.bold())
 
                 ForEach(q.options, id: \.self) { option in
@@ -43,7 +43,7 @@ struct HeadacheQuizRetakeView: View {
                         HeadacheQuizStore.saveAnswer(questionID: q.id, answer: option)
                     } label: {
                         HStack {
-                            Text(option)
+                            Text(HeadacheTemperatureFormatting.localizedStoredText(option))
                                 .font(.body)
                                 .foregroundStyle(.primary)
                             Spacer()

@@ -70,7 +70,9 @@ struct HeadacheLoggerApp: App {
     var body: some Scene {
         WindowGroup {
             #if DEBUG
-            if let mode = PaywallScreenshotMode.current {
+            if ProcessInfo.processInfo.arguments.contains("-HeadacheWidgetSnapshot") {
+                HeadacheWidgetScreenshotHarness()
+            } else if let mode = PaywallScreenshotMode.current {
                 PaywallScreenshotHarness(mode: mode)
                     .environmentObject(captureCoordinator)
                     .environmentObject(storeService)
@@ -165,9 +167,9 @@ private struct HeadacheLoggerRootContent: View {
         var id: String { rawValue }
     }
 
-    private var trialOfferLabel: String? {
-        directTrialPackage?.headacheProIntroOfferLabel
-            ?? storeService.products.compactMap(\.headacheProIntroOfferLabel).first
+    private var trialOfferDuration: String? {
+        directTrialPackage?.headacheProIntroOfferDuration
+            ?? storeService.products.compactMap(\.headacheProIntroOfferDuration).first
     }
 
     private var hasTrialOffer: Bool { directTrialPackage != nil }
@@ -191,7 +193,7 @@ private struct HeadacheLoggerRootContent: View {
                                 .environmentObject(storeService)
                         case .trialOffer:
                             TrialOfferSheet(
-                                offerLabel: trialOfferLabel,
+                                trialDuration: trialOfferDuration,
                                 priceLabel: directTrialPackage?.headacheProPriceLabel,
                                 directPurchase: directTrialPackage != nil,
                                 isPurchasing: trialPurchaseInFlight,
@@ -561,7 +563,7 @@ private struct HeadacheLoggerRootContent: View {
                     trialPurchaseError = nil
                 }
             } catch {
-                trialPurchaseError = "Couldn't start your trial. Please try again."
+                trialPurchaseError = String(localized: "Couldn't start your trial. Please try again.")
             }
         }
     }
@@ -639,14 +641,14 @@ private struct ProIntroSheet: View {
                     Text("Headache Pro is here")
                         .font(.title.bold())
 
-                    Text("Forecast checks stay quiet until your logs support a personal pressure, AQI, or timing pattern. When an alert fires, it explains the matching trigger and personal lift.")
+                    Text("Forecast checks stay quiet until your logs show a recurring pressure, AQI, or timing pattern. Alerts describe the forecast signal and how often it appeared in your logs.")
                         .font(.body)
                         .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 14) {
-                        ProBullet(icon: "barometer", text: "Pressure-drop and AQI alerts based on your own logs")
-                        ProBullet(icon: "chart.bar.xaxis", text: "Personalized patterns from your existing logs")
-                        ProBullet(icon: "lock.shield", text: "All processing stays on-device")
+                        ProBullet(icon: "barometer", text: String(localized: "Pressure-drop and AQI alerts based on your own logs"))
+                        ProBullet(icon: "chart.bar.xaxis", text: String(localized: "Personalized patterns from your existing logs"))
+                        ProBullet(icon: "lock.shield", text: String(localized: "All processing stays on-device"))
                     }
                     .padding(.top, 8)
                 }
@@ -714,7 +716,7 @@ private struct ProBullet: View {
 }
 
 struct TrialOfferSheet: View {
-    let offerLabel: String?
+    let trialDuration: String?
     /// Recurring price after the trial, already localized and period-suffixed by
     /// `headacheProPriceLabel`. Only required in `directPurchase` mode (Apple 3.1.2
     /// needs price + terms before purchase). Never carries a hardcoded amount: nil
@@ -742,35 +744,22 @@ struct TrialOfferSheet: View {
         LinearGradient(colors: [brandPrimary, brandSecondary], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
-    /// Extract a clean period phrase from an intro label like `"7-day free trial"` → `"7 days"`.
-    /// Falls back to nil when the label doesn't match the expected shape.
     private var trialPeriodPhrase: String? {
-        guard let offerLabel else { return nil }
-        // Match the leading "N-unit" segment.
-        let scanner = Scanner(string: offerLabel)
-        var value: Int = 0
-        guard scanner.scanInt(&value) else { return nil }
-        _ = scanner.scanString("-")
-        var unit = ""
-        let unitChars = CharacterSet.letters
-        guard let scanned = scanner.scanCharacters(from: unitChars) else { return nil }
-        unit = scanned
-        let plural = value == 1 ? unit : "\(unit)s"
-        return "\(value) \(plural)"
+        trialDuration
     }
 
     private var headline: String {
         if let period = trialPeriodPhrase {
-            return "\(period) of Pro, free."
+            return String(localized: "Headache Pro is free for \(period).")
         }
-        return "Try Headache Pro free."
+        return String(localized: "Try Headache Pro free.")
     }
 
     private var subheadline: String {
         if trialPeriodPhrase != nil {
-            return "Find your triggers and get ahead of risky weather. Free until your trial ends."
+            return String(localized: "See patterns in your logs and get weather alerts when your data supports them. Free until the trial ends.")
         }
-        return "Find your triggers and get ahead of risky weather, free for eligible new subscribers."
+        return String(localized: "See patterns in your logs and get alerts based on your history, free for eligible new subscribers.")
     }
 
     /// Leads with the patterns/alerts payoff. "All on-device" is intentionally demoted
@@ -780,14 +769,14 @@ struct TrialOfferSheet: View {
             TrialBullet(
                 icon: "chart.bar.xaxis",
                 tint: .indigo,
-                title: "Your personal patterns",
-                detail: "Sleep, timing, pressure, and weather from your own logs."
+                title: String(localized: "Your personal patterns"),
+                detail: String(localized: "Patterns in sleep, timing, pressure, and weather from your logs.")
             ),
             TrialBullet(
                 icon: "barometer",
                 tint: .orange,
-                title: "Pressure & AQI alerts",
-                detail: "A heads-up 12-24h before risky weather hits."
+                title: String(localized: "Pressure & AQI alerts"),
+                detail: String(localized: "A weather heads-up based on your logs, 12 to 24 hours ahead.")
             )
         ]
     }
@@ -798,11 +787,11 @@ struct TrialOfferSheet: View {
     private var billingDisclosure: String {
         if directPurchase, let priceLabel {
             if let period = trialPeriodPhrase {
-                return "Free for \(period), then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24h before it ends."
+                return String(localized: "Free for \(period), then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24 hours before it ends.")
             }
-            return "Then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24h before it ends."
+            return String(localized: "Then \(priceLabel). Auto-renews; cancel anytime in Settings at least 24 hours before it ends.")
         }
-        return "Billed through Apple. No charge during the trial."
+        return String(localized: "Billed through Apple. No charge during the trial.")
     }
 
     private var glowAnimation: Animation {

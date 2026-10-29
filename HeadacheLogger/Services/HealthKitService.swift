@@ -417,10 +417,10 @@ actor HealthKitService {
     /// so true "Denied" is undetectable. We report what we honestly can: whether the device supports
     /// Health and whether we've already presented the read-permission sheet.
     func connectionSummary() async -> String {
-        guard HKHealthStore.isHealthDataAvailable() else { return "Unavailable on this device" }
+        guard HKHealthStore.isHealthDataAvailable() else { return String(localized: "Unavailable on this device") }
 
         #if DEBUG
-        if HeadacheBrand.isScreenshotMode { return "Connected" }
+        if HeadacheBrand.isScreenshotMode { return String(localized: "Connected") }
         #endif
 
         // The honest signal is whether we can actually READ data. HealthKit never
@@ -430,7 +430,7 @@ actor HealthKitService {
         // made out-of-band in the Health app, or a read-type set that drifted from
         // what was granted across versions). So probe for a real sample first: a
         // returned value proves read access regardless of the request status.
-        if await hasAnyReadableSample() { return "Connected" }
+        if await hasAnyReadableSample() { return String(localized: "Connected") }
 
         let status: HKAuthorizationRequestStatus = await withCheckedContinuation { continuation in
             store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, _ in
@@ -438,10 +438,10 @@ actor HealthKitService {
             }
         }
         switch status {
-        case .unnecessary: return "Connected" // sheet already shown; data may simply be absent
-        case .shouldRequest: return "Not connected"
-        case .unknown: return "Not connected"
-        @unknown default: return "Not connected"
+        case .unnecessary: return String(localized: "Connected") // sheet already shown; data may simply be absent
+        case .shouldRequest: return String(localized: "Not connected")
+        case .unknown: return String(localized: "Not connected")
+        @unknown default: return String(localized: "Not connected")
         }
     }
 

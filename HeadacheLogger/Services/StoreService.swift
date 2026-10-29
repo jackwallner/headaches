@@ -167,11 +167,11 @@ extension Package {
     var headacheProDisplayName: String {
         switch headacheProPackageKind {
         case .lifetime:
-            return "Lifetime"
+            return String(localized: "Lifetime")
         case .yearly:
-            return "Yearly"
+            return String(localized: "Yearly")
         case .monthly:
-            return "Monthly"
+            return String(localized: "Monthly")
         case .other:
             return storeProduct.localizedTitle
         }
@@ -209,39 +209,48 @@ extension Package {
 
     var headacheProPriceLabel: String {
         guard let period = storeProduct.subscriptionPeriod else { return storeProduct.localizedPriceString }
-        let unit: String
+        var components = DateComponents()
+        let unit: NSCalendar.Unit
+        let singular: String
         switch period.unit {
-        case .day: unit = period.value == 1 ? "day" : "days"
-        case .week: unit = period.value == 1 ? "week" : "weeks"
-        case .month: unit = period.value == 1 ? "month" : "months"
-        case .year: unit = period.value == 1 ? "year" : "years"
-        @unknown default: unit = ""
+        case .day: components.day = period.value; unit = .day; singular = String(localized: "day")
+        case .week: components.weekOfMonth = period.value; unit = .weekOfMonth; singular = String(localized: "week")
+        case .month: components.month = period.value; unit = .month; singular = String(localized: "month")
+        case .year: components.year = period.value; unit = .year; singular = String(localized: "year")
+        @unknown default: return storeProduct.localizedPriceString
         }
-        if period.value == 1 {
-            return "\(storeProduct.localizedPriceString) / \(unit)"
-        } else {
-            return "\(storeProduct.localizedPriceString) / \(period.value) \(unit)"
-        }
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [unit]
+        formatter.unitsStyle = .full
+        formatter.maximumUnitCount = 1
+        let duration = period.value == 1 ? singular : (formatter.string(from: components) ?? "")
+        return String(localized: "\(storeProduct.localizedPriceString) per \(duration)")
     }
 
-    var headacheProIntroOfferLabel: String? {
+    var headacheProIntroOfferDuration: String? {
         guard let intro = storeProduct.introductoryDiscount, intro.paymentMode == .freeTrial else {
             return nil
         }
         let period = intro.subscriptionPeriod
-        let unit: String
+        var components = DateComponents()
+        let unit: NSCalendar.Unit
         switch period.unit {
-        case .day: unit = period.value == 1 ? "day" : "days"
-        case .week: unit = period.value == 1 ? "week" : "weeks"
-        case .month: unit = period.value == 1 ? "month" : "months"
-        case .year: unit = period.value == 1 ? "year" : "years"
-        @unknown default: unit = ""
+        case .day: components.day = period.value; unit = .day
+        case .week: components.day = period.value * 7; unit = .day
+        case .month: components.month = period.value; unit = .month
+        case .year: components.year = period.value; unit = .year
+        @unknown default: return nil
         }
-        if period.unit == .week {
-            return "\(period.value * 7)-day free trial"
-        } else {
-            return "\(period.value)-\(unit.dropLast(period.value == 1 ? 0 : 1)) free trial"
-        }
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [unit]
+        formatter.unitsStyle = .full
+        formatter.maximumUnitCount = 1
+        return formatter.string(from: components)
+    }
+
+    var headacheProIntroOfferLabel: String? {
+        guard let duration = headacheProIntroOfferDuration else { return nil }
+        return String(localized: "Free for \(duration)")
     }
 }
 
@@ -270,11 +279,11 @@ extension StoreService {
     /// when the user is eligible, price-forward otherwise so the price is never
     /// hidden (Apple 3.1.2 — nothing implies Pro is free forever).
     var onboardingCTALabel: String {
-        guard let package = onboardingTrialPackage else { return "Unlock Headache Pro" }
-        if isEligibleForIntroOffer(package), let trial = package.headacheProIntroOfferLabel {
-            return "Start \(trial)"
+        guard let package = onboardingTrialPackage else { return String(localized: "Unlock Headache Pro") }
+        if isEligibleForIntroOffer(package), let duration = package.headacheProIntroOfferDuration {
+            return String(localized: "Start a free trial for \(duration)")
         }
-        return "Unlock Headache Pro for \(package.storeProduct.localizedPriceString)"
+        return String(localized: "Unlock Headache Pro for \(package.storeProduct.localizedPriceString)")
     }
 
     /// Full Apple-3.1.2 auto-renew disclosure for the onboarding CTA. States trial
@@ -288,11 +297,10 @@ extension StoreService {
     /// rendered.
     var onboardingCTADisclosureText: String? {
         guard let package = onboardingTrialPackage else { return nil }
-        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings › Apple ID › Subscriptions."
-        if isEligibleForIntroOffer(package), let trial = package.headacheProIntroOfferLabel {
-            return "\(trial.capitalized), then \(package.headacheProPriceLabel). \(renew)"
+        if isEligibleForIntroOffer(package), let duration = package.headacheProIntroOfferDuration {
+            return String(localized: "Free for \(duration), then \(package.headacheProPriceLabel). Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings › Apple ID › Subscriptions.")
         }
-        return "\(package.headacheProPriceLabel). \(renew)"
+        return String(localized: "\(package.headacheProPriceLabel). Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings › Apple ID › Subscriptions.")
     }
 
     /// Percent savings of the yearly plan compared to 12× the monthly plan. Returns
@@ -447,7 +455,7 @@ final class StoreService: NSObject, ObservableObject {
             await refreshIntroEligibility()
         } catch {
             logger.error("Product fetch failed: \(String(describing: error), privacy: .public)")
-            lastError = "Couldn't load purchase options. Check your connection and try again."
+            lastError = String(localized: "Couldn't load purchase options. Check your connection and try again.")
         }
     }
 
@@ -524,7 +532,7 @@ final class StoreService: NSObject, ObservableObject {
         } catch {
             entitlementCheckFailed = true
             logger.error("Customer info refresh failed: \(String(describing: error), privacy: .public)")
-            lastError = "Couldn't refresh your subscription status. Check your connection and try again."
+            lastError = String(localized: "Couldn't refresh your subscription status. Check your connection and try again.")
         }
     }
 
@@ -555,12 +563,12 @@ final class StoreService: NSObject, ObservableObject {
                 }
             )
             currentOffering = nil
-            lastError = products.isEmpty ? "StoreKit Testing products are unavailable." : nil
+            lastError = products.isEmpty ? String(localized: "StoreKit Testing products are unavailable.") : nil
         } catch {
             logger.error("StoreKit Testing product fetch failed: \(String(describing: error), privacy: .public)")
             products = []
             introEligibility = [:]
-            lastError = "Couldn't load StoreKit Testing products."
+            lastError = String(localized: "Couldn't load StoreKit Testing products.")
         }
     }
 
@@ -657,7 +665,7 @@ final class StoreService: NSObject, ObservableObject {
                     return
                 }
             }
-            lastError = "No previous Headache Pro purchase was found on this Apple ID."
+            lastError = String(localized: "No previous Headache Pro purchase was found on this Apple ID.")
             return
         }
         #endif
@@ -666,10 +674,10 @@ final class StoreService: NSObject, ObservableObject {
             let info = try await client.restorePurchases()
             apply(customerInfo: info)
             hasResolvedEntitlements = true
-            lastError = isProUnlocked ? nil : "No previous Headache Pro purchase was found on this Apple ID."
+            lastError = isProUnlocked ? nil : String(localized: "No previous Headache Pro purchase was found on this Apple ID.")
         } catch {
             logger.error("Restore failed: \(String(describing: error), privacy: .public)")
-            lastError = "Couldn't restore purchases. Try again."
+            lastError = String(localized: "Couldn't restore purchases. Try again.")
         }
     }
 

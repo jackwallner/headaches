@@ -35,7 +35,7 @@ struct EditEventSheet: View {
                     Picker("Severity", selection: $severity) {
                         Text("Not set").tag(Optional<HeadacheSeverity>.none)
                         ForEach(HeadacheSeverity.allCases, id: \.self) { s in
-                            Text(s.rawValue.capitalized).tag(Optional(s))
+                            Text(s.displayName).tag(Optional(s))
                         }
                     }
                     .pickerStyle(.segmented)

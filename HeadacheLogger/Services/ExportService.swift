@@ -103,7 +103,7 @@ enum ExportService {
                 csv(event.id.uuidString),
                 csv(timestampFormatter.string(from: event.timestamp)),
                 csv(event.timezoneIdentifier),
-                csv(event.weekdayName),
+                csv(HeadacheTemperatureFormatting.localizedStoredText(event.weekdayName)),
                 csv(String(event.weekdayIndex)),
                 csv(String(event.hourOfDay)),
                 csv(String(event.minuteOfHour)),
@@ -115,7 +115,7 @@ enum ExportService {
                 csv(event.locality),
                 csv(event.region),
                 csv(number(event.altitudeM, formatter: decimalFormatter)),
-                csv(event.weatherSummary),
+                csv(event.weatherSummary.map(HeadacheTemperatureFormatting.localizedStoredText)),
                 csv(event.weatherCode.map(String.init)),
                 csv(number(event.temperatureC, formatter: decimalFormatter)),
                 csv(number(event.apparentTemperatureC, formatter: decimalFormatter)),
@@ -180,7 +180,7 @@ enum ExportService {
                 csv(event.motionActivity?.rawValue),
                 csv(event.healthStatusMessage),
                 csv(event.environmentStatusMessage),
-                csv(event.severity?.rawValue),
+                csv(event.severity?.displayName),
                 csv(event.userNotes),
             ].joined(separator: ",")
         }
@@ -197,20 +197,20 @@ enum ExportService {
     /// Lines prefixed with `#` so spreadsheet tools and simple parsers can treat them as comments; tabular CSV starts after the preamble.
     private static func csvPreamble(eventCount: Int, generatedAtISO8601: String) -> [String] {
         [
-            "# One Tap Headache Tracker: exported headache event log",
-            "# What this file is: one row per time you tapped Headache in the app; each row is a timestamped snapshot of optional context (not a diagnosis).",
-            "# Time: timestamp (UTC ISO8601 with fractional seconds), timezone ID, weekday name, hour/minute, part_of_day (overnight/morning/afternoon/evening).",
-            "# Health (Apple Health when permitted): activity (steps, active/basal energy, distance, exercise, stand, flights), sleep (hours in window, inferred main-sleep wake time, hours since wake), heart (resting, recent avg, HRV, SpO₂, VO₂ max, walking speed), breathing rate, environmental and headphone audio (6h avg dB), mindful minutes today, barometric pressure change over 6h (device samples), workouts in last 24h, intake (caffeine mg, water mL today), blood pressure (systolic/diastolic), blood glucose, time in daylight today, days since last period start when cycle data exists.",
-            "# Environment (when location/weather services work): human-readable location plus separate locality/region and altitude, weather summary and code, temperature (°C and °F columns), humidity, pressure and trend, precipitation, wind, cloud cover, UV, dew point, air quality indices and pollutants, pollen-style counts when exposed by the data provider.",
-            "# Device (captured on-device at tap time): battery level percent, charging flag, low-power-mode flag, motion activity (stationary/walking/running/automotive/cycling/unknown).",
-            "# Status columns: capture_status plus health_status / environment_status reflect whether those bundles were captured; health_message and environment_message explain gaps or errors when present.",
-            "# severity: optional rating (slight/medium/extreme) captured at tap time when the prompt is enabled.",
-            "# user_notes: optional text you can add at tap time or later in History.",
-            "# Empty quoted cells mean the value was unavailable or not recorded for that event.",
-            "# This export is for personal tracking and sharing with a clinician or researcher; it does not establish medical facts by itself.",
+            String(localized: "# One Tap Headache Tracker: exported headache event log"),
+            String(localized: "# What this file is: one row per time you tapped Headache in the app. Each row is a timestamped snapshot of optional context, not a diagnosis."),
+            String(localized: "# Time fields include the UTC timestamp, timezone ID, weekday name, hour and minute, and the stable part_of_day value."),
+            String(localized: "# Health fields include activity, sleep, heart, breathing, audio, mindful minutes, workouts, intake, blood pressure, blood glucose, daylight, and cycle data when Apple Health access is allowed."),
+            String(localized: "# Environment fields include location, weather, temperature, humidity, pressure, precipitation, wind, cloud cover, UV, dew point, air quality, pollutants, and pollen when available."),
+            String(localized: "# Device fields include battery level, charging, low power mode, and motion activity captured when you logged the headache."),
+            String(localized: "# Status fields show whether capture, Health, and environment context was available. Message fields explain missing context or errors."),
+            String(localized: "# Severity is an optional rating captured when the prompt is enabled."),
+            String(localized: "# User notes are optional text you can add when logging or later in History."),
+            String(localized: "# Empty quoted cells mean a value was unavailable or was not recorded for that event."),
+            String(localized: "# This export is for personal tracking and sharing. It does not establish medical facts by itself."),
             "#",
             "# export_generated_at_utc: \(generatedAtISO8601)",
-            "# row_count: \(eventCount)",
+            String(localized: "# Row count: \(eventCount.formatted(.number))"),
             "#",
         ]
     }
@@ -290,7 +290,7 @@ enum ExportService {
     }
 
     private static func drawHeader(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, windowStart: Date, windowEnd: Date, generatedAt: Date) -> CGFloat {
-        let title = "Headache Report"
+        let title = String(localized: "Headache Report")
         let titleAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 26, weight: .heavy),
             .foregroundColor: UIColor.label,
@@ -299,14 +299,14 @@ enum ExportService {
 
         let dateFmt = DateFormatter()
         dateFmt.dateStyle = .medium
-        let subtitle = "\(dateFmt.string(from: windowStart)) to \(dateFmt.string(from: windowEnd))"
+        let subtitle = String(localized: "\(dateFmt.string(from: windowStart)) to \(dateFmt.string(from: windowEnd))")
         let subtitleAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 12, weight: .regular),
             .foregroundColor: UIColor.secondaryLabel,
         ]
         (subtitle as NSString).draw(at: CGPoint(x: leftMargin, y: y + 32), withAttributes: subtitleAttrs)
 
-        let generated = "Generated \(dateFmt.string(from: generatedAt))"
+        let generated = String(localized: "Generated \(dateFmt.string(from: generatedAt))")
         let genSize = (generated as NSString).size(withAttributes: subtitleAttrs)
         (generated as NSString).draw(
             at: CGPoint(x: leftMargin + contentWidth - genSize.width, y: y + 32),
@@ -337,29 +337,29 @@ enum ExportService {
             partCounts[event.partOfDay, default: 0] += 1
         }
         let topWeekday: String = {
-            guard let top = dayCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
+            guard let top = dayCounts.max(by: { $0.value < $1.value })?.key else { return "-" }
             let symbols = calendar.standaloneWeekdaySymbols
             let i = top - 1
-            return (i >= 0 && i < symbols.count) ? symbols[i] : "—"
+            return (i >= 0 && i < symbols.count) ? symbols[i] : "-"
         }()
         let topPart: String = {
-            guard let top = partCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
-            return top.rawValue.capitalized
+            guard let top = partCounts.max(by: { $0.value < $1.value })?.key else { return "-" }
+            return top.displayName
         }()
 
         let stats: [(String, String)] = [
-            ("Attacks", String(total)),
-            ("Days affected", String(attackDays)),
-            ("Severe rated", String(extreme)),
-            ("Peak weekday", topWeekday),
-            ("Peak time", topPart),
+            (String(localized: "Headaches logged"), total.formatted(.number)),
+            (String(localized: "Days with a headache"), attackDays.formatted(.number)),
+            (String(localized: "Severe ratings"), extreme.formatted(.number)),
+            (String(localized: "Most common weekday"), topWeekday),
+            (String(localized: "Most common time"), topPart),
         ]
 
         let headerAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
             .foregroundColor: UIColor.label,
         ]
-        ("Summary" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+        (String(localized: "Summary") as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
         let rowY = y + 24
         let cellWidth = contentWidth / CGFloat(stats.count)
@@ -373,7 +373,7 @@ enum ExportService {
         ]
         for (index, stat) in stats.enumerated() {
             let originX = leftMargin + cellWidth * CGFloat(index)
-            (stat.0.uppercased() as NSString).draw(at: CGPoint(x: originX, y: rowY), withAttributes: labelAttrs)
+            (stat.0 as NSString).draw(at: CGPoint(x: originX, y: rowY), withAttributes: labelAttrs)
             (stat.1 as NSString).draw(at: CGPoint(x: originX, y: rowY + 12), withAttributes: valueAttrs)
         }
 
@@ -385,7 +385,7 @@ enum ExportService {
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
             .foregroundColor: UIColor.label,
         ]
-        ("Last 90 days" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+        (String(localized: "Last 90 days") as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
         let gridTop = y + 22
         let cellSize: CGFloat = 14
@@ -422,7 +422,7 @@ enum ExportService {
             .font: UIFont.systemFont(ofSize: 9, weight: .regular),
             .foregroundColor: UIColor.secondaryLabel,
         ]
-        ("Less" as NSString).draw(at: CGPoint(x: leftMargin, y: legendY + 2), withAttributes: legendAttrs)
+        (String(localized: "Less") as NSString).draw(at: CGPoint(x: leftMargin, y: legendY + 2), withAttributes: legendAttrs)
         let swatches: [HeatmapDay] = [
             HeatmapDay(date: .now, count: 0, peakSeverity: nil),
             HeatmapDay(date: .now, count: 1, peakSeverity: .slight),
@@ -437,7 +437,7 @@ enum ExportService {
             path.fill()
             swatchX += 16
         }
-        ("More" as NSString).draw(at: CGPoint(x: swatchX, y: legendY + 2), withAttributes: legendAttrs)
+        (String(localized: "More") as NSString).draw(at: CGPoint(x: swatchX, y: legendY + 2), withAttributes: legendAttrs)
 
         return legendY + 18
     }
@@ -459,7 +459,7 @@ enum ExportService {
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
             .foregroundColor: UIColor.label,
         ]
-        ("Top patterns" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
+        (String(localized: "Top patterns") as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
         var cursorY = y + 22
         let titleAttrs: [NSAttributedString.Key: Any] = [
@@ -474,8 +474,8 @@ enum ExportService {
         let topInsights = Array(summary.insights.prefix(3))
         if topInsights.isEmpty {
             let body = summary.totalEvents < InsightsEngine.minimumSampleSize
-                ? "Not enough logged headaches yet for pattern detection (need at least \(InsightsEngine.minimumSampleSize))."
-                : "No single signal yet stands out at the confidence threshold. Continued logging will surface patterns as they emerge."
+                ? String(localized: "Not enough logged headaches yet for pattern detection (need at least \(InsightsEngine.minimumSampleSize)).")
+                : String(localized: "No single signal yet stands out. Continued logging can show patterns over time.")
             cursorY = drawWrappedText(body, at: CGPoint(x: leftMargin, y: cursorY), width: contentWidth, attributes: detailAttrs) + 4
             return cursorY
         }
@@ -502,7 +502,7 @@ enum ExportService {
             .font: UIFont.systemFont(ofSize: 8, weight: .regular),
             .foregroundColor: UIColor.tertiaryLabel,
         ]
-        let line = "Generated by One Tap Headache Tracker. Descriptive only, not a clinical diagnosis. Discuss with a qualified clinician."
+        let line = String(localized: "Generated by One Tap Headache Tracker. Descriptive only, not medical advice or a diagnosis.")
         (line as NSString).draw(at: CGPoint(x: leftMargin, y: footerY), withAttributes: attrs)
     }
 }

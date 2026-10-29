@@ -56,12 +56,12 @@ enum HeadacheQuizQuestions {
         ),
         HeadacheQuizQuestion(
             id: "trigger_weather",
-            question: "Have you noticed weather changes triggering your headaches?",
+            question: "Have you noticed a link between weather changes and your headaches?",
             options: ["Pressure drops", "Heat", "Cold", "No", "Not sure"]
         ),
         HeadacheQuizQuestion(
             id: "trigger_food",
-            question: "Do certain foods or drinks seem to trigger your headaches?",
+            question: "Do certain foods or drinks seem to be linked with your headaches?",
             options: ["Yes", "No", "Not sure"]
         ),
         HeadacheQuizQuestion(

@@ -35,7 +35,7 @@ struct HeadacheQuizView: View {
             }
 
             VStack(alignment: .leading, spacing: 20) {
-                Text(q.question)
+                Text(HeadacheTemperatureFormatting.localizedStoredText(q.question))
                     .font(.title3.bold())
 
                 ForEach(q.options, id: \.self) { option in
@@ -43,7 +43,7 @@ struct HeadacheQuizView: View {
                         selectAnswer(for: q.id, answer: option)
                     } label: {
                         HStack {
-                            Text(option)
+                            Text(HeadacheTemperatureFormatting.localizedStoredText(option))
                                 .font(.body)
                                 .foregroundStyle(.primary)
                             Spacer()
@@ -107,7 +107,7 @@ struct HeadacheQuizView: View {
                 Text("Skip the Quiz?")
                     .font(.title2.bold())
 
-                Text("Answering these helps Patterns highlight the triggers most relevant to your headaches. You can always come back later from Settings.")
+                Text("Your answers help Patterns highlight areas in your logs. You can always come back later from Settings.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

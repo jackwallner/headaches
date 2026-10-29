@@ -115,6 +115,14 @@ enum ProactiveAlertsEngine {
         case low
         case moderate
         case high
+
+        var displayName: String {
+            switch self {
+            case .low: String(localized: "Few signals")
+            case .moderate: String(localized: "Some signals")
+            case .high: String(localized: "Several signals")
+            }
+        }
     }
 
     struct RiskFactor: Sendable, Identifiable {
@@ -163,20 +171,22 @@ enum ProactiveAlertsEngine {
             if maxDrop >= 6 {
                 let bump = profile.pressure.isSupported ? 3 : 2
                 score += bump
-                let base = String(format: "%.1f hPa drop forecast in the next 24h.", maxDrop)
+                let pressureDrop = maxDrop.formatted(.number.precision(.fractionLength(1)))
+                let base = String(localized: "Pressure is forecast to fall by \(pressureDrop) hPa in the next 24 hours.")
+                let detail = [base, personalNote(profile.pressure)].filter { !$0.isEmpty }.joined(separator: " ")
                 factors.append(RiskFactor(
                     id: "pressure",
                     icon: "barometer",
-                    title: "Pressure dropping",
-                    detail: base + personalNote(profile.pressure)
+                    title: String(localized: "Pressure change"),
+                    detail: detail
                 ))
             } else if maxDrop >= 3 {
                 score += 1
                 factors.append(RiskFactor(
                     id: "pressure-mild",
                     icon: "barometer",
-                    title: "Mild pressure shift",
-                    detail: String(format: "%.1f hPa drop forecast.", maxDrop)
+                    title: String(localized: "Pressure change"),
+                    detail: String(localized: "Pressure is forecast to fall by \(maxDrop.formatted(.number.precision(.fractionLength(1)))) hPa.")
                 ))
             }
 
@@ -185,8 +195,8 @@ enum ProactiveAlertsEngine {
                 factors.append(RiskFactor(
                     id: "aqi-high",
                     icon: "aqi.high",
-                    title: "Unhealthy air",
-                    detail: "AQI is forecast to reach \(Int(aqiPeak))."
+                    title: String(localized: "Air quality"),
+                    detail: String(localized: "Air quality is forecast to reach AQI \(Int(aqiPeak).formatted(.number)).")
                 ))
             } else if aqiPeak >= 100 {
                 let bump = profile.airQuality.isSupported ? 2 : 1
@@ -194,8 +204,11 @@ enum ProactiveAlertsEngine {
                 factors.append(RiskFactor(
                     id: "aqi-moderate",
                     icon: "aqi.medium",
-                    title: "Elevated air quality",
-                    detail: "AQI forecast peak: \(Int(aqiPeak))." + personalNote(profile.airQuality)
+                    title: String(localized: "Air quality"),
+                    detail: [
+                        String(localized: "Air quality is forecast to reach AQI \(Int(aqiPeak).formatted(.number))."),
+                        personalNote(profile.airQuality)
+                    ].filter { !$0.isEmpty }.joined(separator: " ")
                 ))
             }
         }
@@ -206,16 +219,16 @@ enum ProactiveAlertsEngine {
                 factors.append(RiskFactor(
                     id: "sleep-very-low",
                     icon: "bed.double.fill",
-                    title: "Very short sleep",
-                    detail: String(format: "%.1fh last night, well under your usual window.", sleep)
+                    title: String(localized: "Very short sleep"),
+                    detail: String(localized: "Sleep last night: \(Measurement(value: sleep, unit: UnitDuration.hours).formatted(.measurement(width: .abbreviated))).")
                 ))
             } else if sleep < 6 {
                 score += 2
                 factors.append(RiskFactor(
                     id: "sleep-low",
                     icon: "bed.double.fill",
-                    title: "Short sleep",
-                    detail: String(format: "%.1fh last night.", sleep)
+                    title: String(localized: "Short sleep"),
+                    detail: String(localized: "Sleep last night: \(Measurement(value: sleep, unit: UnitDuration.hours).formatted(.measurement(width: .abbreviated))).")
                 ))
             }
         }
@@ -228,11 +241,7 @@ enum ProactiveAlertsEngine {
             }
         }()
 
-        let recommendation = recommendationText(
-            level: level,
-            factors: factors,
-            sleepLastNightHours: sleepLastNightHours
-        )
+        let recommendation = recommendationText(level: level)
 
         return RiskForecast(level: level, score: score, factors: factors, recommendation: recommendation, evaluatedAt: now)
     }
@@ -241,47 +250,18 @@ enum ProactiveAlertsEngine {
     /// risk reads as personal rather than a generic weather warning. Empty when the signal is unproven.
     private static func personalNote(_ signal: PersonalSignalProfile) -> String {
         guard signal.isSupported, signal.conditionDays > 0 else { return "" }
-        return " You've logged headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days."
+        return String(localized: "You logged headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days.")
     }
 
-    /// One concrete next-step line tailored to the level and which signals fired. Keeps the card
-    /// from being a bare risk score the user has to interpret on their own.
-    private static func recommendationText(level: RiskLevel, factors: [RiskFactor], sleepLastNightHours: Double?) -> String {
-        let ids = Set(factors.map(\.id))
-        let hasPressure = ids.contains("pressure") || ids.contains("pressure-mild")
-        let hasAQI = ids.contains("aqi-high") || ids.contains("aqi-moderate")
-        let hasSleep = ids.contains("sleep-very-low") || ids.contains("sleep-low")
-
+    /// Keeps the forecast descriptive and clear that it cannot predict a headache.
+    private static func recommendationText(level: RiskLevel) -> String {
         switch level {
         case .low:
-            if let sleep = sleepLastNightHours, sleep >= 7 {
-                return "Nothing in today's forecast stands out, and last night's sleep is working in your favor. A normal day."
-            }
-            return "Nothing in today's forecast stands out. A good day to keep your usual routine."
+            return String(localized: "Few forecast signals match patterns in your logs. This does not predict whether you will have a headache.")
         case .moderate:
-            var tips: [String] = ["Hydrate early"]
-            if hasPressure { tips.append("keep rescue meds within reach") }
-            if hasAQI { tips.append("limit time outdoors and run an air filter if you have one") }
-            if hasSleep { tips.append("protect tonight's sleep window") }
-            return "A moderate day. " + sentence(from: tips) + " and watch for your usual early signs."
+            return String(localized: "Some forecast signals match patterns in your logs. This does not predict whether you will have a headache.")
         case .high:
-            var tips: [String] = ["Pre-hydrate now", "keep rescue meds handy"]
-            if hasAQI { tips.append("stay indoors with filtered air when you can") }
-            if hasSleep { tips.append("prioritize rest and ease off screens") }
-            if hasPressure && !hasAQI && !hasSleep { tips.append("plan lighter commitments if you can") }
-            return "Treat today as high-risk. " + sentence(from: tips) + "."
-        }
-    }
-
-    /// Joins tips into a single readable clause (comma-separated, "and" before the last).
-    private static func sentence(from tips: [String]) -> String {
-        switch tips.count {
-        case 0: return ""
-        case 1: return tips[0]
-        case 2: return "\(tips[0]) and \(tips[1])"
-        default:
-            let head = tips.dropLast().joined(separator: ", ")
-            return "\(head), and \(tips.last!)"
+            return String(localized: "Several forecast signals match patterns in your logs. This does not predict whether you will have a headache.")
         }
     }
 
@@ -316,19 +296,19 @@ enum ProactiveAlertsEngine {
         }
         guard maxDrop >= threshold else { return nil }
         let hours = max(1, dropEndIndex)
-        let body = "Forecast: \(formatHpa(maxDrop)) drop over the next \(hours)h. You've recorded headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days in your history."
-        return AlertDecision(kind: .pressureDrop, title: "Personal pressure trigger ahead", body: body)
+        let body = String(localized: "Pressure is forecast to fall by \(formatHpa(maxDrop)) hPa in the next \(hours) hours. Your logs show headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days.")
+        return AlertDecision(kind: .pressureDrop, title: String(localized: "Pressure pattern in the forecast"), body: body)
     }
 
     private static func airQualityDecision(forecast: HourlyForecast, threshold: Int, signal: PersonalSignalProfile) -> AlertDecision? {
         guard let peak = forecast.usAqi.compactMap({ $0 }).max() else { return nil }
         guard Int(peak) >= threshold else { return nil }
-        let body = "AQI is forecast to reach \(Int(peak)) today. You've recorded headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days in your history."
-        return AlertDecision(kind: .airQuality, title: "Personal air-quality trigger ahead", body: body)
+        let body = String(localized: "Air quality is forecast to reach AQI \(Int(peak).formatted(.number)) today. Your logs show headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days.")
+        return AlertDecision(kind: .airQuality, title: String(localized: "Air-quality pattern in the forecast"), body: body)
     }
 
     private static func formatHpa(_ value: Double) -> String {
-        String(format: "%.1f hPa", value)
+        value.formatted(.number.precision(.fractionLength(1)))
     }
 
     private static func ensureNotificationAuthorization() async -> Bool {
@@ -693,7 +673,7 @@ extension ProactiveAlertsEngine {
             let trigger = UNCalendarNotificationTrigger(dateMatching: fireComponents, repeats: false)
 
             let content = UNMutableNotificationContent()
-            content.title = "Headache pattern ahead"
+            content.title = String(localized: "A time pattern in your logs")
             content.body = notificationBody(for: cluster)
             content.sound = .default
             content.threadIdentifier = "pro-alerts"
@@ -714,22 +694,22 @@ extension ProactiveAlertsEngine {
 
     private static func notificationBody(for cluster: PatternCluster) -> String {
         let timeRange = formatHourRange(start: cluster.startHour, end: cluster.endHour)
-        let day = cluster.weekdayName
+        let day = HeadacheTemperatureFormatting.localizedStoredText(cluster.weekdayName)
         let share = Int((cluster.share * 100).rounded())
-        return "\(share)% of your headaches fall on \(day)s around \(timeRange)."
+        return String(localized: "You logged \(share)% of headaches on \(day) around \(timeRange).")
     }
 
     private static func formatHourRange(start: Int, end: Int) -> String {
         let fmt: (Int) -> String = { hour in
             var dc = DateComponents()
             dc.hour = hour
-            guard let date = Calendar.current.date(from: dc) else { return "\(hour):00" }
+            guard let date = Calendar.current.date(from: dc) else { return hour.formatted(.number) + ":00" }
             let f = DateFormatter()
-            f.dateFormat = "h a"
-            return f.string(from: date).lowercased()
+            f.setLocalizedDateFormatFromTemplate("j")
+            return f.string(from: date)
         }
         if start == end { return fmt(start) }
-        return "\(fmt(start))–\(fmt(end))"
+        return String(localized: "\(fmt(start)) to \(fmt(end))")
     }
 
     /// Runs pattern analysis from a ModelContext and schedules notifications if enabled.

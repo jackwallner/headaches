@@ -67,9 +67,9 @@ struct InsightsView: View {
                     .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                     .listRowBackground(Color.clear)
                 } header: {
-                    Text("Today's risk")
+                    Text("Tomorrow's forecast signals")
                 } footer: {
-                    Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
+                    Text("Shows forecast pressure and air quality alongside your logged sleep. It is a heads-up, not a prediction.")
                         .font(.footnote)
                 }
             }
@@ -80,9 +80,9 @@ struct InsightsView: View {
                         .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
                         .listRowBackground(Color.clear)
                 } header: {
-                    Text("Get ahead of triggers")
+                    Text("Weather signals")
                 } footer: {
-                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
+                    Text("Proactive Alerts use the forecast signals shown here for a 12 to 24 hour heads-up.")
                         .font(.footnote)
                 }
             }
@@ -94,8 +94,8 @@ struct InsightsView: View {
         if events.count < InsightsEngine.minimumSampleSize {
             Section {
                 LearningStateRow(
-                    title: "Personalized patterns warming up",
-                    detail: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs. You have \(events.count).",
+                    title: String(localized: "Personalized patterns warming up"),
+                    detail: String(localized: "Personalized patterns unlock after \(InsightsEngine.minimumSampleSize) logs. You have \(events.count)."),
                     progress: Double(events.count) / Double(InsightsEngine.minimumSampleSize)
                 )
             } header: {
@@ -104,8 +104,8 @@ struct InsightsView: View {
         } else if summary.insights.isEmpty {
             Section {
                 LearningStateRow(
-                    title: "Still watching for a clear pattern",
-                    detail: "\(events.count) headaches logged so far. Keep using the one-tap button and Pro will surface a pattern when a signal stands out.",
+                    title: String(localized: "Still watching for a clear pattern"),
+                    detail: String(localized: "\(HeadacheTemperatureFormatting.loggedCountDescription(events.count)) Keep using the one-tap button and Pro will surface a pattern when a signal stands out."),
                     progress: nil
                 )
             } header: {
@@ -123,7 +123,7 @@ struct InsightsView: View {
             } header: {
                 Text("Your patterns")
             } footer: {
-                Text("Patterns are computed locally from your logged events. They describe your data, not a clinical diagnosis. Share with a doctor if you're trying to identify triggers.")
+                Text("Patterns are computed on your device from your logs. They describe your data and do not show what caused a headache. This is not medical advice or a diagnosis.")
                     .font(.footnote)
             }
         }
@@ -178,10 +178,10 @@ struct InsightsView: View {
                     Image(systemName: "chart.bar.xaxis")
                         .font(.system(size: 56, weight: .bold))
                         .foregroundStyle(brandColor)
-                    Text("See what triggers your headaches")
+                    Text("Explore patterns in your logs")
                         .font(.title2.bold())
                         .multilineTextAlignment(.center)
-                    Text("Pro analyzes your logged events and surfaces the patterns hiding in the data (sleep, pressure, time of day, weather) with a chart and explanation for each one.")
+                    Text("Pro summarizes patterns in your logged sleep, pressure, timing, and weather data.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -199,7 +199,7 @@ struct InsightsView: View {
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
-                Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
+                    Text(HeadacheTemperatureFormatting.loggedCountDescription(events.count))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Button {
@@ -240,10 +240,10 @@ struct InsightsView: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 4)
-            SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches, 1.6× the even baseline.")
-            SampleInsightRow(icon: "bed.double.fill", title: "Sleep before a headache", detail: "Median 5h 40m, 47% under 6 hours.")
-            SampleInsightRow(icon: "barometer", title: "Falling pressure pattern", detail: "62% of headaches followed a pressure drop.")
-            SampleInsightRow(icon: "bell.badge.fill", title: "Proactive Alerts", detail: "Get notified 12–24h before risky weather.")
+            SampleInsightRow(icon: "sunset.fill", title: String(localized: "Most common time: Evening"), detail: String(localized: "40% of your headaches, 1.6× the even baseline."))
+            SampleInsightRow(icon: "bed.double.fill", title: String(localized: "Sleep before a headache"), detail: String(localized: "Median 5h 40m, 47% under 6 hours."))
+            SampleInsightRow(icon: "barometer", title: String(localized: "Falling pressure pattern"), detail: String(localized: "62% of headaches were logged on days with falling pressure."))
+            SampleInsightRow(icon: "bell.badge.fill", title: String(localized: "Proactive Alerts"), detail: String(localized: "Forecast alerts based on patterns in your logs."))
         }
         .padding(.horizontal, 16)
     }
@@ -302,7 +302,7 @@ private struct InsightsHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(summary.totalEvents) headache\(summary.totalEvents == 1 ? "" : "s") logged")
+            Text(HeadacheTemperatureFormatting.loggedCountDescription(summary.totalEvents))
                 .font(.title2.bold())
             if let range = summary.dateRange {
                 Text(rangeLabel(range))
@@ -315,7 +315,7 @@ private struct InsightsHeader: View {
     private func rangeLabel(_ range: ClosedRange<Date>) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        return "\(formatter.string(from: range.lowerBound)) to \(formatter.string(from: range.upperBound))"
+        return String(localized: "\(formatter.string(from: range.lowerBound)) to \(formatter.string(from: range.upperBound))")
     }
 }
 
@@ -450,8 +450,8 @@ private struct ProactiveAlertsCard: View {
                         }
                     }
                     Text(prefs.alertsEnabled
-                         ? "You'll be notified when the forecast matches a supported personal trigger. Tap to tune thresholds and quiet hours."
-                         : "Turn on background forecast checks that stay quiet until your logs support a pressure or AQI trigger.")
+                         ? "You'll be notified when forecast conditions match patterns in your logs. Tap to tune thresholds and quiet hours."
+                         : "Turn on background forecast checks that stay quiet until pressure or AQI patterns appear in your logs.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
@@ -487,12 +487,12 @@ struct InsightDetailView: View {
                 heroBlock
                 chartBlock
                 sectionBlock(
-                    title: "Your pattern",
+                    title: String(localized: "Your pattern"),
                     body: insight.yourPattern,
                     icon: "person.crop.circle.fill"
                 )
                 sectionBlock(
-                    title: "Why this matters",
+                    title: String(localized: "Why this matters"),
                     body: insight.whyItMatters,
                     icon: "lightbulb.fill"
                 )
@@ -527,7 +527,7 @@ struct InsightDetailView: View {
             Text(insight.detail)
                 .font(.body)
                 .foregroundStyle(.secondary)
-            Text("Based on \(totalEvents) logged headache\(totalEvents == 1 ? "" : "s").")
+            Text(HeadacheTemperatureFormatting.basedOnCountDescription(totalEvents))
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -585,7 +585,7 @@ struct InsightDetailView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Set up Proactive Alerts")
                     .font(.headline)
-                Text("Get a notification before this signal spikes.")
+                Text("Get a notification when forecast signals match your logged patterns.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -603,7 +603,7 @@ struct InsightDetailView: View {
     }
 
     private var disclaimer: some View {
-        Text("Computed locally from your logged events. Descriptive only, not a clinical diagnosis.")
+        Text("Computed on your device from your logs. Descriptive only. Not medical advice or a diagnosis.")
             .font(.footnote)
             .foregroundStyle(.tertiary)
             .padding(.top, 4)
@@ -622,7 +622,7 @@ private struct BreakdownChart: View {
         Chart {
             ForEach(breakdown.buckets) { bucket in
                 BarMark(
-                    x: .value("Bucket", bucket.label),
+                    x: .value("Bucket", bucket.displayLabel),
                     y: .value("Share", bucket.share)
                 )
                 .foregroundStyle(bucket.isPeak ? accent : Color.secondary.opacity(0.45))
@@ -667,7 +667,7 @@ private struct BreakdownChart: View {
     }
 
     private func percentLabel(_ value: Double) -> String {
-        "\(Int((value * 100).rounded()))%"
+        value.formatted(.percent.precision(.fractionLength(0)))
     }
 }
 
@@ -684,8 +684,8 @@ struct CalendarHeatmapCard: View {
             HeatmapGrid(days: days)
 
             HStack(spacing: 14) {
-                summaryChip(value: headacheDayCount, label: "headache days")
-                summaryChip(value: freeDayCount, label: "headache-free")
+                summaryChip(value: headacheDayCount, text: HeadacheTemperatureFormatting.headacheDayCountLabel(headacheDayCount))
+                summaryChip(value: freeDayCount, text: HeadacheTemperatureFormatting.headacheFreeDayCountLabel(freeDayCount))
                 Spacer(minLength: 0)
             }
             .font(.caption.monospacedDigit())
@@ -697,11 +697,14 @@ struct CalendarHeatmapCard: View {
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
     }
 
-    private func summaryChip(value: Int, label: String) -> some View {
-        HStack(spacing: 4) {
-            Text("\(value)").fontWeight(.semibold).foregroundStyle(.primary)
-            Text(label)
+    private func summaryChip(value: Int, text: String) -> some View {
+        var attributed = AttributedString(text)
+        let formattedValue = value.formatted(.number)
+        if let range = attributed.range(of: formattedValue) {
+            attributed[range].font = .system(.caption, design: .default).weight(.semibold).monospacedDigit()
+            attributed[range].foregroundColor = .primary
         }
+        return Text(attributed).foregroundStyle(.secondary)
     }
 }
 
@@ -804,7 +807,7 @@ struct DailyRiskForecastCard: View {
                     Text(forecast.level.displayName)
                         .font(.title2.bold())
                         .foregroundStyle(forecast.level.tint)
-                    Text("risk today")
+                    Text("forecast signals")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Spacer(minLength: 0)
@@ -814,7 +817,7 @@ struct DailyRiskForecastCard: View {
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Refresh risk forecast")
+                    .accessibilityLabel("Refresh forecast")
                 }
                 if forecast.factors.isEmpty {
                     Text("No elevated signals in the next 24 hours.")
@@ -856,7 +859,7 @@ struct DailyRiskForecastCard: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Label("Location unavailable", systemImage: "location.slash")
                         .font(.subheadline.weight(.semibold))
-                    Text("Log a headache once to capture your location, then come back here for forecast-based risk.")
+                    Text("Log a headache once to capture your location, then come back here to see forecast signals.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

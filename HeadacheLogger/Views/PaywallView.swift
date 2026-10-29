@@ -24,9 +24,9 @@ struct PaywallView: View {
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
 
     private let paywallFeatures: [(icon: String, title: String)] = [
-        ("bell.badge.fill", "12-24h warnings: heads-up before pressure and AQI shift"),
-        ("chart.bar.xaxis", "Personal triggers: patterns from your sleep and weather"),
-        ("waveform.path.ecg", "Daily risk forecast: tomorrow's score from your own data")
+        ("bell.badge.fill", String(localized: "Forecast alerts based on your logged patterns")),
+        ("chart.bar.xaxis", String(localized: "Patterns in your sleep, timing, and weather logs")),
+        ("waveform.path.ecg", String(localized: "Daily forecast signals alongside your own data"))
     ]
 
     var body: some View {
@@ -124,7 +124,7 @@ struct PaywallView: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(brandColor)
             }
-            Text("Know before the headache hits")
+            Text("Understand your patterns")
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
@@ -271,10 +271,10 @@ struct PaywallView: View {
     }
 
     private var ctaTitle: String {
-        guard let package = selectedPackage else { return "Continue" }
-        if package.headacheProPackageKind == .lifetime { return "Unlock Lifetime" }
-        if store.isEligibleForIntroOffer(package) { return "Start Free Trial" }
-        return "Subscribe Now"
+        guard let package = selectedPackage else { return String(localized: "Continue") }
+        if package.headacheProPackageKind == .lifetime { return String(localized: "Unlock Lifetime") }
+        if store.isEligibleForIntroOffer(package) { return String(localized: "Start Free Trial") }
+        return String(localized: "Subscribe Now")
     }
 
     /// Short, high-trust microcopy directly under the CTA. Distinct from the
@@ -283,10 +283,10 @@ struct PaywallView: View {
         guard let package = selectedPackage else { return nil }
         switch package.headacheProPackageKind {
         case .lifetime:
-            return "One-time payment. No subscription."
+            return String(localized: "One-time payment. No subscription.")
         case .yearly, .monthly, .other:
             if store.isEligibleForIntroOffer(package) {
-                return "No charge today."
+                return String(localized: "No charge today.")
             }
             return nil
         }
@@ -296,13 +296,12 @@ struct PaywallView: View {
         guard let package = selectedPackage else { return nil }
         let price = package.headacheProPriceLabel
         if package.headacheProPackageKind == .lifetime {
-            return "\(price). One-time purchase. Lifetime access, no subscription."
+            return String(localized: "\(price). One-time purchase. Lifetime access, no subscription.")
         }
-        let renew = "Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings → Apple ID → Subscriptions."
-        if store.isEligibleForIntroOffer(package), let trial = package.headacheProIntroOfferLabel {
-            return "\(trial.capitalized), then \(price). \(renew)"
+        if store.isEligibleForIntroOffer(package), let duration = package.headacheProIntroOfferDuration {
+            return String(localized: "Free for \(duration), then \(price). Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings → Apple ID → Subscriptions.")
         }
-        return "\(price). \(renew)"
+        return String(localized: "\(price). Auto-renews unless cancelled at least 24 hours before the end of the current period. Manage or cancel in Settings → Apple ID → Subscriptions.")
     }
 
     private func selectDefaultPackageIfNeeded() {
@@ -338,10 +337,10 @@ struct PaywallView: View {
                 case .purchased, .pending:
                     break
                 case .cancelled:
-                    errorMessage = "Purchase cancelled. Tap again to continue."
+                    errorMessage = String(localized: "Purchase cancelled. Tap again to continue.")
                 }
             } catch {
-                errorMessage = "Couldn't complete the purchase. Please try again."
+                errorMessage = String(localized: "Couldn't complete the purchase. Please try again.")
             }
         }
     }
@@ -410,7 +409,7 @@ private struct PaywallPlanCard: View {
                     }
                     HStack(spacing: 6) {
                         if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
-                            Text(trial.capitalized)
+                            Text(trial)
                                 .font(.caption2.weight(.semibold))
                                 .foregroundStyle(accent)
                                 .lineLimit(1)

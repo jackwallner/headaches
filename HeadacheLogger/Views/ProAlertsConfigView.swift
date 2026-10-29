@@ -24,7 +24,7 @@ struct ProAlertsConfigView: View {
                         }
                     }
             } footer: {
-                Text("When enabled, the app checks your local forecast every few hours and only notifies you when your own daily history shows a clear link between headaches and pressure drops or air quality.")
+                Text("When enabled, the app checks your local forecast every few hours and only notifies you when logged headaches often occurred on days with pressure changes or poorer air quality.")
             }
 
             if let permissionsBanner {
@@ -42,17 +42,17 @@ struct ProAlertsConfigView: View {
             Section {
                 ProAlertStatusRow(
                     icon: notificationIcon,
-                    title: "Notifications",
+                    title: String(localized: "Notifications"),
                     value: notificationLabel
                 )
                 ProAlertStatusRow(
                     icon: "location.fill",
-                    title: "Forecast location",
+                    title: String(localized: "Forecast location"),
                     value: friendlyLocationStatus
                 )
                 ProAlertStatusRow(
                     icon: "clock.arrow.circlepath",
-                    title: "Last proactive alert",
+                    title: String(localized: "Last proactive alert"),
                     value: lastAlertText
                 )
                 Button {
@@ -64,26 +64,26 @@ struct ProAlertsConfigView: View {
             } header: {
                 Text("Status")
             } footer: {
-                Text(prefs.alertsEnabled ? "Use a test alert to confirm notifications are working before waiting for real headache weather." : "Enable Proactive Alerts first, then send a test notification.")
+                Text(prefs.alertsEnabled ? String(localized: "Use a test alert to confirm notifications are working before relying on a forecast alert.") : String(localized: "Enable Proactive Alerts first, then send a test notification."))
             }
 
             Section {
                 ProAlertStatusRow(
                     icon: "barometer",
-                    title: "Pressure signal",
+                    title: String(localized: "Pressure signal"),
                     value: signalStatus(personalProfile.pressure)
                 )
                 ProAlertStatusRow(
                     icon: "aqi.medium",
-                    title: "Air-quality signal",
-                    value: prefs.airQualityEnabled ? signalStatus(personalProfile.airQuality) : "Off"
+                    title: String(localized: "Air-quality signal"),
+                    value: prefs.airQualityEnabled ? signalStatus(personalProfile.airQuality) : String(localized: "Off")
                 )
             } header: {
                 Text("Personalization")
             } footer: {
                 Text(personalProfile.pressure.isSupported || (prefs.airQualityEnabled && personalProfile.airQuality.isSupported)
-                     ? "Alert text includes the probability lift and breakdown so you know why it fired."
-                     : "Keep logging. Forecast alerts stay quiet until your daily history shows a clear weather-pattern link across at least \(ProactiveAlertsEngine.personalSignalMinimumSampleSize) days.")
+                     ? String(localized: "Alert text shows how often headaches appeared on similar days in your logs.")
+                     : String(localized: "Keep logging. Forecast alerts stay quiet until your history includes enough days to show a recurring weather pattern."))
             }
 
             Section("Pressure drop") {
@@ -91,12 +91,12 @@ struct ProAlertsConfigView: View {
                     Text("Alert when pressure is forecast to drop by")
                     HStack {
                         Slider(value: $prefs.pressureDropThresholdHpa, in: 2...10, step: 0.5)
-                        Text(String(format: "%.1f hPa", prefs.pressureDropThresholdHpa))
+                Text("\(prefs.pressureDropThresholdHpa.formatted(.number.precision(.fractionLength(1)))) hPa")
                             .monospacedDigit()
                             .frame(width: 70, alignment: .trailing)
                     }
                 }
-                Text("Most barometric-trigger studies use 3–6 hPa over 12–24 hours.")
+                Text("This setting is the forecast pressure change that activates an alert.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -146,14 +146,14 @@ struct ProAlertsConfigView: View {
             }
 
             Section {
-                Toggle("Predict from your patterns", isOn: $prefs.patternAlertsEnabled)
+                Toggle("Notify about recurring times", isOn: $prefs.patternAlertsEnabled)
                     .onChange(of: prefs.patternAlertsEnabled) { _, _ in
                         schedulePatterns()
                     }
                 if prefs.patternAlertsEnabled {
                     Picker("Sensitivity", selection: $prefs.patternAlertSensitivity) {
-                        Text("High chance only").tag(0.0)
-                        Text("Any chance").tag(1.0)
+                        Text("Strong pattern only").tag(0.0)
+                        Text("Any observed pattern").tag(1.0)
                     }
                     .pickerStyle(.segmented)
                     .onChange(of: prefs.patternAlertSensitivity) { _, _ in
@@ -161,11 +161,11 @@ struct ProAlertsConfigView: View {
                     }
                 }
             } header: {
-                Text("Prediction")
+                Text("Forecast patterns")
             } footer: {
                 Text(prefs.patternAlertsEnabled
-                    ? "Analyzes your headache history on-device for recurring time patterns, then notifies you ~1 hour before a headache is likely. All analysis runs locally; nothing leaves your phone."
-                    : "When enabled, the app analyzes your personal headache patterns and sends a heads-up about an hour before you'd typically get one."
+                    ? "Analyzes your headache history on your device for recurring time patterns, then sends a descriptive reminder near that time. Nothing leaves your phone."
+                    : "When enabled, the app looks for recurring times in your headache logs and sends a descriptive reminder near that time."
                 )
             }
         }
@@ -204,42 +204,39 @@ struct ProAlertsConfigView: View {
 
     private var notificationLabel: String {
         switch notificationStatus {
-        case .authorized, .provisional, .ephemeral: return "Ready"
-        case .denied: return "Off in Settings"
-        case .notDetermined: return "Needs permission"
-        @unknown default: return "Unknown"
+        case .authorized, .provisional, .ephemeral: return String(localized: "Ready")
+        case .denied: return String(localized: "Off in Settings")
+        case .notDetermined: return String(localized: "Needs permission")
+        @unknown default: return String(localized: "Unknown")
         }
     }
 
     private var friendlyLocationStatus: String {
-        switch locationStatus {
-        case "Allowed": return "Ready"
-        case "Denied": return "Off in Settings"
-        case "Off": return "Location Services off"
-        case "Not asked": return "Needs permission"
-        default: return locationStatus
-        }
+        if locationStatus == String(localized: "While Using / Always") { return String(localized: "Ready") }
+        if locationStatus == String(localized: "Denied") { return String(localized: "Off in Settings") }
+        if locationStatus == String(localized: "Off") { return String(localized: "Location Services off") }
+        if locationStatus == String(localized: "Not Yet Asked") { return String(localized: "Needs permission") }
+        return locationStatus
     }
 
     private var lastAlertText: String {
         let defaults = HeadacheAppGroup.userDefaults
         guard let date = defaults.object(forKey: HeadacheStorageKey.proAlertLastFiredAt.rawValue) as? Date else {
-            return "None yet"
+            return String(localized: "None yet")
         }
         let kind = defaults.string(forKey: HeadacheStorageKey.proAlertLastFiredKind.rawValue)
-        let prefix = kind == ProactiveAlertsEngine.AlertKind.airQuality.rawValue ? "AQI" : "Pressure"
-        return "\(prefix) • \(date.formatted(date: .abbreviated, time: .shortened))"
+        let prefix = kind == ProactiveAlertsEngine.AlertKind.airQuality.rawValue ? String(localized: "AQI") : String(localized: "Pressure")
+        return String(localized: "\(prefix) • \(date.formatted(date: .abbreviated, time: .shortened))")
     }
 
     private func signalStatus(_ signal: ProactiveAlertsEngine.PersonalSignalProfile) -> String {
         if signal.isSupported {
-            let risk = Int((signal.relativeRisk * 100).rounded())
-            return "\(risk)% risk • \(signal.headacheConditionDays)/\(signal.conditionDays)"
+            return String(localized: "You logged headaches on \(signal.headacheConditionDays) of \(signal.conditionDays) similar days.")
         }
         if signal.totalDays < ProactiveAlertsEngine.personalSignalMinimumSampleSize {
-            return "Learning \(signal.totalDays)/\(ProactiveAlertsEngine.personalSignalMinimumSampleSize)"
+            return String(localized: "Learning \(signal.totalDays)/\(ProactiveAlertsEngine.personalSignalMinimumSampleSize)")
         }
-        return "No clear pattern"
+        return String(localized: "No clear pattern")
     }
 
     private func refreshPermissionStatuses() async {
@@ -257,14 +254,14 @@ struct ProAlertsConfigView: View {
         var issues: [String] = []
         switch notificationStatus {
         case .denied:
-            issues.append("Notifications are off. Alerts can't be delivered until you enable them in Settings.")
+            issues.append(String(localized: "Notifications are off. Alerts can't be delivered until you enable them in Settings."))
         case .notDetermined:
-            issues.append("Notification permission hasn't been granted yet.")
+            issues.append(String(localized: "Notification permission hasn't been granted yet."))
         default:
             break
         }
         if locationStatus == "Denied" || locationStatus == "Off" {
-            issues.append("Location is off. Without it the app can't fetch your local forecast.")
+            issues.append(String(localized: "Location is off. Without it the app can't fetch your local forecast."))
         }
         permissionsBanner = issues.isEmpty ? nil : issues.joined(separator: " ")
     }
@@ -290,13 +287,13 @@ struct ProAlertsConfigView: View {
                 || settings.authorizationStatus == .provisional
                 || settings.authorizationStatus == .ephemeral else {
             await refreshPermissionStatuses()
-            testAlertMessage = "Notifications are not enabled. Open iPhone Settings and allow notifications for One Tap Headache Tracker."
+            testAlertMessage = String(localized: "Notifications are not enabled. Open iPhone Settings and allow notifications for One Tap Headache Tracker.")
             return
         }
 
         let content = UNMutableNotificationContent()
-        content.title = "Test Headache Pro Alert"
-        content.body = "Notifications are working. Real alerts fire only when a forecast matches a supported personal trigger from your logs."
+        content.title = String(localized: "Test Headache Pro Alert")
+        content.body = String(localized: "Notifications are working. Real alerts fire only when a forecast matches a supported personal signal from your logs.")
         content.sound = .default
         content.threadIdentifier = "pro-alerts"
         let request = UNNotificationRequest(identifier: "pro-alert-test-\(UUID().uuidString)", content: content, trigger: nil)
@@ -304,9 +301,9 @@ struct ProAlertsConfigView: View {
         do {
             try await center.add(request)
             await refreshPermissionStatuses()
-            testAlertMessage = "Test alert sent."
+            testAlertMessage = String(localized: "Test alert sent.")
         } catch {
-            testAlertMessage = "Could not send the test alert. Please try again."
+            testAlertMessage = String(localized: "Could not send the test alert. Please try again.")
         }
     }
 
@@ -315,7 +312,7 @@ struct ProAlertsConfigView: View {
         components.hour = hour
         let date = Calendar.current.date(from: components) ?? Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "h a"
+        formatter.setLocalizedDateFormatFromTemplate("j")
         return formatter.string(from: date)
     }
 }

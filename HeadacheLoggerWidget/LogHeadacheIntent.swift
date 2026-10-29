@@ -5,8 +5,8 @@ import WidgetKit
 /// One-tap log from the Home Screen widget. Runs in the widget extension: no HealthKit or location here;
 /// the event is stored at tap time; the main app enriches Health + weather using **that** timestamp when it opens.
 struct LogHeadacheIntent: AppIntent {
-    static let title: LocalizedStringResource = "Log headache"
-    static let description: IntentDescription = "Records a headache in One Tap Headache Tracker."
+    static let title = LocalizedStringResource("Log headache")
+    static let description = IntentDescription("Records a headache in One Tap Headache Tracker.")
 
     /// Keep the user on the Home Screen after tapping.
     static let openAppWhenRun = false
