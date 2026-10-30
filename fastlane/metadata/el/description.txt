@@ -41,5 +41,5 @@ HEADACHE PRO – ΒΡΕΙΤΕ ΤΟΥΣ ΕΚΛΥΤΙΚΟΥΣ ΠΑΡΑΓΟΝΤΕΣ
 Λεπτομέρειες συνδρομής
 Το Headache Pro διατίθεται ως συνδρομή με αυτόματη ανανέωση (μηνιαία ή ετήσια, και οι δύο με 7 ημέρες δωρεάν δοκιμή) ή ως εφάπαξ αγορά Lifetime. Οι τιμές εμφανίζονται στην εφαρμογή πριν από την αγορά και διαφέρουν ανά περιοχή. Η χρέωση γίνεται στο Apple ID σας κατά την επιβεβαίωση. Οι συνδρομές ανανεώνονται αυτόματα εκτός αν ακυρωθούν τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Διαχειριστείτε ή ακυρώστε οποιαδήποτε στιγμή από Ρυθμίσεις → Apple ID → Συνδρομές.
 
-Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Privacy Policy: https://jackwallner.com/ios/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

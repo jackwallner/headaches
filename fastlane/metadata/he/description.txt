@@ -41,5 +41,5 @@ Migraine Tracker- Headache Log הוא יומן כאבי ראש מקומי‑קו
 פרטי מנוי
 ‏Headache Pro זמין כמנוי מתחדש אוטומטית (חודשי או שנתי, שניהם עם 7 ימי ניסיון בחינם) או כרכישה חד-פעמית Lifetime. המחירים מוצגים באפליקציה לפני הרכישה ומשתנים לפי אזור. התשלום נגבה מה-Apple ID שלך בעת האישור. המנויים מתחדשים אוטומטית אלא אם מבטלים אותם לפחות 24 שעות לפני תום התקופה הנוכחית. אפשר לנהל או לבטל בכל עת דרך הגדרות ← Apple ID ← מנויים.
 
-Privacy Policy: https://jackwallner.github.io/headaches/privacy-policy.html
+Privacy Policy: https://jackwallner.com/ios/headaches/privacy-policy.html
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

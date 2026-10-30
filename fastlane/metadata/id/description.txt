@@ -41,5 +41,5 @@ Baik Anda melacak migrain kronis, sakit kepala klaster, tegang, hormonal, atau h
 Detail Langganan
 Headache Pro tersedia sebagai langganan perpanjangan otomatis (Bulanan atau Tahunan, keduanya dengan uji coba gratis 7 hari) atau sebagai pembelian Lifetime sekali bayar. Harga ditampilkan di aplikasi sebelum Anda membeli dan berbeda-beda menurut wilayah. Pembayaran dibebankan ke Apple ID Anda saat konfirmasi. Langganan diperpanjang otomatis kecuali dibatalkan setidaknya 24 jam sebelum periode berjalan berakhir. Kelola atau batalkan kapan saja di Pengaturan → Apple ID → Langganan.
 
-Kebijakan Privasi: https://jackwallner.github.io/headaches/privacy-policy.html
+Kebijakan Privasi: https://jackwallner.com/ios/headaches/privacy-policy.html
 Ketentuan Penggunaan (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

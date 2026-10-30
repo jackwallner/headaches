@@ -41,5 +41,5 @@ Migraine Tracker- Headache Log, yerel-öncelikli bir baş ağrısı günlüğüd
 Abonelik Ayrıntıları
 Headache Pro, otomatik yenilenen abonelik (Aylık veya Yıllık, ikisinde de 7 günlük ücretsiz deneme) ya da tek seferlik Lifetime satın alma olarak sunulur. Fiyatlar satın almadan önce uygulamada gösterilir ve bölgeye göre değişir. Ödeme, onay sırasında Apple Kimliğinizden tahsil edilir. Geçerli dönemin bitiminden en az 24 saat önce iptal edilmediği sürece abonelikler otomatik olarak yenilenir. Ayarlar → Apple Kimliği → Abonelikler bölümünden istediğiniz zaman yönetin veya iptal edin.
 
-Gizlilik Politikası: https://jackwallner.github.io/headaches/privacy-policy.html
+Gizlilik Politikası: https://jackwallner.com/ios/headaches/privacy-policy.html
 Kullanım Koşulları (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

@@ -37,5 +37,5 @@ Headache Proは、記録した履歴に見られる傾向を表示します。�
 
 Headache Proは月額または年額の自動更新サブスクリプションで利用でき、対象となる方は7日間の無料トライアルを利用できます。Lifetimeの買い切りも選べます。購入前にアプリ内でサブスクリプションの詳細を確認できます。購入確定時にApple IDに請求されます。現在の期間終了の24時間以上前に解約しない場合、サブスクリプションは自動更新されます。設定 > Apple ID > サブスクリプションから管理・解約できます。
 
-プライバシーポリシー: https://jackwallner.github.io/headaches/privacy-policy.html
+プライバシーポリシー: https://jackwallner.com/ios/headaches/privacy-policy.html
 利用規約（EULA）: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

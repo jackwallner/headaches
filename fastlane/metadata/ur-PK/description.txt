@@ -35,5 +35,5 @@ HEADACHE PRO
 سبسکرپشن کی تفصیلات
 ‏Headache Pro خودکار تجدید ہونے والی سبسکرپشن کے طور پر (ماہانہ یا سالانہ، دونوں میں 7 دن کی مفت آزمائش) یا ایک بار کی Lifetime خریداری کے طور پر دستیاب ہے۔ قیمتیں خریدنے سے پہلے ایپ میں دکھائی جاتی ہیں اور خطے کے مطابق مختلف ہوتی ہیں۔ تصدیق کے وقت آپ کے Apple ID سے ادائیگی لی جاتی ہے۔ موجودہ مدت ختم ہونے سے کم از کم 24 گھنٹے پہلے منسوخ نہ کرنے پر سبسکرپشن خودکار طور پر تجدید ہو جاتی ہے۔ کسی بھی وقت Settings → Apple ID → Subscriptions میں انتظام کریں یا منسوخ کریں۔
 
-رازداری کی پالیسی: https://jackwallner.github.io/headaches/privacy-policy.html
+رازداری کی پالیسی: https://jackwallner.com/ios/headaches/privacy-policy.html
 استعمال کی شرائط (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
