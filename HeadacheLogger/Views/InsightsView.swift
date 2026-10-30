@@ -194,6 +194,13 @@ struct InsightsView: View {
 
     private func loadAndBackfillDailyRecords() async {
         var records = DailyRecordStore.load()
+        let versionKey = HeadacheStorageKey.sleepBackfillVersion.rawValue
+        let storedVersion = HeadacheAppGroup.userDefaults.integer(forKey: versionKey)
+        if storedVersion < DailyRecordStore.sleepBackfillVersion {
+            records = DailyRecordStore.resettingStaleSleep(records, storedVersion: storedVersion)
+            DailyRecordStore.save(records)
+            HeadacheAppGroup.userDefaults.set(DailyRecordStore.sleepBackfillVersion, forKey: versionKey)
+        }
         let needsSleepBackfill = records.contains { !$0.sleepFetched && $0.weatherFetched }
         if needsSleepBackfill {
             records = await DailyRecordStore.backfillSleep(records: records, healthKit: HealthKitService.shared)

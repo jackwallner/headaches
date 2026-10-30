@@ -775,23 +775,7 @@ actor HealthKitService {
     /// reflect ongoing sleep (e.g. a 2 a.m. log includes the current sleep in progress).
     private func sleepContextBefore(date: Date) async throws -> (hours: Double?, wakeTime: Date?) {
         let store = self.store
-        let calendar = Calendar.current
-        let previousEvening = calendar.date(
-            bySettingHour: 18,
-            minute: 0,
-            second: 0,
-            of: calendar.date(byAdding: .day, value: -1, to: date) ?? date.addingTimeInterval(-86400)
-        ) ?? date.addingTimeInterval(-86400)
-        let todayNoon = calendar.date(
-            bySettingHour: 12,
-            minute: 0,
-            second: 0,
-            of: date
-        ) ?? date
-        let end = min(date, todayNoon)
-        // Safety: if previousEvening somehow ends up after `end` (extreme edge cases), fall back
-        // to a 24h look-back so we never pass an inverted range to HealthKit.
-        let start = previousEvening < end ? previousEvening : date.addingTimeInterval(-86_400)
+        let (start, end) = SleepIntervalMerge.nightWindow(before: date)
         let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
 
         return try await withCheckedThrowingContinuation { continuation in
@@ -819,7 +803,7 @@ actor HealthKitService {
                     SleepIntervalMerge.Interval(start: $0.startDate, end: $0.endDate)
                 }
                 let merged = SleepIntervalMerge.merge(intervals, mergeGap: 45 * 60)
-                let totalSeconds = merged.reduce(0.0) { $0 + $1.duration }
+                let totalSeconds = SleepIntervalMerge.asleepSeconds(intervals)
                 let wake = SleepIntervalMerge.wakeTimeAfterLongestSleep(merged)
 
                 guard totalSeconds > 0 else {

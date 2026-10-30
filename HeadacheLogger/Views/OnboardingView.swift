@@ -11,6 +11,7 @@ struct OnboardingView: View {
     @State private var step = 0
     @State private var isWorking = false
     @State private var isPurchasing = false
+    @State private var isRestoring = false
     @State private var trialError: String?
     @State private var showPaywallFallback = false
 
@@ -180,9 +181,10 @@ struct OnboardingView: View {
             Text("·").foregroundStyle(.tertiary)
             Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
             Text("·").foregroundStyle(.tertiary)
-            Button("Restore") {
-                Task { await store.restorePurchases() }
+            Button(isRestoring ? "Restoring…" : "Restore") {
+                startRestore()
             }
+            .disabled(isRestoring || isPurchasing)
         }
         .font(.caption2)
         .foregroundStyle(.tertiary)
@@ -332,6 +334,21 @@ struct OnboardingView: View {
             } catch {
                 ConversionDiagnostics.record(.purchaseFailed)
                 trialError = store.lastError ?? "Couldn't start your trial. Please try again."
+            }
+        }
+    }
+
+    /// Mirrors the paywall: a restored purchase finishes onboarding, anything else says why.
+    private func startRestore() {
+        trialError = nil
+        isRestoring = true
+        Task { @MainActor in
+            defer { isRestoring = false }
+            await store.restorePurchases()
+            if store.isProUnlocked {
+                finishOnboarding()
+            } else {
+                trialError = store.lastError ?? "No previous Headache Pro purchase was found on this Apple ID."
             }
         }
     }

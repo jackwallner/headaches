@@ -61,6 +61,7 @@
 		CFFCF9BE047EBC7351802E30 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
 		D2154AC55D1BE4F18F71BA40 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
 		D2A25F0E0B62B270B3DB00B6 /* HeadacheAppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC0792289CA354CC0B28C43 /* HeadacheAppGroup.swift */; };
+		D71BE055526CFF8A48F62B42 /* OvernightFindingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3C736D8621B1DE3462A6A8 /* OvernightFindingsTests.swift */; };
 		D9447241D9F98FDCBFED788D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334426D57EADD647A3B13738 /* HomeView.swift */; };
 		DFBE92F8E24C185CF581D00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92D22239C0ACC0D64E3DC4B0 /* Assets.xcassets */; };
 		E1E6406B0B06AEDE54C3E916 /* DailyRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D57B46C10D3D54AAAF7F859 /* DailyRecordStore.swift */; };
@@ -166,6 +167,7 @@
 		8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadacheLoggerWatchApp.swift; sourceTree = "<group>"; };
 		86A860127D5977E37581C603 /* DailyWeatherBackfillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherBackfillService.swift; sourceTree = "<group>"; };
 		87BECD2401272F50D2B638AF /* SleepIntervalMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepIntervalMerge.swift; sourceTree = "<group>"; };
+		8A3C736D8621B1DE3462A6A8 /* OvernightFindingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvernightFindingsTests.swift; sourceTree = "<group>"; };
 		8B2A6A7A02FE4CD5E837A631 /* ReviewPromptTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptTracker.swift; sourceTree = "<group>"; };
 		9017BED492A2E12B9B6E6710 /* CaptureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureCoordinator.swift; sourceTree = "<group>"; };
 		91367B1F7BDF8F54249C011B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 			children = (
 				A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */,
 				B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */,
+				8A3C736D8621B1DE3462A6A8 /* OvernightFindingsTests.swift */,
 				168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */,
 				723F7475C1EFCF02BF30B52A /* StoreQuarantineTests.swift */,
 				C4129CE81EDA16858FF75A88 /* UnfoldedSplitTests.swift */,
@@ -670,6 +673,7 @@
 			files = (
 				F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */,
 				B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */,
+				D71BE055526CFF8A48F62B42 /* OvernightFindingsTests.swift in Sources */,
 				88DA032C60DFDA3F480E7A2F /* ReviewPromptTrackerTests.swift in Sources */,
 				87B8E311F08EAEB44603CC3C /* StoreQuarantineTests.swift in Sources */,
 				755A501FDB737B6D709365BE /* UnfoldedSplitTests.swift in Sources */,
@@ -791,7 +795,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 110;
+				CURRENT_PROJECT_VERSION = 111;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -906,7 +910,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 110;
+				CURRENT_PROJECT_VERSION = 111;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = YXG4MP6W39;
 				ENABLE_NS_ASSERTIONS = NO;

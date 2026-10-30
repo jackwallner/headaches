@@ -56,6 +56,9 @@ enum HeadacheStorageKey: String {
     case milestonePrompt5Shown = "headacheMilestonePrompt5Shown"
     /// True after the user has been prompted about Pro at the 10-log milestone.
     case milestonePrompt10Shown = "headacheMilestonePrompt10Shown"
+
+    /// Last `DailyRecordStore.sleepBackfillVersion` applied to the stored daily records.
+    case sleepBackfillVersion = "headacheSleepBackfillVersion"
 }
 
 enum HeadacheOnboardingStore {
