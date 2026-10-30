@@ -335,11 +335,12 @@ private struct HeadacheLoggerRootContent: View {
 
     /// Home is on screen with no promo, trial or paywall sheet and no Undo bar over it.
     private var isHomeClear: Bool {
-        hasCompletedOnboarding
-            && reviewPromptCoordinator.homeIsUncovered
-            && activeSheet == nil
-            && !pendingPaywallAfterTrialDismiss
-            && !captureCoordinator.proPromptShownThisSession
+        ReviewPromptTracker.isHomeClear(
+            hasCompletedOnboarding: hasCompletedOnboarding,
+            homeIsUncovered: reviewPromptCoordinator.homeIsUncovered,
+            hasActiveSheet: activeSheet != nil,
+            pendingPaywallAfterTrialDismiss: pendingPaywallAfterTrialDismiss
+        )
     }
 
     /// Single dismissal handler for the root promo sheet. Runs trial-purchase

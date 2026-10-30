@@ -607,11 +607,14 @@ private struct SummaryGrid: View {
     }
 
     private var mostCommonWeekday: String? {
-        groupedMax(from: events.map(\.weekdayName))
+        let counts = events.reduce(into: [Int: Int]()) { $0[$1.weekdayIndex, default: 0] += 1 }
+        guard let top = counts.mostCommon(rank: { $0 })?.key else { return nil }
+        return events.first { $0.weekdayIndex == top }?.weekdayName
     }
 
     private var mostCommonPartOfDay: String? {
-        groupedMax(from: events.map { $0.partOfDay.rawValue.capitalized })
+        let counts = events.reduce(into: [PartOfDay: Int]()) { $0[$1.partOfDay, default: 0] += 1 }
+        return counts.mostCommon()?.key.rawValue.capitalized
     }
 
     private var averageTemperatureText: String {
@@ -623,15 +626,6 @@ private struct SummaryGrid: View {
         }
         let avgF = HeadacheTemperatureFormatting.celsiusToFahrenheit(avgC)
         return "\(Int(avgF.rounded()))°F"
-    }
-
-    private func groupedMax(from values: [String]) -> String? {
-        values
-            .reduce(into: [:]) { counts, value in
-                counts[value, default: 0] += 1
-            }
-            .max(by: { lhs, rhs in lhs.value < rhs.value })?
-            .key
     }
 }
 

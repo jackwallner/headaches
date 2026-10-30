@@ -91,7 +91,7 @@ struct InsightsView: View {
                     Text("Today's risk")
                         .keepsWholeAboveTabBar()
                 } footer: {
-                    Text("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
+                    Text("Risk combines the next 24 hours of forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
                         .font(.footnote)
                         .keepsWholeAboveTabBar()
                 }
@@ -194,6 +194,13 @@ struct InsightsView: View {
 
     private func loadAndBackfillDailyRecords() async {
         var records = DailyRecordStore.load()
+        let versionKey = HeadacheStorageKey.sleepBackfillVersion.rawValue
+        let storedVersion = HeadacheAppGroup.userDefaults.integer(forKey: versionKey)
+        if storedVersion < DailyRecordStore.sleepBackfillVersion {
+            records = DailyRecordStore.resettingStaleSleep(records, storedVersion: storedVersion)
+            DailyRecordStore.save(records)
+            HeadacheAppGroup.userDefaults.set(DailyRecordStore.sleepBackfillVersion, forKey: versionKey)
+        }
         let needsSleepBackfill = records.contains { !$0.sleepFetched && $0.weatherFetched }
         if needsSleepBackfill {
             records = await DailyRecordStore.backfillSleep(records: records, healthKit: HealthKitService.shared)
@@ -408,6 +415,11 @@ private struct LockedInsightPreviewRow: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        // The blur only hides pixels: without this, VoiceOver reads the locked insight in full.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Locked Pro pattern")
+        .accessibilityHint("Opens Pro plans")
+        .accessibilityAddTraits(.isButton)
     }
 }
 

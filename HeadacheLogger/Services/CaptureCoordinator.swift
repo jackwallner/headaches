@@ -10,6 +10,9 @@ final class CaptureCoordinator: ObservableObject {
     @Published var bannerIsError = false
     @Published var isCapturing = false
     @Published var lastCapturedEventID: UUID?
+    /// True while the latest `isCapturing` run is a retry, which must not bring back the
+    /// "Logged" checkmark or an Undo that deletes the entry being fixed.
+    private(set) var currentRunIsRetry = false
     /// True once any monetization surface (trial offer, Pro intro, or milestone card) has
     /// appeared in *this* app session. Both the Home milestone card and the root-level trial
     /// offer read this so only one Pro moment shows per session. Reset on cold launch.
@@ -110,6 +113,7 @@ final class CaptureCoordinator: ObservableObject {
             return false
         }
 
+        currentRunIsRetry = false
         isCapturing = true
         bannerMessage = "Saving and collecting context…"
         bannerIsError = false
@@ -184,6 +188,7 @@ final class CaptureCoordinator: ObservableObject {
             return
         }
 
+        currentRunIsRetry = true
         isCapturing = true
         bannerMessage = "Retrying context capture…"
         bannerIsError = false

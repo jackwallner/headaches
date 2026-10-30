@@ -111,7 +111,7 @@ enum InsightsEngine {
         for event in events {
             counts[event.partOfDay, default: 0] += 1
         }
-        guard let (top, topCount) = counts.max(by: { $0.value < $1.value }), topCount > 0 else { return nil }
+        guard let (top, topCount) = counts.mostCommon(), topCount > 0 else { return nil }
         let total = events.count
         let topShare = Double(topCount) / Double(total)
         guard topShare >= 0.30 else { return nil }
@@ -149,7 +149,7 @@ enum InsightsEngine {
         for event in events {
             counts[event.weekdayIndex, default: 0] += 1
         }
-        guard let (topIndex, topCount) = counts.max(by: { $0.value < $1.value }), topCount > 0 else { return nil }
+        guard let (topIndex, topCount) = counts.mostCommon(rank: { $0 }), topCount > 0 else { return nil }
         let total = events.count
         let topShare = Double(topCount) / Double(total)
         // Uniform across 7 days would be ~14%. Surface only when meaningfully concentrated —
@@ -272,7 +272,7 @@ enum InsightsEngine {
                 : "\(pct)%"
             detail = "Headaches are \(moreLikely) more likely after \(headline.label) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med))."
             strength = 0.5 + min((headline.lift - 1.0) / 2.0, 0.5)
-            title = "Low sleep: \(headline.label)"
+            title = sleepBandTitle(label: headline.label, range: bucket.range)
             yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)%, compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
         } else {
             let lowSleepShare = Double(headacheSleepValues.filter { $0 < 6 }.count) / Double(total)
@@ -312,7 +312,7 @@ enum InsightsEngine {
         let coveragePhrase = coverageQualifier(subset: total, of: events.count)
         var counts: [PressureTrend: Int] = [:]
         for t in trends { counts[t, default: 0] += 1 }
-        guard let (top, topCount) = counts.max(by: { $0.value < $1.value }) else { return nil }
+        guard let (top, topCount) = counts.mostCommon() else { return nil }
         let topShare = Double(topCount) / Double(total)
         guard topShare >= 0.45 else { return nil }
         let buckets: [Bucket] = order.map { trend in
@@ -534,7 +534,7 @@ enum InsightsEngine {
             }
         }
         guard total >= minimumSampleSize else { return nil }
-        guard let (top, topCount) = counts.max(by: { $0.value < $1.value }) else { return nil }
+        guard let (top, topCount) = counts.mostCommon() else { return nil }
         let topShare = Double(topCount) / Double(total)
         // With three buckets the even baseline is 33%. Surface only when one severity clearly
         // dominates (>=50%) — at 40% the "pattern" is barely above chance.
@@ -1208,7 +1208,7 @@ enum InsightsEngine {
         let order: [MotionActivity] = [.stationary, .walking, .running, .automotive, .cycling, .unknown]
         var counts: [MotionActivity: Int] = [:]
         for v in values { counts[v, default: 0] += 1 }
-        guard let (top, topCount) = counts.max(by: { $0.value < $1.value }), topCount > 0 else { return nil }
+        guard let (top, topCount) = counts.mostCommon(), topCount > 0 else { return nil }
         // Don't surface "stationary" — people sit to log headaches, that's expected.
         // Only surface when a non-stationary activity dominates.
         guard top != .stationary, top != .unknown else { return nil }
@@ -1491,6 +1491,13 @@ enum InsightsEngine {
         return " (of the \(subset) with available data)"
     }
 
+    /// "Low sleep" only fits the short bands; an 8h+ headline is long sleep.
+    static func sleepBandTitle(label: String, range: Range<Double>) -> String {
+        if range.upperBound <= 6 { return "Short sleep: \(label)" }
+        if range.lowerBound >= 8 { return "Long sleep: \(label)" }
+        return "Sleep: \(label)"
+    }
+
     private static func formatHours(_ hours: Double) -> String {
         let total = max(0, hours)
         let h = Int(total)
@@ -1556,6 +1563,22 @@ enum InsightsEngine {
 
 /// One row per calendar day in a fixed lookback window. Used by the in-app heatmap and by
 /// the doctor-facing PDF so both renderings see the same severity colouring.
+extension Dictionary where Value == Int {
+    /// The most frequent key. Ties go to the lowest `rank`: Dictionary order changes between
+    /// launches, so a plain `max` gave different "most common" answers for the same logs.
+    func mostCommon(rank: (Key) -> Int) -> (key: Key, value: Int)? {
+        self.max { a, b in a.value != b.value ? a.value < b.value : rank(a.key) > rank(b.key) }
+    }
+}
+
+extension Dictionary where Value == Int, Key: CaseIterable {
+    /// Ties go to the case declared first.
+    func mostCommon() -> (key: Key, value: Int)? {
+        let order = Array(Key.allCases)
+        return mostCommon { key in order.firstIndex(of: key) ?? order.count }
+    }
+}
+
 struct HeatmapDay: Identifiable, Sendable {
     let date: Date
     let count: Int
@@ -1593,7 +1616,9 @@ enum HeatmapData {
         while cursor <= today {
             let entry = byDay[cursor]
             out.append(HeatmapDay(date: cursor, count: entry?.count ?? 0, peakSeverity: entry?.peak))
-            cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+            // Re-normalise each step: after a DST change at local midnight, adding a day keeps
+            // the 01:00 wall time and the cursor never matches a startOfDay key again.
+            cursor = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400))
         }
         return out
     }
