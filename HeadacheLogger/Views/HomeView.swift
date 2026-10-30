@@ -17,6 +17,8 @@ struct HomeView: View {
     @State private var severityNotesTarget: SeverityNotesTarget?
     @State private var showCheckmark = false
     @State private var showPaywall = false
+    /// True once the milestone card claimed this session's Pro moment, so the claim keeps it on screen.
+    @State private var milestoneClaimedSession = false
     @State private var didPresentDebugDetails = false
     /// Drives the bottom Undo / Add Details snackbar. Set when a tap completes and
     /// auto-clears after `undoSnackbarTTLSeconds` so the controls don't linger forever.
@@ -120,7 +122,10 @@ struct HomeView: View {
                 if let milestone = activeMilestone {
                     MilestoneProPrompt(milestone: milestone, showPaywall: $showPaywall, onDismiss: markMilestoneShown)
                         .keepsWholeAboveTabBar()
-                        .onAppear { captureCoordinator.proPromptShownThisSession = true }
+                        .onAppear {
+                            milestoneClaimedSession = true
+                            captureCoordinator.proPromptShownThisSession = true
+                        }
                 }
 
                 if !recentEvents.isEmpty {
@@ -207,7 +212,7 @@ struct HomeView: View {
             }
         }
         .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
-            if !isCapturing, captureCoordinator.lastCapturedEventID != nil {
+            if !isCapturing, !captureCoordinator.currentRunIsRetry, captureCoordinator.lastCapturedEventID != nil {
                 showCheckmark = true
                 Task {
                     try? await Task.sleep(nanoseconds: 3_500_000_000)
@@ -271,7 +276,7 @@ struct HomeView: View {
         }
     }
 
-    fileprivate enum ProMilestone: Int, Equatable {
+    enum ProMilestone: Int, Equatable {
         case threeLogs = 3
         case fiveLogs = 5
         case tenLogs = 10
@@ -287,7 +292,7 @@ struct HomeView: View {
         var detail: String {
             switch self {
             case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more."
-            case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches."
+            case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro shows the patterns in your logs."
             case .tenLogs: return "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
             }
         }
@@ -302,22 +307,39 @@ struct HomeView: View {
     }
 
     private var activeMilestone: ProMilestone? {
-        guard !store.isProUnlocked else { return nil }
-        // One Pro moment per session: if a trial offer already fired, skip the milestone.
-        guard !captureCoordinator.proPromptShownThisSession else { return nil }
-        let count = events.count
-        if count >= 10, !milestone10PromptShown { return .tenLogs }
-        if count >= 5, !milestone5PromptShown { return .fiveLogs }
-        if count >= 3, !milestone3PromptShown { return .threeLogs }
+        Self.milestone(
+            count: events.count,
+            isPro: store.isProUnlocked,
+            sessionClaimedElsewhere: captureCoordinator.proPromptShownThisSession && !milestoneClaimedSession,
+            shown3: milestone3PromptShown,
+            shown5: milestone5PromptShown,
+            shown10: milestone10PromptShown
+        )
+    }
+
+    /// One Pro moment per session: the card yields to a trial offer that already fired,
+    /// but its own claim on the session must not hide it again.
+    static func milestone(
+        count: Int,
+        isPro: Bool,
+        sessionClaimedElsewhere: Bool,
+        shown3: Bool,
+        shown5: Bool,
+        shown10: Bool
+    ) -> ProMilestone? {
+        guard !isPro, !sessionClaimedElsewhere else { return nil }
+        if count >= 10 { return shown10 ? nil : .tenLogs }
+        if count >= 5 { return shown5 ? nil : .fiveLogs }
+        if count >= 3 { return shown3 ? nil : .threeLogs }
         return nil
     }
 
+    /// Retiring a milestone retires the lower ones too, so "Not now" on the 10-log card
+    /// doesn't bring back the 5-log card.
     private func markMilestoneShown(_ milestone: ProMilestone) {
-        switch milestone {
-        case .threeLogs: milestone3PromptShown = true
-        case .fiveLogs: milestone5PromptShown = true
-        case .tenLogs: milestone10PromptShown = true
-        }
+        milestone3PromptShown = true
+        if milestone.rawValue >= ProMilestone.fiveLogs.rawValue { milestone5PromptShown = true }
+        if milestone == .tenLogs { milestone10PromptShown = true }
     }
 }
 

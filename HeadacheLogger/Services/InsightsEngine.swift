@@ -272,7 +272,7 @@ enum InsightsEngine {
                 : "\(pct)%"
             detail = "Headaches are \(moreLikely) more likely after \(headline.label) of sleep (\(ratePct)% vs \(overallPct)% overall). Median: \(formatHours(med))."
             strength = 0.5 + min((headline.lift - 1.0) / 2.0, 0.5)
-            title = "Low sleep: \(headline.label)"
+            title = sleepBandTitle(label: headline.label, range: bucket.range)
             yourPattern = "On days following \(headline.label) of sleep, your headache rate was \(ratePct)%, compared to \(overallPct)% across all days with sleep data. Median sleep before a headache: \(formatHours(med))."
         } else {
             let lowSleepShare = Double(headacheSleepValues.filter { $0 < 6 }.count) / Double(total)
@@ -1491,6 +1491,13 @@ enum InsightsEngine {
         return " (of the \(subset) with available data)"
     }
 
+    /// "Low sleep" only fits the short bands; an 8h+ headline is long sleep.
+    static func sleepBandTitle(label: String, range: Range<Double>) -> String {
+        if range.upperBound <= 6 { return "Short sleep: \(label)" }
+        if range.lowerBound >= 8 { return "Long sleep: \(label)" }
+        return "Sleep: \(label)"
+    }
+
     private static func formatHours(_ hours: Double) -> String {
         let total = max(0, hours)
         let h = Int(total)
@@ -1593,7 +1600,9 @@ enum HeatmapData {
         while cursor <= today {
             let entry = byDay[cursor]
             out.append(HeatmapDay(date: cursor, count: entry?.count ?? 0, peakSeverity: entry?.peak))
-            cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+            // Re-normalise each step: after a DST change at local midnight, adding a day keeps
+            // the 01:00 wall time and the cursor never matches a startOfDay key again.
+            cursor = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400))
         }
         return out
     }

@@ -150,6 +150,18 @@ enum ReviewPromptTracker {
         return canRequestReview(hasCompletedOnboarding: hasCompletedOnboarding, now: now)
     }
 
+    /// Home is clear for the rating ask when no sheet covers it. The session's Pro moment is
+    /// deliberately not part of this: the Home milestone card claims it on every launch for a
+    /// free user with 3+ logs, which used to block the ask for those users forever.
+    static func isHomeClear(
+        hasCompletedOnboarding: Bool,
+        homeIsUncovered: Bool,
+        hasActiveSheet: Bool,
+        pendingPaywallAfterTrialDismiss: Bool
+    ) -> Bool {
+        hasCompletedOnboarding && homeIsUncovered && !hasActiveSheet && !pendingPaywallAfterTrialDismiss
+    }
+
     static func markShown(now: Date = .now) {
         lastShownDate = now
         consumePendingPositiveMoment()

@@ -214,10 +214,10 @@ struct ProAlertsConfigView: View {
 
     private var friendlyLocationStatus: String {
         switch locationStatus {
-        case "Allowed": return "Ready"
+        case "While Using / Always": return "Ready"
         case "Denied": return "Off in Settings"
         case "Off": return "Location Services off"
-        case "Not asked": return "Needs permission"
+        case "Not Yet Asked": return "Needs permission"
         default: return locationStatus
         }
     }
@@ -234,8 +234,8 @@ struct ProAlertsConfigView: View {
 
     private func signalStatus(_ signal: ProactiveAlertsEngine.PersonalSignalProfile) -> String {
         if signal.isSupported {
-            let risk = Int((signal.relativeRisk * 100).rounded())
-            return "\(risk)% risk • \(signal.headacheConditionDays)/\(signal.conditionDays)"
+            let lift = String(format: "%.1f", signal.relativeRisk)
+            return "\(lift)× more likely • \(signal.headacheConditionDays) of \(signal.conditionDays) days"
         }
         if signal.totalDays < ProactiveAlertsEngine.personalSignalMinimumSampleSize {
             return "Learning \(signal.totalDays)/\(ProactiveAlertsEngine.personalSignalMinimumSampleSize)"

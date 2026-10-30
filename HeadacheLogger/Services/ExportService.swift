@@ -215,7 +215,7 @@ enum ExportService {
         ]
     }
 
-    private static func csv(_ value: String?) -> String {
+    static func csv(_ value: String?) -> String {
         let raw = value ?? ""
         let escaped = raw.replacingOccurrences(of: "\"", with: "\"\"")
         let needsFormulaGuard = escaped.first.map({ "=+-@".contains($0) }) == true
@@ -245,6 +245,16 @@ enum ExportService {
     }
 
     // MARK: - Doctor PDF
+
+    /// System colors resolved for a light page. Dynamic colors resolve against the
+    /// window's traits at draw time, so a dark window drew near-white ink on the white PDF.
+    enum PDFInk {
+        private static var light: UITraitCollection { UITraitCollection(userInterfaceStyle: .light) }
+        static var label: UIColor { UIColor.label.resolvedColor(with: light) }
+        static var secondaryLabel: UIColor { UIColor.secondaryLabel.resolvedColor(with: light) }
+        static var tertiaryLabel: UIColor { UIColor.tertiaryLabel.resolvedColor(with: light) }
+        static var separator: UIColor { UIColor.separator.resolvedColor(with: light) }
+    }
 
     /// Renders a one-page clinical-style report covering the trailing 90 days.
     @MainActor
@@ -293,7 +303,7 @@ enum ExportService {
         let title = "Headache Report"
         let titleAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 26, weight: .heavy),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         (title as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: titleAttrs)
 
@@ -302,7 +312,7 @@ enum ExportService {
         let subtitle = "\(dateFmt.string(from: windowStart)) to \(dateFmt.string(from: windowEnd))"
         let subtitleAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 12, weight: .regular),
-            .foregroundColor: UIColor.secondaryLabel,
+            .foregroundColor: PDFInk.secondaryLabel,
         ]
         (subtitle as NSString).draw(at: CGPoint(x: leftMargin, y: y + 32), withAttributes: subtitleAttrs)
 
@@ -314,7 +324,7 @@ enum ExportService {
         )
 
         let separatorY = y + 54
-        UIColor.separator.setStroke()
+        PDFInk.separator.setStroke()
         let path = UIBezierPath()
         path.lineWidth = 0.5
         path.move(to: CGPoint(x: leftMargin, y: separatorY))
@@ -337,13 +347,13 @@ enum ExportService {
             partCounts[event.partOfDay, default: 0] += 1
         }
         let topWeekday: String = {
-            guard let top = dayCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
+            guard let top = dayCounts.max(by: { $0.value < $1.value })?.key else { return "None" }
             let symbols = calendar.standaloneWeekdaySymbols
             let i = top - 1
-            return (i >= 0 && i < symbols.count) ? symbols[i] : "—"
+            return (i >= 0 && i < symbols.count) ? symbols[i] : "None"
         }()
         let topPart: String = {
-            guard let top = partCounts.max(by: { $0.value < $1.value })?.key else { return "—" }
+            guard let top = partCounts.max(by: { $0.value < $1.value })?.key else { return "None" }
             return top.rawValue.capitalized
         }()
 
@@ -357,7 +367,7 @@ enum ExportService {
 
         let headerAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         ("Summary" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
@@ -365,11 +375,11 @@ enum ExportService {
         let cellWidth = contentWidth / CGFloat(stats.count)
         let labelAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 9, weight: .semibold),
-            .foregroundColor: UIColor.secondaryLabel,
+            .foregroundColor: PDFInk.secondaryLabel,
         ]
         let valueAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 20, weight: .bold),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         for (index, stat) in stats.enumerated() {
             let originX = leftMargin + cellWidth * CGFloat(index)
@@ -383,7 +393,7 @@ enum ExportService {
     private static func drawHeatmap(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, days: [HeatmapDay]) -> CGFloat {
         let headerAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         ("Last 90 days" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
@@ -420,7 +430,7 @@ enum ExportService {
         let legendY = gridBottom + 6
         let legendAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 9, weight: .regular),
-            .foregroundColor: UIColor.secondaryLabel,
+            .foregroundColor: PDFInk.secondaryLabel,
         ]
         ("Less" as NSString).draw(at: CGPoint(x: leftMargin, y: legendY + 2), withAttributes: legendAttrs)
         let swatches: [HeatmapDay] = [
@@ -443,7 +453,7 @@ enum ExportService {
     }
 
     private static func heatmapPDFColor(for day: HeatmapDay, brand: UIColor) -> UIColor {
-        if day.count == 0 { return UIColor.tertiaryLabel.withAlphaComponent(0.25) }
+        if day.count == 0 { return PDFInk.tertiaryLabel.withAlphaComponent(0.25) }
         if let severity = day.peakSeverity {
             switch severity {
             case .slight: return brand.withAlphaComponent(0.35)
@@ -457,18 +467,18 @@ enum ExportService {
     private static func drawTopPatterns(at y: CGFloat, leftMargin: CGFloat, contentWidth: CGFloat, summary: InsightsEngine.Summary) -> CGFloat {
         let headerAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         ("Top patterns" as NSString).draw(at: CGPoint(x: leftMargin, y: y), withAttributes: headerAttrs)
 
         var cursorY = y + 22
         let titleAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 12, weight: .semibold),
-            .foregroundColor: UIColor.label,
+            .foregroundColor: PDFInk.label,
         ]
         let detailAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 10, weight: .regular),
-            .foregroundColor: UIColor.secondaryLabel,
+            .foregroundColor: PDFInk.secondaryLabel,
         ]
 
         let topInsights = Array(summary.insights.prefix(3))
@@ -500,7 +510,7 @@ enum ExportService {
         let footerY = pageRect.height - 40
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 8, weight: .regular),
-            .foregroundColor: UIColor.tertiaryLabel,
+            .foregroundColor: PDFInk.tertiaryLabel,
         ]
         let line = "Generated by One Tap Headache Tracker. Descriptive only, not a clinical diagnosis. Discuss with a qualified clinician."
         (line as NSString).draw(at: CGPoint(x: leftMargin, y: footerY), withAttributes: attrs)

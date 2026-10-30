@@ -128,7 +128,7 @@ enum DailyRecordStore {
                     sleepFetched: false
                 )
             }
-            cursor = cal.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+            cursor = cal.startOfDay(for: cal.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400))
         }
 
         return byDate.values.sorted { $0.date < $1.date }
@@ -218,7 +218,7 @@ enum DailyRecordStore {
             if byDate[cursor] == nil {
                 byDate[cursor] = blankRecord(for: cursor)
             }
-            cursor = calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400)
+            cursor = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: cursor) ?? cursor.addingTimeInterval(86_400))
         }
 
         return byDate.values.sorted { $0.date < $1.date }
@@ -293,17 +293,39 @@ enum DailyRecordStore {
     }
 
     /// Backfill sleep hours from HealthKit for all records that don't already have sleep data.
-    /// Sleep is queried for the night before each record's date.
+    /// Sleep is queried for the night that ends on each record's day.
     static func backfillSleep(records: [DailyRecord], healthKit: HealthKitService) async -> [DailyRecord] {
         var updated = records
         for i in updated.indices {
             guard !updated[i].sleepFetched else { continue }
-            if let hours = await healthKit.fetchSleepHoursForNightBefore(updated[i].date) {
+            if let hours = await healthKit.fetchSleepHoursForNightBefore(sleepQueryDate(for: updated[i].date)) {
                 updated[i].sleepHoursLastNight = hours
                 updated[i].sleepFetched = true
             }
         }
         return updated
+    }
+
+    /// A record's `date` is its 00:00, and a sleep window ends at min(date, noon), so querying
+    /// with the record date itself returned only the sleep before midnight. Query at noon.
+    static func sleepQueryDate(for day: Date, calendar: Calendar = .current) -> Date {
+        calendar.date(bySettingHour: 12, minute: 0, second: 0, of: calendar.startOfDay(for: day)) ?? day
+    }
+
+    /// Bumped when backfilled sleep was written wrong. Version 1: backfills before it queried
+    /// the hours before midnight, which inverted the sleep insights.
+    static let sleepBackfillVersion = 1
+
+    /// Clears every record's sleep once per `sleepBackfillVersion` so the corrected backfill
+    /// refills it (and `merged` refills headache days from their events).
+    static func resettingStaleSleep(_ records: [DailyRecord], storedVersion: Int) -> [DailyRecord] {
+        guard storedVersion < sleepBackfillVersion else { return records }
+        return records.map { record in
+            var record = record
+            record.sleepHoursLastNight = nil
+            record.sleepFetched = false
+            return record
+        }
     }
 
     /// Compute lift-based counts for sleep: how much more likely is a headache given a sleep range?

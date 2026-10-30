@@ -152,35 +152,38 @@ enum ImportService {
     }
 
     /// Parse a single CSV row into fields, handling quoted values and escaped quotes.
-    private static func parseCSVRow(_ line: String) -> [String] {
+    /// Undoes the export's spreadsheet formula guard, so a backup round trip keeps notes intact.
+    static func parseCSVRow(_ line: String) -> [String] {
         var fields: [String] = []
         var current = ""
         var inQuotes = false
+        var chars = Array(line)[...]
 
-        for char in line {
+        while let char = chars.popFirst() {
             switch char {
+            case "\"" where inQuotes && chars.first == "\"":
+                chars.removeFirst()
+                current.append(char)
             case "\"":
                 inQuotes.toggle()
-            case ",":
-                if inQuotes {
-                    current.append(char)
-                } else {
-                    let cleaned = unescapeQuotes(current).trimmingCharacters(in: .whitespaces)
-                    fields.append(cleaned)
-                    current = ""
-                }
+            case "," where !inQuotes:
+                fields.append(cleanField(current))
+                current = ""
             default:
                 current.append(char)
             }
         }
 
-        let cleaned = unescapeQuotes(current).trimmingCharacters(in: .whitespaces)
-        fields.append(cleaned)
+        fields.append(cleanField(current))
         return fields
     }
 
-    private static func unescapeQuotes(_ value: String) -> String {
-        value.replacingOccurrences(of: "\"\"", with: "\"")
+    private static func cleanField(_ value: String) -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespaces)
+        guard trimmed.first == "'", let next = trimmed.dropFirst().first, "=+-@".contains(next) else {
+            return trimmed
+        }
+        return String(trimmed.dropFirst())
     }
 
     // MARK: - Event Creation and Population

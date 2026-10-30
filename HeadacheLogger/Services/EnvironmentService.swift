@@ -113,7 +113,8 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
         )
 
         do {
-            let placemarks = try await reverseGeocode(location)
+            // A place label is optional: a geocode error must not throw away the weather.
+            let placemarks = (try? await reverseGeocode(location)) ?? []
             let placemark = placemarks.first
 
             async let weatherTask = OpenMeteoClient.fetchWeatherNearestTo(
