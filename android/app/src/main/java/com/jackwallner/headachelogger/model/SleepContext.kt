@@ -19,10 +19,10 @@ object SleepContext {
         return start to end
     }
 
-    /** Total asleep hours (null when none) and the wake time after the longest merged block. */
+    /** Hours actually asleep (null when none) and the wake time after the longest block merged across awake gaps. */
     fun summarize(asleep: List<SleepIntervalMerge.Interval>): Pair<Double?, Instant?> {
         val merged = SleepIntervalMerge.merge(asleep, MERGE_GAP_SECONDS)
-        val total = merged.sumOf { it.durationSeconds }
+        val total = SleepIntervalMerge.asleepSeconds(asleep)
         val wake = SleepIntervalMerge.wakeTimeAfterLongestSleep(merged)
         return (if (total > 0) total / 3600 else null) to wake
     }

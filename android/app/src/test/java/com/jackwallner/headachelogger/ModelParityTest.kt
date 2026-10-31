@@ -217,7 +217,8 @@ class ModelParityTest {
             SleepIntervalMerge.Interval(t(15, 19), t(15, 19, 30)),
         )
         val snapshot = SleepContext.snapshot(stages, event)
-        assertEquals(8.0, snapshot.sleepHoursLastNight!!, 0.001)
+        // 3h + 4h + the 30 minute early segment; the 30 minute awake gap is merged away for the wake time only.
+        assertEquals(7.5, snapshot.sleepHoursLastNight!!, 0.001)
         assertEquals(t(16, 6, 30), snapshot.lastMainSleepWakeTime)
         assertEquals(3.5, snapshot.hoursSinceMainSleepWake!!, 0.001)
         assertFalse(SleepContext.snapshot(emptyList(), event).hasMeaningfulValue)

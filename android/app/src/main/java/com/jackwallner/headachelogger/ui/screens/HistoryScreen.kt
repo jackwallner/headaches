@@ -82,6 +82,8 @@ import com.jackwallner.headachelogger.model.HeadacheSeverity
 import com.jackwallner.headachelogger.model.ImportResult
 import com.jackwallner.headachelogger.model.ImportStrategy
 import com.jackwallner.headachelogger.model.InsightsEngine
+import com.jackwallner.headachelogger.model.PartOfDay
+import com.jackwallner.headachelogger.model.mostCommon
 import com.jackwallner.headachelogger.model.Temperature
 import com.jackwallner.headachelogger.ui.Format
 import com.jackwallner.headachelogger.ui.LocalNav
@@ -418,7 +420,9 @@ fun ProBadge() {
 
 @Composable
 private fun SummaryGrid(events: List<HeadacheEvent>, useCelsius: Boolean) {
-    fun <T> mode(values: List<T>): T? = values.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
+    val topWeekdayIndex = events.groupingBy { it.weekdayIndex }.eachCount().mostCommon((1..7).toList())?.first
+    val topWeekday = events.firstOrNull { it.weekdayIndex == topWeekdayIndex }?.weekdayName
+    val topPartOfDay = events.groupingBy { it.partOfDay }.eachCount().mostCommon(PartOfDay.entries)?.first?.title
     val temps = events.mapNotNull { it.temperatureC }
     val avg = if (temps.isEmpty()) "–" else temps.average().let { c ->
         if (useCelsius) "${Math.round(c)}°C" else "${Math.round(Temperature.celsiusToFahrenheit(c))}°F"
@@ -426,10 +430,10 @@ private fun SummaryGrid(events: List<HeadacheEvent>, useCelsius: Boolean) {
     Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             SummaryCard("Total Logs", events.size.toString(), Tint.pink, Modifier.weight(1f))
-            SummaryCard("Most Common Day", mode(events.map { it.weekdayName }) ?: "–", Tint.orange, Modifier.weight(1f))
+            SummaryCard("Most Common Day", topWeekday ?: "–", Tint.orange, Modifier.weight(1f))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            SummaryCard("Most Common Time", mode(events.map { it.partOfDay.title }) ?: "–", Tint.purple, Modifier.weight(1f))
+            SummaryCard("Most Common Time", topPartOfDay ?: "–", Tint.purple, Modifier.weight(1f))
             SummaryCard("Avg Temp", avg, Tint.blue, Modifier.weight(1f))
         }
     }

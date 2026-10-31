@@ -14,6 +14,8 @@ import com.jackwallner.headachelogger.model.HeatmapData
 import com.jackwallner.headachelogger.model.HeatmapDay
 import com.jackwallner.headachelogger.model.InsightsEngine
 import com.jackwallner.headachelogger.model.InsightSummary
+import com.jackwallner.headachelogger.model.PartOfDay
+import com.jackwallner.headachelogger.model.mostCommon
 import java.io.File
 import java.time.Instant
 import java.time.LocalDate
@@ -28,6 +30,7 @@ object ReportPdf {
     private const val HEIGHT = 792
     private const val MARGIN = 36f
     private const val WINDOW_DAYS = 90
+    private const val NONE = "None"
     private const val BRAND = 0xFFF2405C.toInt()
     private const val INK = 0xFF000000.toInt()
     private const val SECONDARY = 0x993C3C43.toInt()
@@ -86,10 +89,10 @@ object ReportPdf {
     private fun summaryStats(c: Canvas, y: Float, width: Float, events: List<HeadacheEvent>, zone: ZoneId): Float {
         val attackDays = events.map { it.timestamp.atZone(zone).toLocalDate() }.toSet().size
         val severe = events.count { it.severity == HeadacheSeverity.EXTREME }
-        val topWeekday = events.groupingBy { it.weekdayIndex }.eachCount().maxByOrNull { it.value }?.key?.let { index ->
+        val topWeekday = events.groupingBy { it.weekdayIndex }.eachCount().mostCommon((1..7).toList())?.first?.let { index ->
             java.time.DayOfWeek.of(if (index == 1) 7 else index - 1).getDisplayName(TextStyle.FULL, Locale.getDefault())
-        } ?: "–"
-        val topPart = events.groupingBy { it.partOfDay }.eachCount().maxByOrNull { it.value }?.key?.title ?: "–"
+        } ?: NONE
+        val topPart = events.groupingBy { it.partOfDay }.eachCount().mostCommon(PartOfDay.entries)?.first?.title ?: NONE
         val stats = listOf(
             "Attacks" to events.size.toString(),
             "Days affected" to attackDays.toString(),

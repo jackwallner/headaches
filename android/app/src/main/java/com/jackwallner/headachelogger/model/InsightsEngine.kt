@@ -82,14 +82,7 @@ object InsightsEngine {
     }
 
     /** Swift `Dictionary.max(by:)` with a deterministic tie-break: the first key in `order` wins. */
-    private fun <K> topOf(counts: Map<K, Int>, order: List<K>): Pair<K, Int>? {
-        var best: Pair<K, Int>? = null
-        for (key in order) {
-            val c = counts[key] ?: continue
-            if (best == null || c > best.second) best = key to c
-        }
-        return best
-    }
+    private fun <K> topOf(counts: Map<K, Int>, order: List<K>): Pair<K, Int>? = counts.mostCommon(order)
 
     /** Bins values and marks the first bin with the strictly largest share as the peak, like iOS. */
     private class Binned(val buckets: List<Bucket>, val topShare: Double, val topLabel: String, val topIndex: Int)
@@ -113,7 +106,8 @@ object InsightsEngine {
     private fun partOfDayInsight(events: List<HeadacheEvent>): Insight? {
         val order = listOf(PartOfDay.MORNING, PartOfDay.AFTERNOON, PartOfDay.EVENING, PartOfDay.OVERNIGHT)
         val counts = events.groupingBy { it.partOfDay }.eachCount()
-        val (top, topCount) = topOf(counts, order) ?: return null
+        // Display order differs from declaration order; ties follow the declaration order like iOS.
+        val (top, topCount) = topOf(counts, PartOfDay.entries) ?: return null
         if (topCount <= 0) return null
         val total = events.size
         val topShare = topCount.toDouble() / total
@@ -217,7 +211,7 @@ object InsightsEngine {
             val moreLikely = if (h.third >= 2.0) "${fmt1(h.third)}×" else "$pct%"
             detail = "Headaches are $moreLikely more likely after ${h.first} of sleep ($ratePct% vs $overallPct% overall). Median: ${formatHours(med)}."
             strength = 0.5 + min((h.third - 1.0) / 2.0, 0.5)
-            title = "Low sleep: ${h.first}"
+            title = sleepBandTitle(h.first, bucket.range.lower, bucket.range.upper)
             yourPattern = "On days following ${h.first} of sleep, your headache rate was $ratePct%, compared to $overallPct% across all days with sleep data. Median sleep before a headache: ${formatHours(med)}."
         } else {
             val lowSleepShare = values.count { it < 6 }.toDouble() / total
@@ -251,7 +245,7 @@ object InsightsEngine {
         val total = trends.size
         val coverage = coverageQualifier(total, events.size)
         val counts = trends.groupingBy { it }.eachCount()
-        val (top, topCount) = topOf(counts, order) ?: return null
+        val (top, topCount) = topOf(counts, PressureTrend.entries) ?: return null
         val topShare = topCount.toDouble() / total
         if (topShare < 0.45) return null
         val buckets = order.map { t ->
@@ -1033,6 +1027,13 @@ object InsightsEngine {
 
     private fun coverageQualifier(subset: Int, total: Int): String =
         if (subset in 1 until total) " (of the $subset with available data)" else ""
+
+    /** "Low sleep" only fits the short bands; an 8h+ headline is long sleep. */
+    fun sleepBandTitle(label: String, lower: Double, upper: Double): String = when {
+        upper <= 6 -> "Short sleep: $label"
+        lower >= 8 -> "Long sleep: $label"
+        else -> "Sleep: $label"
+    }
 
     fun formatHours(hours: Double): String {
         val total = max(0.0, hours)

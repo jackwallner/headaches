@@ -42,6 +42,19 @@ object OpenMeteoTime {
     }
 }
 
+/**
+ * The most frequent key. Ties go to the earliest key in [order], never to log order, so every
+ * surface names the same "most common" answer for the same logs. Port of iOS `mostCommon`.
+ */
+fun <K> Map<K, Int>.mostCommon(order: List<K>): Pair<K, Int>? {
+    var best: Pair<K, Int>? = null
+    for (key in order) {
+        val count = this[key] ?: continue
+        if (best == null || count > best.second) best = key to count
+    }
+    return best
+}
+
 /** Derives main-sleep wake time from split sleep segments. Port of `SleepIntervalMerge`. */
 object SleepIntervalMerge {
     data class Interval(val start: Instant, val end: Instant) {
@@ -60,6 +73,9 @@ object SleepIntervalMerge {
         }
         return out
     }
+
+    /** Time actually asleep: the union of the raw asleep segments. The 45-minute merge is only for the wake time. */
+    fun asleepSeconds(intervals: List<Interval>): Double = merge(intervals, 0).sumOf { it.durationSeconds }
 
     fun wakeTimeAfterLongestSleep(merged: List<Interval>): Instant? = merged.maxByOrNull { it.durationSeconds }?.end
 }
