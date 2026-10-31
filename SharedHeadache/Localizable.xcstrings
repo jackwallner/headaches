@@ -16294,7 +16294,7 @@
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Co- hændelsesmønster"
+            "value": "Samtidigt mønster"
           }
         },
         "ru": {
@@ -34817,6 +34817,95 @@
         }
       }
     },
+    "Locked Pro pattern": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked Pro pattern"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Låst Pro-mønster"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesperrtes Pro-Muster"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patrón Pro bloqueado"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lukittu Pro-kuvio"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tendance Pro verrouillée"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zárolt Pro-mintázat"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andamento Pro bloccato"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ロックされたProのパターン"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Låst Pro-mønster"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zablokowany wzorzec Pro"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padrão Pro bloqueado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закономерность Pro заблокирована"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закономірність Pro заблокована"
+          }
+        }
+      }
+    },
     "Log Headache": {
       "extractionState": "manual",
       "localizations": {
@@ -44251,6 +44340,95 @@
         }
       }
     },
+    "One tap. Logged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One tap. Logged."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ét tryk. Registreret."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Tippen. Erfasst."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un toque. Registrado."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yksi napautus. Kirjattu."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un geste. C’est noté."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Egy koppintás. Rögzítve."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un tocco. Registrato."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ワンタップで記録完了"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ett trykk. Loggført."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedno dotknięcie. Zapisano."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um toque. Registado."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Одно касание. Записано."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Один дотик. Записано."
+          }
+        }
+      }
+    },
     "One-page report covering the last 90 days: headache count, severity mix, calendar heatmap, and your top patterns.": {
       "extractionState": "manual",
       "localizations": {
@@ -44870,6 +45048,95 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouvrez l’app pour recueillir les données météo."
+          }
+        }
+      }
+    },
+    "Opens Pro plans": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens Pro plans"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Åbner Pro-abonnementer"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öffnet die Pro-Abos"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre los planes Pro"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avaa Pro-tilaukset"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvre les formules Pro"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Megnyitja a Pro-csomagokat"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apre i piani Pro"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proのプランを開きます"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Åpner Pro-abonnementer"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otwiera plany Pro"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre os planos Pro"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открывает тарифы Pro"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкриває плани Pro"
           }
         }
       }
@@ -48678,7 +48945,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Прости."
+            "value": "Pro"
           }
         },
         "pt-PT": {
@@ -51727,6 +51994,95 @@
         }
       }
     },
+    "Risk combines the next 24 hours of forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Risk combines the next 24 hours of forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Risikoen kombinerer prognosen for lufttryk og luftkvalitet de næste 24 timer med din søvn i nat. Det er et varsel, ikke en forudsigelse."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Risiko verbindet die Luftdruck- und Luftqualitätsprognose der nächsten 24 Stunden mit deinem Schlaf der letzten Nacht. Es ist ein Hinweis, keine Vorhersage."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El riesgo combina la previsión de presión y calidad del aire de las próximas 24 horas con tu sueño de anoche. Es un aviso, no una predicción."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riski yhdistää seuraavan 24 tunnin ilmanpaine- ja ilmanlaatuennusteen viime yön uneesi. Se on ennakkovaroitus, ei ennustus."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le risque combine les prévisions de pression et de qualité de l’air des 24 prochaines heures avec votre sommeil de la nuit dernière. C’est une alerte, pas une prédiction."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A kockázat a következő 24 óra légnyomás- és levegőminőség-előrejelzését veti össze az előző éjszakai alvásoddal. Ez figyelmeztetés, nem jóslat."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il rischio combina le previsioni di pressione e qualità dell’aria delle prossime 24 ore con il tuo sonno della notte scorsa. È un avviso, non una certezza."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リスクは、今後24時間の気圧と空気質の予報に昨夜の睡眠を組み合わせて算出します。確実な予測ではなく、目安としてご利用ください。"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Risikoen kombinerer prognosen for lufttrykk og luftkvalitet de neste 24 timene med søvnen din i natt. Det er et varsel, ikke en spådom."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ryzyko łączy prognozę ciśnienia i jakości powietrza na najbliższe 24 godziny z twoim snem z ostatniej nocy. To ostrzeżenie, a nie pewność."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O risco combina a previsão de pressão e qualidade do ar das próximas 24 horas com o teu sono da última noite. É um aviso, não uma garantia."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Риск учитывает прогноз давления и качества воздуха на ближайшие 24 часа и твой сон прошлой ночью. Это предупреждение, а не предсказание."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ризик враховує прогноз тиску та якості повітря на найближчі 24 години і твій сон минулої ночі. Це попередження, а не передбачення."
+          }
+        }
+      }
+    },
     "Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.": {
       "extractionState": "manual",
       "localizations": {
@@ -52748,31 +53104,31 @@
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lásd Pro tervek"
+            "value": "Pro-csomagok megtekintése"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ks. Pro-suunnitelmat"
+            "value": "Katso Pro-tilaukset"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Se Pro planer"
+            "value": "Se Pro-abonnementer"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Se Pro- planer"
+            "value": "Se Pro-abonnementer"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Планы Headache Pro"
+            "value": "Тарифы Pro"
           }
         },
         "pt-PT": {
@@ -63363,7 +63719,7 @@
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Скачать Headache Pro"
+            "value": "Открыть Headache Pro"
           }
         },
         "pt-PT": {
@@ -66230,6 +66586,95 @@
           "stringUnit": {
             "state": "translated",
             "value": "Signaux météo"
+          }
+        }
+      }
+    },
+    "Weather, sleep and steps are saved with every entry.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather, sleep and steps are saved with every entry."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vejr, søvn og skridt gemmes med hver registrering."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wetter, Schlaf und Schritte werden mit jedem Eintrag gespeichert."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El tiempo, el sueño y los pasos se guardan con cada registro."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sää, uni ja askeleet tallentuvat jokaiseen kirjaukseen."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La météo, le sommeil et les pas sont enregistrés avec chaque note."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Az időjárás, az alvás és a lépések minden bejegyzéssel elmentődnek."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meteo, sonno e passi vengono salvati con ogni registrazione."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "天気・睡眠・歩数が記録ごとに保存されます。"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vær, søvn og skritt lagres med hver registrering."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pogoda, sen i kroki zapisują się przy każdym wpisie."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O tempo, o sono e os passos ficam guardados em cada registo."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Погода, сон и шаги сохраняются с каждой записью."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Погода, сон і кроки зберігаються з кожним записом."
           }
         }
       }
