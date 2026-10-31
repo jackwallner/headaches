@@ -120,7 +120,7 @@ struct HistoryView: View {
                     pendingDeleteEvents = []
                 }
             } message: {
-                Text("This permanently removes the entr\(pendingDeleteEvents.count == 1 ? "y" : "ies") from your history. Export a CSV first if you need a backup.")
+                Text("This permanently removes the selected entries from your history. Export a CSV first if you need a backup.")
             }
             .fileImporter(
                 isPresented: $showFileImporter,
@@ -340,12 +340,18 @@ struct HistoryView: View {
 
     private var exportSubtitle: String {
         if events.isEmpty {
-            return "Export your headache history to a CSV file you can share with a doctor or open in Numbers."
+            return String(localized: "Export your headache history to a CSV file you can share with a doctor or open in Numbers.")
         }
         if let selectedYear {
-            return "Exports \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") from \(selectedYear), or export all years below. The CSV opens in Numbers and works for your doctor."
+            return String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Export selected entries from %@, or export all years below. The CSV opens in Numbers and can be shared with your doctor.",
+                    comment: "CSV export subtitle for a selected year"
+                ),
+                String(selectedYear)
+            )
         }
-        return "Save all \(filteredEvents.count) entr\(filteredEvents.count == 1 ? "y" : "ies") to a CSV file you can share with a doctor, open in Numbers, or back up."
+        return String(localized: "Save all selected entries to a CSV file you can share with a doctor, open in Numbers, or back up.")
     }
 
     private var exportActionLabel: String {
@@ -570,7 +576,7 @@ struct HistoryView: View {
                             .background(brandColor.opacity(0.15), in: Capsule())
                             .foregroundStyle(brandColor)
                     }
-                    Text("See what time, sleep, and weather patterns emerge from your \(filteredEvents.count) logged headache\(filteredEvents.count == 1 ? "" : "s").")
+                    Text("See what time, sleep, and weather patterns emerge from your logged headaches.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -934,7 +940,7 @@ private struct ImportAlertModifier: ViewModifier {
                     pendingRows = []
                 }
             } message: {
-                Text("Found \(pendingRows.count) event\(pendingRows.count == 1 ? "" : "s") in the file. How would you like to handle events that already exist?")
+                Text("This file may contain events that are already in your history. How would you like to handle them?")
             }
             .alert("Import Failed", isPresented: $showError) {
                 Button("OK", role: .cancel) {}

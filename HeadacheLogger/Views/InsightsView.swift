@@ -237,7 +237,10 @@ struct InsightsView: View {
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
-                Text("Logged so far: \(events.count) headache\(events.count == 1 ? "" : "s")")
+                Text(String.localizedStringWithFormat(
+                    NSLocalizedString("You have logged %lld headaches.", comment: "Logged headache count"),
+                    events.count
+                ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Button {
@@ -340,7 +343,10 @@ private struct InsightsHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(summary.totalEvents) headache\(summary.totalEvents == 1 ? "" : "s") logged")
+            Text(String.localizedStringWithFormat(
+                NSLocalizedString("You have logged %lld headaches.", comment: "Logged headache count"),
+                summary.totalEvents
+            ))
                 .font(.title2.bold())
             if let range = summary.dateRange {
                 Text(rangeLabel(range))
@@ -577,7 +583,10 @@ struct InsightDetailView: View {
             Text(insight.detail)
                 .font(.body)
                 .foregroundStyle(.secondary)
-            Text("Based on \(totalEvents) logged headache\(totalEvents == 1 ? "" : "s").")
+            Text(String.localizedStringWithFormat(
+                NSLocalizedString("Based on %lld logged headaches.", comment: "Insight sample size"),
+                totalEvents
+            ))
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
