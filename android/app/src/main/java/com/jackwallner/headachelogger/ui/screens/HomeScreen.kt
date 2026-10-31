@@ -70,6 +70,7 @@ import com.jackwallner.headachelogger.model.CaptureStatus
 import com.jackwallner.headachelogger.model.HeadacheEvent
 import com.jackwallner.headachelogger.model.HeadacheSeverity
 import com.jackwallner.headachelogger.model.PressureTrend
+import com.jackwallner.headachelogger.model.ProMilestone
 import com.jackwallner.headachelogger.model.Temperature
 import com.jackwallner.headachelogger.ui.Format
 import com.jackwallner.headachelogger.ui.LocalNav
@@ -98,10 +99,10 @@ import kotlinx.coroutines.launch
 private const val UNDO_TTL_MS = 15_000L
 private const val CAPTURE_EXPLAINER_THRESHOLD = 3
 
-private enum class Milestone(val count: Int, val title: String, val detail: String, val icon: ImageVector) {
-    TEN(10, "10 headaches, meaningful data", "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts.", Icons.Filled.Bolt),
-    FIVE(5, "5 headaches logged, enough for patterns", "You have enough data for personalized pattern analysis. Pro finds what's triggering your headaches.", Icons.Filled.AutoAwesome),
-    THREE(3, "You've logged 3 headaches", "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more.", Icons.Filled.BarChart),
+private fun ProMilestone.icon(): ImageVector = when (this) {
+    ProMilestone.TEN -> Icons.Filled.Bolt
+    ProMilestone.FIVE -> Icons.Filled.AutoAwesome
+    ProMilestone.THREE -> Icons.Filled.BarChart
 }
 
 /** Port of `HomeView`: the one-tap button, the latest event, recovery, milestone prompts and the undo bar. */
@@ -130,7 +131,7 @@ fun HomeScreen(graph: AppGraph) {
     }
 
     LaunchedEffect(capture.isCapturing) {
-        if (!capture.isCapturing && capture.lastCapturedEventId != null) {
+        if (!capture.isCapturing && !capture.currentRunIsRetry && capture.lastCapturedEventId != null) {
             showCheckmark = true
             showUndo()
             delay(3_500)
@@ -139,13 +140,14 @@ fun HomeScreen(graph: AppGraph) {
     }
     LaunchedEffect(capture.lastCapturedEventId) { if (capture.lastCapturedEventId == null) hideUndo() }
 
-    val milestone = when {
-        graph.store.isPro || capture.proPromptShownThisSession -> null
-        events.size >= 10 && !settings.milestone10Shown -> Milestone.TEN
-        events.size >= 5 && !settings.milestone5Shown -> Milestone.FIVE
-        events.size >= 3 && !settings.milestone3Shown -> Milestone.THREE
-        else -> null
-    }
+    val milestone = ProMilestone.active(
+        count = events.size,
+        isPro = graph.store.isPro,
+        sessionClaimedElsewhere = capture.proPromptShownThisSession && !capture.milestoneClaimedSession,
+        shown3 = settings.milestone3Shown,
+        shown5 = settings.milestone5Shown,
+        shown10 = settings.milestone10Shown,
+    )
 
     Box(Modifier.fillMaxSize().background(palette.background).testTag("homeView")) {
         Column(Modifier.fillMaxSize()) {
@@ -181,16 +183,19 @@ fun HomeScreen(graph: AppGraph) {
                     }
                 }
                 if (milestone != null) {
-                    LaunchedEffect(milestone) { capture.proPromptShownThisSession = true }
+                    LaunchedEffect(milestone) {
+                        capture.milestoneClaimedSession = true
+                        capture.proPromptShownThisSession = true
+                    }
                     MilestonePrompt(
                         milestone,
                         onShow = { nav.paywall("headache_home_sheet") },
+                        // Retiring a milestone retires the lower ones too, so "Not now" on the
+                        // 10-log card doesn't bring back the 5-log card.
                         onDismiss = {
-                            when (milestone) {
-                                Milestone.THREE -> settings.milestone3Shown = true
-                                Milestone.FIVE -> settings.milestone5Shown = true
-                                Milestone.TEN -> settings.milestone10Shown = true
-                            }
+                            settings.milestone3Shown = true
+                            if (milestone.count >= ProMilestone.FIVE.count) settings.milestone5Shown = true
+                            if (milestone == ProMilestone.TEN) settings.milestone10Shown = true
                         },
                     )
                 }
@@ -430,7 +435,7 @@ private fun CaptureItem(icon: ImageVector, title: String, subtitle: String) {
 }
 
 @Composable
-private fun MilestonePrompt(milestone: Milestone, onShow: () -> Unit, onDismiss: () -> Unit) {
+private fun MilestonePrompt(milestone: ProMilestone, onShow: () -> Unit, onDismiss: () -> Unit) {
     var dismissed by remember(milestone) { mutableStateOf(false) }
     AnimatedVisibility(!dismissed, exit = fadeOut(tween(200))) {
         val shape = RoundedCornerShape(18.dp)
@@ -438,7 +443,7 @@ private fun MilestonePrompt(milestone: Milestone, onShow: () -> Unit, onDismiss:
             Modifier.fillMaxWidth().clip(shape).background(palette.card).border(1.dp, Brand.primary.copy(alpha = 0.25f), shape).padding(16.dp),
             verticalAlignment = Alignment.Top,
         ) {
-            Icon(milestone.icon, null, tint = Brand.primary, modifier = Modifier.size(26.dp))
+            Icon(milestone.icon(), null, tint = Brand.primary, modifier = Modifier.size(26.dp))
             Spacer(Modifier.width(14.dp))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.weight(1f)) {
                 Text(milestone.title, style = Type.subheadBold, color = palette.textPrimary)

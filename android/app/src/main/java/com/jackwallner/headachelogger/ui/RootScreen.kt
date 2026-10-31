@@ -56,6 +56,7 @@ import com.jackwallner.headachelogger.DebugLaunchOptions
 import com.jackwallner.headachelogger.billing.FunnelStep
 import com.jackwallner.headachelogger.billing.PurchaseException
 import com.jackwallner.headachelogger.billing.PurchaseOutcome
+import com.jackwallner.headachelogger.data.ReviewPromptTracker
 import com.jackwallner.headachelogger.model.Insight
 import com.jackwallner.headachelogger.ui.screens.EditEventScreen
 import com.jackwallner.headachelogger.ui.screens.HistoryScreen
@@ -395,8 +396,12 @@ private fun ReviewHost(graph: AppGraph, nav: Navigator, promos: PromoController)
     val context = LocalContext.current
     val foreground = LocalForeground.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    fun homeClear() = graph.settings.hasCompletedOnboarding && nav.tab == Tab.HOME && nav.stack.isEmpty() &&
-        promos.sheet == null && !promos.pendingPaywallAfterTrial && !graph.capture.proPromptShownThisSession
+    fun homeClear() = ReviewPromptTracker.isHomeClear(
+        hasCompletedOnboarding = graph.settings.hasCompletedOnboarding,
+        homeIsUncovered = nav.tab == Tab.HOME && nav.stack.isEmpty(),
+        hasActiveSheet = promos.sheet != null,
+        pendingPaywallAfterTrialDismiss = promos.pendingPaywallAfterTrial,
+    )
     fun eligible() = !promos.reviewShownThisSession && graph.review.shouldRequestAfterPositiveMoment(graph.settings.hasCompletedOnboarding)
     LaunchedEffect(graph.capture.positiveMomentTick, promos.reviewTick) {
         if (graph.capture.positiveMomentTick == 0 && promos.reviewTick == 0) return@LaunchedEffect

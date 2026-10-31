@@ -59,6 +59,16 @@ class CaptureCoordinator(
         private set
     var proPromptShownThisSession by mutableStateOf(false)
 
+    /** True once the Home milestone card claimed this session's Pro moment, so its own claim keeps it on screen. */
+    var milestoneClaimedSession by mutableStateOf(false)
+
+    /**
+     * True while the latest `isCapturing` run is a retry, which must not bring back the "Logged"
+     * checkmark or an Undo that deletes the entry being fixed.
+     */
+    var currentRunIsRetry = false
+        private set
+
     /** Bumped after a complete log so the host can schedule the rating ask. */
     var positiveMomentTick by mutableStateOf(0)
         private set
@@ -81,6 +91,7 @@ class CaptureCoordinator(
             return false
         }
         lastCapturedEventId = event.id
+        currentRunIsRetry = false
         isCapturing = true
         bannerMessage = "Saving and collecting context…"
         bannerIsError = false
@@ -122,6 +133,7 @@ class CaptureCoordinator(
             bannerMessage = "Could not find event to retry."
             return
         }
+        currentRunIsRetry = true
         isCapturing = true
         bannerMessage = "Retrying context capture…"
         bannerIsError = false

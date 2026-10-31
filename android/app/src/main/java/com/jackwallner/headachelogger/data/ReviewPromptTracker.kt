@@ -75,6 +75,14 @@ class ReviewPromptTracker(
     }
 
     companion object {
+        /**
+         * Home is clear for the rating ask when no sheet covers it. The session's Pro moment is
+         * deliberately not part of this: the Home milestone card claims it on every launch for a
+         * free user with 3+ logs, which would block the ask for those users forever.
+         */
+        fun isHomeClear(hasCompletedOnboarding: Boolean, homeIsUncovered: Boolean, hasActiveSheet: Boolean, pendingPaywallAfterTrialDismiss: Boolean): Boolean =
+            hasCompletedOnboarding && homeIsUncovered && !hasActiveSheet && !pendingPaywallAfterTrialDismiss
+
         const val MINIMUM_LAUNCH_COUNT = 2
         const val COOLDOWN_DAYS = 30
 
