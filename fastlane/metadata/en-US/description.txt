@@ -39,4 +39,4 @@ Payment is charged to your Apple ID at confirmation. Subscriptions renew automat
 This app is for tracking and information, not medical advice, diagnosis or treatment. Patterns, risk and alerts describe your logged data and the forecast, and they do not predict a headache. Talk with a healthcare professional about medical concerns.
 
 Terms (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-Privacy: https://jackwallner.github.io/headaches/privacy-policy.html
+Privacy: https://jackwallner.com/ios/headaches/privacy-policy.html
