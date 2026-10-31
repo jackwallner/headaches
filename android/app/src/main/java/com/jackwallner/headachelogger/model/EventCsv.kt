@@ -208,22 +208,33 @@ object EventCsv {
         return lines
     }
 
+    /** Splits one row, keeping escaped quotes and undoing the export's spreadsheet formula guard. */
     private fun parseRow(line: String): List<String> {
         val fields = mutableListOf<String>()
         val current = StringBuilder()
         var inQuotes = false
-        for (char in line) {
+        var i = 0
+        while (i < line.length) {
+            val char = line[i]
             when {
+                char == '"' && inQuotes && line.getOrNull(i + 1) == '"' -> { current.append('"'); i++ }
                 char == '"' -> inQuotes = !inQuotes
                 char == ',' && !inQuotes -> {
-                    fields += current.toString().replace("\"\"", "\"").trim(' ', '\t')
+                    fields += cleanField(current.toString())
                     current.clear()
                 }
                 else -> current.append(char)
             }
+            i++
         }
-        fields += current.toString().replace("\"\"", "\"").trim(' ', '\t')
+        fields += cleanField(current.toString())
         return fields
+    }
+
+    private fun cleanField(value: String): String {
+        val trimmed = value.trim(' ', '\t')
+        val second = trimmed.getOrNull(1)
+        return if (trimmed.startsWith("'") && second != null && second in "=+-@") trimmed.drop(1) else trimmed
     }
 
     /** Storage row: every CSV column plus the two timestamps the CSV leaves out. Null cells are omitted. */
