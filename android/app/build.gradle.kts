@@ -39,8 +39,8 @@ android {
         applicationId = "com.jackwallner.headachelogger"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.5.3"
+        versionCode = 2
+        versionName = "1.5.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
         buildConfigField("String", "REVENUECAT_API_KEY", "\"$testKey\"")
