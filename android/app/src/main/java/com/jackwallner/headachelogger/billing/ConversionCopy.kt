@@ -9,6 +9,9 @@ object ConversionCopy {
     const val UNAVAILABLE = "Couldn't reach Google Play. Check your connection and try again."
     const val NO_PURCHASE_FOUND = "No previous Headache Pro purchase was found on this Google account."
 
+    /** What a restore tells the user: null when Pro came back, else the store's error or why nothing was found. */
+    fun restoreMessage(isPro: Boolean, lastError: String?): String? = if (isPro) null else lastError ?: NO_PURCHASE_FOUND
+
     /** iOS `onboardingCTALabel`: "Start 7-day free trial" or "Unlock Headache Pro for $X". */
     fun onboardingCtaLabel(trialLabel: String?, priceFormatted: String?, eligibleForTrial: Boolean): String = when {
         priceFormatted == null -> "Unlock Headache Pro"

@@ -66,6 +66,7 @@ import com.jackwallner.headachelogger.ui.theme.Type
 import com.jackwallner.headachelogger.ui.theme.palette
 import com.jackwallner.headachelogger.ui.theme.tappable
 import java.time.Instant
+import java.util.Locale
 
 /** Port of `ProAlertsConfigView`. */
 @Composable
@@ -255,8 +256,8 @@ fun ProAlertsScreen(graph: AppGraph, onClose: () -> Unit) {
     testMessage?.let { InfoDialog("Test Alert", it) { testMessage = null } }
 }
 
-private fun signalStatus(signal: PersonalSignalProfile): String = when {
-    signal.isSupported -> "${Math.round(signal.relativeRisk * 100)}% risk • ${signal.headacheConditionDays}/${signal.conditionDays}"
+internal fun signalStatus(signal: PersonalSignalProfile): String = when {
+    signal.isSupported -> "${String.format(Locale.US, "%.1f", signal.relativeRisk)}× more likely • ${signal.headacheConditionDays} of ${signal.conditionDays} days"
     signal.totalDays < ProactiveAlertsEngine.PERSONAL_MIN_SAMPLE_SIZE -> "Learning ${signal.totalDays}/${ProactiveAlertsEngine.PERSONAL_MIN_SAMPLE_SIZE}"
     else -> "No clear pattern"
 }

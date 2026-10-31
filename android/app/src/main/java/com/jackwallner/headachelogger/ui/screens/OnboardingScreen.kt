@@ -54,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jackwallner.headachelogger.AppGraph
 import com.jackwallner.headachelogger.DebugLaunchOptions
+import com.jackwallner.headachelogger.billing.ConversionCopy
 import com.jackwallner.headachelogger.billing.FunnelStep
 import com.jackwallner.headachelogger.billing.PurchaseException
 import com.jackwallner.headachelogger.billing.PurchaseOutcome
@@ -154,11 +155,27 @@ private fun TrialPage(graph: AppGraph) {
     val scope = rememberCoroutineScope()
     var purchasing by remember { mutableStateOf(false) }
     var trialError by remember { mutableStateOf<String?>(null) }
+    var restoring by remember { mutableStateOf(false) }
 
     fun finish() {
         graph.settings.hasSeenProIntro = true
         graph.settings.hasCompletedOnboarding = true
         graph.initializeDailyRecords()
+    }
+
+    // Mirrors the paywall: a restored purchase finishes onboarding, anything else says why.
+    fun restore() {
+        trialError = null
+        restoring = true
+        scope.launch {
+            try {
+                store.restorePurchases()
+                val failure = ConversionCopy.restoreMessage(store.isPro, store.lastError)
+                if (failure == null) finish() else trialError = failure
+            } finally {
+                restoring = false
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -170,7 +187,7 @@ private fun TrialPage(graph: AppGraph) {
     Page(
         icon = Icons.Filled.AutoAwesome, tint = Brand.primary, title = "Get ahead of your headaches",
         primaryLabel = if (store.onboardingPlan != null) store.onboardingCtaLabel else "Start 7-day free trial",
-        busy = purchasing, tag = "onboarding_trial_cta", showLegal = true, graph = graph,
+        busy = purchasing, tag = "onboarding_trial_cta", showLegal = true, restoring = restoring, onRestore = ::restore,
         aboveButton = {
             TextAction(
                 "Get Started", enabled = !purchasing, modifier = Modifier.testTag("onboarding_free"),
@@ -183,7 +200,7 @@ private fun TrialPage(graph: AppGraph) {
             store.onboardingDisclosure?.let {
                 Text(it, style = Type.caption2, color = palette.textTertiary, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             }
-            trialError?.let { Text(it, style = Type.caption, color = Tint.red, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) }
+            trialError?.let { Text(it, style = Type.caption, color = Tint.red, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().testTag("onboarding_trial_error")) }
         },
         onPrimary = {
             val plan = store.onboardingPlan
@@ -232,7 +249,8 @@ private fun Page(
     tag: String,
     busy: Boolean = false,
     showLegal: Boolean = false,
-    graph: AppGraph? = null,
+    restoring: Boolean = false,
+    onRestore: (() -> Unit)? = null,
     aboveButton: @Composable ColumnScope.() -> Unit = {},
     body: @Composable ColumnScope.() -> Unit,
 ) {
@@ -245,21 +263,20 @@ private fun Page(
         Column(Modifier.fillMaxWidth().padding(top = 12.dp), verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             aboveButton()
             PrimaryButton(primaryLabel, onPrimary, loading = busy, modifier = Modifier.testTag(tag), brush = androidx.compose.ui.graphics.SolidColor(Brand.primary))
-            LegalFooter(graph, Modifier.alpha(if (showLegal) 1f else 0f), enabled = showLegal)
+            LegalFooter(Modifier.alpha(if (showLegal) 1f else 0f), enabled = showLegal, restoring = restoring, busy = busy, onRestore = onRestore)
         }
     }
 }
 
 @Composable
-private fun LegalFooter(graph: AppGraph?, modifier: Modifier, enabled: Boolean) {
+private fun LegalFooter(modifier: Modifier, enabled: Boolean, restoring: Boolean, busy: Boolean, onRestore: (() -> Unit)?) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     Row(modifier.height(32.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
         FooterLink("Terms of Use", enabled) { context.openUrl(Links.TERMS) }
         Text("·", style = Type.caption2, color = palette.textTertiary)
         FooterLink("Privacy Policy", enabled) { context.openUrl(Links.PRIVACY) }
         Text("·", style = Type.caption2, color = palette.textTertiary)
-        FooterLink("Restore", enabled) { graph?.let { scope.launch { it.store.restorePurchases() } } }
+        FooterLink(if (restoring) "Restoring…" else "Restore", enabled && !restoring && !busy) { onRestore?.invoke() }
     }
 }
 

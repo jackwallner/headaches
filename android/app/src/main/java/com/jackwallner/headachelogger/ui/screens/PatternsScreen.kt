@@ -64,6 +64,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
@@ -191,7 +192,7 @@ fun PatternsScreen(graph: AppGraph) {
                 PatternsSection(events.size, summary) { nav.push(Overlay.InsightDetail(it, summary.totalEvents)) }
                 Header("Today's risk")
                 RiskCard(risk, riskLoading, locationMissing) { scope.launch { refreshRisk(force = true) } }
-                Footer("Risk combines tomorrow's forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
+                Footer("Risk combines the next 24 hours of forecast pressure and air quality with last night's sleep. It's a heads-up, not a prediction.")
                 Header("Get ahead of triggers")
                 AlertsCard(graph.settings.alertsEnabled) { nav.push(Overlay.ProAlerts) }
                 Footer("Proactive Alerts use the same forecast signals shown here to give you a 12-24 hour heads-up before risky weather.")
@@ -408,8 +409,9 @@ private fun LockedTeaser(count: Int, summary: InsightSummary, modifier: Modifier
 
 @Composable
 private fun LockedInsightRow(insight: Insight, onClick: () -> Unit) {
-    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).tappable(insight.title, onClick = onClick), contentAlignment = Alignment.Center) {
-        Row(Modifier.fillMaxWidth().blur(7.dp).padding(vertical = 4.dp), verticalAlignment = Alignment.Top) {
+    // The blur only hides pixels: without clearing the semantics, TalkBack reads the locked insight in full.
+    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).tappable("Locked Pro pattern", onClick = onClick), contentAlignment = Alignment.Center) {
+        Row(Modifier.fillMaxWidth().clearAndSetSemantics {}.blur(7.dp).padding(vertical = 4.dp), verticalAlignment = Alignment.Top) {
             Icon(Symbols.of(insight.icon), null, tint = Brand.primary, modifier = Modifier.size(28.dp))
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -421,7 +423,7 @@ private fun LockedInsightRow(insight: Insight, onClick: () -> Unit) {
                 Text(insight.detail, style = Type.subhead, color = palette.textSecondary)
             }
         }
-        Icon(Icons.Filled.Lock, "Locked", tint = palette.textSecondary, modifier = Modifier.size(20.dp))
+        Icon(Icons.Filled.Lock, null, tint = palette.textSecondary, modifier = Modifier.size(20.dp))
     }
 }
 
