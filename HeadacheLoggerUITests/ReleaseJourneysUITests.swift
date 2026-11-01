@@ -35,6 +35,7 @@ final class ReleaseJourneysUITests: XCTestCase {
 
         app.buttons["logHeadacheButton"].tap()
         answerLocationPrompt()
+        waitForCapture(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20))
         QA.checkpoint(app, "logged")
 
@@ -58,17 +59,22 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.checkpoint(app, "pro-paywall", paywall: true)
 
         // At large text sizes the Close button can sit above the scrolled
-        // content; swiping down scrolls back to it, then dismisses the sheet.
-        let close = app.buttons[L("Close")]
+        // content, and on the unfolded Duo it sits under the sheet's top edge;
+        // a swipe down scrolls back to it or dismisses the sheet itself.
+        let close = app.buttons.matching(
+            NSPredicate(format: "label IN %@ OR identifier == %@", ["Close", L("Close")], "xmark.circle.fill")
+        ).firstMatch
         _ = close.waitForExistence(timeout: 5)
         let title = app.staticTexts[L("Know before the headache hits")]
         for _ in 0..<3 where title.exists {
             if close.exists && close.isHittable {
                 close.tap()
-                break
+            } else {
+                QA.swipe(app, .down)
             }
-            QA.swipe(app, .down)
+            if title.waitForNonExistence(timeout: 3) { break }
         }
+        XCTAssertFalse(title.exists, "paywall never closed")
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "paywall never closed")
         QA.checkpoint(app, "settings-after-paywall", paywall: false)
     }
@@ -104,7 +110,7 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(log.waitForExistence(timeout: 15), "the log button is missing")
         log.tap()
         answerLocationPrompt(timeout: 5)
-        XCTAssertTrue(app.descendants(matching: .any)["captureStatusLine"].waitForExistence(timeout: 30), "the tap never registered")
+        waitForCapture(in: app)
         QA.checkpoint(app, "core-logged")
 
         openHistory(in: app)
@@ -181,12 +187,21 @@ final class ReleaseJourneysUITests: XCTestCase {
         return Int(total.label) ?? -1
     }
 
+    /// The tap saves at once and fills in weather and Health after; wait for that
+    /// to finish, so the checkpoint sees the settled screen.
+    private func waitForCapture(in app: XCUIApplication) {
+        let line = app.staticTexts["captureStatusLine"]
+        let done = NSPredicate(format: "exists == true AND NOT (label CONTAINS %@)", "\u{2026}")
+        let wait = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: done, object: line)], timeout: 40)
+        XCTAssertEqual(wait, .completed, "the tap never finished saving")
+    }
+
     /// The first log raises the system location prompt; later ones do not.
     private func answerLocationPrompt(timeout: TimeInterval = 10) {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let deny = springboard.buttons.matching(
-            NSPredicate(format: "label IN %@", ["Don\u{2019}t Allow", "Don't Allow", "Nicht erlauben"])
+        let allow = springboard.buttons.matching(
+            NSPredicate(format: "label IN %@", ["Allow While Using App", "Beim Verwenden der App erlauben", "Erlauben"])
         ).firstMatch
-        if deny.waitForExistence(timeout: timeout) { deny.tap() }
+        if allow.waitForExistence(timeout: timeout) { allow.tap() }
     }
 }
