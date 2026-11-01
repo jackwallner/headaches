@@ -12,6 +12,7 @@ enum PaywallLinks {
 struct PaywallView: View {
     @EnvironmentObject private var store: StoreService
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var displayCloseButton: Bool = true
 
@@ -105,10 +106,17 @@ struct PaywallView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 12) {
                     header
-                    compactFeatureList
-                    planCards
-                    Spacer(minLength: 0)
-                    purchaseSection
+                    if typeSize.isAccessibilitySize {
+                        // The prices come first; the benefits wrap to many lines at this size.
+                        planCards
+                        purchaseSection
+                        compactFeatureList
+                    } else {
+                        compactFeatureList
+                        planCards
+                        Spacer(minLength: 0)
+                        purchaseSection
+                    }
                 }
                 .padding(.horizontal, 22)
                 .padding(.top, displayCloseButton ? 44 : 20)

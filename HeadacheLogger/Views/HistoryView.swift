@@ -666,44 +666,30 @@ private struct DetailedEventRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
-                        .font(.headline)
-                    Text("\(event.weekdayName) • \(event.partOfDay.rawValue.capitalized)")
-                        .font(.caption)
-                        .foregroundStyle(Color.readableSecondary)
+            // Badges beside the date, or under it when the date would truncate.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top) {
+                    dateBlock
+                    Spacer(minLength: 8)
+                    badges
+                    notesButton
                 }
-                Spacer(minLength: 8)
-
-                Text(event.captureStatus.rawValue.capitalized)
-                    .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(statusColor.opacity(0.18), in: Capsule())
-                    .foregroundStyle(.primary)
-
-                if let severity = event.severity {
-                    Text(severity.rawValue.capitalized)
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(severityColor(severity).opacity(0.18), in: Capsule())
-                        .foregroundStyle(.primary)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        dateBlock
+                        HStack { badges }
+                    }
+                    Spacer(minLength: 8)
+                    notesButton
                 }
-
-                Button {
-                    onEditNotes()
-                } label: {
-                    Image(systemName: "square.and.pencil")
-                        .font(.body.weight(.semibold))
-                        .frame(width: 44, height: 44)
-                        .contentShape(Rectangle())
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        dateBlock
+                        badges
+                    }
+                    Spacer(minLength: 8)
+                    notesButton
                 }
-                .buttonStyle(.borderless)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
-                .accessibilityLabel((event.userNotes?.isEmpty == false) ? "Edit note" : "Add note")
-                .accessibilityIdentifier("historyEntryNotesButton")
             }
 
             if let notes = event.userNotes, !notes.isEmpty {
@@ -732,6 +718,50 @@ private struct DetailedEventRow: View {
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.horizontal)
         .accessibilityIdentifier("historyEventRow")
+    }
+
+    private var dateBlock: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
+                .font(.headline)
+            Text("\(event.weekdayName) • \(event.partOfDay.rawValue.capitalized)")
+                .font(.caption)
+                .foregroundStyle(Color.readableSecondary)
+        }
+    }
+
+    @ViewBuilder
+    private var badges: some View {
+        Text(event.captureStatus.rawValue.capitalized)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(statusColor.opacity(0.18), in: Capsule())
+            .foregroundStyle(.primary)
+
+        if let severity = event.severity {
+            Text(severity.rawValue.capitalized)
+                .font(.caption.weight(.semibold))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(severityColor(severity).opacity(0.18), in: Capsule())
+                .foregroundStyle(.primary)
+        }
+    }
+
+    private var notesButton: some View {
+        Button {
+            onEditNotes()
+        } label: {
+            Image(systemName: "square.and.pencil")
+                .font(.body.weight(.semibold))
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+        .accessibilityLabel((event.userNotes?.isEmpty == false) ? "Edit note" : "Add note")
+        .accessibilityIdentifier("historyEntryNotesButton")
     }
 
     private var weatherLine: String? {
