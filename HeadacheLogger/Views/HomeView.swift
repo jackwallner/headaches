@@ -106,7 +106,9 @@ struct HomeView: View {
                         .keepsWholeAboveTabBar()
                         .id("\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(latestEvent.captureCompletedAt?.timeIntervalSince1970 ?? 0)")
 
-                    if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
+                    // Only a source that failed can be fixed by a retry. A declined
+                    // permission or a day with no Health data is not a problem to flag.
+                    if latestEvent.healthStatus == .failed || latestEvent.environmentStatus == .failed {
                         CaptureRecoveryCard(
                             event: latestEvent,
                             isRetrying: captureCoordinator.isCapturing,
