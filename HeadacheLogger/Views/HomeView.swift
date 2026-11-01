@@ -15,6 +15,7 @@ struct HomeView: View {
     /// `.sheet(isPresented:)` + `if let id` pattern could present an empty shell
     /// (a blank white sheet) if the bool and the id ever desynced.
     @State private var severityNotesTarget: SeverityNotesTarget?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showCheckmark = false
     @State private var showPaywall = false
     /// True once the milestone card claimed this session's Pro moment, so the claim keeps it on screen.
@@ -57,14 +58,14 @@ struct HomeView: View {
                                 .font(.system(size: 28, weight: .heavy))
                             Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once, we'll record the moment")
                                 .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.9))
+                                .foregroundStyle(.white)
                         }
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 44)
                         .background(
                             LinearGradient(
-                                colors: [Color(red: 0.95, green: 0.25, blue: 0.36), Color(red: 0.86, green: 0.16, blue: 0.43)],
+                                colors: [Color(red: 0.84, green: 0.16, blue: 0.30), Color(red: 0.86, green: 0.16, blue: 0.43)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -88,10 +89,10 @@ struct HomeView: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
                             }
-                            .transition(.opacity.animation(.easeInOut(duration: 0.25)))
+                            .transition(.opacity.animation(motion))
                         }
                     }
-                    .animation(.easeInOut(duration: 0.25), value: showCheckmark)
+                    .animation(motion, value: showCheckmark)
 
                     if !captureCoordinator.isCapturing, let statusLine = captureCoordinator.bannerMessage {
                         CaptureStatusLine(text: statusLine, isError: captureCoordinator.bannerIsError) {
@@ -138,7 +139,7 @@ struct HomeView: View {
                             Spacer()
                             Text("See all in History")
                                 .font(.footnote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.primary.opacity(0.7))
                         }
                         .keepsWholeAboveTabBar()
 
@@ -210,7 +211,7 @@ struct HomeView: View {
                     },
                     onDismiss: { dismissUndoSnackbar() }
                 )
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
         .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
@@ -218,7 +219,7 @@ struct HomeView: View {
                 showCheckmark = true
                 Task {
                     try? await Task.sleep(nanoseconds: 3_500_000_000)
-                    withAnimation(.easeInOut(duration: 0.25)) {
+                    withAnimation(motion) {
                         showCheckmark = false
                     }
                 }
@@ -252,19 +253,22 @@ struct HomeView: View {
         }
     }
 
+    /// The Home fades and slides, off when Reduce Motion is on.
+    private var motion: Animation? { reduceMotion ? nil : .easeInOut(duration: 0.25) }
+
     private func showDetails(for eventID: UUID) {
         severityNotesTarget = SeverityNotesTarget(id: eventID)
     }
 
     private func showUndoSnackbar() {
         undoDismissTask?.cancel()
-        withAnimation(.easeInOut(duration: 0.25)) {
+        withAnimation(motion) {
             undoSnackbarVisible = true
         }
         undoDismissTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: Self.undoSnackbarTTLSeconds * 1_000_000_000)
             guard !Task.isCancelled else { return }
-            withAnimation(.easeInOut(duration: 0.25)) {
+            withAnimation(motion) {
                 undoSnackbarVisible = false
             }
         }
@@ -273,7 +277,7 @@ struct HomeView: View {
     private func dismissUndoSnackbar() {
         undoDismissTask?.cancel()
         undoDismissTask = nil
-        withAnimation(.easeInOut(duration: 0.25)) {
+        withAnimation(motion) {
             undoSnackbarVisible = false
         }
     }
@@ -403,6 +407,8 @@ private struct LatestEventCard: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Latest Event")
         .accessibilityIdentifier("latestEventCard")
     }
 
@@ -478,6 +484,7 @@ private struct RecentEventRow: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("recentEventRow")
     }
 }
@@ -729,6 +736,7 @@ private struct MilestoneProPrompt: View {
 
     private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
     @State private var dismissed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if !dismissed {
@@ -758,7 +766,7 @@ private struct MilestoneProPrompt: View {
                         }
 
                         Button {
-                            withAnimation {
+                            withAnimation(reduceMotion ? nil : .default) {
                                 dismissed = true
                                 onDismiss(milestone)
                             }
@@ -779,7 +787,7 @@ private struct MilestoneProPrompt: View {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(brandColor.opacity(0.25), lineWidth: 1)
             )
-            .transition(.opacity.combined(with: .move(edge: .top)))
+            .transition(reduceMotion ? .opacity : .opacity.combined(with: .move(edge: .top)))
         }
     }
 }

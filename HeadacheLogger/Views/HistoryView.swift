@@ -1,3 +1,4 @@
+import UIKit
 import SwiftData
 import SwiftUI
 struct HistoryView: View {
@@ -601,8 +602,8 @@ private struct SummaryGrid: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
-                SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink)
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .orange)
+                SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink, valueIdentifier: "totalLogsValue")
+                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .summaryOrange)
             }
             HStack(spacing: 12) {
                 SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: .purple)
@@ -635,10 +636,18 @@ private struct SummaryGrid: View {
     }
 }
 
+private extension Color {
+    /// System orange is 2.3:1 on the light card; this is 4.4:1, and system orange in dark mode.
+    static let summaryOrange = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.72, green: 0.38, blue: 0, alpha: 1)
+    })
+}
+
 private struct SummaryCard: View {
     let title: String
     let value: String
     let tint: Color
+    var valueIdentifier: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -648,7 +657,9 @@ private struct SummaryCard: View {
             Text(value)
                 .font(.title3.bold())
                 .foregroundStyle(tint)
-                .minimumScaleFactor(0.7)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .accessibilityIdentifier(valueIdentifier ?? "")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
