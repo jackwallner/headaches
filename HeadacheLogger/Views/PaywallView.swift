@@ -61,7 +61,7 @@ struct PaywallView: View {
             ProgressView()
             Text("Loading plans…")
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
             Spacer()
             legalFooter
         }
@@ -80,7 +80,7 @@ struct PaywallView: View {
                 .font(.headline)
             Text(store.lastError ?? "Check your connection and try again.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
             Button("Try Again") {
@@ -101,17 +101,22 @@ struct PaywallView: View {
 
     /// Single viewport — warning hero, compact benefits, plans, and CTA together.
     private var paywallContent: some View {
-        VStack(spacing: 12) {
-            header
-            compactFeatureList
-            planCards
-            Spacer(minLength: 0)
-            purchaseSection
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 12) {
+                    header
+                    compactFeatureList
+                    planCards
+                    Spacer(minLength: 0)
+                    purchaseSection
+                }
+                .padding(.horizontal, 22)
+                .padding(.top, displayCloseButton ? 44 : 20)
+                .padding(.bottom, 16)
+                .frame(minHeight: proxy.size.height)
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .padding(.horizontal, 22)
-        .padding(.top, displayCloseButton ? 44 : 20)
-        .padding(.bottom, 16)
-        .frame(maxHeight: .infinity)
     }
 
     private var header: some View {
@@ -131,7 +136,7 @@ struct PaywallView: View {
                 .minimumScaleFactor(0.9)
             Text("Unlock every Headache Pro feature. Private, on-device, no accounts.")
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.9)
@@ -198,7 +203,7 @@ struct PaywallView: View {
 
             Text(trustLine ?? " ")
                 .font(.footnote.weight(.medium))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)
@@ -208,7 +213,7 @@ struct PaywallView: View {
 
             Text(disclosureText ?? " ")
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(4)
                 .minimumScaleFactor(0.9)
@@ -225,7 +230,7 @@ struct PaywallView: View {
             if let restoreMessage {
                 Text(restoreMessage)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
                     .multilineTextAlignment(.center)
             }
 
@@ -235,22 +240,27 @@ struct PaywallView: View {
 
     /// Restore + legal links — required on every paywall state (Apple 3.1.2).
     private var legalFooter: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 0) {
             Button(action: startRestore) {
                 Text(isRestoring ? "Restoring…" : "Restore Purchases")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .disabled(isRestoring || isPurchasing)
 
             HStack(spacing: 4) {
                 Link("Terms", destination: PaywallLinks.standardEULA)
+                    .frame(minWidth: 44, minHeight: 44)
                 Text("·")
                 Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
+                    .frame(minWidth: 44, minHeight: 44)
             }
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
+            .font(.caption)
+            .foregroundStyle(Color.readableSecondary)
+            .tint(Color.readableSecondary)
         }
     }
 
@@ -261,7 +271,7 @@ struct PaywallView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 28))
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(Color.readableSecondary)
                         .padding(16)
                 }
                 .buttonStyle(.plain)
@@ -396,12 +406,12 @@ private struct PaywallPlanCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(accent, in: Capsule())
+                                .background(Color.readableBrand, in: Capsule())
                                 .fixedSize()
                         } else if let savingsPercent {
                             Text("SAVE \(savingsPercent)%")
                                 .font(.system(size: 9, weight: .heavy))
-                                .foregroundStyle(accent)
+                                .foregroundStyle(Color.readableBrand)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(accent.opacity(0.14), in: Capsule())
@@ -412,23 +422,23 @@ private struct PaywallPlanCard: View {
                         if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
                             Text(trial.capitalized)
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(accent)
+                                .foregroundStyle(Color.readableBrand)
                                 .lineLimit(1)
                         } else if package.headacheProPackageKind == .lifetime {
                             Text("One-time purchase")
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.readableSecondary)
                                 .lineLimit(1)
                         }
                         if isRecommended, let savingsPercent {
                             if showsTrialBadge || package.headacheProPackageKind == .lifetime {
                                 Text("·")
                                     .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(.tertiary)
+                                    .foregroundStyle(Color.readableSecondary)
                             }
                             Text("Save \(savingsPercent)%")
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.readableSecondary)
                                 .lineLimit(1)
                         }
                     }
@@ -445,7 +455,7 @@ private struct PaywallPlanCard: View {
                     if let monthlyEquivalent {
                         Text("\(monthlyEquivalent)/mo")
                             .font(.caption2.weight(.medium).monospacedDigit())
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                             .lineLimit(1)
                     }
                 }

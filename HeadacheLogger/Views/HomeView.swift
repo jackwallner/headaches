@@ -158,7 +158,7 @@ struct HomeView: View {
                             .keepsWholeAboveTabBar()
                         Text("Press once when a headache starts; the app records the moment and fills in as much health and environmental context as it can.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                             .keepsWholeAboveTabBar()
 
                         CaptureItem(
@@ -399,7 +399,7 @@ private struct LatestEventCard: View {
                 } label: {
                     Text("Why is something missing?")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
                 }
                 .accessibilityIdentifier("latestEventDetailsDisclosure")
             }
@@ -470,7 +470,7 @@ private struct RecentEventRow: View {
                 Spacer()
                 Text(event.partOfDay.rawValue.capitalized)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
             }
 
             HStack(spacing: 8) {
@@ -479,7 +479,7 @@ private struct RecentEventRow: View {
                 Label(event.weatherSummary ?? "No weather", systemImage: "cloud")
             }
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.readableSecondary)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -506,7 +506,7 @@ private struct CaptureItem: View {
                     .font(.subheadline.weight(.semibold))
                 Text(subtitle)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
             }
         }
         .keepsWholeAboveTabBar()
@@ -522,15 +522,16 @@ private struct MetricChip: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title.uppercased())
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
             Text(value)
                 .font(.headline.monospacedDigit())
-                .foregroundStyle(tint)
+                .foregroundStyle(.primary)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -554,9 +555,13 @@ private struct CaptureRecoveryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Some context couldn't be captured", systemImage: "exclamationmark.bubble")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.orange)
+            Label {
+                Text("Some context couldn't be captured")
+            } icon: {
+                Image(systemName: "exclamationmark.bubble").foregroundStyle(Color.readableOrange)
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.primary)
 
             VStack(alignment: .leading, spacing: 6) {
                 if let healthIssue {
@@ -567,7 +572,7 @@ private struct CaptureRecoveryCard: View {
                 }
             }
             .font(.footnote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.readableSecondary)
 
             Button {
                 onRetry()
@@ -581,7 +586,7 @@ private struct CaptureRecoveryCard: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .tint(.orange)
+            .tint(Color.readableOrange)
             .disabled(isRetrying)
             .accessibilityIdentifier("captureRetryButton")
 
@@ -599,7 +604,7 @@ private struct CaptureRecoveryCard: View {
                 .accessibilityIdentifier("captureReportButton")
             }
             .font(.footnote)
-            .tint(.secondary)
+            .tint(Color.readableSecondary)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -751,7 +756,7 @@ private struct MilestoneProPrompt: View {
                         .font(.subheadline.weight(.semibold))
                     Text(milestone.detail)
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
 
                     HStack(spacing: 10) {
                         Button {
@@ -773,7 +778,7 @@ private struct MilestoneProPrompt: View {
                         } label: {
                             Text("Not now")
                                 .font(.caption)
-                                .foregroundStyle(.tertiary)
+                                .foregroundStyle(Color.readableSecondary)
                         }
                     }
                 }
@@ -799,10 +804,10 @@ private struct StatusBadge: View {
     var body: some View {
         Text(label)
             .font(.caption.weight(.semibold))
-            .foregroundStyle(tint)
+            .foregroundStyle(.primary)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(tint.opacity(0.12), in: Capsule())
+            .background(tint.opacity(0.18), in: Capsule())
     }
 }
 
@@ -822,15 +827,15 @@ private struct CaptureStatusLine: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(6)
+                    .foregroundStyle(Color.readableSecondary)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Dismiss")
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.vertical, 2)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
         .accessibilityIdentifier("captureStatusLine")
@@ -847,6 +852,8 @@ private struct UndoSnackbar: View {
             Button(action: onAddDetails) {
                 Label("Add Details", systemImage: "square.and.pencil")
                     .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .frame(minHeight: 44)
             }
             .accessibilityIdentifier("addDetailsButton")
 
@@ -855,21 +862,23 @@ private struct UndoSnackbar: View {
             Button(role: .destructive, action: onUndo) {
                 Label("Undo", systemImage: "arrow.uturn.backward")
                     .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .frame(minHeight: 44)
             }
             .accessibilityIdentifier("undoLastTapButton")
 
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(6)
+                    .foregroundStyle(Color.readableSecondary)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Dismiss")
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 2)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)

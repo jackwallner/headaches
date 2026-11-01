@@ -1,4 +1,3 @@
-import UIKit
 import SwiftData
 import SwiftUI
 struct HistoryView: View {
@@ -514,7 +513,7 @@ struct HistoryView: View {
                     }
                     Text("A few quick questions so Patterns can surface the triggers most relevant to you. Take it anytime.")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
                         .multilineTextAlignment(.leading)
                     Text("Start quiz")
                         .font(.subheadline.weight(.semibold))
@@ -542,7 +541,7 @@ struct HistoryView: View {
                             .foregroundStyle(.primary)
                         Text("Optional. Helps Patterns surface the triggers most relevant to you.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.right")
@@ -579,7 +578,7 @@ struct HistoryView: View {
                     }
                     Text("See what time, sleep, and weather patterns emerge from your logged headaches.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
@@ -603,7 +602,7 @@ private struct SummaryGrid: View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
                 SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink, valueIdentifier: "totalLogsValue")
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .summaryOrange)
+                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .readableOrange)
             }
             HStack(spacing: 12) {
                 SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: .purple)
@@ -636,13 +635,6 @@ private struct SummaryGrid: View {
     }
 }
 
-private extension Color {
-    /// System orange is 2.3:1 on the light card; this is 4.4:1, and system orange in dark mode.
-    static let summaryOrange = Color(UIColor { traits in
-        traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.72, green: 0.38, blue: 0, alpha: 1)
-    })
-}
-
 private struct SummaryCard: View {
     let title: String
     let value: String
@@ -653,7 +645,7 @@ private struct SummaryCard: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
             Text(value)
                 .font(.title3.bold())
                 .foregroundStyle(tint)
@@ -680,7 +672,7 @@ private struct DetailedEventRow: View {
                         .font(.headline)
                     Text("\(event.weekdayName) • \(event.partOfDay.rawValue.capitalized)")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
                 }
                 Spacer(minLength: 8)
 
@@ -688,16 +680,16 @@ private struct DetailedEventRow: View {
                     .font(.caption.weight(.semibold))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
-                    .background(statusColor.opacity(0.12), in: Capsule())
-                    .foregroundStyle(statusColor)
+                    .background(statusColor.opacity(0.18), in: Capsule())
+                    .foregroundStyle(.primary)
 
                 if let severity = event.severity {
                     Text(severity.rawValue.capitalized)
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
-                        .background(severityColor(severity).opacity(0.12), in: Capsule())
-                        .foregroundStyle(severityColor(severity))
+                        .background(severityColor(severity).opacity(0.18), in: Capsule())
+                        .foregroundStyle(.primary)
                 }
 
                 Button {
@@ -715,7 +707,7 @@ private struct DetailedEventRow: View {
             if let notes = event.userNotes, !notes.isEmpty {
                 Text(notes)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
                     .lineLimit(4)
                     .accessibilityIdentifier("historyEntryNotesPreview")
             }
@@ -725,7 +717,7 @@ private struct DetailedEventRow: View {
                     .compactMap { $0 }
                     .joined(separator: " • "))
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
             }
 
             HStack(spacing: 8) {
@@ -774,7 +766,7 @@ private struct DataPill: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
             Text(value)
                 .font(.subheadline.monospacedDigit())
         }
@@ -805,7 +797,7 @@ private struct ImportExportActionCard: View {
                         .font(.subheadline.weight(.semibold))
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.readableSecondary)
                 }
                 Spacer(minLength: 0)
                 Button(action: action) {
@@ -850,7 +842,7 @@ private struct ImportIntroSheet: View {
                             .font(.title2.bold())
                         Text("Bring entries in from a backup or another device, using a CSV file exported from this app.")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                     }
 
                     VStack(alignment: .leading, spacing: 14) {
@@ -866,7 +858,7 @@ private struct ImportIntroSheet: View {
                             .font(.subheadline.weight(.semibold))
                         Text("Use a CSV exported from this app. Other CSVs are not guaranteed to match the columns we expect.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -874,7 +866,7 @@ private struct ImportIntroSheet: View {
                             .font(.subheadline.weight(.semibold))
                         Text("You can cancel at any step before the final confirmation. Existing entries are never changed without your approval.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.readableSecondary)
                     }
                 }
                 .padding(20)
@@ -918,7 +910,7 @@ private struct ImportStep: View {
                 .background(brandColor, in: Circle())
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline.weight(.semibold))
-                Text(detail).font(.footnote).foregroundStyle(.secondary)
+                Text(detail).font(.footnote).foregroundStyle(Color.readableSecondary)
             }
         }
     }

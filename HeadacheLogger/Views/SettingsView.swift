@@ -221,7 +221,7 @@ struct SettingsView: View {
                     .foregroundStyle(.primary)
                 Text(unlocked ? "Configure personal triggers, thresholds, and quiet hours" : "Unlock Pro to get personalized headache-weather warnings")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.readableSecondary)
             }
             Spacer()
             if !unlocked {
@@ -230,7 +230,7 @@ struct SettingsView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.15), in: Capsule())
-                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .foregroundStyle(Color.readableBrand)
             }
         }
     }
@@ -246,7 +246,7 @@ private struct PermissionRow: View {
             Text(label)
             Spacer()
             Text(value)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.readableSecondary)
                 .accessibilityIdentifier(valueIdentifier)
         }
     }
