@@ -16,6 +16,10 @@ extension Color {
             : UIColor(red: 0.80, green: 0.14, blue: 0.28, alpha: 1)
     })
 
+    /// The brand pink as a fill behind white text, 5:1 in both modes
+    /// (`readableBrand` lightens in dark mode, where white on it is 3.4:1).
+    static let brandFill = Color(red: 0.80, green: 0.14, blue: 0.28)
+
     /// Orange as text or a filled button behind white text, 4.8:1 in light mode.
     static let readableOrange = Color(UIColor { traits in
         traits.userInterfaceStyle == .dark ? .systemOrange : UIColor(red: 0.72, green: 0.34, blue: 0, alpha: 1)

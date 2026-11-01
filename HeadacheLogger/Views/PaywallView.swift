@@ -446,7 +446,7 @@ private struct PaywallPlanCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.readableBrand, in: Capsule())
+                                .background(Color.brandFill, in: Capsule())
                                 .fixedSize()
                         } else if let savingsPercent {
                             Text("SAVE \(savingsPercent)%")
