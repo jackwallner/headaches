@@ -133,14 +133,10 @@ struct PaywallView: View {
             Text("Know before the headache hits")
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.9)
             Text("Unlock every Headache Pro feature. Private, on-device, no accounts.")
                 .font(.footnote)
                 .foregroundStyle(Color.readableSecondary)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.9)
         }
     }
 
@@ -154,8 +150,6 @@ struct PaywallView: View {
                         .frame(width: 24)
                     Text(feature.title)
                         .font(.subheadline)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.85)
                     Spacer(minLength: 0)
                 }
             }
@@ -253,11 +247,17 @@ struct PaywallView: View {
             .disabled(isRestoring || isPurchasing)
 
             HStack(spacing: 4) {
-                Link("Terms", destination: PaywallLinks.standardEULA)
-                    .frame(minWidth: 44, minHeight: 44)
+                Link(destination: PaywallLinks.standardEULA) {
+                    Text("Terms")
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
                 Text("·")
-                Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
-                    .frame(minWidth: 44, minHeight: 44)
+                Link(destination: PaywallLinks.privacyPolicy) {
+                    Text("Privacy Policy")
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
             }
             .font(.caption)
             .foregroundStyle(Color.readableSecondary)
@@ -395,12 +395,10 @@ private struct PaywallPlanCard: View {
             Text(trial.capitalized)
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Color.readableBrand)
-                .lineLimit(1)
         } else if package.headacheProPackageKind == .lifetime {
             Text("One-time purchase")
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Color.readableSecondary)
-                .lineLimit(1)
         }
         if isRecommended, let savingsPercent {
             if separated, showsTrialBadge || package.headacheProPackageKind == .lifetime {
@@ -411,7 +409,6 @@ private struct PaywallPlanCard: View {
             Text("Save \(savingsPercent)%")
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Color.readableSecondary)
-                .lineLimit(1)
         }
     }
 

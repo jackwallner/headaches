@@ -697,6 +697,8 @@ private struct DetailedEventRow: View {
                 } label: {
                     Image(systemName: "square.and.pencil")
                         .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.borderless)
                 .tint(Color(red: 0.95, green: 0.25, blue: 0.36))

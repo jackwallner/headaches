@@ -353,6 +353,7 @@ private struct LatestEventCard: View {
     let event: HeadacheEvent
     var useCelsius: Bool
     @State private var showDetails = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -371,10 +372,11 @@ private struct LatestEventCard: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("latestEventSummary")
 
-            // Three across, or stacked when large text leaves no room for them.
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 12) { metricChips }
+            // Three across, or stacked at accessibility sizes where a value would truncate.
+            if typeSize.isAccessibilitySize {
                 VStack(spacing: 8) { metricChips }
+            } else {
+                HStack(spacing: 12) { metricChips }
             }
 
             if hasMissingContext {
