@@ -113,6 +113,7 @@ struct PaywallView: View {
                 .padding(.horizontal, 22)
                 .padding(.top, displayCloseButton ? 44 : 20)
                 .padding(.bottom, 16)
+                .frame(width: proxy.size.width)
                 .frame(minHeight: proxy.size.height)
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -380,6 +381,40 @@ private struct PaywallPlanCard: View {
     let accent: Color
     let onTap: () -> Void
 
+    /// Trial and savings on one line, or stacked when a narrow phone has no room for both.
+    private var detailLine: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 6) { detailItems(separated: true) }
+            VStack(alignment: .leading, spacing: 2) { detailItems(separated: false) }
+        }
+    }
+
+    @ViewBuilder
+    private func detailItems(separated: Bool) -> some View {
+        if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
+            Text(trial.capitalized)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Color.readableBrand)
+                .lineLimit(1)
+        } else if package.headacheProPackageKind == .lifetime {
+            Text("One-time purchase")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Color.readableSecondary)
+                .lineLimit(1)
+        }
+        if isRecommended, let savingsPercent {
+            if separated, showsTrialBadge || package.headacheProPackageKind == .lifetime {
+                Text("·")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Color.readableSecondary)
+            }
+            Text("Save \(savingsPercent)%")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Color.readableSecondary)
+                .lineLimit(1)
+        }
+    }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 14) {
@@ -418,30 +453,7 @@ private struct PaywallPlanCard: View {
                                 .fixedSize()
                         }
                     }
-                    HStack(spacing: 6) {
-                        if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
-                            Text(trial.capitalized)
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(Color.readableBrand)
-                                .lineLimit(1)
-                        } else if package.headacheProPackageKind == .lifetime {
-                            Text("One-time purchase")
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(Color.readableSecondary)
-                                .lineLimit(1)
-                        }
-                        if isRecommended, let savingsPercent {
-                            if showsTrialBadge || package.headacheProPackageKind == .lifetime {
-                                Text("·")
-                                    .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(Color.readableSecondary)
-                            }
-                            Text("Save \(savingsPercent)%")
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(Color.readableSecondary)
-                                .lineLimit(1)
-                        }
-                    }
+                    detailLine
                 }
 
                 Spacer(minLength: 8)

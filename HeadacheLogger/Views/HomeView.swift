@@ -371,22 +371,10 @@ private struct LatestEventCard: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("latestEventSummary")
 
-            HStack(spacing: 12) {
-                MetricChip(
-                    title: "Steps",
-                    value: event.stepsToday?.formatted(.number) ?? "No data",
-                    tint: .teal
-                )
-                MetricChip(
-                    title: "Sleep",
-                    value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "No data",
-                    tint: .indigo
-                )
-                MetricChip(
-                    title: "AQI",
-                    value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
-                    tint: .mint
-                )
+            // Three across, or stacked when large text leaves no room for them.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) { metricChips }
+                VStack(spacing: 8) { metricChips }
             }
 
             if hasMissingContext {
@@ -410,6 +398,25 @@ private struct LatestEventCard: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Latest Event")
         .accessibilityIdentifier("latestEventCard")
+    }
+
+    @ViewBuilder
+    private var metricChips: some View {
+        MetricChip(
+            title: "Steps",
+            value: event.stepsToday?.formatted(.number) ?? "No data",
+            tint: .teal
+        )
+        MetricChip(
+            title: "Sleep",
+            value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "No data",
+            tint: .indigo
+        )
+        MetricChip(
+            title: "AQI",
+            value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
+            tint: .mint
+        )
     }
 
     private var plainSummary: String {
@@ -523,9 +530,11 @@ private struct MetricChip: View {
             Text(title.uppercased())
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Color.readableSecondary)
+                .lineLimit(1)
             Text(value)
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(.primary)
+                .lineLimit(1)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -828,14 +837,14 @@ private struct CaptureStatusLine: View {
                 Image(systemName: "xmark")
                     .font(.caption.bold())
                     .foregroundStyle(Color.readableSecondary)
-                    .frame(width: 44, height: 44)
+                    .padding(6)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Dismiss")
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 2)
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
         .accessibilityIdentifier("captureStatusLine")

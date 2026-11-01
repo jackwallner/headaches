@@ -177,6 +177,9 @@ final class ReleaseJourneysUITests: XCTestCase {
         let total = app.descendants(matching: .any)["totalLogsValue"]
         if tabButton("History", symbol: Self.historySymbol, in: app).waitForExistence(timeout: 5) {
             tapTab("History", symbol: Self.historySymbol, in: app)
+        } else {
+            // The pane sits beside Home, which settles when the Undo bar times out.
+            _ = app.buttons["undoLastTapButton"].waitForNonExistence(timeout: 20)
         }
         XCTAssertTrue(total.waitForExistence(timeout: 15), "History never rendered")
     }
@@ -194,6 +197,9 @@ final class ReleaseJourneysUITests: XCTestCase {
         let done = NSPredicate(format: "exists == true AND NOT (label CONTAINS %@)", "\u{2026}")
         let wait = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: done, object: line)], timeout: 40)
         XCTAssertEqual(wait, .completed, "the tap never finished saving")
+        // The Logged confirmation holds the button off for a few seconds.
+        let ready = NSPredicate(format: "isEnabled == true")
+        _ = XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: ready, object: app.buttons["logHeadacheButton"])], timeout: 15)
     }
 
     /// The first log raises the system location prompt; later ones do not.
