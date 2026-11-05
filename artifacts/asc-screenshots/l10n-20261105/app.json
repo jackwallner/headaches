@@ -1,0 +1,23 @@
+{
+ "repo": "headaches",
+ "github": "jackwallner/headaches",
+ "bundle": "com.jackwallner.headachelogger",
+ "family": "scene",
+ "asc_id": "6762074561",
+ "live_version": "1.5.5",
+ "targets": [
+  {
+   "rank": 97,
+   "store_locale": "es-ES",
+   "lang": "es",
+   "apple_languages": "(es)",
+   "apple_locale": "es_ES",
+   "regions": [
+    "Spain"
+   ],
+   "customers": 6.0
+  }
+ ],
+ "store_locales_missing": [],
+ "dest": "artifacts/asc-screenshots/l10n-20261105"
+}

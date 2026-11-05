@@ -1,0 +1,56 @@
+{
+ "phone": {
+  "display_type": "APP_IPHONE_67",
+  "frames": [
+   {
+    "file": "01-keep-a-clear-record.png",
+    "md5": "e64e6b6606931a526a1dcaff583d97c2",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/aNogK_hZBCjflb-funiIPQ/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "02-review-a-recorded-headache.png",
+    "md5": "e5e20ad9b650a53505ac09af7a354810",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/26JjxXRApw64EJh_qEWgXw/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "03-read-your-record-clearly.png",
+    "md5": "9dcd242a7712ecd358a1ce267a5063e5",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/NkRun0IFCDOzeGXwl4mcEg/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "04-see-your-patterns.png",
+    "md5": "3a256fdb35a27256d885d686138dfbd8",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/NXaIcInQlg4M5fgjwdlXJQ/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "05-save-context-with-one-tap.png",
+    "md5": "b13623eb67a2155f538972d0b863174a",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/OORKKxMZcYPGxnsvURUdnQ/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "06-review-each-entry.png",
+    "md5": "2cdf3d83ca64a2979515d93cef3893b6",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/9BOLxNZgYj_UrzEU9CusIQ/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   },
+   {
+    "file": "07-review-a-completed-entry.png",
+    "md5": "34eaeb7b8c3ddd69dfc4686e21b1e9d1",
+    "url": "https://is1-ssl.mzstatic.com/image/thumb/GLJJKDYVLKOwVNodu8wUeA/1320x2868bb.png",
+    "w": 1320,
+    "h": 2868
+   }
+  ]
+ }
+}
