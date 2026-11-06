@@ -15,7 +15,7 @@ enum HeadacheBrand {
 
     static var name: String {
         if isScreenshotMode {
-            return "Migraine Tracker"
+            return String(localized: "Migraine Tracker")
         }
         return "One Tap Headache Tracker"
     }
@@ -580,6 +580,32 @@ private enum HeadacheScreenshotSeed {
 
         let calendar = Calendar.current
         let now = Date()
+        let isSpanish = Locale.current.language.languageCode?.identifier == "es"
+        HeadacheAppGroup.userDefaults.set(
+            isSpanish,
+            forKey: HeadacheStorageKey.useCelsiusTemperature.rawValue
+        )
+        let spanishWeather = [
+            "Partly cloudy": "Parcialmente nublado",
+            "Clear": "Despejado",
+            "Cloudy": "Nublado",
+            "Light rain": "Lluvia ligera",
+            "Rain": "Lluvia"
+        ]
+        let spanishNotes = [
+            "Started after a screen-heavy morning. Added context for my private record.": "Empezó tras una mañana con mucho tiempo de pantalla. Añadí contexto a mi registro privado.",
+            "After a long workday": "Tras una larga jornada de trabajo",
+            "Logged from the desk": "Registrado desde el escritorio",
+            "Evening check-in": "Registro de la tarde",
+            "Quick note": "Nota rápida",
+            "Afternoon check-in": "Registro de la tarde",
+            "Logged from the park": "Registrado desde el parque",
+            "Afternoon note": "Nota de la tarde",
+            "Woke up with it": "Me desperté con dolor de cabeza",
+            "Morning check-in": "Registro de la mañana",
+            "Morning note": "Nota de la mañana",
+            "First log": "Primer registro"
+        ]
         // No ties for the busiest part of day or weekday: History and Patterns
         // each break a tie their own way, and the shots would disagree. The
         // first log is past the heatmap's 90-day window and none sits near its
@@ -623,7 +649,7 @@ private enum HeadacheScreenshotSeed {
             event.environmentStatus = .captured
             event.locality = "Seattle"
             event.region = "WA"
-            event.weatherSummary = entry.weather
+            event.weatherSummary = isSpanish ? spanishWeather[entry.weather] ?? entry.weather : entry.weather
             event.temperatureC = 15
             event.pressureHpa = entry.pressure
             event.pressureTrend = [.steady, .rising, .falling][index % 3]
@@ -631,7 +657,27 @@ private enum HeadacheScreenshotSeed {
             event.usAQI = Double(22 + (index * 7) % 24)
             event.sleepHoursLastNight = entry.sleep
             event.severity = entry.severity
-            event.userNotes = entry.note
+            event.userNotes = isSpanish ? spanishNotes[entry.note] ?? entry.note : entry.note
+            context.insert(event)
+        }
+
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotCapture") {
+            let timestamp = calendar.date(bySettingHour: 11, minute: 13, second: 0, of: now) ?? now
+            let event = HeadacheEvent(timestamp: timestamp)
+            event.captureStatus = .complete
+            event.captureCompletedAt = timestamp.addingTimeInterval(42)
+            event.healthStatus = .captured
+            event.environmentStatus = .captured
+            event.locality = "Seattle"
+            event.region = "WA"
+            event.weatherSummary = isSpanish ? "Parcialmente nublado" : "Partly cloudy"
+            event.temperatureC = 15
+            event.pressureHpa = 1016
+            event.pressureTrend = .steady
+            event.stepsToday = 3_456
+            event.usAQI = 40
+            event.sleepHoursLastNight = 6.8
+            event.severity = .slight
             context.insert(event)
         }
 

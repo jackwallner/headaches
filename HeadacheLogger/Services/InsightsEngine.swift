@@ -131,8 +131,8 @@ enum InsightsEngine {
             id: "part-of-day",
             category: .time,
             icon: icon(for: top),
-            title: "Most common time: \(label(for: top))",
-            detail: "\(percent(topShare)) of your logged headaches were logged in the \(label(for: top).lowercased()).",
+            title: String(localized: "Most common time: \(label(for: top))"),
+            detail: String(localized: "\(percent(topShare)) of your logged headaches were logged in the \(label(for: top).lowercased())."),
             strength: topShare,
             whyItMatters: "Headaches that cluster at a specific time of day often point to circadian or behavioural triggers: caffeine timing, screen exposure, dehydration, posture, or letdown after stress. Knowing your peak window lets you preload water, breaks, or rescue meds before you'd normally feel it coming.",
             yourPattern: yourPattern,
@@ -178,8 +178,8 @@ enum InsightsEngine {
             id: "weekday",
             category: .time,
             icon: "calendar",
-            title: "Headache day: \(topName)",
-            detail: "\(percent(topShare)) of your headaches were logged on \(topName).",
+            title: String(localized: "Headache day: \(topName)"),
+            detail: String(localized: "\(percent(topShare)) of your headaches were logged on \(topName)."),
             strength: topShare - baseline,
             whyItMatters: "Weekday clusters often signal a routine trigger: stress build-up, irregular sleep on transition days, alcohol after work, or letdown on a recurring rest day. Spotting the pattern points to behavioural changes (steady sleep windows, caffeine timing, scheduled breaks) rather than medication-only fixes.",
             yourPattern: yourPattern,
@@ -280,10 +280,10 @@ enum InsightsEngine {
                 detail = "\(percent(lowSleepShare)) of your headaches followed a night with under 6 hours of sleep. Median: \(formatHours(med))."
                 strength = 0.5 + lowSleepShare * 0.4
             } else {
-                detail = "Median sleep the night before a headache: \(formatHours(med))."
+                detail = String(localized: "Median sleep the night before a headache: \(formatHours(med)).")
                 strength = 0.35
             }
-            title = "Sleep before a headache"
+            title = String(localized: "Sleep before a headache")
             yourPattern = "Median sleep the night before a headache: \(formatHours(med)). \(percent(lowSleepShare)) of your headaches followed a night under 6 hours."
         }
 
@@ -553,8 +553,8 @@ enum InsightsEngine {
             id: "severity",
             category: .severity,
             icon: "exclamationmark.triangle.fill",
-            title: "Most often: \(label(for: top))",
-            detail: "\(percent(topShare)) of headaches you've rated were \(label(for: top).lowercased()).",
+            title: String(localized: "Most often: \(label(for: top))"),
+            detail: String(localized: "\(percent(topShare)) of headaches you've rated were \(label(for: top).lowercased())."),
             strength: topShare - baseline,
             whyItMatters: "Knowing your typical severity distribution helps frame conversations with a clinician. Frequent extreme attacks, even if they're not your most common bucket, often justify a preventive treatment plan rather than rescue meds alone.",
             yourPattern: "\(percent(topShare)) of your rated headaches were \(label(for: top).lowercased()), \(String(format: "%.1fx", topShare / baseline)) the even baseline of \(percent(baseline)).",
@@ -1514,10 +1514,10 @@ enum InsightsEngine {
 
     private static func label(for part: PartOfDay) -> String {
         switch part {
-        case .overnight: return "Overnight"
-        case .morning: return "Morning"
-        case .afternoon: return "Afternoon"
-        case .evening: return "Evening"
+        case .overnight: return String(localized: "Night")
+        case .morning: return String(localized: "Morning")
+        case .afternoon: return String(localized: "Afternoon")
+        case .evening: return String(localized: "Evening")
         }
     }
 
@@ -1531,11 +1531,7 @@ enum InsightsEngine {
     }
 
     private static func label(for severity: HeadacheSeverity) -> String {
-        switch severity {
-        case .slight: return "Slight"
-        case .medium: return "Medium"
-        case .extreme: return "Extreme"
-        }
+        severity.localizedName
     }
 
     private static func label(for trend: PressureTrend) -> String {

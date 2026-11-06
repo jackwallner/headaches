@@ -82,7 +82,26 @@ struct HistoryView: View {
         decoratedList
     }
 
+    @ViewBuilder
     private var decoratedList: some View {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotHistoryEntry") {
+            ScrollViewReader { proxy in
+                decoratedHistoryList
+                    .onAppear { scrollToScreenshotEntry(using: proxy) }
+                    .onChange(of: events.count) { _, _ in
+                        scrollToScreenshotEntry(using: proxy)
+                    }
+            }
+        } else {
+            decoratedHistoryList
+        }
+        #else
+        decoratedHistoryList
+        #endif
+    }
+
+    private var decoratedHistoryList: some View {
         historyList
             .listStyle(.plain)
             .background(Color(.systemGroupedBackground))
@@ -175,6 +194,13 @@ struct HistoryView: View {
             }
     }
 
+    private func scrollToScreenshotEntry(using proxy: ScrollViewProxy) {
+        #if DEBUG
+        guard ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotHistoryEntry") else { return }
+        proxy.scrollTo("historyEntries", anchor: .top)
+        #endif
+    }
+
     @ViewBuilder
     private func sheetContent(for sheet: ActiveSheet) -> some View {
         switch sheet {
@@ -244,6 +270,7 @@ struct HistoryView: View {
                     }
                     .onDelete(perform: deleteEvents)
                 }
+                .id("historyEntries")
             }
 
             Section {
@@ -309,6 +336,7 @@ struct HistoryView: View {
                 Image(systemName: "ellipsis.circle")
                     .accessibilityLabel("Import or Export")
             }
+            .accessibilityIdentifier("historyImportExportMenu")
         }
     }
 
@@ -620,7 +648,7 @@ private struct SummaryGrid: View {
 
     private var mostCommonPartOfDay: String? {
         let counts = events.reduce(into: [PartOfDay: Int]()) { $0[$1.partOfDay, default: 0] += 1 }
-        return counts.mostCommon()?.key.rawValue.capitalized
+        return counts.mostCommon()?.key.localizedName
     }
 
     private var averageTemperatureText: String {
@@ -667,13 +695,13 @@ private struct DetailedEventRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(.headline)
-                    Text("\(event.weekdayName) • \(event.partOfDay.rawValue.capitalized)")
+                    Text("\(event.weekdayName) • \(event.partOfDay.localizedName)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 8)
 
-                Text(event.captureStatus.rawValue.capitalized)
+                Text(event.captureStatus.localizedName)
                     .font(.caption.weight(.semibold))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
@@ -681,7 +709,7 @@ private struct DetailedEventRow: View {
                     .foregroundStyle(statusColor)
 
                 if let severity = event.severity {
-                    Text(severity.rawValue.capitalized)
+                    Text(severity.localizedName)
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)

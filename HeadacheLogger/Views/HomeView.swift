@@ -17,6 +17,9 @@ struct HomeView: View {
     @State private var severityNotesTarget: SeverityNotesTarget?
     @State private var showCheckmark = false
     @State private var showPaywall = false
+    #if DEBUG
+    @State private var didPrepareScreenshotCapture = false
+    #endif
     /// True once the milestone card claimed this session's Pro moment, so the claim keeps it on screen.
     @State private var milestoneClaimedSession = false
     @State private var didPresentDebugDetails = false
@@ -196,6 +199,18 @@ struct HomeView: View {
             }
             #endif
         }
+        #if DEBUG
+        .task(id: events.count) {
+            guard ProcessInfo.processInfo.arguments.contains("-HeadacheScreenshotCapture"),
+                  !didPrepareScreenshotCapture,
+                  let event = events.first
+            else { return }
+            didPrepareScreenshotCapture = true
+            captureCoordinator.lastCapturedEventID = event.id
+            captureCoordinator.bannerMessage = String(localized: "Context saved.")
+            captureCoordinator.bannerIsError = false
+        }
+        #endif
         .safeAreaInset(edge: .bottom) {
             if undoSnackbarVisible, let eventID = captureCoordinator.lastCapturedEventID {
                 UndoSnackbar(
@@ -355,7 +370,7 @@ private struct LatestEventCard: View {
                     .font(.headline)
                 Spacer()
                 if let severity = event.severity {
-                    StatusBadge(label: severity.rawValue.capitalized, tint: severityColor(severity))
+                    StatusBadge(label: severity.localizedName, tint: severityColor(severity))
                 }
             }
 
@@ -373,7 +388,7 @@ private struct LatestEventCard: View {
                 )
                 MetricChip(
                     title: "Sleep",
-                    value: event.sleepHoursLastNight.map { String(format: "%.1f h", $0) } ?? "No data",
+                    value: event.sleepHoursLastNight.map { $0.formatted(.number.precision(.fractionLength(1))) + " h" } ?? "No data",
                     tint: .indigo
                 )
                 MetricChip(
@@ -410,14 +425,15 @@ private struct LatestEventCard: View {
         let dateTime = event.timestamp.formatted(
             .dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute()
         )
-        parts.append("\(dateTime) · \(event.partOfDay.rawValue.capitalized)")
+        parts.append("\(dateTime) · \(event.partOfDay.localizedName)")
 
         if let weather = weatherHeadline { parts.append(weather) }
         else if !event.locationLabel.isEmpty { parts.append(event.locationLabel) }
 
         if let pressureWord = pressureSummary { parts.append(pressureWord) }
         if let sleep = event.sleepHoursLastNight {
-            parts.append("slept \(String(format: "%.1f", sleep))h")
+            let sleepText = sleep.formatted(.number.precision(.fractionLength(1)))
+            parts.append(String(localized: "slept \(sleepText)h"))
         }
         return parts.joined(separator: " · ")
     }
@@ -460,7 +476,7 @@ private struct RecentEventRow: View {
                 Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Text(event.partOfDay.rawValue.capitalized)
+                Text(event.partOfDay.localizedName)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
@@ -511,9 +527,10 @@ private struct MetricChip: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title.uppercased())
+            Text(LocalizedStringKey(title))
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
+                .textCase(.uppercase)
             Text(value)
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(tint)
@@ -659,7 +676,7 @@ private struct SeverityNotesSheet: View {
                     Picker("Severity", selection: $selectedSeverity) {
                         Text("Not set").tag(Optional<HeadacheSeverity>.none)
                         ForEach(HeadacheSeverity.allCases, id: \.self) { severity in
-                            Text(severity.rawValue.capitalized).tag(Optional(severity))
+                            Text(severity.localizedName).tag(Optional(severity))
                         }
                     }
                     .pickerStyle(.segmented)
@@ -805,7 +822,7 @@ private struct CaptureStatusLine: View {
         HStack(spacing: 8) {
             Image(systemName: isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
                 .foregroundStyle(isError ? .orange : .green)
-            Text(text)
+            Text(LocalizedStringKey(text))
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.primary)
             Spacer(minLength: 0)

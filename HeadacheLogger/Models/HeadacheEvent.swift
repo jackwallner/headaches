@@ -6,6 +6,8 @@ enum CaptureStatus: String, Codable, CaseIterable, Sendable {
     case complete
     case partial
     case failed
+
+    var localizedName: String { NSLocalizedString(rawValue.capitalized, comment: "Capture status") }
 }
 
 enum CaptureSourceStatus: String, Codable, CaseIterable, Sendable {
@@ -20,6 +22,8 @@ enum PartOfDay: String, Codable, CaseIterable, Sendable {
     case morning
     case afternoon
     case evening
+
+    var localizedName: String { NSLocalizedString(rawValue.capitalized, comment: "Part of day") }
 
     static func from(_ date: Date, calendar: Calendar = .current) -> PartOfDay {
         switch calendar.component(.hour, from: date) {
@@ -42,6 +46,8 @@ enum HeadacheSeverity: String, Codable, CaseIterable, Sendable {
     case slight
     case medium
     case extreme
+
+    var localizedName: String { NSLocalizedString(rawValue.capitalized, comment: "Headache severity") }
 }
 
 enum MotionActivity: String, Codable, CaseIterable, Sendable {
