@@ -1,0 +1,56 @@
+{
+  "verdict": "FIX",
+  "header_fixes": [
+    {
+      "locale": "es-ES",
+      "file": "06-review-each-entry.png",
+      "before": "Exporta tus registros\nen PDF o CSV",
+      "after": "Conoce los datos\nque se guardan",
+      "why": "The English headline describes the data captured. The Spanish headline instead advertises PDF/CSV export, changing the frame meaning. Restore the captured-data message with two balanced lines."
+    },
+    {
+      "locale": "es-ES",
+      "file": "07-review-a-completed-entry.png",
+      "before": "Completa los detalles\nde cada registro",
+      "after": "Revisa el registro\ncuando esté completo",
+      "why": "The English headline invites reviewing a completed entry. The Spanish headline asks users to complete its details, changing both the action and completion state. Restore review of a completed record."
+    }
+  ],
+  "ui_defects": [
+    {
+      "locale": "es-ES",
+      "file": "01-keep-a-clear-record.png",
+      "what": "The previous-entries link says “Ver todo en Historia”, but History is “Historial” in the tab and catalog. Use “Ver todo en Historial”. The catalog entry for “See all in History” contains this mistranslation.",
+      "severity": "minor"
+    },
+    {
+      "locale": "es-ES",
+      "file": "03-read-your-record-clearly.png",
+      "what": "Sleep pills show “7.4h”, “6.8h” and “7.1h”. Spanish (Spain) needs decimal commas and spacing before the unit, for example “7,4 h”, consistent with the Home screenshots. HistoryView.swift uses String(format: \"%.1fh\", ...).",
+      "severity": "minor"
+    },
+    {
+      "locale": "es-ES",
+      "file": "04-see-your-patterns.png",
+      "what": "The prominent date range reads “3 ago 2026 to 6 nov 2026”, leaving English “to” between Spanish dates. Use a localized range, for example “Del 3 ago 2026 al 6 nov 2026”. InsightsView.rangeLabel hardcodes the English connector.",
+      "severity": "blocker"
+    },
+    {
+      "locale": "es-ES",
+      "file": "05-save-context-with-one-tap.png",
+      "what": "The previous-entries link repeats “Ver todo en Historia” instead of “Ver todo en Historial”, inconsistent with the destination tab and the History catalog term.",
+      "severity": "minor"
+    },
+    {
+      "locale": "es-ES",
+      "file": "07-review-a-completed-entry.png",
+      "what": "The first intensity segment truncates the catalog translation “Sin configurar” to “Sin configu...”. Shorten the localized option or adjust the control so the full label fits.",
+      "severity": "minor"
+    }
+  ],
+  "unsure": [
+    "Both corrected headlines are saved in copy/headers.json but are not applied to the PNGs. reskin.py requires every raw capture and has no existing-screen reuse mode; raws are absent. The orchestrator must render these corrections and verify the final line balance and uniform header size.",
+    "The comparison uses the fetched live English set. It predates the Spanish UI: English has 11 seeded entries and no visible bottom tab bar, while Spanish has 23 entries and a tab bar. Screen roles match and Spanish composition is consistent, but exact current English/Spanish layout parity cannot be established from these inputs.",
+    "Reviewed the es-ES phone comparison sheet covering all seven frames. Confirmed the suspected number-format, date-range and truncation problems in full frames. Raw checks were skipped as requested. sheet.py used Pillow only for its comparison labels because Swift/CoreText is unavailable; screenshot pixels were not edited."
+  ]
+}
