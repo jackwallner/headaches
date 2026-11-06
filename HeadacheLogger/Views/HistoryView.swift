@@ -754,7 +754,6 @@ private struct DetailedEventRow: View {
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.horizontal)
-        .accessibilityIdentifier("historyEventRow")
     }
 
     private var weatherLine: String? {
