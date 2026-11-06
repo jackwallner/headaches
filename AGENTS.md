@@ -78,6 +78,8 @@ dependencies. Everything else lives in `HeadacheLogger/`:
   billing, the remote Pro emulator, store assets and Play Console answers.
 - `.claude/rules/iphone-duo.md`: the unfolded iPhone Duo split (One Tap beside
   History), its tests and the Duo capture recipe.
+- `.claude/rules/screenshots.md`: localized App Store screenshot capture,
+  review and file placement.
 
 ---
 Shared iOS conventions (build, simulator, release/TestFlight, ASC key, signing,

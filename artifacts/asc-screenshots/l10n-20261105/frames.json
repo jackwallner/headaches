@@ -1,0 +1,202 @@
+{
+  "english_locale": "en-US",
+  "sets": {
+    "phone": {
+      "canvas": [
+        1320,
+        2868
+      ],
+      "frames": [
+        {
+          "file": "01-keep-a-clear-record.png",
+          "base": "en-live/phone/01-keep-a-clear-record.png",
+          "raw": "01-keep-a-clear-record.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "02-review-a-recorded-headache.png",
+          "base": "en-live/phone/02-review-a-recorded-headache.png",
+          "raw": "02-review-a-recorded-headache.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "03-read-your-record-clearly.png",
+          "base": "en-live/phone/03-read-your-record-clearly.png",
+          "raw": "03-read-your-record-clearly.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "04-see-your-patterns.png",
+          "base": "en-live/phone/04-see-your-patterns.png",
+          "raw": "04-see-your-patterns.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "05-save-context-with-one-tap.png",
+          "base": "en-live/phone/05-save-context-with-one-tap.png",
+          "raw": "05-save-context-with-one-tap.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "06-review-each-entry.png",
+          "base": "en-live/phone/06-review-each-entry.png",
+          "raw": "06-review-each-entry.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        },
+        {
+          "file": "07-review-a-completed-entry.png",
+          "base": "en-live/phone/07-review-a-completed-entry.png",
+          "raw": "07-review-a-completed-entry.png",
+          "screen": [
+            110,
+            590,
+            1100,
+            2063
+          ],
+          "header_box": [
+            30,
+            70,
+            1260,
+            390
+          ],
+          "font": "AvenirNext-Regular",
+          "color": [
+            23,
+            63,
+            66
+          ],
+          "max_size": 160,
+          "min_size": 80,
+          "align": "center",
+          "radius": 105
+        }
+      ]
+    }
+  }
+}

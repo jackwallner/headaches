@@ -1,4 +1,13 @@
 {
+  "en-US": {
+    "01-keep-a-clear-record.png": "Log the moment it starts",
+    "02-review-a-recorded-headache.png": "Review your recorded history",
+    "03-read-your-record-clearly.png": "See the record at a glance",
+    "04-see-your-patterns.png": "See your headache patterns",
+    "05-save-context-with-one-tap.png": "Save context with one tap",
+    "06-review-each-entry.png": "Understand what gets captured",
+    "07-review-a-completed-entry.png": "Review a completed entry"
+  },
   "es-ES": {
     "01-keep-a-clear-record.png": "Registra el dolor de cabeza\nen cuanto empiece",
     "02-review-a-recorded-headache.png": "Consulta tu historial\nde dolores de cabeza",

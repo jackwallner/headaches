@@ -1,0 +1,12 @@
+[
+  {
+    "store_locale": "en-US",
+    "language": "en",
+    "apple_locale": "en_US"
+  },
+  {
+    "store_locale": "es-ES",
+    "language": "es",
+    "apple_locale": "es_ES"
+  }
+]

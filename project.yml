@@ -147,6 +147,8 @@ targets:
     platform: iOS
     sources:
       - path: HeadacheLoggerUITests
+    resources:
+      - path: HeadacheLoggerUITests/Resources/capture-locales.json
     dependencies:
       - target: HeadacheLogger
     settings:

@@ -43,6 +43,7 @@
 		8827F5CB25879B990FF4D5B4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9CB6F33845C4EAABFFB28045 /* Localizable.xcstrings */; };
 		88DA032C60DFDA3F480E7A2F /* ReviewPromptTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */; };
 		91CDB6C33CBEDA295626BBF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C0026857E7B70CB3A1374 /* Assets.xcassets */; };
+		91F5428913FE0EB4ABD61938 /* capture-locales.json in Resources */ = {isa = PBXBuildFile; fileRef = D0E41035AABE8C71F3F47C36 /* capture-locales.json */; };
 		9464BD8B40A16D2F7896B2E4 /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B16FC15F8E41B6B50325727 /* EnvironmentService.swift */; };
 		9578D303D494735FB324CB8A /* HeadacheQuizRetakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6135BFE678ED652EFD5AD41E /* HeadacheQuizRetakeView.swift */; };
 		9B1E299C2B694CC4DD8467F5 /* HeadacheQuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10255FE5700D35F1C3F78C7 /* HeadacheQuizStore.swift */; };
@@ -203,6 +204,7 @@
 		C9374226F8FD525B4B20127E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		C9DCB474A89830CF74A79945 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CEC469DF4682BDD380C12307 /* ConversionDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionDiagnostics.swift; sourceTree = "<group>"; };
+		D0E41035AABE8C71F3F47C36 /* capture-locales.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "capture-locales.json"; sourceTree = "<group>"; };
 		D321450C2D0F3D1CFBA28F8C /* PaywallScreenshotHarness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallScreenshotHarness.swift; sourceTree = "<group>"; };
 		DBE1C310F077996DFAD946E6 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
 		DE59A7525ED3B1AC3A9CBE19 /* OvernightFindingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvernightFindingsUITests.swift; sourceTree = "<group>"; };
@@ -269,6 +271,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2FA7C8CBDEC3A5BA8BCD178E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D0E41035AABE8C71F3F47C36 /* capture-locales.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		58E0B70DD8BDD0AC07D0AFA0 /* HeadacheLoggerTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -312,6 +322,7 @@
 				1AFD3560B68D0BDD9D1CF965 /* PaywallFunnelUITests.swift */,
 				FA3A9145278FD44575DA42C1 /* ReleaseJourneysUITests.swift */,
 				C62B9A3F4894CC93601CE606 /* FleetQA */,
+				2FA7C8CBDEC3A5BA8BCD178E /* Resources */,
 			);
 			path = HeadacheLoggerUITests;
 			sourceTree = "<group>";
@@ -474,6 +485,7 @@
 			buildConfigurationList = 053123917807FDB56A245F01 /* Build configuration list for PBXNativeTarget "HeadacheLoggerUITests" */;
 			buildPhases = (
 				75B67361297EA1267387BE34 /* Sources */,
+				32ECCFE9E86362C14F91F82D /* Resources */,
 			);
 			buildRules = (
 			);
@@ -577,6 +589,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		32ECCFE9E86362C14F91F82D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91F5428913FE0EB4ABD61938 /* capture-locales.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3C4D8149C16C2F11226AFC10 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;

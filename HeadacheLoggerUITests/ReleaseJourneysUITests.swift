@@ -85,10 +85,135 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.checkpoint(app, "home-after-relaunch")
     }
 
+    func testLocalizedStoreScreenshots() throws {
+        continueAfterFailure = false
+        let localeURL = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "capture-locales", withExtension: "json"))
+        let locales = try JSONDecoder().decode([StoreScreenshotLocale].self, from: Data(contentsOf: localeURL))
+
+        for locale in locales {
+            captureHome(locale, frame: "01-keep-a-clear-record.png")
+            captureHome(locale, frame: "05-save-context-with-one-tap.png", arguments: ["-HeadacheScreenshotCapture"])
+            captureHistory(locale, frame: "02-review-a-recorded-headache.png")
+            capturePatterns(locale)
+            captureHistory(locale, frame: "03-read-your-record-clearly.png", scrollToEntry: true)
+            captureHistoryMenu(locale)
+            captureEditEvent(locale)
+        }
+    }
+
+    func testLocalizedHistoryStoreScreenshots() throws {
+        continueAfterFailure = false
+        let localeURL = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "capture-locales", withExtension: "json"))
+        let locales = try JSONDecoder().decode([StoreScreenshotLocale].self, from: Data(contentsOf: localeURL))
+
+        for locale in locales {
+            captureHistory(locale, frame: "02-review-a-recorded-headache.png")
+            captureHistory(locale, frame: "03-read-your-record-clearly.png", scrollToEntry: true)
+            captureHistoryMenu(locale)
+        }
+    }
+
+    private func captureHome(_ locale: StoreScreenshotLocale, frame: String, arguments: [String] = []) {
+        let app = launchScreenshot(locale, arguments: arguments)
+        _ = app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20)
+        if frame == "05-save-context-with-one-tap.png" {
+            _ = app.descendants(matching: .any)["captureStatusLine"].waitForExistence(timeout: 20)
+        }
+        attachScreenshot(app, locale: locale, frame: frame)
+    }
+
+    private func captureHistory(_ locale: StoreScreenshotLocale, frame: String, scrollToEntry: Bool = false) {
+        let historyArguments = ["-HeadacheDuoScreen", "history"]
+            + (scrollToEntry ? ["-HeadacheScreenshotHistoryEntry"] : [])
+        let app = launchScreenshot(locale, arguments: historyArguments)
+        _ = app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 20)
+        if scrollToEntry {
+            let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
+            _ = editButton.waitForExistence(timeout: 20)
+            if !editButton.isHittable { attachHistoryCaptureDiagnostics(app, locale: locale) }
+            XCTAssertTrue(editButton.isHittable, "History entry never became visible for \(locale.storeLocale)")
+        }
+        attachScreenshot(app, locale: locale, frame: frame)
+    }
+
+    private func capturePatterns(_ locale: StoreScreenshotLocale) {
+        let app = launchScreenshot(locale, arguments: ["-HeadacheScreenshotPatterns"])
+        _ = app.navigationBars.firstMatch.waitForExistence(timeout: 20)
+        Thread.sleep(forTimeInterval: 2)
+        attachScreenshot(app, locale: locale, frame: "04-see-your-patterns.png")
+    }
+
+    private func captureHistoryMenu(_ locale: StoreScreenshotLocale) {
+        let app = launchScreenshot(locale, arguments: ["-HeadacheDuoScreen", "history"])
+        _ = app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 20)
+        let menu = app.descendants(matching: .any)["historyImportExportMenu"]
+        XCTAssertTrue(menu.waitForExistence(timeout: 10), "History menu missing for \(locale.storeLocale)")
+        if menu.exists { menu.tap() }
+        _ = app.buttons["exportHistoryButton"].waitForExistence(timeout: 10)
+        attachScreenshot(app, locale: locale, frame: "06-review-each-entry.png")
+    }
+
+    private func captureEditEvent(_ locale: StoreScreenshotLocale) {
+        let app = launchScreenshot(locale, arguments: [
+            "-HeadacheDuoScreen", "history", "-HeadacheScreenshotHistoryEntry"
+        ])
+        _ = app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 20)
+        let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
+        _ = editButton.waitForExistence(timeout: 20)
+        if !editButton.isHittable { attachHistoryCaptureDiagnostics(app, locale: locale) }
+        XCTAssertTrue(editButton.isHittable, "History entry never became visible for \(locale.storeLocale)")
+        if editButton.isHittable { editButton.tap() }
+        _ = app.descendants(matching: .any)["editEventSheet"].waitForExistence(timeout: 15)
+        attachScreenshot(app, locale: locale, frame: "07-review-a-completed-entry.png")
+    }
+
+    private func launchScreenshot(_ locale: StoreScreenshotLocale, arguments: [String]) -> XCUIApplication {
+        let app = XCUIApplication(bundleIdentifier: Self.bundle)
+        app.launchArguments = [
+            "-uitesting", "-HeadacheScreenshotSeed", "-HeadacheScreenshotBrand", "-HeadacheProOverride",
+            "-AppleLanguages", "(\(locale.language))", "-AppleLocale", locale.appleLocale
+        ] + arguments
+        app.launch()
+        _ = app.descendants(matching: .any)["homeView"].waitForExistence(timeout: 25)
+        Thread.sleep(forTimeInterval: 2)
+        return app
+    }
+
+    private func attachScreenshot(_ app: XCUIApplication, locale: StoreScreenshotLocale, frame: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "\(locale.storeLocale)__\(frame)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func attachHistoryCaptureDiagnostics(_ app: XCUIApplication, locale: StoreScreenshotLocale) {
+        let screenshot = XCTAttachment(screenshot: app.screenshot())
+        screenshot.name = "\(locale.storeLocale)__history-scroll-debug.png"
+        screenshot.lifetime = .keepAlways
+        add(screenshot)
+
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "\(locale.storeLocale)__history-hierarchy.txt"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+    }
+
     private func launch(_ arguments: [String]) -> XCUIApplication {
         let app = XCUIApplication(bundleIdentifier: Self.bundle)
         QA.launch(app, arguments: arguments)
         XCTAssertTrue(app.descendants(matching: .any)["homeView"].waitForExistence(timeout: 25), "Home never rendered")
         return app
+    }
+}
+
+private struct StoreScreenshotLocale: Decodable {
+    let storeLocale: String
+    let language: String
+    let appleLocale: String
+
+    enum CodingKeys: String, CodingKey {
+        case storeLocale = "store_locale"
+        case language
+        case appleLocale = "apple_locale"
     }
 }

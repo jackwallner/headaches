@@ -33,6 +33,10 @@ printf '%s\n' '[{"path":"capture.png","languages":["en-US"]}]' | ./ocr
 
 Edit `frames.json` and `headers.json` for each app. Config image paths are relative to the config file. Rectangles use `[x,y,w,h]` in canvas pixels; radius is also in canvas pixels. A photo `plate` must match the full canvas. Keep background pixels immediately outside both header sides; otherwise supply a plate.
 
+Frames may define `extra_text` rows with `key`, `box`, `font`, and RGB `color`, plus optional RGB `fill_color`, `fill_radius`, `max_size`, `min_size`, and `align`. Localized copy lives in `headers.json` at `<frame>#<key>`.
+
+For the Headache Logger adapter, `capture.sh` captures the full set in one GH-sim job. `capture.sh --history-only` reruns the three History scenes across English and all selected locales, then replaces only those raw captures.
+
 Put raws at `RAW_ROOT/LOCALE/SET/RAW.png`, including English references at `en-US` (override with config `english_locale`). Outputs go to `OUT_ROOT/LOCALE/SET/file.png`; sheets go to `OUT_ROOT/sheets/LOCALE-SET.jpg`. Keep the output root app-specific.
 
 Use `--bezel` for a continuous dark bezel with visible top and bottom; use RAW for clipped devices. Default minimum score is 0.65. `--radius` adds the estimated radius; bezel mode reports scale 1 in frame pixels.

@@ -1,0 +1,50 @@
+{
+  "locales": [
+    "es-ES"
+  ],
+  "frames": 7,
+  "gate": {
+    "es-ES": "PASS"
+  },
+  "gh_sim_jobs": 8,
+  "app_code_changed": [
+    {
+      "path": "HeadacheLogger/HeadacheLoggerApp.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Models/HeadacheEvent.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Services/InsightsEngine.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Views/EditEventSheet.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Views/HistoryView.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Views/HomeView.swift",
+      "debug_only": false
+    },
+    {
+      "path": "HeadacheLogger/Views/InsightsView.swift",
+      "debug_only": false
+    },
+    {
+      "path": "SharedHeadache/Localizable.xcstrings",
+      "debug_only": false
+    }
+  ],
+  "defects": [
+    "History row accessibility identifier propagated to descendants and masked the edit-note button; removed the row identifier while retaining child action identifiers.",
+    "History summaries and heatmap included English labels and weekday names; localized their titles, counts, and weekday output."
+  ],
+  "left_out": [],
+  "adapter": "xcuitest"
+}
