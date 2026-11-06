@@ -741,15 +741,14 @@ struct CalendarHeatmapCard: View {
     private var headacheDayCount: Int { days.filter { $0.count > 0 }.count }
     private var freeDayCount: Int { days.count - headacheDayCount }
 
-    private var caption: String {
-        let base = "Coloured days have a logged headache. Darker means more severe."
-        return days.count < window.count ? base + " Outlined days come before your first log." : base
+    private var caption: LocalizedStringKey {
+        "Coloured cells mark days you logged a headache. Darker means a more severe attack when severity was rated."
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Text(title).font(.headline)
+                Text(LocalizedStringKey(title)).font(.headline)
                 Spacer(minLength: 8)
                 HeatmapLegend()
             }
@@ -757,8 +756,8 @@ struct CalendarHeatmapCard: View {
             HeatmapGrid(days: window)
 
             HStack(spacing: 14) {
-                summaryChip(value: headacheDayCount, label: "headache days")
-                summaryChip(value: freeDayCount, label: "headache-free")
+                summaryChip(value: headacheDayCount, headacheFree: false)
+                summaryChip(value: freeDayCount, headacheFree: true)
                 Spacer(minLength: 0)
             }
             .font(.caption.monospacedDigit())
@@ -773,11 +772,12 @@ struct CalendarHeatmapCard: View {
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
     }
 
-    private func summaryChip(value: Int, label: String) -> some View {
-        HStack(spacing: 4) {
-            Text("\(value)").fontWeight(.semibold).foregroundStyle(.primary)
-            Text(label)
-        }
+    private func summaryChip(value: Int, headacheFree: Bool) -> some View {
+        let format = headacheFree
+            ? NSLocalizedString("%lld headache-free days", comment: "Heatmap count of days without a headache")
+            : NSLocalizedString("%lld headache days", comment: "Heatmap count of days with a headache")
+        let value = String.localizedStringWithFormat(format, value)
+        return Text(value)
     }
 }
 

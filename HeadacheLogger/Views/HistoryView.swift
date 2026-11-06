@@ -643,7 +643,7 @@ private struct SummaryGrid: View {
     private var mostCommonWeekday: String? {
         let counts = events.reduce(into: [Int: Int]()) { $0[$1.weekdayIndex, default: 0] += 1 }
         guard let top = counts.mostCommon(rank: { $0 })?.key else { return nil }
-        return events.first { $0.weekdayIndex == top }?.weekdayName
+        return events.first { $0.weekdayIndex == top }?.timestamp.formatted(.dateTime.weekday(.wide))
     }
 
     private var mostCommonPartOfDay: String? {
@@ -670,7 +670,7 @@ private struct SummaryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text(value)
@@ -695,7 +695,7 @@ private struct DetailedEventRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
                         .font(.headline)
-                    Text("\(event.weekdayName) • \(event.partOfDay.localizedName)")
+                    Text("\(event.timestamp.formatted(.dateTime.weekday(.wide))) • \(event.partOfDay.localizedName)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -788,7 +788,7 @@ private struct DataPill: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
             Text(value)
