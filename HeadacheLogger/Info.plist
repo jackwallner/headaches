@@ -63,5 +63,7 @@
 	<array>
 		<string>com.jackwallner.headachelogger.weatherCheck</string>
 	</array>
+	<key>UIPrefersShowingLanguageSettings</key>
+	<true/>
 </dict>
 </plist>

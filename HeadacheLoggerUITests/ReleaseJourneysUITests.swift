@@ -217,3 +217,35 @@ private struct StoreScreenshotLocale: Decodable {
         case appleLocale = "apple_locale"
     }
 }
+
+// TEMP proof, removed before commit.
+extension ReleaseJourneysUITests {
+    @MainActor
+    @objc func testLanguageRowProof() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uitesting", "-HeadacheScreenshotSeed", "-AppleLanguages", "(de)", "-AppleLocale", "de_DE"]
+        app.launch()
+        sleep(10)
+        let a0 = XCTAttachment(screenshot: app.screenshot())
+        a0.name = "language-proof-de-1-home"
+        a0.lifetime = .keepAlways
+        add(a0)
+        if app.tabBars.buttons["Einstellungen"].exists {
+            app.tabBars.buttons["Einstellungen"].tap()
+        } else if app.buttons["Einstellungen"].exists {
+            app.buttons["Einstellungen"].firstMatch.tap()
+        }
+        sleep(3)
+        for _ in 0..<10 where !app.staticTexts["Sprache"].exists { app.swipeUp() }
+        let a1 = XCTAttachment(screenshot: app.screenshot())
+        a1.name = "language-proof-de-2-row"
+        a1.lifetime = .keepAlways
+        add(a1)
+        app.swipeUp()
+        sleep(1)
+        let a2 = XCTAttachment(screenshot: app.screenshot())
+        a2.name = "language-proof-de-3-status"
+        a2.lifetime = .keepAlways
+        add(a2)
+    }
+}

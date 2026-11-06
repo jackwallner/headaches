@@ -7975,6 +7975,95 @@
         }
       }
     },
+    "%lld headaches, meaningful data": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hovedpiner, brugbare data"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Kopfschmerz-Einträge, aussagekräftige Daten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld headaches, meaningful data"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dolores de cabeza, datos útiles"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld päänsärkyä, hyödyllistä dataa"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld maux de tête, des données utiles"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld fejfájás, hasznos adatok"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld mal di testa, dati utili"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld件の頭痛、十分なデータです"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hodepiner, nyttige data"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld bólów głowy, przydatne dane"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dores de cabeça, dados úteis"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld головных болей, полезные данные"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld головних болів, корисні дані"
+          }
+        }
+      }
+    },
     "+1 to +3": {
       "extractionState": "manual",
       "localizations": {
@@ -28142,6 +28231,95 @@
         }
       }
     },
+    "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more.": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "God start! Pro viser mønstrene i dine registreringer: tidspunkt, søvn, vejr og mere."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guter Start! Pro zeigt Muster in deinen Einträgen: Uhrzeit, Schlaf, Wetter und mehr."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Buen comienzo! Pro muestra los patrones de tus registros: horario, sueño, tiempo y más."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hyvä alku! Pro näyttää kirjauksiesi kuviot: ajankohdan, unen, sään ja paljon muuta."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bon début ! Pro fait ressortir les tendances de vos notes : heure, sommeil, météo et plus encore."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jó kezdés! A Pro megmutatja a bejegyzéseid mintázatait: időpont, alvás, időjárás és még sok más."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ottimo inizio! Pro mostra gli andamenti nei tuoi registri: orari, sonno, meteo e altro."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "良いスタートです!Proなら、時間帯、睡眠、天気など、記録に見られるパターンを確認できます。"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "God start! Pro viser mønstrene i registreringene dine: tidspunkt, søvn, vær og mer."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dobry początek! Pro pokazuje wzorce w twoich wpisach: porę dnia, sen, pogodę i nie tylko."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bom começo! O Pro mostra os padrões nos teus registos: horário, sono, meteorologia e muito mais."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хорошее начало! Pro показывает закономерности в твоих записях: время, сон, погоду и не только."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гарний початок! Pro показує закономірності у твоїх записах: час, сон, погоду та інше."
+          }
+        }
+      }
+    },
     "HRV (SDNN, ms) at headache onset": {
       "extractionState": "manual",
       "localizations": {
@@ -32855,6 +33033,95 @@
           "stringUnit": {
             "state": "translated",
             "value": "Consultez les tendances météo à l’avance"
+          }
+        }
+      }
+    },
+    "Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprog"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kieli"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nyelv"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lingua"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Språk"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Język"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мова"
           }
         }
       }
@@ -45137,6 +45404,95 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouvrez l’app pour recueillir les données météo."
+          }
+        }
+      }
+    },
+    "Opens iOS Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Åbner Indstillinger i iOS"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öffnet die iOS-Einstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens iOS Settings"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre los Ajustes de iOS"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avaa iOS:n Asetukset"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvre les Réglages d'iOS"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Megnyitja az iOS Beállításokat"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apre Impostazioni di iOS"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOSの設定を開きます"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Åpner Innstillinger i iOS"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otwiera Ustawienia iOS"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre as Definições do iOS"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открывает Настройки iOS"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Відкриває Параметри iOS"
           }
         }
       }
@@ -68815,6 +69171,95 @@
         }
       }
     },
+    "You have enough data for personalized pattern analysis. Pro shows the patterns in your logs.": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har nok data til en personlig mønsteranalyse. Pro viser mønstrene i dine registreringer."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast genug Daten für eine persönliche Musteranalyse. Pro zeigt die Muster in deinen Einträgen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have enough data for personalized pattern analysis. Pro shows the patterns in your logs."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tienes suficientes datos para un análisis personalizado de patrones. Pro muestra los patrones de tus registros."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sinulla on tarpeeksi dataa henkilökohtaiseen kuvioanalyysiin. Pro näyttää kirjauksiesi kuviot."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous avez assez de données pour une analyse personnalisée des tendances. Pro montre les tendances de vos notes."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elég adatod van a személyre szabott mintázatelemzéshez. A Pro megmutatja a bejegyzéseid mintázatait."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai dati sufficienti per un'analisi personalizzata degli andamenti. Pro mostra gli andamenti nei tuoi registri."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "パーソナライズされたパターン分析に十分なデータがあります。Proなら記録に見られるパターンを確認できます。"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har nok data til en personlig mønsteranalyse. Pro viser mønstrene i registreringene dine."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masz już dość danych do spersonalizowanej analizy wzorców. Pro pokazuje wzorce w twoich wpisach."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tens dados suficientes para uma análise personalizada de padrões. O Pro mostra os padrões nos teus registos."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Данных уже достаточно для персонального анализа закономерностей. Pro показывает закономерности в твоих записях."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Даних уже достатньо для персонального аналізу закономірностей. Pro показує закономірності у твоїх записах."
+          }
+        }
+      }
+    },
     "You have logged %lld headaches.": {
       "extractionState": "manual",
       "localizations": {
@@ -69772,6 +70217,184 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vous avez constitué un historique utile. Débloquez Pro pour consulter vos tendances et recevoir des alertes proactives."
+          }
+        }
+      }
+    },
+    "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts.": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har nu nok historik til brugbare mønstre. Lås op for Pro for at se dine personlige mønstre og få varsler fra vejrudsigten."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast genug Verlauf für aussagekräftige Muster. Schalte Pro frei, um deine persönlichen Muster zu sehen und Wetterhinweise zu erhalten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya tienes suficiente historial para ver patrones útiles. Desbloquea Pro para ver tus patrones personalizados y recibir avisos de previsión."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historiaa on nyt tarpeeksi hyödyllisiin kuvioihin. Avaa Pro, niin näet omat kuviosi ja saat ennusteilmoituksia."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous avez assez d'historique pour des tendances utiles. Débloquez Pro pour voir vos tendances personnalisées et recevoir des alertes proactives."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elég előzményed van a hasznos mintázatokhoz. Oldd fel a Prót a személyes mintázataidhoz és az előrejelzési értesítésekhez."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai abbastanza cronologia per andamenti utili. Sblocca Pro per vedere i tuoi andamenti personalizzati e ricevere avvisi meteo."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有用なパターンを見るのに十分な履歴がたまりました。Proを解除すると、あなたのパターンの確認と予報通知の受け取りができます。"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har nok historikk til nyttige mønstre. Lås opp Pro for å se dine personlige mønstre og få værvarsler."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masz już wystarczającą historię, by zobaczyć przydatne wzorce. Odblokuj Pro, aby zobaczyć swoje wzorce i otrzymywać powiadomienia o prognozie."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Já tens histórico suficiente para padrões úteis. Desbloqueia o Pro para veres os teus padrões personalizados e receberes alertas proativos."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Истории уже достаточно для полезных закономерностей. Открой Pro, чтобы видеть свои закономерности и получать уведомления по прогнозу."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Історії вже достатньо для корисних закономірностей. Відкрий Pro, щоб бачити свої закономірності й отримувати проактивні сповіщення."
+          }
+        }
+      }
+    },
+    "You've logged %lld headaches": {
+      "extractionState": "manual",
+      "localizations": {
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har registreret %lld hovedpiner"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast %lld Kopfschmerzen eingetragen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've logged %lld headaches"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Has registrado %lld dolores de cabeza"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olet kirjannut %lld päänsärkyä"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous avez noté %lld maux de tête"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld fejfájást rögzítettél"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hai registrato %lld mal di testa"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld件の頭痛を記録しました"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du har loggført %lld hodepiner"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapisano już %lld bóle głowy"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registaste %lld dores de cabeça"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уже записано %lld головные боли"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уже записано %lld головні болі"
           }
         }
       }
