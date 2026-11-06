@@ -6,7 +6,7 @@
   "gate": {
     "es-ES": "PASS"
   },
-  "gh_sim_jobs": 8,
+  "gh_sim_jobs": 10,
   "app_code_changed": [
     {
       "path": "HeadacheLogger/HeadacheLoggerApp.swift",
@@ -43,8 +43,35 @@
   ],
   "defects": [
     "History row accessibility identifier propagated to descendants and masked the edit-note button; removed the row identifier while retaining child action identifiers.",
-    "History summaries and heatmap included English labels and weekday names; localized their titles, counts, and weekday output."
+    "History summaries and heatmap included English labels and weekday names; localized their titles, counts, and weekday output.",
+    "es-ES frames 01 and 05: corrected See all in History to Ver todo en Historial.",
+    "es-ES frame 03: sleep values now use the localized decimal separator and unit spacing, for example 7,4 h; English remains 7.4h.",
+    "es-ES frame 04: Insights date range now uses the localized %@ to %@ catalog entry, Del %@ al %@.",
+    "es-ES frame 07: shortened Not set to Sin elegir so the full intensity label fits."
   ],
   "left_out": [],
-  "adapter": "xcuitest"
+  "adapter": "xcuitest",
+  "gh_sim_run_ids": {
+    "capture": "headaches-shots@20261105-211151-06a9-codex-mbpro34207-1105-212151-5793",
+    "unit_tests": "headaches-shots@20261105-211151-06a9-codex-mbpro34207-1105-213844-11641"
+  },
+  "header_fixes_applied": [
+    {
+      "locale": "es-ES",
+      "file": "06-review-each-entry.png",
+      "text": "Conoce los datos\nque se guardan"
+    },
+    {
+      "locale": "es-ES",
+      "file": "07-review-a-completed-entry.png",
+      "text": "Revisa el registro\ncuando esté completo"
+    }
+  ],
+  "remaining_notes": [
+    "The English App Store references show 11 entries without a visible bottom tab bar, while current Spanish captures show 23 entries with a tab bar. Screen roles match, but exact cross-locale layout parity remains unverified."
+  ],
+  "gh_sim_results": {
+    "capture": "PASS",
+    "unit_tests": "PASS"
+  }
 }

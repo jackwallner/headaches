@@ -747,7 +747,7 @@ private struct DetailedEventRow: View {
 
             HStack(spacing: 8) {
                 DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
-                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { String(format: "%.1fh", $0) } ?? "No data")
+                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { formattedSleepHours($0) } ?? "No data")
                 DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
             }
         }
@@ -761,6 +761,14 @@ private struct DetailedEventRow: View {
             summary: event.weatherSummary,
             celsius: event.temperatureC,
             useCelsius: useCelsius
+        )
+    }
+
+    private func formattedSleepHours(_ hours: Double) -> String {
+        let number = hours.formatted(.number.precision(.fractionLength(1)))
+        return String.localizedStringWithFormat(
+            NSLocalizedString("%@h", comment: "Sleep duration in hours"),
+            number
         )
     }
 

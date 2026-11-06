@@ -1514,6 +1514,95 @@
         }
       }
     },
+    "%@h": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@h"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@時間"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ godz."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ó"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ t"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ t"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ч"
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ год"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ h"
+          }
+        }
+      }
+    },
     "%@ headache%@ logged": {
       "extractionState": "manual",
       "localizations": {
@@ -5988,7 +6077,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ a %@"
+            "value": "Del %@ al %@"
           }
         },
         "it": {
@@ -42762,7 +42851,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sin configurar"
+            "value": "Sin elegir"
           }
         },
         "it": {
@@ -53175,7 +53264,7 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ver todo en Historia"
+            "value": "Ver todo en Historial"
           }
         },
         "it": {

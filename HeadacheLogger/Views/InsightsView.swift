@@ -359,7 +359,11 @@ private struct InsightsHeader: View {
     private func rangeLabel(_ range: ClosedRange<Date>) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        return "\(formatter.string(from: range.lowerBound)) to \(formatter.string(from: range.upperBound))"
+        return String.localizedStringWithFormat(
+            NSLocalizedString("%@ to %@", comment: "Insights date range"),
+            formatter.string(from: range.lowerBound),
+            formatter.string(from: range.upperBound)
+        )
     }
 }
 
