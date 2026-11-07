@@ -20,7 +20,9 @@ enum HeadacheTemperatureFormatting {
     /// Weather subtitle: `"Clear, 72°F"` or `"Clear, 22°C"`.
     static func weatherSummaryWithTemperature(summary: String?, celsius: Double?, useCelsius: Bool) -> String? {
         guard let summary, !summary.isEmpty else { return nil }
-        guard let temp = displayInteger(celsius: celsius, useCelsius: useCelsius) else { return summary }
-        return "\(summary), \(temp)"
+        // Summaries are stored in English; translate them when they are shown.
+        let localized = String(localized: String.LocalizationValue(summary))
+        guard let temp = displayInteger(celsius: celsius, useCelsius: useCelsius) else { return localized }
+        return "\(localized), \(temp)"
     }
 }

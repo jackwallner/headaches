@@ -484,7 +484,7 @@ private struct RecentEventRow: View {
             HStack(spacing: 8) {
                 Label(event.locationLabel.isEmpty ? "Location unavailable" : event.locationLabel, systemImage: "location")
                 Spacer()
-                Label(event.weatherSummary ?? "No weather", systemImage: "cloud")
+                Label(LocalizedStringKey(event.weatherSummary ?? "No weather"), systemImage: "cloud")
             }
             .font(.caption)
             .foregroundStyle(.secondary)
