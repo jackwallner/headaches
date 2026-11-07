@@ -6,6 +6,7 @@ import UserNotifications
 struct ProAlertsConfigView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var prefs = ProAlertPreferences.shared
     @State private var notificationStatus: UNAuthorizationStatus = .notDetermined
     @State private var locationStatus = EnvironmentService.shared.locationAuthorizationSummary()
@@ -182,6 +183,10 @@ struct ProAlertsConfigView: View {
                 await ProactiveAlertsEngine.patternAlertSettingsChanged(in: modelContext)
                 await refreshPermissionStatuses()
             }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active else { return }
+            Task { await refreshPermissionStatuses() }
         }
         .alert("Test Alert", isPresented: testAlertBinding) {
             Button("OK", role: .cancel) { testAlertMessage = nil }
