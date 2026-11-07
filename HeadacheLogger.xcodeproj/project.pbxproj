@@ -81,6 +81,7 @@
 		F44B344B700D41CFC10C376D /* HeadacheEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4B54EB5A64427B7DC43A2F /* HeadacheEvent.swift */; };
 		F4D36C76D423D4BEF2CA59FD /* ProactiveAlertsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0694F29596702E670ED45D44 /* ProactiveAlertsEngine.swift */; };
 		F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */; };
+		4FCFC217D1D47B4098C8277D /* StateMachineFixesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E04B691323732C5186B039 /* StateMachineFixesTests.swift */; };
 		FA8EFEC5D1F70EC66FAEF806 /* ProAlertPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26C529527476DB4EF2D977F /* ProAlertPreferences.swift */; };
 		FC374774D642F632FF0C187D /* HeadacheLoggerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8026F9C47B64B8A6FD41748E /* HeadacheLoggerWatchApp.swift */; };
 		FDC181FFD202D30A2E2E336A /* InsightsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228C7A2B35897EC80F7A321C /* InsightsEngine.swift */; };
@@ -188,6 +189,7 @@
 		9E9FDF0333E813841B3E325A /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		9F9C78392E24C65D489A0719 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionDiagnosticsTests.swift; sourceTree = "<group>"; };
+		F7E04B691323732C5186B039 /* StateMachineFixesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachineFixesTests.swift; sourceTree = "<group>"; };
 		A8472C3F09A9A16899D362E3 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
 		A9528BACB8EFBAA9B22AC82B /* HeadacheLoggerWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HeadacheLoggerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE39D707E377269384673F20 /* WatchConnectivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityController.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 			isa = PBXGroup;
 			children = (
 				A4D32B5AB222D3D42415E339 /* ConversionDiagnosticsTests.swift */,
+				F7E04B691323732C5186B039 /* StateMachineFixesTests.swift */,
 				B75B1D38A2F3FA4E4F7395C1 /* HeadacheLoggerTests.swift */,
 				8A3C736D8621B1DE3462A6A8 /* OvernightFindingsTests.swift */,
 				168D4BE64CF5870D2BC5A62F /* ReviewPromptTrackerTests.swift */,
@@ -721,6 +724,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6C085BA137EEF8340540697 /* ConversionDiagnosticsTests.swift in Sources */,
+				4FCFC217D1D47B4098C8277D /* StateMachineFixesTests.swift in Sources */,
 				B0506BCFEF861EE5962D48FC /* HeadacheLoggerTests.swift in Sources */,
 				D71BE055526CFF8A48F62B42 /* OvernightFindingsTests.swift in Sources */,
 				88DA032C60DFDA3F480E7A2F /* ReviewPromptTrackerTests.swift in Sources */,
