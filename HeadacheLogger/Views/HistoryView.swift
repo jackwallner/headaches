@@ -754,15 +754,20 @@ private struct DetailedEventRow: View {
                 .accessibilityIdentifier("historyEntryNotesButton")
             }
 
-            HStack(spacing: 8) {
-                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
-                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { formattedSleepHours($0) } ?? "No data")
-                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { dataPills }
+                VStack(alignment: .leading, spacing: 8) { dataPills }
             }
         }
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .padding(.horizontal)
+    }
+
+    @ViewBuilder private var dataPills: some View {
+        DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
+        DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { formattedSleepHours($0) } ?? "No data")
+        DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
     }
 
     private var hasNotes: Bool { event.userNotes?.isEmpty == false }
@@ -881,6 +886,7 @@ private struct DataPill: View {
                 .foregroundStyle(AppTheme.secondaryText)
             Text(value)
                 .font(.subheadline.monospacedDigit())
+                .fixedSize(horizontal: true, vertical: false)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)

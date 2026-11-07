@@ -803,6 +803,8 @@ private struct CaptureStatusLine: View {
     let text: String
     var isError: Bool = false
     var onDismiss: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .subheadline) private var reservedLines = 60.0
 
     var body: some View {
         HStack(spacing: 8) {
@@ -825,7 +827,8 @@ private struct CaptureStatusLine: View {
         .padding(.leading, 14)
         .padding(.trailing, 4)
         .padding(.vertical, 2)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        // Messages swap while a log runs; holding three lines at accessibility sizes keeps the cards below still.
+        .frame(maxWidth: .infinity, minHeight: dynamicTypeSize.isAccessibilitySize ? reservedLines : nil, alignment: .leading)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
         .accessibilityIdentifier("captureStatusLine")
     }
