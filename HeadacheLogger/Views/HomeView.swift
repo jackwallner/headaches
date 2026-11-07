@@ -16,7 +16,6 @@ struct HomeView: View {
     /// `.sheet(isPresented:)` + `if let id` pattern could present an empty shell
     /// (a blank white sheet) if the bool and the id ever desynced.
     @State private var severityNotesTarget: SeverityNotesTarget?
-    @State private var showCheckmark = false
     @State private var showPaywall = false
     #if DEBUG
     @State private var didPrepareScreenshotCapture = false
@@ -30,9 +29,6 @@ struct HomeView: View {
     @State private var undoDismissTask: Task<Void, Never>?
 
     private static let undoSnackbarTTLSeconds: UInt64 = 15
-    /// How long the "Logged" check covers the button. The Undo bar stays up
-    /// after it, so the check is a brief acknowledgement, not a state to wait out.
-    private static let loggedConfirmationNanoseconds: UInt64 = 1_600_000_000
     /// Once the user has logged this many times, the long "What Gets Captured"
     /// explainer collapses so Home stays focused on action + latest + recent.
     private static let captureExplainerLogThreshold = 3
@@ -46,6 +42,9 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(spacing: 14) {
                     Button {
+                        // Guarded here, not with .disabled: a disabled button dims, and the whole
+                        // button would redraw when the capture ends.
+                        guard !captureCoordinator.isCapturing else { return }
                         let success = captureCoordinator.captureHeadache(in: modelContext)
                         if success && promptForSeverityNotes {
                             let capturedID = captureCoordinator.lastCapturedEventID
@@ -80,31 +79,15 @@ struct HomeView: View {
                         .shadow(color: AppTheme.brandEnd.opacity(0.30), radius: 18, x: 0, y: 10)
                     }
                     .buttonStyle(.plain)
-                    .disabled(captureCoordinator.isCapturing || showCheckmark)
                     .accessibilityLabel("Log headache")
                     .accessibilityIdentifier("logHeadacheButton")
-                    .overlay {
-                        if showCheckmark {
-                            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                                .fill(.ultraThinMaterial)
-                            VStack(spacing: 8) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 32))
-                                    .foregroundStyle(.green)
-                                Text("Logged")
-                                    .font(.headline)
-                                    .foregroundStyle(.primary)
-                            }
-                            .transition(reduceMotion ? .identity : .opacity.animation(Motion.standard))
-                        }
-                    }
-                    .animation(reduceMotion ? nil : Motion.standard, value: showCheckmark)
 
-                    if !captureCoordinator.isCapturing, let statusLine = captureCoordinator.bannerMessage {
+                    // Shown from the tap on ("Saving..." becomes "Context saved."), so the
+                    // result never lands late and pushes the cards below it down.
+                    if let statusLine = captureCoordinator.bannerMessage {
                         CaptureStatusLine(text: statusLine, isError: captureCoordinator.bannerIsError) {
                             captureCoordinator.bannerMessage = nil
                         }
-                        .id("status-\(statusLine)")
                     }
                 }
 
@@ -232,13 +215,6 @@ struct HomeView: View {
         }
         .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
             if !isCapturing, !captureCoordinator.currentRunIsRetry, captureCoordinator.lastCapturedEventID != nil {
-                showCheckmark = true
-                Task {
-                    try? await Task.sleep(nanoseconds: Self.loggedConfirmationNanoseconds)
-                    Motion.animate(reduce: reduceMotion) {
-                        showCheckmark = false
-                    }
-                }
                 showUndoSnackbar()
             }
         }
@@ -493,7 +469,7 @@ private struct RecentEventRow: View {
                 Label(LocalizedStringKey(event.weatherSummary ?? "No weather"), systemImage: "cloud")
             }
             .font(.caption)
-            .foregroundStyle(AppTheme.secondaryText)
+            .foregroundStyle(.primary)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)

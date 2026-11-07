@@ -99,19 +99,25 @@ struct PaywallView: View {
         .frame(maxHeight: .infinity)
     }
 
-    /// Single viewport — warning hero, compact benefits, plans, and CTA together.
+    /// Warning hero, compact benefits, plans, and CTA. Fills one screen at the
+    /// default text size and scrolls when larger text or a longer language needs more room.
     private var paywallContent: some View {
-        VStack(spacing: 12) {
-            header
-            compactFeatureList
-            planCards
-            Spacer(minLength: 0)
-            purchaseSection
+        GeometryReader { proxy in
+            ScrollView {
+                VStack(spacing: 12) {
+                    header
+                    compactFeatureList
+                    planCards
+                    Spacer(minLength: 0)
+                    purchaseSection
+                }
+                .padding(.horizontal, 22)
+                .padding(.top, displayCloseButton ? 44 : 20)
+                .padding(.bottom, 16)
+                .frame(minHeight: proxy.size.height)
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .padding(.horizontal, 22)
-        .padding(.top, displayCloseButton ? 44 : 20)
-        .padding(.bottom, 16)
-        .frame(maxHeight: .infinity)
     }
 
     private var header: some View {
@@ -127,8 +133,8 @@ struct PaywallView: View {
             Text("Know before the headache hits")
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.9)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("paywallTitle")
             Text("Unlock every Headache Pro feature. Private, on-device, no accounts.")
                 .font(.footnote)
                 .foregroundStyle(AppTheme.secondaryText)
@@ -140,15 +146,14 @@ struct PaywallView: View {
     private var compactFeatureList: some View {
         VStack(alignment: .leading, spacing: 8) {
             ForEach(paywallFeatures, id: \.title) { feature in
-                HStack(spacing: 12) {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
                     Image(systemName: feature.icon)
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(brandColor)
                         .frame(width: 24)
                     Text(feature.title)
                         .font(.subheadline)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.85)
+                        .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: 0)
                 }
             }
@@ -180,15 +185,16 @@ struct PaywallView: View {
                     Text(ctaTitle)
                         .font(.headline.bold())
                         .foregroundStyle(.white)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.72)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .opacity(isPurchasing ? 0 : 1)
                     if isPurchasing {
                         ProgressView().tint(.white)
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 52)
+                .frame(minHeight: 52)
+                .padding(.vertical, 4)
                 .background(AppTheme.brand, in: Capsule())
                 .shadow(color: brandColor.opacity(0.25), radius: 12, x: 0, y: 6)
             }
@@ -199,8 +205,7 @@ struct PaywallView: View {
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(AppTheme.secondaryText)
                 .multilineTextAlignment(.center)
-                .lineLimit(1)
-                .minimumScaleFactor(0.85)
+                .fixedSize(horizontal: false, vertical: true)
                 .frame(minHeight: 20)
                 .opacity(trustLine == nil ? 0 : 1)
                 .accessibilityHidden(trustLine == nil)
@@ -209,8 +214,7 @@ struct PaywallView: View {
                 .font(.caption)
                 .foregroundStyle(AppTheme.secondaryText)
                 .multilineTextAlignment(.center)
-                .lineLimit(4)
-                .minimumScaleFactor(0.9)
+                .fixedSize(horizontal: false, vertical: true)
                 .frame(minHeight: 64, alignment: .top)
                 .opacity(disclosureText == nil ? 0 : 1)
                 .accessibilityHidden(disclosureText == nil)
@@ -270,6 +274,8 @@ struct PaywallView: View {
                         .padding(16)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(Text("Close"))
+                .accessibilityIdentifier("paywallCloseButton")
             }
             Spacer()
         }
@@ -375,6 +381,33 @@ private struct PaywallPlanCard: View {
     let accent: Color
     let onTap: () -> Void
 
+    private var planName: some View {
+        Text(package.headacheProDisplayName)
+            .font(.subheadline.bold())
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// One badge only: dual pills truncate on compact widths.
+    @ViewBuilder private var planBadge: some View {
+        if isRecommended {
+            Text("BEST VALUE")
+                .font(.caption2.weight(.heavy))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(AppTheme.brand, in: Capsule())
+                .fixedSize()
+        } else if let savingsPercent {
+            Text("SAVE \(savingsPercent)%")
+                .font(.caption2.weight(.heavy))
+                .foregroundStyle(accent)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(accent.opacity(0.14), in: Capsule())
+                .fixedSize()
+        }
+    }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 14) {
@@ -390,40 +423,19 @@ private struct PaywallPlanCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 6) {
-                        Text(package.headacheProDisplayName)
-                            .font(.subheadline.bold())
-                            .layoutPriority(1)
-                        // One badge only: dual pills truncate on compact widths.
-                        if isRecommended {
-                            Text("BEST VALUE")
-                                .font(.system(size: 9, weight: .heavy))
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(accent, in: Capsule())
-                                .fixedSize()
-                        } else if let savingsPercent {
-                            Text("SAVE \(savingsPercent)%")
-                                .font(.system(size: 9, weight: .heavy))
-                                .foregroundStyle(accent)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(accent.opacity(0.14), in: Capsule())
-                                .fixedSize()
-                        }
+                    ViewThatFits(in: .horizontal) {
+                        HStack(spacing: 6) { planName; planBadge }
+                        VStack(alignment: .leading, spacing: 4) { planName; planBadge }
                     }
                     HStack(spacing: 6) {
                         if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
                             Text(trial.capitalized)
                                 .font(.caption2.weight(.semibold))
                                 .foregroundStyle(accent)
-                                .lineLimit(1)
                         } else if package.headacheProPackageKind == .lifetime {
                             Text("One-time purchase")
                                 .font(.caption2.weight(.semibold))
                                 .foregroundStyle(AppTheme.secondaryText)
-                                .lineLimit(1)
                         }
                         if isRecommended, let savingsPercent {
                             if showsTrialBadge || package.headacheProPackageKind == .lifetime {
@@ -434,9 +446,9 @@ private struct PaywallPlanCard: View {
                             Text("Save \(savingsPercent)%")
                                 .font(.caption2.weight(.semibold))
                                 .foregroundStyle(AppTheme.secondaryText)
-                                .lineLimit(1)
                         }
                     }
+                    .fixedSize(horizontal: false, vertical: true)
                 }
 
                 Spacer(minLength: 8)

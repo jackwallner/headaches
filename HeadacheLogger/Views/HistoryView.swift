@@ -734,6 +734,41 @@ private struct DetailedEventRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            ZStack(alignment: .topTrailing) {
+                // One element for the entry's text; the notes button stays a separate control.
+                entrySummary
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier(hasNotes ? "historyEntryNotesPreview" : "historyEntrySummary")
+
+                Button {
+                    onEditNotes()
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                        .font(.body.weight(.semibold))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.borderless)
+                .tint(AppTheme.brandText)
+                .accessibilityLabel(Text(LocalizedStringKey(hasNotes ? "Edit note" : "Add note")))
+                .accessibilityIdentifier("historyEntryNotesButton")
+            }
+
+            HStack(spacing: 8) {
+                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
+                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { formattedSleepHours($0) } ?? "No data")
+                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
+            }
+        }
+        .padding(16)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.horizontal)
+    }
+
+    private var hasNotes: Bool { event.userNotes?.isEmpty == false }
+
+    private var entrySummary: some View {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
@@ -759,25 +794,15 @@ private struct DetailedEventRow: View {
                         .background(severityColor(severity).opacity(0.12), in: Capsule())
                         .foregroundStyle(severityColor(severity))
                 }
-
-                Button {
-                    onEditNotes()
-                } label: {
-                    Image(systemName: "square.and.pencil")
-                        .font(.body.weight(.semibold))
-                }
-                .buttonStyle(.borderless)
-                .tint(AppTheme.brandText)
-                .accessibilityLabel((event.userNotes?.isEmpty == false) ? "Edit note" : "Add note")
-                .accessibilityIdentifier("historyEntryNotesButton")
             }
+            .padding(.trailing, 44)
+            .frame(minHeight: 44, alignment: .top)
 
             if let notes = event.userNotes, !notes.isEmpty {
                 Text(notes)
                     .font(.footnote)
                     .foregroundStyle(AppTheme.secondaryText)
                     .lineLimit(4)
-                    .accessibilityIdentifier("historyEntryNotesPreview")
             }
 
             if !event.locationLabel.isEmpty || event.weatherSummary != nil {
@@ -787,16 +812,7 @@ private struct DetailedEventRow: View {
                     .font(.subheadline)
                     .foregroundStyle(AppTheme.secondaryText)
             }
-
-            HStack(spacing: 8) {
-                DataPill(title: "Steps", value: event.stepsToday?.formatted(.number) ?? "No data")
-                DataPill(title: "Sleep", value: event.sleepHoursLastNight.map { formattedSleepHours($0) } ?? "No data")
-                DataPill(title: "hPa", value: event.pressureHpa.map { String(format: "%.0f", $0) } ?? "No data")
-            }
         }
-        .padding(16)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .padding(.horizontal)
     }
 
     private var weatherLine: String? {

@@ -85,20 +85,21 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.checkpoint(app, "settings")
 
         pro.tap()
-        XCTAssertTrue(app.staticTexts["Know before the headache hits"].waitForExistence(timeout: 20), "paywall never rendered")
+        // By identifier: the title and the Close button are localized (German in the german persona).
+        let title = app.staticTexts["paywallTitle"]
+        XCTAssertTrue(title.waitForExistence(timeout: 20), "paywall never rendered")
         QA.checkpoint(app, "pro-paywall", paywall: true)
 
-        // At large text sizes the Close button can sit above the scrolled
-        // content; swiping down scrolls back to it, then dismisses the sheet.
-        let close = app.buttons["Close"]
+        // The paywall scrolls at large text sizes; scroll back up if Close is off screen.
+        let close = app.buttons["paywallCloseButton"]
         _ = close.waitForExistence(timeout: 5)
-        let title = app.staticTexts["Know before the headache hits"]
         for _ in 0..<3 where title.exists {
             if close.exists && close.isHittable {
                 close.tap()
                 break
             }
-            app.swipeDown(velocity: .fast)
+            let scroll = app.scrollViews.firstMatch
+            if scroll.exists { QA.swipe(scroll, .down) }
         }
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "paywall never closed")
         QA.checkpoint(app, "settings-after-paywall", paywall: false)
