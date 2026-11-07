@@ -1,1 +1,1 @@
-Háttérbeli fejlesztések és hibajavítások, hogy a Migraine Headache Tracker gördülékenyen működjön. Köszönjük, hogy itt vagy.
+Az app nyelvét mostantól a Beállításokban módosíthatod. A frissítés javításokat és fejlesztéseket is tartalmaz.

@@ -1,1 +1,1 @@
-Melhorias nos bastidores e correções de erros para o Migraine Headache Tracker funcionar melhor. Obrigado por estar aqui.
+Agora você pode mudar o idioma do app nos Ajustes. Esta atualização também traz correções e melhorias.

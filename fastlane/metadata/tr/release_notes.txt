@@ -1,1 +1,1 @@
-Migraine Headache Tracker'ın sorunsuz çalışması için arka planda iyileştirmeler ve hata düzeltmeleri. Burada olduğun için teşekkürler.
+Artık uygulamanın dilini Ayarlar'dan değiştirebilirsiniz. Bu güncelleme düzeltmeler ve iyileştirmeler de içeriyor.

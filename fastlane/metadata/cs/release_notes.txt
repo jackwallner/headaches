@@ -1,1 +1,1 @@
-Vylepšení na pozadí a opravy chyb, aby Migraine Headache Tracker běžel hladce. Děkujeme, že jste tu.
+Jazyk aplikace teď můžete změnit v Nastavení. Tato aktualizace přináší také opravy a vylepšení.

@@ -1,1 +1,1 @@
-Peningkatan di balik layar dan perbaikan bug agar Migraine Headache Tracker berjalan lancar. Terima kasih telah hadir.
+Kini Anda dapat mengubah bahasa aplikasi dari Pengaturan. Pembaruan ini juga berisi perbaikan dan peningkatan.

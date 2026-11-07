@@ -1,1 +1,1 @@
-Cải tiến phía sau và sửa lỗi để Migraine Headache Tracker chạy mượt mà. Cảm ơn bạn đã đồng hành.
+Giờ đây bạn có thể đổi ngôn ngữ của ứng dụng trong Cài đặt. Bản cập nhật này cũng có các bản sửa lỗi và cải tiến.

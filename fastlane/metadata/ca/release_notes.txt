@@ -1,1 +1,1 @@
-Millores internes i correccions d'errors perquè Migraine Headache Tracker funcioni bé. Gràcies per ser aquí.
+Ara pots canviar l'idioma de l'app des de Configuració. Aquesta actualització també inclou correccions i millores.
