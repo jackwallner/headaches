@@ -36,17 +36,42 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20))
         QA.checkpoint(app, "logged")
 
-        app.tabBars.buttons["History"].tap()
+        showHistory(app)
         QA.checkpoint(app, "history")
 
-        app.tabBars.buttons["Patterns"].tap()
+        tapTab(app, symbol: "chart.bar.xaxis", names: ["Patterns", "Muster"])
         QA.checkpoint(app, "patterns")
+    }
+
+    func testCoreLoopLogSurvivesRelaunch() {
+        continueAfterFailure = false
+        let app = launch(Self.seededPro)
+        showHistory(app)
+        let notes = app.buttons.matching(identifier: "historyEntryNotesButton")
+        _ = notes.firstMatch.waitForExistence(timeout: 15)
+        let before = notes.count
+        QA.checkpoint(app, "core-history-before")
+
+        tapTab(app, symbol: "brain.head.profile", names: ["Logging", "Eintragen", "One Tap Headache Tracker"])
+        app.buttons["logHeadacheButton"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "log never saved")
+        QA.checkpoint(app, "core-logged")
+
+        showHistory(app)
+        XCTAssertTrue(notes.firstMatch.waitForExistence(timeout: 15), "History lost its entries")
+        XCTAssertGreaterThan(notes.count, before, "new entry missing from History")
+        QA.checkpoint(app, "core-history-after")
+
+        QA.relaunch(app)
+        XCTAssertTrue(app.descendants(matching: .any)["homeView"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "entry gone after relaunch")
+        QA.checkpoint(app, "core-after-relaunch")
     }
 
     func test03ProPaywallShownAndClosed() {
         continueAfterFailure = false
         let app = launch(["-uitesting", "-HeadacheScreenshotSeed"])
-        app.tabBars.buttons["Settings"].tap()
+        tapTab(app, symbol: "slider.horizontal.3", names: ["Settings", "Einstellungen"])
         let pro = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", "Proactive Alerts")).firstMatch
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "Pro row missing for a free user")
         QA.checkpoint(app, "settings")
@@ -74,7 +99,7 @@ final class ReleaseJourneysUITests: XCTestCase {
     func test04ReturnVisitWithInterruption() {
         continueAfterFailure = false
         let app = launch(Self.seededPro)
-        app.tabBars.buttons["History"].tap()
+        showHistory(app)
         QA.checkpoint(app, "history-before-interruption")
 
         QA.interrupt(app)
@@ -128,8 +153,7 @@ final class ReleaseJourneysUITests: XCTestCase {
         let app = launchScreenshot(locale, arguments: historyArguments)
         _ = app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 20)
         if scrollToEntry {
-            let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
-            _ = editButton.waitForExistence(timeout: 20)
+            let editButton = revealHistoryEntry(app)
             if !editButton.isHittable { attachHistoryCaptureDiagnostics(app, locale: locale) }
             XCTAssertTrue(editButton.isHittable, "History entry never became visible for \(locale.storeLocale)")
         }
@@ -158,8 +182,7 @@ final class ReleaseJourneysUITests: XCTestCase {
             "-HeadacheDuoScreen", "history", "-HeadacheScreenshotHistoryEntry"
         ])
         _ = app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 20)
-        let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
-        _ = editButton.waitForExistence(timeout: 20)
+        let editButton = revealHistoryEntry(app)
         if !editButton.isHittable { attachHistoryCaptureDiagnostics(app, locale: locale) }
         XCTAssertTrue(editButton.isHittable, "History entry never became visible for \(locale.storeLocale)")
         if editButton.isHittable { editButton.tap() }
@@ -196,6 +219,36 @@ final class ReleaseJourneysUITests: XCTestCase {
         hierarchy.name = "\(locale.storeLocale)__history-hierarchy.txt"
         hierarchy.lifetime = .keepAlways
         add(hierarchy)
+    }
+
+    /// A tab by its symbol identifier or its English or German label. The
+    /// unfolded Duo draws the bar as a rail, so no `tabBars` query.
+    private func tapTab(_ app: XCUIApplication, symbol: String, names: [String]) {
+        let tab = app.buttons.matching(NSPredicate(
+            format: "identifier == %@ OR label IN %@", symbol, names
+        )).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 15), "\(names[0]) tab missing")
+        tab.tap()
+    }
+
+    /// History is a tab on a phone and its own pane, with no tab, on the unfolded Duo.
+    private func showHistory(_ app: XCUIApplication) {
+        let tab = app.buttons.matching(NSPredicate(
+            format: "identifier == %@ OR label IN %@", "clock.arrow.circlepath", ["History", "Verlauf"]
+        )).firstMatch
+        if tab.waitForExistence(timeout: 5) { tab.tap() }
+        XCTAssertTrue(app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 15), "History never rendered")
+    }
+
+    /// Scrolls History until the first entry's note button can be tapped.
+    private func revealHistoryEntry(_ app: XCUIApplication) -> XCUIElement {
+        let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
+        _ = editButton.waitForExistence(timeout: 20)
+        let list = app.descendants(matching: .any)["historyView"]
+        for _ in 0..<4 where !editButton.isHittable && list.exists {
+            QA.swipe(list, .up)
+        }
+        return editButton
     }
 
     private func launch(_ arguments: [String]) -> XCUIApplication {

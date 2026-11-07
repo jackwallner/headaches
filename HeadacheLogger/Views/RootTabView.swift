@@ -77,7 +77,7 @@ struct RootTabView: View {
             .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(0)
             .tabItem {
-                Label(HeadacheBrand.name, systemImage: "brain.head.profile")
+                Label("Logging", systemImage: "brain.head.profile")
             }
 
             if split == nil {

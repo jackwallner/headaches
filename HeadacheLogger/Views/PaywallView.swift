@@ -133,8 +133,7 @@ struct PaywallView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.9)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 

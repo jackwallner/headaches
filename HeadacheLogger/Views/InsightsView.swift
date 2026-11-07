@@ -351,7 +351,7 @@ private struct InsightsHeader: View {
             if let range = summary.dateRange {
                 Text(rangeLabel(range))
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.primary)
             }
         }
     }
@@ -765,7 +765,7 @@ struct CalendarHeatmapCard: View {
                 Spacer(minLength: 0)
             }
             .font(.caption.monospacedDigit())
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.primary)
 
             Text(caption)
                 .font(.footnote)

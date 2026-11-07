@@ -60,7 +60,7 @@ struct HomeView: View {
                                 .font(.system(size: 28, weight: .heavy))
                             Text(captureCoordinator.isCapturing ? "Saving and collecting context..." : "Tap once, we'll record the moment")
                                 .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.9))
+                                .foregroundStyle(.white)
                         }
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -139,7 +139,7 @@ struct HomeView: View {
                             Spacer()
                             Text("See all in History")
                                 .font(.footnote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.primary)
                         }
                         .keepsWholeAboveTabBar()
 
@@ -416,6 +416,8 @@ private struct LatestEventCard: View {
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Latest Event")
         .accessibilityIdentifier("latestEventCard")
     }
 

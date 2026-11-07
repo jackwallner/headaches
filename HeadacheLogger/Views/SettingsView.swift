@@ -104,7 +104,7 @@ struct SettingsView: View {
                 } label: {
                     LabeledContent {
                         HStack(spacing: 6) {
-                            Text(Self.currentLanguageName).foregroundStyle(Color.secondary)
+                            Text(Self.currentLanguageName).foregroundStyle(Color.primary)
                             // Leaves the app, so the outward arrow rather than a chevron.
                             Image(systemName: "arrow.up.forward")
                                 .font(.footnote.weight(.semibold))

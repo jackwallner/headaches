@@ -871,12 +871,12 @@ struct TrialOfferSheet: View {
         return "Billed through Apple. No charge during the trial."
     }
 
-    private var glowAnimation: Animation {
-        .easeInOut(duration: 2.2).repeatForever(autoreverses: true)
+    private var glowAnimation: Animation? {
+        reduceMotion ? nil : .easeInOut(duration: 2.2).repeatForever(autoreverses: true)
     }
 
-    private var shimmerAnimation: Animation {
-        .linear(duration: 2.6).repeatForever(autoreverses: false).delay(0.4)
+    private var shimmerAnimation: Animation? {
+        reduceMotion ? nil : .linear(duration: 2.6).repeatForever(autoreverses: false).delay(0.4)
     }
 
     var body: some View {

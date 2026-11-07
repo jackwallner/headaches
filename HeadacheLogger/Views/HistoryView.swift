@@ -630,7 +630,7 @@ private struct SummaryGrid: View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
                 SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink)
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: .orange)
+                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: Color(red: 0.70, green: 0.33, blue: 0.0))
             }
             HStack(spacing: 12) {
                 SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: .purple)
@@ -697,7 +697,7 @@ private struct DetailedEventRow: View {
                         .font(.headline)
                     Text("\(event.timestamp.formatted(.dateTime.weekday(.wide))) • \(event.partOfDay.localizedName)")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.primary)
                 }
                 Spacer(minLength: 8)
 
