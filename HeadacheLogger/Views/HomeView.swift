@@ -298,17 +298,17 @@ struct HomeView: View {
 
         var title: String {
             switch self {
-            case .threeLogs: return "You've logged \(rawValue) headaches"
-            case .fiveLogs: return "\(rawValue) headaches logged, enough for patterns"
-            case .tenLogs: return "\(rawValue) headaches, meaningful data"
+            case .threeLogs: return String(localized: "You've logged \(rawValue) headaches")
+            case .fiveLogs: return String(localized: "\(rawValue) headaches logged, enough for patterns")
+            case .tenLogs: return String(localized: "\(rawValue) headaches, meaningful data")
             }
         }
 
         var detail: String {
             switch self {
-            case .threeLogs: return "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more."
-            case .fiveLogs: return "You have enough data for personalized pattern analysis. Pro shows the patterns in your logs."
-            case .tenLogs: return "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts."
+            case .threeLogs: return String(localized: "Great start! Pro reveals the patterns hiding in your logs: time, sleep, weather, and more.")
+            case .fiveLogs: return String(localized: "You have enough data for personalized pattern analysis. Pro shows the patterns in your logs.")
+            case .tenLogs: return String(localized: "You've built enough history for meaningful patterns. Unlock Pro to see your personalized patterns and get proactive alerts.")
             }
         }
 

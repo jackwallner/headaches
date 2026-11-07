@@ -333,7 +333,7 @@ private struct ProAlertStatusRow: View {
                 .frame(width: 24)
             Text(title)
             Spacer()
-            Text(value)
+            Text(LocalizedStringKey(value))
                 .foregroundStyle(.secondary)
         }
     }
