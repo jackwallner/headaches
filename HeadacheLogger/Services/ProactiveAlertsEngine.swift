@@ -671,21 +671,12 @@ extension ProactiveAlertsEngine {
         let patternIDs = pending.filter { $0.identifier.hasPrefix("pattern-alert-") }.map(\.identifier)
         center.removePendingNotificationRequests(withIdentifiers: patternIDs)
 
+        let prefs = ProAlertPreferenceValues.current()
         for cluster in clusters {
-            let triggerHour = cluster.startHour > 0 ? cluster.startHour - 1 : 23
-            var components = DateComponents()
-            components.weekday = cluster.weekdayIndex
-            components.hour = triggerHour
-            components.minute = 0
-
             // Schedule for the next occurrence only — rescheduled on each capture/app-foreground.
             // Using repeated weekly triggers would keep firing stale patterns if the user's
             // schedule changes and they stop opening the app.
-            guard let nextDate = Calendar.current.nextDate(
-                after: Date(),
-                matching: components,
-                matchingPolicy: .nextTime
-            ) else { continue }
+            guard let nextDate = nextPatternAlertDate(for: cluster, after: Date(), prefs: prefs) else { continue }
             let fireComponents = Calendar.current.dateComponents(
                 [.year, .month, .day, .hour, .minute],
                 from: nextDate
@@ -702,6 +693,28 @@ extension ProactiveAlertsEngine {
             let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
             try? await center.add(request)
         }
+    }
+
+    /// One hour before the cluster's first hour (the previous evening for a 12 am window),
+    /// or nil when that time falls inside the user's quiet hours.
+    static func nextPatternAlertDate(
+        for cluster: PatternCluster,
+        after now: Date,
+        prefs: ProAlertPreferenceValues,
+        calendar: Calendar = .current
+    ) -> Date? {
+        var components = DateComponents()
+        if cluster.startHour > 0 {
+            components.weekday = cluster.weekdayIndex
+            components.hour = cluster.startHour - 1
+        } else {
+            components.weekday = (cluster.weekdayIndex + 5) % 7 + 1
+            components.hour = 23
+        }
+        components.minute = 0
+        guard let date = calendar.nextDate(after: now, matching: components, matchingPolicy: .nextTime),
+              !prefs.isQuietHour(at: date, calendar: calendar) else { return nil }
+        return date
     }
 
     /// Cancels all pattern-based notifications (called when the user disables the feature).

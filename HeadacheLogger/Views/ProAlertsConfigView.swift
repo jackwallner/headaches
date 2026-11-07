@@ -120,6 +120,9 @@ struct ProAlertsConfigView: View {
 
             Section("Quiet hours") {
                 Toggle("Don't alert at night", isOn: $prefs.quietHoursEnabled)
+                    .onChange(of: prefs.quietHoursEnabled) { _, _ in reschedulePatterns() }
+                    .onChange(of: prefs.quietHoursStart) { _, _ in reschedulePatterns() }
+                    .onChange(of: prefs.quietHoursEnd) { _, _ in reschedulePatterns() }
                 if prefs.quietHoursEnabled {
                     Stepper(value: $prefs.quietHoursStart, in: 0...23) {
                         HStack {
@@ -192,6 +195,10 @@ struct ProAlertsConfigView: View {
             await ProactiveAlertsEngine.patternAlertSettingsChanged(in: modelContext)
             await refreshPermissionStatuses()
         }
+    }
+
+    @MainActor private func reschedulePatterns() {
+        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
     }
 
     private var testAlertBinding: Binding<Bool> {
