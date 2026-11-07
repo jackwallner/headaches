@@ -692,7 +692,7 @@ private struct ProIntroSheet: View {
     @State private var showPaywall = false
     var onDismiss: () -> Void
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         NavigationStack {
@@ -707,7 +707,7 @@ private struct ProIntroSheet: View {
 
                     Text("Forecast checks stay quiet until your logs support a personal pressure, AQI, or timing pattern. When an alert fires, it explains the matching trigger and personal lift.")
                         .font(.body)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
 
                     VStack(alignment: .leading, spacing: 14) {
                         ProBullet(icon: "barometer", text: "Pressure-drop and AQI alerts based on your own logs")
@@ -726,7 +726,7 @@ private struct ProIntroSheet: View {
                         Text("See Pro plans")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: 50)
-                            .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
+                            .background(AppTheme.brand, in: RoundedRectangle(cornerRadius: 14))
                             .foregroundStyle(.white)
                     }
                     Button("Not now") {
@@ -734,7 +734,7 @@ private struct ProIntroSheet: View {
                         dismiss()
                     }
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
@@ -770,7 +770,7 @@ private struct ProBullet: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
                 .frame(width: 26)
             Text(text)
                 .font(.callout)
@@ -802,8 +802,8 @@ struct TrialOfferSheet: View {
     @State private var isRestoring = false
     @State private var restoreMessage: String?
 
-    private var brandPrimary: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
-    private var brandSecondary: Color { Color(red: 0.86, green: 0.16, blue: 0.43) }
+    private var brandPrimary: Color { AppTheme.brand }
+    private var brandSecondary: Color { AppTheme.brandEnd }
     private var brandGradient: LinearGradient {
         LinearGradient(colors: [brandPrimary, brandSecondary], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
@@ -845,13 +845,13 @@ struct TrialOfferSheet: View {
         [
             TrialBullet(
                 icon: "chart.bar.xaxis",
-                tint: .indigo,
+                tint: AppTheme.indigo,
                 title: "Your personal patterns",
                 detail: "Sleep, timing, pressure, and weather from your own logs."
             ),
             TrialBullet(
                 icon: "barometer",
-                tint: .orange,
+                tint: AppTheme.orange,
                 title: "Pressure & AQI alerts",
                 detail: "A heads-up 12-24h before risky weather hits."
             )
@@ -934,7 +934,7 @@ struct TrialOfferSheet: View {
                         )
                     Text(subheadline)
                         .font(.system(.subheadline, design: .rounded))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 12)
@@ -949,19 +949,19 @@ struct TrialOfferSheet: View {
 
                 Label("All on-device. Your logs never leave your phone.", systemImage: "lock.shield")
                     .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .labelStyle(.titleAndIcon)
 
                 Group {
                     if let errorMessage {
                         Text(errorMessage)
                             .font(.system(.footnote, design: .rounded))
-                            .foregroundStyle(.red)
+                            .foregroundStyle(AppTheme.red)
                             .multilineTextAlignment(.center)
-                            .transition(.opacity)
+                            .transition(reduceMotion ? .identity : .opacity)
                     }
                 }
-                .animation(.easeInOut(duration: 0.18), value: errorMessage)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: errorMessage)
 
                 VStack(spacing: 10) {
                     Button(action: onStartTrial) {
@@ -984,7 +984,7 @@ struct TrialOfferSheet: View {
 
                     Text(billingDisclosure)
                         .font(.system(.caption2, design: .rounded))
-                        .foregroundStyle(.tertiary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
 
@@ -1003,7 +1003,7 @@ struct TrialOfferSheet: View {
                     Button(action: onDismiss) {
                         Text("Not now")
                             .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 8)
                     }
@@ -1013,7 +1013,9 @@ struct TrialOfferSheet: View {
                     Button(action: startRestore) {
                         Text(isRestoring ? "Restoring…" : "Restore Purchases")
                             .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .disabled(isRestoring || isPurchasing)
@@ -1021,18 +1023,22 @@ struct TrialOfferSheet: View {
                     if let restoreMessage {
                         Text(restoreMessage)
                             .font(.system(.caption, design: .rounded))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                             .multilineTextAlignment(.center)
                     }
                 }
 
                 HStack(spacing: 4) {
                     Link("Terms", destination: PaywallLinks.standardEULA)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                     Text("·")
                     Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .font(.system(.caption2, design: .rounded))
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(AppTheme.secondaryText)
             }
             .padding(.horizontal, 24)
             .padding(.top, 8)
@@ -1107,7 +1113,7 @@ private struct TrialBulletRow: View {
                     .foregroundStyle(.primary)
                 Text(bullet.detail)
                     .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)

@@ -541,14 +541,14 @@ struct HistoryView: View {
                     }
                     Text("A few quick questions so Patterns can surface the triggers most relevant to you. Take it anytime.")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .multilineTextAlignment(.leading)
                     Text("Start quiz")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .background(brandColor, in: Capsule())
+                        .background(AppTheme.brand, in: Capsule())
                 }
                 .padding(18)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -569,7 +569,7 @@ struct HistoryView: View {
                             .foregroundStyle(.primary)
                         Text("Optional. Helps Patterns surface the triggers most relevant to you.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.right")
@@ -606,7 +606,7 @@ struct HistoryView: View {
                     }
                     Text("See what time, sleep, and weather patterns emerge from your logged headaches.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.right")
@@ -619,25 +619,54 @@ struct HistoryView: View {
         .buttonStyle(.plain)
     }
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 }
 
 private struct SummaryGrid: View {
     let events: [HeadacheEvent]
     var useCelsius: Bool
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 12) {
-                SummaryCard(title: "Total Logs", value: "\(events.count)", tint: .pink)
-                SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: Color(red: 0.70, green: 0.33, blue: 0.0))
+        // At accessibility sizes a half-width card is narrower than a word like
+        // "Evening", so the cards stack one per row instead.
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(spacing: 12) {
+                totalCard
+                dayCard
+                timeCard
+                temperatureCard
             }
-            HStack(spacing: 12) {
-                SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: .purple)
-                SummaryCard(title: "Avg Temp", value: averageTemperatureText, tint: .blue)
+            .padding(.horizontal)
+        } else {
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    totalCard
+                    dayCard
+                }
+                HStack(spacing: 12) {
+                    timeCard
+                    temperatureCard
+                }
             }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
+    }
+
+    private var totalCard: some View {
+        SummaryCard(title: "Total Logs", value: "\(events.count)", tint: AppTheme.pink, identifier: "summaryTotalLogs")
+    }
+
+    private var dayCard: some View {
+        SummaryCard(title: "Most Common Day", value: mostCommonWeekday ?? "No data", tint: AppTheme.orange)
+    }
+
+    private var timeCard: some View {
+        SummaryCard(title: "Most Common Time", value: mostCommonPartOfDay ?? "No data", tint: AppTheme.purple)
+    }
+
+    private var temperatureCard: some View {
+        SummaryCard(title: "Avg Temp", value: averageTemperatureText, tint: AppTheme.blue)
     }
 
     private var mostCommonWeekday: String? {
@@ -667,12 +696,13 @@ private struct SummaryCard: View {
     let title: String
     let value: String
     let tint: Color
+    var identifier: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(LocalizedStringKey(title))
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             Text(value)
                 .font(.title3.bold())
                 .foregroundStyle(tint)
@@ -681,6 +711,10 @@ private struct SummaryCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(LocalizedStringKey(title)))
+        .accessibilityValue(Text(value))
+        .accessibilityIdentifier(identifier ?? "summaryCard")
     }
 }
 
@@ -724,7 +758,7 @@ private struct DetailedEventRow: View {
                         .font(.body.weight(.semibold))
                 }
                 .buttonStyle(.borderless)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .tint(AppTheme.brandText)
                 .accessibilityLabel((event.userNotes?.isEmpty == false) ? "Edit note" : "Add note")
                 .accessibilityIdentifier("historyEntryNotesButton")
             }
@@ -732,7 +766,7 @@ private struct DetailedEventRow: View {
             if let notes = event.userNotes, !notes.isEmpty {
                 Text(notes)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .lineLimit(4)
                     .accessibilityIdentifier("historyEntryNotesPreview")
             }
@@ -742,7 +776,7 @@ private struct DetailedEventRow: View {
                     .compactMap { $0 }
                     .joined(separator: " • "))
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
 
             HStack(spacing: 8) {
@@ -774,18 +808,18 @@ private struct DetailedEventRow: View {
 
     private var statusColor: Color {
         switch event.captureStatus {
-        case .complete: .green
-        case .partial: .orange
-        case .failed: .red
-        case .pending: .blue
+        case .complete: AppTheme.green
+        case .partial: AppTheme.orange
+        case .failed: AppTheme.red
+        case .pending: AppTheme.blue
         }
     }
 
     private func severityColor(_ severity: HeadacheSeverity) -> Color {
         switch severity {
-        case .slight: .yellow
-        case .medium: .orange
-        case .extreme: .red
+        case .slight: AppTheme.slight
+        case .medium: AppTheme.orange
+        case .extreme: AppTheme.red
         }
     }
 }
@@ -798,13 +832,16 @@ private struct DataPill: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(LocalizedStringKey(title))
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             Text(value)
                 .font(.subheadline.monospacedDigit())
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(LocalizedStringKey(title)))
+        .accessibilityValue(Text(value))
     }
 }
 
@@ -822,14 +859,14 @@ private struct ImportExportActionCard: View {
             HStack(spacing: 12) {
                 Image(systemName: icon)
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .foregroundStyle(AppTheme.brandText)
                     .frame(width: 24)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline.weight(.semibold))
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
                 Spacer(minLength: 0)
                 Button(action: action) {
@@ -837,7 +874,7 @@ private struct ImportExportActionCard: View {
                         .font(.caption.weight(.semibold))
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .tint(AppTheme.brand)
                 .controlSize(.small)
                 .accessibilityIdentifier("importExportAction-\(actionLabel)")
             }
@@ -847,7 +884,7 @@ private struct ImportExportActionCard: View {
                         .font(.caption.weight(.semibold))
                 }
                 .buttonStyle(.borderless)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .tint(AppTheme.brandText)
                 .padding(.leading, 36)
                 .accessibilityIdentifier("importExportAction-\(secondaryLabel)")
             }
@@ -860,7 +897,7 @@ private struct ImportIntroSheet: View {
     var onContinue: () -> Void
     var onCancel: () -> Void
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         NavigationStack {
@@ -874,7 +911,7 @@ private struct ImportIntroSheet: View {
                             .font(.title2.bold())
                         Text("Bring entries in from a backup or another device, using a CSV file exported from this app.")
                             .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                     }
 
                     VStack(alignment: .leading, spacing: 14) {
@@ -890,7 +927,7 @@ private struct ImportIntroSheet: View {
                             .font(.subheadline.weight(.semibold))
                         Text("Use a CSV exported from this app. Other CSVs are not guaranteed to match the columns we expect.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -898,7 +935,7 @@ private struct ImportIntroSheet: View {
                             .font(.subheadline.weight(.semibold))
                         Text("You can cancel at any step before the final confirmation. Existing entries are never changed without your approval.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                     }
                 }
                 .padding(20)
@@ -915,7 +952,7 @@ private struct ImportIntroSheet: View {
                     Text("Choose CSV File")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
+                        .background(AppTheme.brand, in: RoundedRectangle(cornerRadius: 14))
                         .foregroundStyle(.white)
                 }
                 .padding(.horizontal, 20)
@@ -931,7 +968,7 @@ private struct ImportStep: View {
     let title: String
     let detail: String
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -939,10 +976,10 @@ private struct ImportStep: View {
                 .font(.headline.bold())
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
-                .background(brandColor, in: Circle())
+                .background(AppTheme.brand, in: Circle())
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline.weight(.semibold))
-                Text(detail).font(.footnote).foregroundStyle(.secondary)
+                Text(detail).font(.footnote).foregroundStyle(AppTheme.secondaryText)
             }
         }
     }

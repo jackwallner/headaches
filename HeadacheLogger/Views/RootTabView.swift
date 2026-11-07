@@ -61,7 +61,7 @@ struct RootTabView: View {
         .onChange(of: split != nil) { _, isSplit in
             if isSplit, selectedTab == 1 { selectedTab = 0 }
         }
-        .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+        .tint(AppTheme.brandText)
         .preferredColorScheme(AppAppearance.from(storageValue: appearanceRaw).preferredColorScheme)
         .onAppear { reviewPromptCoordinator.isOnHomeTab = selectedTab == 0 }
         .onChange(of: selectedTab) { _, tab in
