@@ -28,9 +28,9 @@ struct HeadacheQuizRetakeView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Step \(currentStep + 1) of \(HeadacheQuizQuestions.all.count)")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                 ProgressView(value: Double(currentStep + 1), total: Double(HeadacheQuizQuestions.all.count))
-                    .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .tint(AppTheme.brandText)
             }
 
             VStack(alignment: .leading, spacing: 20) {
@@ -49,7 +49,7 @@ struct HeadacheQuizRetakeView: View {
                             Spacer()
                             if answers[q.id] == option {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                                    .foregroundStyle(AppTheme.brandText)
                             }
                         }
                         .padding(.horizontal, 16)
@@ -57,7 +57,7 @@ struct HeadacheQuizRetakeView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(answers[q.id] == option
-                                    ? Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.08)
+                                    ? AppTheme.brandText.opacity(0.08)
                                     : Color(.secondarySystemGroupedBackground))
                         )
                     }
@@ -76,7 +76,7 @@ struct HeadacheQuizRetakeView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .tint(AppTheme.brand)
             .frame(maxWidth: .infinity)
         }
     }
@@ -86,19 +86,19 @@ struct HeadacheQuizRetakeView: View {
             Spacer()
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 52, weight: .bold))
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
             Text("Answers Updated")
                 .font(.title2.bold())
             Text("Thanks! Your answers help us improve future versions of Patterns.")
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .multilineTextAlignment(.center)
             Spacer()
             Button("Done") {
                 dismiss()
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .tint(AppTheme.brand)
             .frame(maxWidth: .infinity)
         }
     }

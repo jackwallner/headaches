@@ -29,9 +29,9 @@ struct HeadacheQuizView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Step \(currentStep + 1) of \(HeadacheQuizQuestions.all.count)")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                 ProgressView(value: Double(currentStep + 1), total: Double(HeadacheQuizQuestions.all.count))
-                    .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .tint(AppTheme.brandText)
             }
 
             VStack(alignment: .leading, spacing: 20) {
@@ -49,7 +49,7 @@ struct HeadacheQuizView: View {
                             Spacer()
                             if answers[q.id] == option {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                                    .foregroundStyle(AppTheme.brandText)
                             }
                         }
                         .padding(.horizontal, 16)
@@ -57,7 +57,7 @@ struct HeadacheQuizView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(answers[q.id] == option
-                                    ? Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.08)
+                                    ? AppTheme.brandText.opacity(0.08)
                                     : Color(.secondarySystemGroupedBackground))
                         )
                     }
@@ -73,14 +73,14 @@ struct HeadacheQuizView: View {
                         currentStep += 1
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .tint(AppTheme.brand)
                     .frame(maxWidth: .infinity)
                 } else {
                     Button("Finish") {
                         saveAndComplete()
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .tint(AppTheme.brand)
                     .frame(maxWidth: .infinity)
                 }
 
@@ -88,7 +88,7 @@ struct HeadacheQuizView: View {
                     isSkipping = true
                 }
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             }
         }
     }
@@ -102,14 +102,14 @@ struct HeadacheQuizView: View {
             VStack(spacing: 16) {
                 Image(systemName: "questionmark.circle")
                     .font(.system(size: 48, weight: .light))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
 
                 Text("Skip the Quiz?")
                     .font(.title2.bold())
 
                 Text("Answering these helps Patterns highlight the triggers most relevant to your headaches. You can always come back later from Settings.")
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .multilineTextAlignment(.center)
             }
 
@@ -120,14 +120,14 @@ struct HeadacheQuizView: View {
                     isSkipping = false
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .tint(AppTheme.brand)
                 .frame(maxWidth: .infinity)
 
                 Button("Skip for Now") {
                     completeQuiz()
                 }
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             }
         }
     }
@@ -141,14 +141,14 @@ struct HeadacheQuizView: View {
             VStack(spacing: 16) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 52, weight: .bold))
-                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .foregroundStyle(AppTheme.brandText)
 
                 Text("That's All. Thank You!")
                     .font(.title2.bold())
 
                 Text("Your answers will help us highlight the headache patterns most relevant to you. You can update them anytime in Settings.")
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .multilineTextAlignment(.center)
             }
 
@@ -158,7 +158,7 @@ struct HeadacheQuizView: View {
                 completeQuiz()
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .tint(AppTheme.brand)
             .frame(maxWidth: .infinity)
         }
     }

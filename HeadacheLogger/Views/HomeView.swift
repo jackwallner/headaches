@@ -5,6 +5,7 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var captureCoordinator: CaptureCoordinator
     @EnvironmentObject private var store: StoreService
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(HeadacheStorageKey.useCelsiusTemperature.rawValue, store: HeadacheAppGroup.userDefaults) private var useCelsius = false
     @AppStorage(HeadacheStorageKey.promptForSeverityNotes.rawValue, store: HeadacheAppGroup.userDefaults) private var promptForSeverityNotes = false
     @AppStorage(HeadacheStorageKey.milestonePrompt3Shown.rawValue, store: HeadacheAppGroup.userDefaults) private var milestone3PromptShown = false
@@ -29,6 +30,9 @@ struct HomeView: View {
     @State private var undoDismissTask: Task<Void, Never>?
 
     private static let undoSnackbarTTLSeconds: UInt64 = 15
+    /// How long the "Logged" check covers the button. The Undo bar stays up
+    /// after it, so the check is a brief acknowledgement, not a state to wait out.
+    private static let loggedConfirmationNanoseconds: UInt64 = 1_600_000_000
     /// Once the user has logged this many times, the long "What Gets Captured"
     /// explainer collapses so Home stays focused on action + latest + recent.
     private static let captureExplainerLogThreshold = 3
@@ -67,13 +71,13 @@ struct HomeView: View {
                         .padding(.vertical, 44)
                         .background(
                             LinearGradient(
-                                colors: [Color(red: 0.95, green: 0.25, blue: 0.36), Color(red: 0.86, green: 0.16, blue: 0.43)],
+                                colors: [AppTheme.brand, AppTheme.brandEnd],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
                             in: RoundedRectangle(cornerRadius: 28, style: .continuous)
                         )
-                        .shadow(color: Color(red: 0.86, green: 0.16, blue: 0.43).opacity(0.30), radius: 18, x: 0, y: 10)
+                        .shadow(color: AppTheme.brandEnd.opacity(0.30), radius: 18, x: 0, y: 10)
                     }
                     .buttonStyle(.plain)
                     .disabled(captureCoordinator.isCapturing || showCheckmark)
@@ -91,10 +95,10 @@ struct HomeView: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
                             }
-                            .transition(.opacity.animation(.easeInOut(duration: 0.25)))
+                            .transition(reduceMotion ? .identity : .opacity.animation(Motion.standard))
                         }
                     }
-                    .animation(.easeInOut(duration: 0.25), value: showCheckmark)
+                    .animation(reduceMotion ? nil : Motion.standard, value: showCheckmark)
 
                     if !captureCoordinator.isCapturing, let statusLine = captureCoordinator.bannerMessage {
                         CaptureStatusLine(text: statusLine, isError: captureCoordinator.bannerIsError) {
@@ -158,7 +162,7 @@ struct HomeView: View {
                             .keepsWholeAboveTabBar()
                         Text("Press once when a headache starts; the app records the moment and fills in as much health and environmental context as it can.")
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                             .keepsWholeAboveTabBar()
 
                         CaptureItem(
@@ -223,15 +227,15 @@ struct HomeView: View {
                     },
                     onDismiss: { dismissUndoSnackbar() }
                 )
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .transition(reduceMotion ? .identity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
         .onChange(of: captureCoordinator.isCapturing) { _, isCapturing in
             if !isCapturing, !captureCoordinator.currentRunIsRetry, captureCoordinator.lastCapturedEventID != nil {
                 showCheckmark = true
                 Task {
-                    try? await Task.sleep(nanoseconds: 3_500_000_000)
-                    withAnimation(.easeInOut(duration: 0.25)) {
+                    try? await Task.sleep(nanoseconds: Self.loggedConfirmationNanoseconds)
+                    Motion.animate(reduce: reduceMotion) {
                         showCheckmark = false
                     }
                 }
@@ -271,13 +275,13 @@ struct HomeView: View {
 
     private func showUndoSnackbar() {
         undoDismissTask?.cancel()
-        withAnimation(.easeInOut(duration: 0.25)) {
+        Motion.animate(reduce: reduceMotion) {
             undoSnackbarVisible = true
         }
         undoDismissTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: Self.undoSnackbarTTLSeconds * 1_000_000_000)
             guard !Task.isCancelled else { return }
-            withAnimation(.easeInOut(duration: 0.25)) {
+            Motion.animate(reduce: reduceMotion) {
                 undoSnackbarVisible = false
             }
         }
@@ -286,7 +290,7 @@ struct HomeView: View {
     private func dismissUndoSnackbar() {
         undoDismissTask?.cancel()
         undoDismissTask = nil
-        withAnimation(.easeInOut(duration: 0.25)) {
+        Motion.animate(reduce: reduceMotion) {
             undoSnackbarVisible = false
         }
     }
@@ -384,31 +388,31 @@ private struct LatestEventCard: View {
                 MetricChip(
                     title: "Steps",
                     value: event.stepsToday?.formatted(.number) ?? "No data",
-                    tint: .teal
+                    tint: AppTheme.teal
                 )
                 MetricChip(
                     title: "Sleep",
                     value: event.sleepHoursLastNight.map { $0.formatted(.number.precision(.fractionLength(1))) + " h" } ?? "No data",
-                    tint: .indigo
+                    tint: AppTheme.indigo
                 )
                 MetricChip(
                     title: "AQI",
                     value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
-                    tint: .mint
+                    tint: AppTheme.cyan
                 )
             }
 
             if hasMissingContext {
                 DisclosureGroup(isExpanded: $showDetails) {
                     VStack(alignment: .leading, spacing: 6) {
-                        StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? .green : .orange)
-                        StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? .blue : .orange)
+                        StatusBadge(label: "Health: \(event.healthStatus.rawValue)", tint: event.healthStatus == .captured ? AppTheme.green : AppTheme.orange)
+                        StatusBadge(label: "Environment: \(event.environmentStatus.rawValue)", tint: event.environmentStatus == .captured ? AppTheme.blue : AppTheme.orange)
                     }
                     .padding(.top, 8)
                 } label: {
                     Text("Why is something missing?")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
                 .accessibilityIdentifier("latestEventDetailsDisclosure")
             }
@@ -462,9 +466,9 @@ private struct LatestEventCard: View {
 
     private func severityColor(_ severity: HeadacheSeverity) -> Color {
         switch severity {
-        case .slight: .yellow
-        case .medium: .orange
-        case .extreme: .red
+        case .slight: AppTheme.slight
+        case .medium: AppTheme.orange
+        case .extreme: AppTheme.red
         }
     }
 }
@@ -480,7 +484,7 @@ private struct RecentEventRow: View {
                 Spacer()
                 Text(event.partOfDay.localizedName)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
 
             HStack(spacing: 8) {
@@ -489,7 +493,7 @@ private struct RecentEventRow: View {
                 Label(LocalizedStringKey(event.weatherSummary ?? "No weather"), systemImage: "cloud")
             }
             .font(.caption)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.secondaryText)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -507,7 +511,7 @@ private struct CaptureItem: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
                 .frame(width: 24, height: 24)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -515,7 +519,7 @@ private struct CaptureItem: View {
                     .font(.subheadline.weight(.semibold))
                 Text(subtitle)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
         }
         .keepsWholeAboveTabBar()
@@ -531,7 +535,7 @@ private struct MetricChip: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(LocalizedStringKey(title))
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .textCase(.uppercase)
             Text(value)
                 .font(.headline.monospacedDigit())
@@ -541,6 +545,9 @@ private struct MetricChip: View {
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(tint.opacity(0.10), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(LocalizedStringKey(title)))
+        .accessibilityValue(Text(value))
     }
 }
 
@@ -566,7 +573,7 @@ private struct CaptureRecoveryCard: View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Some context couldn't be captured", systemImage: "exclamationmark.bubble")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.orange)
+                .foregroundStyle(AppTheme.orange)
 
             VStack(alignment: .leading, spacing: 6) {
                 if let healthIssue {
@@ -577,7 +584,7 @@ private struct CaptureRecoveryCard: View {
                 }
             }
             .font(.footnote)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.secondaryText)
 
             Button {
                 onRetry()
@@ -591,7 +598,7 @@ private struct CaptureRecoveryCard: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .tint(.orange)
+            .tint(AppTheme.orangeFill)
             .disabled(isRetrying)
             .accessibilityIdentifier("captureRetryButton")
 
@@ -609,14 +616,14 @@ private struct CaptureRecoveryCard: View {
                 .accessibilityIdentifier("captureReportButton")
             }
             .font(.footnote)
-            .tint(.secondary)
+            .tint(AppTheme.secondaryText)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(AppTheme.orange.opacity(0.10), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Color.orange.opacity(0.35), lineWidth: 1)
+                .stroke(AppTheme.orange.opacity(0.35), lineWidth: 1)
         )
         .accessibilityIdentifier("captureRecoveryCard")
     }
@@ -744,8 +751,9 @@ private struct MilestoneProPrompt: View {
     @Binding var showPaywall: Bool
     var onDismiss: (HomeView.ProMilestone) -> Void
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
     @State private var dismissed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if !dismissed {
@@ -760,7 +768,7 @@ private struct MilestoneProPrompt: View {
                         .font(.subheadline.weight(.semibold))
                     Text(milestone.detail)
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
 
                     HStack(spacing: 10) {
                         Button {
@@ -770,19 +778,19 @@ private struct MilestoneProPrompt: View {
                                 .font(.caption.bold())
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 7)
-                                .background(brandColor, in: Capsule())
+                                .background(AppTheme.brand, in: Capsule())
                                 .foregroundStyle(.white)
                         }
 
                         Button {
-                            withAnimation {
+                            Motion.animate(reduce: reduceMotion, .default) {
                                 dismissed = true
                                 onDismiss(milestone)
                             }
                         } label: {
                             Text("Not now")
                                 .font(.caption)
-                                .foregroundStyle(.tertiary)
+                                .foregroundStyle(AppTheme.secondaryText)
                         }
                     }
                 }
@@ -796,7 +804,7 @@ private struct MilestoneProPrompt: View {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(brandColor.opacity(0.25), lineWidth: 1)
             )
-            .transition(.opacity.combined(with: .move(edge: .top)))
+            .transition(reduceMotion ? .identity : .opacity.combined(with: .move(edge: .top)))
         }
     }
 }
@@ -823,7 +831,7 @@ private struct CaptureStatusLine: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
-                .foregroundStyle(isError ? .orange : .green)
+                .foregroundStyle(isError ? AppTheme.orange : AppTheme.green)
             Text(LocalizedStringKey(text))
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.primary)
@@ -831,15 +839,16 @@ private struct CaptureStatusLine: View {
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(6)
+                    .foregroundStyle(AppTheme.secondaryText)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Dismiss")
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.leading, 14)
+        .padding(.trailing, 4)
+        .padding(.vertical, 2)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
         .accessibilityIdentifier("captureStatusLine")
@@ -852,10 +861,12 @@ private struct UndoSnackbar: View {
     var onDismiss: () -> Void
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 6) {
             Button(action: onAddDetails) {
                 Label("Add Details", systemImage: "square.and.pencil")
                     .font(.subheadline.weight(.semibold))
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .accessibilityIdentifier("addDetailsButton")
 
@@ -864,21 +875,25 @@ private struct UndoSnackbar: View {
             Button(role: .destructive, action: onUndo) {
                 Label("Undo", systemImage: "arrow.uturn.backward")
                     .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppTheme.red)
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .accessibilityIdentifier("undoLastTapButton")
 
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(6)
+                    .foregroundStyle(AppTheme.secondaryText)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Dismiss")
+            .accessibilityIdentifier("undoSnackbarDismiss")
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.leading, 16)
+        .padding(.trailing, 4)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
@@ -886,6 +901,7 @@ private struct UndoSnackbar: View {
         )
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("undoSnackbar")
     }
 }

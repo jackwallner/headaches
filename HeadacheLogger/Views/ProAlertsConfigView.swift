@@ -31,7 +31,7 @@ struct ProAlertsConfigView: View {
                 Section {
                     Text(permissionsBanner)
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                     Button("Open iPhone Settings") {
                         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                         openURL(url)
@@ -98,7 +98,7 @@ struct ProAlertsConfigView: View {
                 }
                 Text("Most barometric-trigger studies use 3–6 hPa over 12–24 hours.")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
 
             Section("Air quality") {
@@ -109,12 +109,12 @@ struct ProAlertsConfigView: View {
                             Text("Threshold")
                             Spacer()
                             Text("AQI \(prefs.airQualityThreshold)")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.secondaryText)
                         }
                     }
                     Text("US AQI 100 is \"unhealthy for sensitive groups\". 150+ is unhealthy for everyone.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
             }
 
@@ -126,7 +126,7 @@ struct ProAlertsConfigView: View {
                             Text("From")
                             Spacer()
                             Text(formatHour(prefs.quietHoursStart))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.secondaryText)
                         }
                     }
                     Stepper(value: $prefs.quietHoursEnd, in: 0...23) {
@@ -134,7 +134,7 @@ struct ProAlertsConfigView: View {
                             Text("Until")
                             Spacer()
                             Text(formatHour(prefs.quietHoursEnd))
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.secondaryText)
                         }
                     }
                 }
@@ -329,12 +329,12 @@ private struct ProAlertStatusRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
                 .frame(width: 24)
             Text(title)
             Spacer()
             Text(LocalizedStringKey(value))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
         }
     }
 }

@@ -221,7 +221,7 @@ struct InsightsView: View {
                         .multilineTextAlignment(.center)
                     Text("Pro analyzes your logged events and surfaces the patterns hiding in the data (sleep, pressure, time of day, weather) with a chart and explanation for each one.")
                         .font(.callout)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .multilineTextAlignment(.center)
                 }
                 .padding(.top, 24)
@@ -242,14 +242,14 @@ struct InsightsView: View {
                     events.count
                 ))
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                 Button {
                     showPaywall = true
                 } label: {
                     Text("See Pro plans")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(brandColor, in: RoundedRectangle(cornerRadius: 14))
+                        .background(AppTheme.brand, in: RoundedRectangle(cornerRadius: 14))
                         .foregroundStyle(.white)
                 }
                 .padding(.horizontal, 20)
@@ -263,7 +263,7 @@ struct InsightsView: View {
         VStack(spacing: 10) {
             Text("Your patterns so far")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 4)
 
@@ -278,7 +278,7 @@ struct InsightsView: View {
         VStack(spacing: 10) {
             Text("Example patterns you'll see")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 4)
             SampleInsightRow(icon: "sunset.fill", title: "Most common time: Evening", detail: "40% of your headaches, 1.6× the even baseline.")
@@ -289,7 +289,7 @@ struct InsightsView: View {
         .padding(.horizontal, 16)
     }
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 }
 
 /// Translates the user's quiz answers into an ordered list of insight categories
@@ -374,14 +374,14 @@ private struct InsightRow: View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: insight.icon)
                 .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
                 .frame(width: 30)
             VStack(alignment: .leading, spacing: 4) {
                 Text(insight.title)
                     .font(.headline)
                 Text(insight.detail)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
         }
         .padding(.vertical, 4)
@@ -392,7 +392,7 @@ private struct LockedInsightPreviewRow: View {
     let insight: InsightsEngine.Insight
     @Binding var showPaywall: Bool
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         Button {
@@ -411,7 +411,7 @@ private struct LockedInsightPreviewRow: View {
                     }
                     Text(insight.detail)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
                 Spacer(minLength: 0)
             }
@@ -420,7 +420,7 @@ private struct LockedInsightPreviewRow: View {
             .overlay(
                 Image(systemName: "lock.fill")
                     .font(.headline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             )
             .contentShape(Rectangle())
         }
@@ -439,8 +439,8 @@ private struct ProBadge: View {
             .font(.caption2.bold())
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.15), in: Capsule())
-            .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+            .background(AppTheme.brandText.opacity(0.15), in: Capsule())
+            .foregroundStyle(AppTheme.brandText)
     }
 }
 
@@ -453,11 +453,11 @@ private struct SampleInsightRow: View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: icon)
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                .foregroundStyle(AppTheme.brandText)
                 .frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline.weight(.semibold))
-                Text(detail).font(.footnote).foregroundStyle(.secondary)
+                Text(detail).font(.footnote).foregroundStyle(AppTheme.secondaryText)
             }
             Spacer()
         }
@@ -471,7 +471,7 @@ private struct SampleInsightRow: View {
 private struct ProactiveAlertsCard: View {
     @StateObject private var prefs = ProAlertPreferences.shared
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         NavigationLink {
@@ -480,7 +480,7 @@ private struct ProactiveAlertsCard: View {
             HStack(alignment: .center, spacing: 14) {
                 Image(systemName: prefs.alertsEnabled ? "bell.badge.fill" : "bell.slash.fill")
                     .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(prefs.alertsEnabled ? brandColor : .secondary)
+                    .foregroundStyle(prefs.alertsEnabled ? brandColor : AppTheme.secondaryText)
                     .frame(width: 32)
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 8) {
@@ -491,8 +491,8 @@ private struct ProactiveAlertsCard: View {
                                 .font(.caption2.bold())
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.green.opacity(0.18), in: Capsule())
-                                .foregroundStyle(Color.green)
+                                .background(AppTheme.green.opacity(0.18), in: Capsule())
+                                .foregroundStyle(AppTheme.green)
                         } else {
                             Text("Suggested setup")
                                 .font(.caption2.bold())
@@ -506,7 +506,7 @@ private struct ProactiveAlertsCard: View {
                          ? "You'll be notified when the forecast matches a supported personal trigger. Tap to tune thresholds and quiet hours."
                          : "Turn on background forecast checks that stay quiet until your logs support a pressure or AQI trigger.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .multilineTextAlignment(.leading)
                 }
                 Spacer(minLength: 0)
@@ -532,7 +532,7 @@ struct InsightDetailView: View {
     let insight: InsightsEngine.Insight
     let totalEvents: Int
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         ScrollView {
@@ -586,13 +586,13 @@ struct InsightDetailView: View {
             }
             Text(insight.detail)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             Text(String.localizedStringWithFormat(
                 NSLocalizedString("Based on %lld logged headaches.", comment: "Insight sample size"),
                 totalEvents
             ))
                 .font(.caption)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(AppTheme.secondaryText)
         }
     }
 
@@ -608,7 +608,7 @@ struct InsightDetailView: View {
                     BaselineSwatch()
                     Text("Even baseline (\(percentString(baseline))): what you'd see if headaches were spread evenly across these buckets.")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
             }
         }
@@ -648,12 +648,12 @@ struct InsightDetailView: View {
                     .font(.headline)
                 Text("Get a notification before this signal spikes.")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
             Spacer()
             Image(systemName: "chevron.right")
                 .font(.footnote.bold())
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
         }
         .padding(14)
         .background(brandColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
@@ -666,7 +666,7 @@ struct InsightDetailView: View {
     private var disclaimer: some View {
         Text("Computed locally from your logged events. Descriptive only, not a clinical diagnosis.")
             .font(.footnote)
-            .foregroundStyle(.tertiary)
+            .foregroundStyle(AppTheme.secondaryText)
             .padding(.top, 4)
     }
 
@@ -690,7 +690,7 @@ private struct BreakdownChart: View {
                 .annotation(position: .top, alignment: .center) {
                     Text(percentLabel(bucket.share))
                         .font(.caption2.weight(bucket.isPeak ? .bold : .regular))
-                        .foregroundStyle(bucket.isPeak ? accent : .secondary)
+                        .foregroundStyle(bucket.isPeak ? accent : AppTheme.secondaryText)
                 }
                 .cornerRadius(4)
             }
@@ -751,10 +751,18 @@ struct CalendarHeatmapCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(LocalizedStringKey(title)).font(.headline)
-                Spacer(minLength: 8)
-                HeatmapLegend()
+            // Side by side when both fit on one line, else the legend drops
+            // below the title so no word breaks mid-word.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(LocalizedStringKey(title)).font(.headline)
+                    Spacer(minLength: 8)
+                    HeatmapLegend()
+                }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(LocalizedStringKey(title)).font(.headline)
+                    HeatmapLegend()
+                }
             }
 
             HeatmapGrid(days: window)
@@ -769,7 +777,7 @@ struct CalendarHeatmapCard: View {
 
             Text(caption)
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(14)
@@ -835,13 +843,13 @@ struct HeatmapGrid: View {
 struct HeatmapLegend: View {
     var body: some View {
         HStack(spacing: 6) {
-            Text("Less").font(.caption2).foregroundStyle(.secondary)
+            Text("Less").font(.caption2).foregroundStyle(AppTheme.secondaryText).fixedSize()
             ForEach(0..<5) { i in
                 RoundedRectangle(cornerRadius: 3, style: .continuous)
                     .fill(legendSwatch(at: i))
                     .frame(width: 12, height: 12)
             }
-            Text("More").font(.caption2).foregroundStyle(.secondary)
+            Text("More").font(.caption2).foregroundStyle(AppTheme.secondaryText).fixedSize()
         }
     }
 
@@ -879,7 +887,7 @@ struct DailyRiskForecastCard: View {
     let locationMissing: Bool
     let onRetry: () -> Void
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -890,12 +898,12 @@ struct DailyRiskForecastCard: View {
                         .foregroundStyle(forecast.level.tint)
                     Text("risk today")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                     Spacer(minLength: 0)
                     Button(action: onRetry) {
                         Image(systemName: "arrow.clockwise")
                             .font(.footnote.bold())
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.secondaryText)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Refresh risk forecast")
@@ -903,7 +911,7 @@ struct DailyRiskForecastCard: View {
                 if forecast.factors.isEmpty {
                     Text("No elevated signals in the next 24 hours.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 } else {
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(forecast.factors) { factor in
@@ -914,7 +922,7 @@ struct DailyRiskForecastCard: View {
                                     .frame(width: 22)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(factor.title).font(.subheadline.weight(.semibold))
-                                    Text(factor.detail).font(.footnote).foregroundStyle(.secondary)
+                                    Text(factor.detail).font(.footnote).foregroundStyle(AppTheme.secondaryText)
                                 }
                             }
                         }
@@ -934,7 +942,7 @@ struct DailyRiskForecastCard: View {
             } else if isLoading {
                 HStack(spacing: 10) {
                     ProgressView()
-                    Text("Checking forecast…").font(.subheadline).foregroundStyle(.secondary)
+                    Text("Checking forecast…").font(.subheadline).foregroundStyle(AppTheme.secondaryText)
                 }
             } else if locationMissing {
                 VStack(alignment: .leading, spacing: 6) {
@@ -942,15 +950,15 @@ struct DailyRiskForecastCard: View {
                         .font(.subheadline.weight(.semibold))
                     Text("Log a headache once to capture your location, then come back here for forecast-based risk.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
             } else {
                 HStack(spacing: 10) {
                     Image(systemName: "wifi.exclamationmark")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                     Text("Forecast unavailable. Tap to retry.")
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                     Spacer(minLength: 0)
                     Button("Retry", action: onRetry)
                         .font(.footnote.bold())
@@ -973,9 +981,9 @@ private extension ProactiveAlertsEngine.RiskLevel {
 
     var tint: Color {
         switch self {
-        case .low: .green
-        case .moderate: .orange
-        case .high: .red
+        case .low: AppTheme.green
+        case .moderate: AppTheme.orange
+        case .high: AppTheme.red
         }
     }
 }
@@ -987,7 +995,7 @@ private struct LearningStateRow: View {
     let detail: String
     let progress: Double?
 
-    private var brandColor: Color { Color(red: 0.95, green: 0.25, blue: 0.36) }
+    private var brandColor: Color { AppTheme.brandText }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -996,7 +1004,7 @@ private struct LearningStateRow: View {
                 .foregroundStyle(brandColor)
             Text(detail)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
             if let progress {
                 ProgressView(value: min(progress, 1))
             }

@@ -47,9 +47,11 @@ final class ReleaseJourneysUITests: XCTestCase {
         continueAfterFailure = false
         let app = launch(Self.seededPro)
         showHistory(app)
-        let notes = app.buttons.matching(identifier: "historyEntryNotesButton")
-        _ = notes.firstMatch.waitForExistence(timeout: 15)
-        let before = notes.count
+        // History is a List, so rows below the fold are not in the hierarchy
+        // and counting them cannot show a new entry. The summary card at the
+        // top always is.
+        let before = totalLogs(app)
+        XCTAssertNotNil(before, "Total Logs never rendered")
         QA.checkpoint(app, "core-history-before")
 
         tapTab(app, symbol: "brain.head.profile", names: ["Logging", "Eintragen", "One Tap Headache Tracker"])
@@ -58,8 +60,13 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.checkpoint(app, "core-logged")
 
         showHistory(app)
-        XCTAssertTrue(notes.firstMatch.waitForExistence(timeout: 15), "History lost its entries")
-        XCTAssertGreaterThan(notes.count, before, "new entry missing from History")
+        let deadline = Date().addingTimeInterval(15)
+        while Date() < deadline, (totalLogs(app) ?? 0) <= (before ?? 0) {
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        XCTAssertGreaterThan(totalLogs(app) ?? 0, before ?? 0, "new entry missing from History")
+        let entry = revealHistoryEntry(app)
+        XCTAssertTrue(entry.isHittable, "History lost its entries")
         QA.checkpoint(app, "core-history-after")
 
         QA.relaunch(app)
@@ -72,7 +79,8 @@ final class ReleaseJourneysUITests: XCTestCase {
         continueAfterFailure = false
         let app = launch(["-uitesting", "-HeadacheScreenshotSeed"])
         tapTab(app, symbol: "slider.horizontal.3", names: ["Settings", "Einstellungen"])
-        let pro = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", "Proactive Alerts")).firstMatch
+        // By identifier: the row's label is localized ("Wetterhinweise" in German).
+        let pro = app.buttons["proAlertsRow"]
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "Pro row missing for a free user")
         QA.checkpoint(app, "settings")
 
@@ -240,12 +248,20 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["historyView"].waitForExistence(timeout: 15), "History never rendered")
     }
 
+    /// The Total Logs card's count, or nil while it is not on screen.
+    private func totalLogs(_ app: XCUIApplication) -> Int? {
+        let card = app.descendants(matching: .any)["summaryTotalLogs"]
+        guard card.waitForExistence(timeout: 15) else { return nil }
+        let digits = String((card.value as? String ?? "").filter(\.isNumber))
+        return Int(digits)
+    }
+
     /// Scrolls History until the first entry's note button can be tapped.
     private func revealHistoryEntry(_ app: XCUIApplication) -> XCUIElement {
         let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
         _ = editButton.waitForExistence(timeout: 20)
         let list = app.descendants(matching: .any)["historyView"]
-        for _ in 0..<4 where !editButton.isHittable && list.exists {
+        for _ in 0..<8 where !editButton.isHittable && list.exists {
             QA.swipe(list, .up)
         }
         return editButton

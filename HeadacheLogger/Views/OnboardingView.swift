@@ -16,7 +16,7 @@ struct OnboardingView: View {
     @State private var showPaywallFallback = false
 
     private static let totalSteps = 4
-    private static let brandColor = Color(red: 0.95, green: 0.25, blue: 0.36)
+    private static let brandColor = AppTheme.brandText
 
     var body: some View {
         NavigationStack {
@@ -103,7 +103,7 @@ struct OnboardingView: View {
                 }
                 .disabled(busy)
                 .buttonStyle(.borderedProminent)
-                .tint(Self.brandColor)
+                .tint(AppTheme.brand)
                 .controlSize(.large)
                 .frame(maxWidth: .infinity)
 
@@ -128,7 +128,7 @@ struct OnboardingView: View {
             body: {
                 Text("Log a headache with a single tap. The app quietly captures time, optional Apple Health context, and optional local weather so you can spot patterns.")
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Get Started",
@@ -141,12 +141,12 @@ struct OnboardingView: View {
         page(
             icon: Image(systemName: "heart.text.square.fill")
                 .font(.system(size: 56, weight: .bold))
-                .foregroundStyle(.pink),
+                .foregroundStyle(AppTheme.pink),
             title: "Apple Health",
             body: {
                 Text("Next, iOS will ask whether to allow read access to metrics like activity, sleep, heart rate, and workouts. Nothing is written to Health, and you can change this anytime in Settings.")
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Continue",
@@ -159,12 +159,12 @@ struct OnboardingView: View {
         page(
             icon: Image(systemName: "location.fill")
                 .font(.system(size: 56, weight: .bold))
-                .foregroundStyle(.blue),
+                .foregroundStyle(AppTheme.blue),
             title: "Location",
             body: {
                 Text("Next, iOS will ask whether to share your location. It's used only to fetch approximate weather and place labels when you log. We don't track you in the background.")
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             },
             primaryLabel: "Continue",
@@ -178,16 +178,16 @@ struct OnboardingView: View {
     private var legalFooter: some View {
         HStack(spacing: 12) {
             Link("Terms of Use", destination: PaywallLinks.standardEULA)
-            Text("·").foregroundStyle(.tertiary)
+            Text("·").foregroundStyle(AppTheme.secondaryText)
             Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
-            Text("·").foregroundStyle(.tertiary)
+            Text("·").foregroundStyle(AppTheme.secondaryText)
             Button(isRestoring ? "Restoring…" : "Restore") {
                 startRestore()
             }
             .disabled(isRestoring || isPurchasing)
         }
         .font(.caption2)
-        .foregroundStyle(.tertiary)
+        .foregroundStyle(AppTheme.secondaryText)
     }
 
     private func enableHealthTapped() async {
@@ -227,7 +227,7 @@ struct OnboardingView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
                         .font(.body)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.secondaryText)
                         .fixedSize(horizontal: false, vertical: true)
                     trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
                     trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
@@ -251,7 +251,7 @@ struct OnboardingView: View {
                 .frame(width: 24)
             Text(text)
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
@@ -271,7 +271,7 @@ struct OnboardingView: View {
                 finishOnboarding()
             }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(AppTheme.secondaryText)
             .disabled(isPurchasing)
 
             // No disclosure until the package (and its real price) loads — never a
@@ -279,7 +279,7 @@ struct OnboardingView: View {
             if let disclosure = store.onboardingCTADisclosureText {
                 Text(disclosure)
                     .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -287,7 +287,7 @@ struct OnboardingView: View {
             if let trialError {
                 Text(trialError)
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(AppTheme.red)
                     .multilineTextAlignment(.center)
                     .accessibilityIdentifier("onboardingTrialError")
             }
@@ -401,19 +401,19 @@ struct OnboardingFoldPanel: View {
             .padding(.vertical, 44)
             .background(
                 LinearGradient(
-                    colors: [Color(red: 0.95, green: 0.25, blue: 0.36), Color(red: 0.86, green: 0.16, blue: 0.43)],
+                    colors: [AppTheme.brand, AppTheme.brandEnd],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ),
                 in: RoundedRectangle(cornerRadius: 28, style: .continuous)
             )
-            .shadow(color: Color(red: 0.86, green: 0.16, blue: 0.43).opacity(0.30), radius: 18, x: 0, y: 10)
+            .shadow(color: AppTheme.brandEnd.opacity(0.30), radius: 18, x: 0, y: 10)
             VStack(spacing: 8) {
                 Text("One tap. Logged.")
                     .font(.title2.weight(.semibold))
                 Text("Weather, sleep and steps are saved with every entry.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
                     .multilineTextAlignment(.center)
             }
         }

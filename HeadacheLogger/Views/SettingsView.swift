@@ -45,6 +45,7 @@ struct SettingsView: View {
                             proRowLabel(unlocked: false)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("proAlertsRow")
                     }
                     if store.isProUnlocked && store.hasSubscription {
                         Button("Manage Subscription") {
@@ -246,13 +247,13 @@ struct SettingsView: View {
     private func proRowLabel(unlocked: Bool) -> some View {
         HStack(spacing: 12) {
             Image(systemName: unlocked ? "bell.badge.fill" : "lock.fill")
-                .foregroundStyle(unlocked ? Color(red: 0.95, green: 0.25, blue: 0.36) : .secondary)
+                .foregroundStyle(unlocked ? AppTheme.brandText : AppTheme.secondaryText)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Proactive Alerts")
                     .foregroundStyle(.primary)
                 Text(unlocked ? "Configure personal triggers, thresholds, and quiet hours" : "Unlock Pro to get personalized headache-weather warnings")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
             Spacer()
             if !unlocked {
@@ -260,8 +261,8 @@ struct SettingsView: View {
                     .font(.caption.bold())
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color(red: 0.95, green: 0.25, blue: 0.36).opacity(0.15), in: Capsule())
-                    .foregroundStyle(Color(red: 0.95, green: 0.25, blue: 0.36))
+                    .background(AppTheme.brandText.opacity(0.15), in: Capsule())
+                    .foregroundStyle(AppTheme.brandText)
             }
         }
     }
@@ -277,7 +278,7 @@ private struct PermissionRow: View {
             Text(LocalizedStringKey(label))
             Spacer()
             Text(LocalizedStringKey(value))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AppTheme.secondaryText)
                 .accessibilityIdentifier(valueIdentifier)
         }
     }
