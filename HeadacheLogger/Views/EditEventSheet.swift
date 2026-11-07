@@ -90,6 +90,7 @@ struct EditEventSheet: View {
 
         do {
             try modelContext.save()
+            Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
         } catch {
             #if DEBUG
             print("EditEventSheet: save failed | \(error)")

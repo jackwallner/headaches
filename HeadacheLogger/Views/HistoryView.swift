@@ -448,19 +448,27 @@ struct HistoryView: View {
     }
 
     private func commitDelete(_ targets: [HeadacheEvent]) {
+        if !Self.delete(targets, in: modelContext) {
+            showDeleteError = true
+        }
+    }
+
+    /// Deletes and saves, then reschedules pattern alerts so none is left for a
+    /// pattern the remaining entries no longer show. Returns false when the save failed.
+    static func delete(_ targets: [HeadacheEvent], in context: ModelContext) -> Bool {
         for eventToDelete in targets {
-            if let originalIndex = events.firstIndex(where: { $0.id == eventToDelete.id }) {
-                modelContext.delete(events[originalIndex])
-            }
+            context.delete(eventToDelete)
         }
         do {
-            try modelContext.save()
+            try context.save()
         } catch {
             // Put the rows back rather than showing a delete that will undo
             // itself on the next launch.
-            modelContext.rollback()
-            showDeleteError = true
+            context.rollback()
+            return false
         }
+        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context) }
+        return true
     }
 
     private func removeTemporaryExport() {
@@ -512,6 +520,7 @@ struct HistoryView: View {
         )
         pendingImportRows = []
         importResultMessage = summaryMessage(from: result)
+        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
     }
 
     private func summaryMessage(from result: ImportResult) -> String {

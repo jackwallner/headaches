@@ -255,6 +255,7 @@ final class CaptureCoordinator: ObservableObject {
                 lastCapturedEventID = nil
                 bannerMessage = "Last entry undone."
                 bannerIsError = false
+                Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: context) }
             } catch {
                 consoleError("CaptureCoordinator: undo save failed", error: error, trace: ["eventID": "\(eventID)"])
                 bannerMessage = "Undo failed. Try again."
