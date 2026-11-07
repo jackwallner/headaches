@@ -841,6 +841,7 @@ private struct UndoSnackbar: View {
             Button(action: onAddDetails) {
                 Label("Add Details", systemImage: "square.and.pencil")
                     .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppTheme.brandText)
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
             }
@@ -870,7 +871,8 @@ private struct UndoSnackbar: View {
         }
         .padding(.leading, 16)
         .padding(.trailing, 4)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .frame(minHeight: 48)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.primary.opacity(0.08), lineWidth: 1)

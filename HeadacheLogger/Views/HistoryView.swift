@@ -769,30 +769,15 @@ private struct DetailedEventRow: View {
 
     private var entrySummary: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
-                        .font(.headline)
-                    Text("\(event.timestamp.formatted(.dateTime.weekday(.wide))) • \(event.partOfDay.localizedName)")
-                        .font(.caption)
-                        .foregroundStyle(.primary)
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top) {
+                    entryDateLabels
+                    Spacer(minLength: 8)
+                    entryBadges
                 }
-                Spacer(minLength: 8)
-
-                Text(event.captureStatus.localizedName)
-                    .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(statusColor.opacity(0.12), in: Capsule())
-                    .foregroundStyle(statusColor)
-
-                if let severity = event.severity {
-                    Text(severity.localizedName)
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(severityColor(severity).opacity(0.12), in: Capsule())
-                        .foregroundStyle(severityColor(severity))
+                VStack(alignment: .leading, spacing: 8) {
+                    entryDateLabels
+                    entryBadges
                 }
             }
             .padding(.trailing, 44)
@@ -811,6 +796,42 @@ private struct DetailedEventRow: View {
                     .joined(separator: " • "))
                     .font(.subheadline)
                     .foregroundStyle(AppTheme.secondaryText)
+            }
+        }
+    }
+
+    private var entryDateLabels: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(event.timestamp.formatted(date: .abbreviated, time: .shortened))
+                .font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("\(event.timestamp.formatted(.dateTime.weekday(.wide))) • \(event.partOfDay.localizedName)")
+                .font(.caption)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var entryBadges: some View {
+        HStack(spacing: 8) {
+            Text(event.captureStatus.localizedName)
+                .font(.caption.weight(.semibold))
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(statusColor.opacity(0.12), in: Capsule())
+                .foregroundStyle(statusColor)
+
+            if let severity = event.severity {
+                Text(severity.localizedName)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                    .fixedSize()
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(severityColor(severity).opacity(0.12), in: Capsule())
+                    .foregroundStyle(severityColor(severity))
             }
         }
     }

@@ -52,7 +52,7 @@ enum AppTheme {
     static let brandText = dynamic(light: 0xBD2039, dark: 0xFF5C74)
 
     /// Secondary text. The system `.secondary` is about 3.4:1 on white.
-    static let secondaryText = dynamic(light: 0x5F5F64, dark: 0x9A9AA0)
+    static let secondaryText = dynamic(light: 0x4A4A4F, dark: 0xB0B0B6)
 
     static let slight = dynamic(light: 0x785600, dark: 0xFFD60A)
     /// Solid orange behind white text.

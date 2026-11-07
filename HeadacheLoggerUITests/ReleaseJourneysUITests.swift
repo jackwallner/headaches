@@ -57,6 +57,8 @@ final class ReleaseJourneysUITests: XCTestCase {
         tapTab(app, symbol: "brain.head.profile", names: ["Logging", "Eintragen", "One Tap Headache Tracker"])
         app.buttons["logHeadacheButton"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "log never saved")
+        // The Undo bar appears once capture ends; checkpoint after, so the card is settled.
+        XCTAssertTrue(app.descendants(matching: .any)["undoSnackbar"].waitForExistence(timeout: 30), "capture never finished")
         QA.checkpoint(app, "core-logged")
 
         showHistory(app)
@@ -65,8 +67,7 @@ final class ReleaseJourneysUITests: XCTestCase {
             Thread.sleep(forTimeInterval: 0.5)
         }
         XCTAssertGreaterThan(totalLogs(app) ?? 0, before ?? 0, "new entry missing from History")
-        let entry = revealHistoryEntry(app)
-        XCTAssertTrue(entry.isHittable, "History lost its entries")
+        XCTAssertTrue(revealHistoryEntry(app).isHittable, "History lost its entries")
         QA.checkpoint(app, "core-history-after")
 
         QA.relaunch(app)
@@ -257,15 +258,18 @@ final class ReleaseJourneysUITests: XCTestCase {
         return Int(digits)
     }
 
-    /// Scrolls History until the first entry's note button can be tapped.
+    /// Scrolls History until an entry's note button can be tapped.
     private func revealHistoryEntry(_ app: XCUIApplication) -> XCUIElement {
-        let editButton = app.buttons.matching(identifier: "historyEntryNotesButton").firstMatch
-        _ = editButton.waitForExistence(timeout: 20)
+        let buttons = app.buttons.matching(identifier: "historyEntryNotesButton")
+        _ = buttons.firstMatch.waitForExistence(timeout: 20)
         let list = app.descendants(matching: .any)["historyView"]
-        for _ in 0..<8 where !editButton.isHittable && list.exists {
+        func hittable() -> XCUIElement? {
+            buttons.allElementsBoundByIndex.first { $0.exists && $0.isHittable }
+        }
+        for _ in 0..<8 where hittable() == nil && list.exists {
             QA.swipe(list, .up)
         }
-        return editButton
+        return hittable() ?? buttons.firstMatch
     }
 
     private func launch(_ arguments: [String]) -> XCUIApplication {
