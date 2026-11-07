@@ -70,7 +70,14 @@ enum ProactiveAlertsEngine {
 
     static func runIfEligible() async -> Bool {
         await StoreService.shared.updateCustomerProductStatus(fetchPolicy: .fetchCurrent)
-        guard await StoreService.shared.isProUnlocked else { return false }
+        guard await StoreService.shared.isProUnlocked else {
+            // A fresh answer that the user is not Pro: the pattern alerts scheduled while
+            // they were must not fire. A failed check keeps them.
+            if !(await StoreService.shared.entitlementCheckFailed) {
+                await cancelAllPatternNotifications()
+            }
+            return false
+        }
 
         let prefs = ProAlertPreferenceValues.current()
         guard prefs.alertsEnabled else { return false }

@@ -287,6 +287,9 @@ private struct HeadacheLoggerRootContent: View {
             // Entitlements often resolve a beat after the view appears. Re-run the promo paths
             // once we actually know the user isn't Pro — and skip entirely if they are.
             guard resolved else { return }
+            // A fresh entitlement answer: drop pattern alerts a lapsed account still has
+            // pending, or restore them for a renewed one.
+            schedulePatterns()
             offerProIntroIfNeeded()
             evaluateExistingUserTrialOffer()
         }
