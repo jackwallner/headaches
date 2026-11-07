@@ -732,6 +732,16 @@ extension ProactiveAlertsEngine {
         return "\(fmt(start))–\(fmt(end))"
     }
 
+    /// The pattern settings' own path: asks for notification permission while it is still
+    /// undecided, so turning the toggle on can deliver, then schedules.
+    @MainActor
+    static func patternAlertSettingsChanged(in context: ModelContext) async {
+        if ProAlertPreferenceValues.current().patternAlertsEnabled, await StoreService.shared.isProUnlocked {
+            _ = await ensureNotificationAuthorization()
+        }
+        await schedulePatternAlertsIfEnabled(in: context)
+    }
+
     /// Runs pattern analysis from a ModelContext and schedules notifications if enabled.
     @MainActor
     static func schedulePatternAlertsIfEnabled(in context: ModelContext) async {

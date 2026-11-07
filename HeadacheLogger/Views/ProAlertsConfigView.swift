@@ -175,6 +175,10 @@ struct ProAlertsConfigView: View {
             ProactiveAlertsEngine.refreshPersonalAlertProfile(in: modelContext)
             personalProfile = ProactiveAlertsEngine.PersonalAlertProfile.current()
             await refreshPermissionStatuses()
+            if prefs.patternAlertsEnabled {
+                await ProactiveAlertsEngine.patternAlertSettingsChanged(in: modelContext)
+                await refreshPermissionStatuses()
+            }
         }
         .alert("Test Alert", isPresented: testAlertBinding) {
             Button("OK", role: .cancel) { testAlertMessage = nil }
@@ -184,7 +188,10 @@ struct ProAlertsConfigView: View {
     }
 
     @MainActor private func schedulePatterns() {
-        Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
+        Task {
+            await ProactiveAlertsEngine.patternAlertSettingsChanged(in: modelContext)
+            await refreshPermissionStatuses()
+        }
     }
 
     private var testAlertBinding: Binding<Bool> {
@@ -251,7 +258,7 @@ struct ProAlertsConfigView: View {
     }
 
     private func updateBanner() {
-        guard prefs.alertsEnabled else {
+        guard prefs.alertsEnabled || prefs.patternAlertsEnabled else {
             permissionsBanner = nil
             return
         }
@@ -264,7 +271,7 @@ struct ProAlertsConfigView: View {
         default:
             break
         }
-        if locationStatus == "Denied" || locationStatus == "Off" {
+        if prefs.alertsEnabled, locationStatus == "Denied" || locationStatus == "Off" {
             issues.append("Location is off. Without it the app can't fetch your local forecast.")
         }
         permissionsBanner = issues.isEmpty ? nil : issues.joined(separator: " ")
@@ -278,6 +285,7 @@ struct ProAlertsConfigView: View {
         }
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
         await refreshPermissionStatuses()
+        await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext)
     }
 
     private func sendTestAlert() async {
