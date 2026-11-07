@@ -255,6 +255,7 @@ private struct HeadacheLoggerRootContent: View {
                 runWidgetEnrichmentIfReady()
                 schedulePatterns()
                 maintainDailyRecordsIfNeeded()
+                cacheForecastLocationIfNeeded()
             } else if phase == .background {
                 foregroundEpoch += 1
                 scheduleBackgroundIfNeeded()
@@ -372,6 +373,11 @@ private struct HeadacheLoggerRootContent: View {
 
     @MainActor private func schedulePatterns() {
         Task { await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext) }
+    }
+
+    private func cacheForecastLocationIfNeeded() {
+        guard storeService.isProUnlocked, ProAlertPreferenceValues.current().alertsEnabled else { return }
+        Task { await EnvironmentService.shared.cacheForecastLocationIfMissing() }
     }
 
     /// Ensure yesterday's record exists so the denominator stays accurate. Backfills

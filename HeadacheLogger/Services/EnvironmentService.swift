@@ -64,6 +64,28 @@ final class EnvironmentService: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    /// Forecast alerts read the coordinate a capture caches. When location is allowed but no
+    /// capture has stored one yet (for example after a CSV import), fetch one now so the
+    /// "Forecast location: Ready" row is true.
+    func cacheForecastLocationIfMissing() async {
+        let authorized = manager.authorizationStatus == .authorizedWhenInUse
+            || manager.authorizationStatus == .authorizedAlways
+        await Self.cacheForecastLocationIfMissing(
+            isAuthorized: authorized && !HeadacheOnboardingStore.declinedLocation
+        ) {
+            await self.requestLocation()?.coordinate
+        }
+    }
+
+    static func cacheForecastLocationIfMissing(
+        isAuthorized: Bool,
+        locate: () async -> CLLocationCoordinate2D?
+    ) async {
+        guard isAuthorized, CachedLocation.current() == nil,
+              let coordinate = await locate() else { return }
+        CachedLocation.save(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+
     func captureSnapshot(at date: Date) async -> EnvironmentCaptureResult {
         if HeadacheOnboardingStore.declinedLocation {
             return EnvironmentCaptureResult(

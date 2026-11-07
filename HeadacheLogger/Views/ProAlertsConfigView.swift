@@ -183,6 +183,7 @@ struct ProAlertsConfigView: View {
                 await ProactiveAlertsEngine.patternAlertSettingsChanged(in: modelContext)
                 await refreshPermissionStatuses()
             }
+            await EnvironmentService.shared.cacheForecastLocationIfMissing()
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
@@ -298,6 +299,7 @@ struct ProAlertsConfigView: View {
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
         await refreshPermissionStatuses()
         await ProactiveAlertsEngine.schedulePatternAlertsIfEnabled(in: modelContext)
+        await EnvironmentService.shared.cacheForecastLocationIfMissing()
     }
 
     private func sendTestAlert() async {
