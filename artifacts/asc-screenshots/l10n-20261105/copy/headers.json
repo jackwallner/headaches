@@ -1,20 +1,128 @@
 {
-  "en-US": {
-    "01-keep-a-clear-record.png": "Log the moment it starts",
-    "02-review-a-recorded-headache.png": "Review your recorded history",
-    "03-read-your-record-clearly.png": "See the record at a glance",
-    "04-see-your-patterns.png": "See your headache patterns",
-    "05-save-context-with-one-tap.png": "Save context with one tap",
-    "06-review-each-entry.png": "Understand what gets captured",
-    "07-review-a-completed-entry.png": "Review a completed entry"
-  },
-  "es-ES": {
-    "01-keep-a-clear-record.png": "Registra el dolor de cabeza\nen cuanto empiece",
-    "02-review-a-recorded-headache.png": "Consulta tu historial\nde dolores de cabeza",
-    "03-read-your-record-clearly.png": "Todos tus registros\nde un vistazo",
-    "04-see-your-patterns.png": "Descubre patrones\nen tus registros",
-    "05-save-context-with-one-tap.png": "Guarda el contexto\ncon un toque",
-    "06-review-each-entry.png": "Conoce los datos\nque se guardan",
-    "07-review-a-completed-entry.png": "Revisa el registro\ncuando esté completo"
-  }
+ "en-US": {
+  "01-keep-a-clear-record.png": "Log the moment it starts",
+  "02-review-a-recorded-headache.png": "Review your recorded history",
+  "03-read-your-record-clearly.png": "See the record at a glance",
+  "04-see-your-patterns.png": "See your headache patterns",
+  "05-save-context-with-one-tap.png": "Save context with one tap",
+  "06-review-each-entry.png": "Understand what gets captured",
+  "07-review-a-completed-entry.png": "Review a completed entry"
+ },
+ "es-ES": {
+  "01-keep-a-clear-record.png": "Registra el dolor de cabeza\nen cuanto empiece",
+  "02-review-a-recorded-headache.png": "Consulta tu historial\nde dolores de cabeza",
+  "03-read-your-record-clearly.png": "Todos tus registros\nde un vistazo",
+  "04-see-your-patterns.png": "Descubre patrones\nen tus registros",
+  "05-save-context-with-one-tap.png": "Guarda el contexto\ncon un toque",
+  "06-review-each-entry.png": "Conoce los datos\nque se guardan",
+  "07-review-a-completed-entry.png": "Revisa el registro\ncuando esté completo"
+ },
+ "da": {
+  "01-keep-a-clear-record.png": "Log det, når det begynder",
+  "02-review-a-recorded-headache.png": "Gennemgå din historik",
+  "03-read-your-record-clearly.png": "Overblik over dine\nregistreringer",
+  "04-see-your-patterns.png": "Se mønstrene i dine\nhovedpiner",
+  "05-save-context-with-one-tap.png": "Gem kontekst med ét tryk",
+  "06-review-each-entry.png": "Forstå, hvad der\ngemmes",
+  "07-review-a-completed-entry.png": "Gennemgå en\nfuldført registrering"
+ },
+ "de-DE": {
+  "01-keep-a-clear-record.png": "Erfasse den Moment,\nin dem es beginnt",
+  "02-review-a-recorded-headache.png": "Dein Verlauf\nauf einen Blick",
+  "03-read-your-record-clearly.png": "Alle Einträge\nübersichtlich",
+  "04-see-your-patterns.png": "Erkenne Muster\nin deinen Kopfschmerzen",
+  "05-save-context-with-one-tap.png": "Kontext mit\neinem Tipp sichern",
+  "06-review-each-entry.png": "Sieh, was alles\ngespeichert wird",
+  "07-review-a-completed-entry.png": "Einen fertigen\nEintrag prüfen"
+ },
+ "fi": {
+  "01-keep-a-clear-record.png": "Kirjaa hetki, kun\nkipu alkaa",
+  "02-review-a-recorded-headache.png": "Selaa kirjattua historiaa",
+  "03-read-your-record-clearly.png": "Näe merkinnät\nyhdellä silmäyksellä",
+  "04-see-your-patterns.png": "Näe päänsärkysi\nkaavat",
+  "05-save-context-with-one-tap.png": "Tallenna olosuhteet\nyhdellä napautuksella",
+  "06-review-each-entry.png": "Katso, mitä\ntallentuu",
+  "07-review-a-completed-entry.png": "Tarkista valmis merkintä"
+ },
+ "fr-FR": {
+  "01-keep-a-clear-record.png": "Notez le moment\noù ça commence",
+  "02-review-a-recorded-headache.png": "Consultez votre\nhistorique",
+  "03-read-your-record-clearly.png": "Vos entrées\nd'un coup d'œil",
+  "04-see-your-patterns.png": "Repérez les tendances\nde vos migraines",
+  "05-save-context-with-one-tap.png": "Enregistrez le contexte\nd'une seule touche",
+  "06-review-each-entry.png": "Découvrez ce qui\nest enregistré",
+  "07-review-a-completed-entry.png": "Relisez une entrée\nterminée"
+ },
+ "hu": {
+  "01-keep-a-clear-record.png": "Rögzítsd, amikor\nelkezdődik",
+  "02-review-a-recorded-headache.png": "Nézd át az\nelőzményeidet",
+  "03-read-your-record-clearly.png": "A bejegyzések\negy pillantásra",
+  "04-see-your-patterns.png": "Lásd a fejfájásaid\nmintázatait",
+  "05-save-context-with-one-tap.png": "Mentsd el a körülményeket\negyetlen koppintással",
+  "06-review-each-entry.png": "Értsd meg, mi\nkerül mentésre",
+  "07-review-a-completed-entry.png": "Nézz át egy\nkész bejegyzést"
+ },
+ "it": {
+  "01-keep-a-clear-record.png": "Registra il momento\nin cui inizia",
+  "02-review-a-recorded-headache.png": "Rivedi il tuo storico",
+  "03-read-your-record-clearly.png": "Le tue registrazioni\nin un colpo d'occhio",
+  "04-see-your-patterns.png": "Scopri gli schemi\ndei tuoi mal di testa",
+  "05-save-context-with-one-tap.png": "Salva il contesto\ncon un tocco",
+  "06-review-each-entry.png": "Scopri cosa\nviene salvato",
+  "07-review-a-completed-entry.png": "Rivedi una voce\ncompletata"
+ },
+ "ja": {
+  "01-keep-a-clear-record.png": "始まった瞬間を\n記録",
+  "02-review-a-recorded-headache.png": "記録した履歴を\n見返す",
+  "03-read-your-record-clearly.png": "記録を\nひと目で確認",
+  "04-see-your-patterns.png": "頭痛のパターンを\n見つける",
+  "05-save-context-with-one-tap.png": "ワンタップで\n状況も保存",
+  "06-review-each-entry.png": "保存される内容を\n確認",
+  "07-review-a-completed-entry.png": "完成した記録を\n見直す"
+ },
+ "no": {
+  "01-keep-a-clear-record.png": "Logg øyeblikket\nnår det starter",
+  "02-review-a-recorded-headache.png": "Se gjennom historikken din",
+  "03-read-your-record-clearly.png": "Oversikt over\nloggføringene dine",
+  "04-see-your-patterns.png": "Se mønstrene i\nhodepinene dine",
+  "05-save-context-with-one-tap.png": "Lagre kontekst\nmed ett trykk",
+  "06-review-each-entry.png": "Forstå hva som\nlagres",
+  "07-review-a-completed-entry.png": "Se gjennom en\nferdig loggføring"
+ },
+ "pl": {
+  "01-keep-a-clear-record.png": "Zapisz moment,\ngdy się zaczyna",
+  "02-review-a-recorded-headache.png": "Przejrzyj swoją historię",
+  "03-read-your-record-clearly.png": "Wpisy widoczne\nw jednej chwili",
+  "04-see-your-patterns.png": "Zobacz wzorce\nswoich bólów głowy",
+  "05-save-context-with-one-tap.png": "Zapisz kontekst\njednym dotknięciem",
+  "06-review-each-entry.png": "Zobacz, co jest\nzapisywane",
+  "07-review-a-completed-entry.png": "Przejrzyj\nukończony wpis"
+ },
+ "pt-PT": {
+  "01-keep-a-clear-record.png": "Registe o momento\nem que começa",
+  "02-review-a-recorded-headache.png": "Consulte o seu histórico",
+  "03-read-your-record-clearly.png": "Os seus registos\nnum relance",
+  "04-see-your-patterns.png": "Veja os padrões\ndas suas dores de cabeça",
+  "05-save-context-with-one-tap.png": "Guarde o contexto\ncom um toque",
+  "06-review-each-entry.png": "Perceba o que\nfica guardado",
+  "07-review-a-completed-entry.png": "Reveja um registo\nconcluído"
+ },
+ "ru": {
+  "01-keep-a-clear-record.png": "Фиксируйте момент,\nкогда боль начинается",
+  "02-review-a-recorded-headache.png": "Просматривайте\nисторию записей",
+  "03-read-your-record-clearly.png": "Все записи\nодним взглядом",
+  "04-see-your-patterns.png": "Смотрите закономерности\nваших головных болей",
+  "05-save-context-with-one-tap.png": "Сохраняйте контекст\nодним касанием",
+  "06-review-each-entry.png": "Узнайте, что\nсохраняется",
+  "07-review-a-completed-entry.png": "Проверьте\nзавершённую запись"
+ },
+ "uk": {
+  "01-keep-a-clear-record.png": "Фіксуйте момент,\nколи біль починається",
+  "02-review-a-recorded-headache.png": "Переглядайте\nісторію записів",
+  "03-read-your-record-clearly.png": "Усі записи\nодним поглядом",
+  "04-see-your-patterns.png": "Дивіться закономірності\nваших головних болів",
+  "05-save-context-with-one-tap.png": "Зберігайте контекст\nодним дотиком",
+  "06-review-each-entry.png": "Дізнайтеся, що\nзберігається",
+  "07-review-a-completed-entry.png": "Перевірте\nзавершений запис"
+ }
 }

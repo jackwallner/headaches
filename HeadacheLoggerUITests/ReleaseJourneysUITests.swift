@@ -232,6 +232,9 @@ final class ReleaseJourneysUITests: XCTestCase {
         attachment.name = "\(locale.storeLocale)__\(frame)"
         attachment.lifetime = .keepAlways
         add(attachment)
+        // Settle the simulator between launches; slow runners lost the next launch otherwise.
+        app.terminate()
+        Thread.sleep(forTimeInterval: 2)
     }
 
     private func attachHistoryCaptureDiagnostics(_ app: XCUIApplication, locale: StoreScreenshotLocale) {

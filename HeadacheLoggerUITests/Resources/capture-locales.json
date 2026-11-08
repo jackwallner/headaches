@@ -5,8 +5,63 @@
     "apple_locale": "en_US"
   },
   {
-    "store_locale": "es-ES",
-    "language": "es",
-    "apple_locale": "es_ES"
+    "store_locale": "da",
+    "language": "da",
+    "apple_locale": "da_DK"
+  },
+  {
+    "store_locale": "de-DE",
+    "language": "de",
+    "apple_locale": "de_DE"
+  },
+  {
+    "store_locale": "fi",
+    "language": "fi",
+    "apple_locale": "fi_FI"
+  },
+  {
+    "store_locale": "fr-FR",
+    "language": "fr",
+    "apple_locale": "fr_FR"
+  },
+  {
+    "store_locale": "hu",
+    "language": "hu",
+    "apple_locale": "hu_HU"
+  },
+  {
+    "store_locale": "it",
+    "language": "it",
+    "apple_locale": "it_IT"
+  },
+  {
+    "store_locale": "ja",
+    "language": "ja",
+    "apple_locale": "ja_JP"
+  },
+  {
+    "store_locale": "no",
+    "language": "nb",
+    "apple_locale": "nb_NO"
+  },
+  {
+    "store_locale": "pl",
+    "language": "pl",
+    "apple_locale": "pl_PL"
+  },
+  {
+    "store_locale": "pt-PT",
+    "language": "pt-PT",
+    "apple_locale": "pt_PT"
+  },
+  {
+    "store_locale": "ru",
+    "language": "ru",
+    "apple_locale": "ru_RU"
+  },
+  {
+    "store_locale": "uk",
+    "language": "uk",
+    "apple_locale": "uk_UA"
   }
 ]

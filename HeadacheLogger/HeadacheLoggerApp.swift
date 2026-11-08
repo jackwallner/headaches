@@ -589,9 +589,10 @@ private enum HeadacheScreenshotSeed {
 
         let calendar = Calendar.current
         let now = Date()
-        let isSpanish = Locale.current.language.languageCode?.identifier == "es"
+        let language = Locale.current.language.languageCode?.identifier ?? "en"
+        let isSpanish = language == "es"
         HeadacheAppGroup.userDefaults.set(
-            isSpanish,
+            language != "en",
             forKey: HeadacheStorageKey.useCelsiusTemperature.rawValue
         )
         let spanishWeather = [
@@ -615,6 +616,27 @@ private enum HeadacheScreenshotSeed {
             "Morning note": "Nota de la mañana",
             "First log": "Primer registro"
         ]
+        // Store-screenshot notes for the three entries that show on screen.
+        let screenshotNotes: [String: [String]] = [
+            "da": ["Startede efter en formiddag foran skærmen. Tilføjede kontekst til min private journal.", "Efter en lang arbejdsdag", "Registreret fra skrivebordet"],
+            "de": ["Begann nach einem Vormittag am Bildschirm. Kontext zu meinem privaten Protokoll ergänzt.", "Nach einem langen Arbeitstag", "Am Schreibtisch erfasst"],
+            "fi": ["Alkoi näyttöpainotteisen aamun jälkeen. Lisäsin olosuhteet yksityiseen kirjaukseeni.", "Pitkän työpäivän jälkeen", "Kirjattu työpöydän ääressä"],
+            "fr": ["Début après une matinée devant les écrans. Contexte ajouté à mon suivi privé.", "Après une longue journée de travail", "Noté depuis le bureau"],
+            "hu": ["Egy képernyő előtt töltött délelőtt után kezdődött. Hozzáadtam a körülményeket a privát naplómhoz.", "Egy hosszú munkanap után", "Az asztalnál rögzítve"],
+            "it": ["È iniziato dopo una mattinata davanti allo schermo. Ho aggiunto il contesto al mio registro privato.", "Dopo una lunga giornata di lavoro", "Registrato dalla scrivania"],
+            "ja": ["画面を見続けた午前中のあとに始まった。状況を自分の記録に追加した。", "長い仕事の一日のあと", "デスクで記録"],
+            "nb": ["Startet etter en formiddag foran skjermen. La til kontekst i min private logg.", "Etter en lang arbeidsdag", "Logget fra skrivebordet"],
+            "pl": ["Zaczęło się po przedpołudniu spędzonym przed ekranem. Dodałem kontekst do prywatnego rejestru.", "Po długim dniu pracy", "Zapisano przy biurku"],
+            "pt": ["Começou depois de uma manhã a olhar para ecrãs. Adicionei contexto ao meu registo privado.", "Depois de um longo dia de trabalho", "Registado na secretária"],
+            "ru": ["Началось после утра за экраном. Добавил контекст в личную запись.", "После долгого рабочего дня", "Записано за рабочим столом"],
+            "uk": ["Почалося після ранку за екраном. Додав контекст до особистого запису.", "Після довгого робочого дня", "Записано за робочим столом"]
+        ]
+        var localizedNotes = isSpanish ? spanishNotes : [:]
+        if let notes = screenshotNotes[language], notes.count == 3 {
+            localizedNotes["Started after a screen-heavy morning. Added context for my private record."] = notes[0]
+            localizedNotes["After a long workday"] = notes[1]
+            localizedNotes["Logged from the desk"] = notes[2]
+        }
         // No ties for the busiest part of day or weekday: History and Patterns
         // each break a tie their own way, and the shots would disagree. The
         // first log is past the heatmap's 90-day window and none sits near its
@@ -666,7 +688,7 @@ private enum HeadacheScreenshotSeed {
             event.usAQI = Double(22 + (index * 7) % 24)
             event.sleepHoursLastNight = entry.sleep
             event.severity = entry.severity
-            event.userNotes = isSpanish ? spanishNotes[entry.note] ?? entry.note : entry.note
+            event.userNotes = localizedNotes[entry.note] ?? entry.note
             context.insert(event)
         }
 
