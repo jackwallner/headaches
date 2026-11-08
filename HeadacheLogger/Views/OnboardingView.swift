@@ -95,17 +95,20 @@ struct OnboardingView: View {
                 Button {
                     action()
                 } label: {
-                    if busy {
-                        ProgressView().tint(.white)
-                    } else {
-                        Text(primaryLabel)
+                    Group {
+                        if busy {
+                            ProgressView().tint(.white)
+                        } else {
+                            Text(primaryLabel)
+                        }
                     }
+                    // Inside the label, so the button is the same width on every step.
+                    .frame(maxWidth: .infinity)
                 }
                 .disabled(busy)
                 .buttonStyle(.borderedProminent)
                 .tint(AppTheme.brand)
                 .controlSize(.large)
-                .frame(maxWidth: .infinity)
 
                 // Fixed-height legal-footer slot on EVERY step. Reserving the space
                 // even when empty keeps the primary button's frame identical across

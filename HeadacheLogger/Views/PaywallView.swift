@@ -12,6 +12,7 @@ enum PaywallLinks {
 struct PaywallView: View {
     @EnvironmentObject private var store: StoreService
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var displayCloseButton: Bool = true
 
@@ -103,17 +104,25 @@ struct PaywallView: View {
     /// default text size and scrolls when larger text or a longer language needs more room.
     private var paywallContent: some View {
         GeometryReader { proxy in
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 12) {
                     header
-                    compactFeatureList
-                    planCards
-                    Spacer(minLength: 0)
-                    purchaseSection
+                    if typeSize.isAccessibilitySize {
+                        // The prices come first; the benefits wrap to many lines at this size.
+                        planCards
+                        purchaseSection
+                        compactFeatureList
+                    } else {
+                        compactFeatureList
+                        planCards
+                        Spacer(minLength: 0)
+                        purchaseSection
+                    }
                 }
                 .padding(.horizontal, 22)
                 .padding(.top, displayCloseButton ? 44 : 20)
                 .padding(.bottom, 16)
+                .frame(width: proxy.size.width)
                 .frame(minHeight: proxy.size.height)
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -238,28 +247,33 @@ struct PaywallView: View {
 
     /// Restore + legal links — required on every paywall state (Apple 3.1.2).
     private var legalFooter: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 0) {
             Button(action: startRestore) {
                 Text(isRestoring ? "Restoring…" : "Restore Purchases")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(AppTheme.secondaryText)
-                    .frame(minHeight: 44)
+                    .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .disabled(isRestoring || isPurchasing)
 
             HStack(spacing: 4) {
-                Link("Terms", destination: PaywallLinks.standardEULA)
-                    .frame(minHeight: 44)
-                    .contentShape(Rectangle())
+                Link(destination: PaywallLinks.standardEULA) {
+                    Text("Terms")
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
                 Text("·")
-                Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
-                    .frame(minHeight: 44)
-                    .contentShape(Rectangle())
+                Link(destination: PaywallLinks.privacyPolicy) {
+                    Text("Privacy Policy")
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
             }
-            .font(.caption2)
+            .font(.caption)
             .foregroundStyle(AppTheme.secondaryText)
+            .tint(AppTheme.secondaryText)
         }
     }
 
@@ -408,6 +422,38 @@ private struct PaywallPlanCard: View {
         }
     }
 
+    /// Trial and savings on one line, or stacked when a narrow phone has no room for both.
+    private var detailLine: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 6) { detailItems(separated: true) }
+            VStack(alignment: .leading, spacing: 2) { detailItems(separated: false) }
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    @ViewBuilder
+    private func detailItems(separated: Bool) -> some View {
+        if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
+            Text(trial.capitalized)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(accent)
+        } else if package.headacheProPackageKind == .lifetime {
+            Text("One-time purchase")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(AppTheme.secondaryText)
+        }
+        if isRecommended, let savingsPercent {
+            if separated, showsTrialBadge || package.headacheProPackageKind == .lifetime {
+                Text("·")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(AppTheme.secondaryText)
+            }
+            Text("Save \(savingsPercent)%")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(AppTheme.secondaryText)
+        }
+    }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 14) {
@@ -427,28 +473,7 @@ private struct PaywallPlanCard: View {
                         HStack(spacing: 6) { planName; planBadge }
                         VStack(alignment: .leading, spacing: 4) { planName; planBadge }
                     }
-                    HStack(spacing: 6) {
-                        if showsTrialBadge, let trial = package.headacheProIntroOfferLabel {
-                            Text(trial.capitalized)
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(accent)
-                        } else if package.headacheProPackageKind == .lifetime {
-                            Text("One-time purchase")
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(AppTheme.secondaryText)
-                        }
-                        if isRecommended, let savingsPercent {
-                            if showsTrialBadge || package.headacheProPackageKind == .lifetime {
-                                Text("·")
-                                    .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(AppTheme.secondaryText)
-                            }
-                            Text("Save \(savingsPercent)%")
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(AppTheme.secondaryText)
-                        }
-                    }
-                    .fixedSize(horizontal: false, vertical: true)
+                    detailLine
                 }
 
                 Spacer(minLength: 8)

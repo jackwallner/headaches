@@ -97,7 +97,9 @@ struct HomeView: View {
                         .id("\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(latestEvent.captureCompletedAt?.timeIntervalSince1970 ?? 0)")
                         .transaction { $0.animation = nil }
 
-                    if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
+                    // Only a source that failed can be fixed by a retry. A declined
+                    // permission or a day with no Health data is not a problem to flag.
+                    if latestEvent.healthStatus == .failed || latestEvent.environmentStatus == .failed {
                         CaptureRecoveryCard(
                             event: latestEvent,
                             isRetrying: captureCoordinator.isCapturing,
@@ -344,6 +346,7 @@ private struct LatestEventCard: View {
     let event: HeadacheEvent
     var useCelsius: Bool
     @State private var showDetails = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -362,22 +365,11 @@ private struct LatestEventCard: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("latestEventSummary")
 
-            HStack(spacing: 12) {
-                MetricChip(
-                    title: "Steps",
-                    value: event.stepsToday?.formatted(.number) ?? "No data",
-                    tint: AppTheme.teal
-                )
-                MetricChip(
-                    title: "Sleep",
-                    value: event.sleepHoursLastNight.map { $0.formatted(.number.precision(.fractionLength(1))) + " h" } ?? "No data",
-                    tint: AppTheme.indigo
-                )
-                MetricChip(
-                    title: "AQI",
-                    value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
-                    tint: AppTheme.cyan
-                )
+            // Three across, or stacked at accessibility sizes where a value would truncate.
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 8) { metricChips }
+            } else {
+                HStack(spacing: 12) { metricChips }
             }
 
             if hasMissingContext {
@@ -401,6 +393,25 @@ private struct LatestEventCard: View {
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Latest Event")
         .accessibilityIdentifier("latestEventCard")
+    }
+
+    @ViewBuilder
+    private var metricChips: some View {
+        MetricChip(
+            title: "Steps",
+            value: event.stepsToday?.formatted(.number) ?? "No data",
+            tint: AppTheme.teal
+        )
+        MetricChip(
+            title: "Sleep",
+            value: event.sleepHoursLastNight.map { $0.formatted(.number.precision(.fractionLength(1))) + " h" } ?? "No data",
+            tint: AppTheme.indigo
+        )
+        MetricChip(
+            title: "AQI",
+            value: event.usAQI.map { String(format: "%.0f", $0) } ?? "No data",
+            tint: AppTheme.cyan
+        )
     }
 
     private var plainSummary: String {
@@ -476,6 +487,7 @@ private struct RecentEventRow: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("recentEventRow")
     }
 }

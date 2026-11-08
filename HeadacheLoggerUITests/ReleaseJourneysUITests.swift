@@ -2,8 +2,9 @@ import XCTest
 
 /// The release gate's journeys (`qa-gate run`): the first onboarding pages, a
 /// one-tap log on seeded data, History and Patterns, the Pro paywall shown and
-/// closed, and a return visit with an interruption. Each step ends in
-/// `QA.checkpoint`, which runs the fleet oracles on the screen. Assert
+/// closed, and a return visit with an interruption, plus the core loop (a log
+/// is counted and survives a relaunch). Each step ends in `QA.checkpoint`,
+/// which runs the fleet oracles on the screen. The other journeys assert
 /// reachability only.
 ///
 /// Onboarding stops before the Apple Health page's button: it raises the
@@ -33,6 +34,8 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.checkpoint(app, "home")
 
         app.buttons["logHeadacheButton"].tap()
+        answerLocationPrompt()
+        waitForCapture(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20))
         QA.checkpoint(app, "logged")
 
@@ -56,6 +59,7 @@ final class ReleaseJourneysUITests: XCTestCase {
 
         tapTab(app, symbol: "brain.head.profile", names: ["Logging", "Eintragen", "One Tap Headache Tracker"])
         app.buttons["logHeadacheButton"].tap()
+        answerLocationPrompt(timeout: 5)
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "log never saved")
         // The Undo bar appears once capture ends; checkpoint after, so the card is settled.
         XCTAssertTrue(app.descendants(matching: .any)["undoSnackbar"].waitForExistence(timeout: 30), "capture never finished")
@@ -66,14 +70,21 @@ final class ReleaseJourneysUITests: XCTestCase {
         while Date() < deadline, (totalLogs(app) ?? 0) <= (before ?? 0) {
             Thread.sleep(forTimeInterval: 0.5)
         }
-        XCTAssertGreaterThan(totalLogs(app) ?? 0, before ?? 0, "new entry missing from History")
+        let after = totalLogs(app)
+        XCTAssertGreaterThan(after ?? 0, before ?? 0, "new entry missing from History")
         XCTAssertTrue(revealHistoryEntry(app).isHittable, "History lost its entries")
         QA.checkpoint(app, "core-history-after")
 
+        // The seed rewrites the log on every launch, so the relaunch drops it
+        // and reads what the first run saved.
+        app.launchArguments.removeAll { $0 == "-HeadacheScreenshotSeed" }
         QA.relaunch(app)
         XCTAssertTrue(app.descendants(matching: .any)["homeView"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "entry gone after relaunch")
         QA.checkpoint(app, "core-after-relaunch")
+        showHistory(app)
+        XCTAssertEqual(totalLogs(app), after, "the log was gone after a relaunch")
+        QA.checkpoint(app, "core-history-after-relaunch")
     }
 
     func test03ProPaywallShownAndClosed() {
@@ -91,17 +102,21 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(title.waitForExistence(timeout: 20), "paywall never rendered")
         QA.checkpoint(app, "pro-paywall", paywall: true)
 
-        // The paywall scrolls at large text sizes; scroll back up if Close is off screen.
+        // At large text sizes the Close button can sit above the scrolled
+        // content, and on the unfolded Duo it sits under the sheet's top edge;
+        // a swipe down scrolls back to it or dismisses the sheet itself.
         let close = app.buttons["paywallCloseButton"]
         _ = close.waitForExistence(timeout: 5)
         for _ in 0..<3 where title.exists {
             if close.exists && close.isHittable {
                 close.tap()
-                break
+            } else {
+                let scroll = app.scrollViews.firstMatch
+                QA.swipe(scroll.exists ? scroll : app, .down)
             }
-            let scroll = app.scrollViews.firstMatch
-            if scroll.exists { QA.swipe(scroll, .down) }
+            if title.waitForNonExistence(timeout: 3) { break }
         }
+        XCTAssertFalse(title.exists, "paywall never closed")
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "paywall never closed")
         QA.checkpoint(app, "settings-after-paywall", paywall: false)
     }
@@ -277,6 +292,21 @@ final class ReleaseJourneysUITests: XCTestCase {
         QA.launch(app, arguments: arguments)
         XCTAssertTrue(app.descendants(matching: .any)["homeView"].waitForExistence(timeout: 25), "Home never rendered")
         return app
+    }
+
+    /// The tap saves at once and fills in weather and Health after; the Undo
+    /// bar appears once that ends, so the checkpoint sees the settled screen.
+    private func waitForCapture(in app: XCUIApplication) {
+        XCTAssertTrue(app.descendants(matching: .any)["undoSnackbar"].waitForExistence(timeout: 40), "the tap never finished saving")
+    }
+
+    /// The first log raises the system location prompt; later ones do not.
+    private func answerLocationPrompt(timeout: TimeInterval = 10) {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = springboard.buttons.matching(
+            NSPredicate(format: "label IN %@", ["Allow While Using App", "Beim Verwenden der App erlauben", "Erlauben"])
+        ).firstMatch
+        if allow.waitForExistence(timeout: timeout) { allow.tap() }
     }
 }
 
