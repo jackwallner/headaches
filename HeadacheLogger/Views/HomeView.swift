@@ -95,6 +95,7 @@ struct HomeView: View {
                     LatestEventCard(event: latestEvent, useCelsius: useCelsius)
                         .keepsWholeAboveTabBar()
                         .id("\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(latestEvent.captureCompletedAt?.timeIntervalSince1970 ?? 0)")
+                        .transaction { $0.animation = nil }
 
                     if latestEvent.captureStatus == .partial || latestEvent.captureStatus == .failed {
                         CaptureRecoveryCard(
@@ -106,6 +107,7 @@ struct HomeView: View {
                         )
                         .keepsWholeAboveTabBar()
                         .id("recovery-\(latestEvent.id)-\(latestEvent.captureStatus.rawValue)-\(captureCoordinator.isCapturing)")
+                        .transaction { $0.animation = nil }
                     }
                 }
 
