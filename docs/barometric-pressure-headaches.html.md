@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/barometric-pressure-headaches.ht
 
 ## Barometric Pressure Headaches: Studies and Tracking
 
-By Jack Wallner · Last updated October 28, 2026
+By Jack Wallner · Last updated November 12, 2026
 
 A barometric pressure headache is a headache or migraine attack that seems to start around a change in air pressure, usually a drop as a storm or low-pressure system arrives. Diary studies link pressure falls of about 5 to 10 hPa with migraine in some people, but not everyone reacts. To check your own link, record the pressure and its direction each time a headache starts.
 
@@ -43,6 +43,33 @@ Record the pressure, and whether it is rising or falling, at the moment each hea
 - **The basics of the attack:** severity, symptoms and medication, as in a [standard headache diary](https://jackwallner.com/ios/headaches/how-to-keep-a-headache-diary.html).
 
 Doing this by hand means opening a weather app during a headache every time. Most people skip it, and the gaps make any pattern hard to trust.
+
+## What do the study numbers look like in inches of mercury?
+
+A 5 hPa drop is about 0.15 inHg, and 10 hPa is about 0.30 inHg. Most US weather apps show pressure in inches of mercury, so here are the figures from the studies above in both units (1 hPa is 0.0295 inHg).
+
+| Figure from the research | hPa (millibars) | inHg |
+| --- | --- | --- |
+| Standard sea-level pressure | 1013 | 29.92 |
+| Day-to-day fall linked with more migraine (Kimoto 2011) | more than 5 | more than 0.15 |
+| Range below standard where attacks clustered (Okuma 2015) | 6 to 10 | 0.18 to 0.30 |
+| Pressure band where attacks clustered (Okuma 2015) | 1003 to 1007 | 29.62 to 29.74 |
+
+Pressure also depends on altitude, so compare your readings with your own earlier readings in the same place, not with these numbers alone.
+
+## How do you read a pressure pattern in your log?
+
+Compare the share of headaches that started on falling-pressure days with the share of all days that had falling pressure. Falling pressure is common, so some headaches will land on those days by chance. A worked example from 60 days of logging:
+
+| Step | Example |
+| --- | --- |
+| Days with falling pressure | 21 of 60 days (35%) |
+| Headaches logged | 10 |
+| Expected on falling days by chance | 35% of 10 = 3.5 |
+| Actually started on falling days | 7 |
+| Reading | About twice what chance predicts: a lead worth checking over the next few months |
+
+If 4 of the 10 had started on falling days, that is close to the 3.5 you would expect anyway, and pressure would not stand out. Sleep, meals and your cycle on those same days can also explain a cluster, so keep logging them.
 
 ## How many headaches do you need to see a pressure pattern?
 

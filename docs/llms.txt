@@ -9,7 +9,7 @@
 ## Guides
 
 - [Barometric Pressure Headaches: Studies and Tracking](https://jackwallner.com/ios/headaches/barometric-pressure-headaches.html.md): Barometric pressure headaches explained: what studies of pressure drops and migraine found, why not everyone reacts, and how to log pressure with each headache.
-- [Best Headache Tracker App for iPhone (2026 Comparison)](https://jackwallner.com/ios/headaches/best-headache-tracker-app.html.md): Five iPhone headache and migraine tracker apps compared: Migraine Buddy, MiG, Pressure Pal, Relief and Migraine Headache Tracker Log. Facts as of October 2026.
+- [Best Headache Tracker App for iPhone (2026 Comparison)](https://jackwallner.com/ios/headaches/best-headache-tracker-app.html.md): Five iPhone headache and migraine tracker apps compared: Migraine Buddy, MiG, Pressure Pal, Relief and Migraine Headache Tracker Log. Facts as of November 2026.
 - [How to Keep a Headache Diary: What to Log and What to Skip](https://jackwallner.com/ios/headaches/how-to-keep-a-headache-diary.html.md): How to keep a headache diary: the five fields to log every time, optional context worth adding, a sample entry, and when to bring it to a doctor.
 - [Migraine Trigger Tracking: How to Find Your Triggers With a Diary](https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html.md): How to track migraine triggers: the most common triggers, what to log before each attack, how long it takes, and how to tell an early symptom from a trigger.
 
