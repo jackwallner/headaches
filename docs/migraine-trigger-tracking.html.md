@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html
 
 ## Migraine Trigger Tracking: How to Find Your Triggers With a Diary
 
-By Jack Wallner · Last updated October 28, 2026
+By Jack Wallner · Last updated November 12, 2026
 
 Migraine trigger tracking means logging each attack with what happened in the hours before it, such as sleep, meals, stress, your cycle and the weather, then looking for factors that come up more often before attacks than on other days. It usually takes a few months, and triggers are personal: a 90-day diary study found most people's trigger profiles were unique.
 
@@ -66,6 +66,15 @@ Because real life never repeats cleanly. To be sure a factor matters, you need d
 
 - **Compare rates, not counts.** If you drink coffee every day, coffee will appear before every attack without meaning anything. Ask whether a factor is more common before attacks than on other days.
 - **Keep logging after a change.** The Migraine Trust suggests continuing the diary after you avoid a suspected trigger, so you can see whether attacks actually change.
+
+A worked example: over 60 days you had red wine on 10 evenings and 12 headache days. Split the days by the factor and compare how often a headache followed:
+
+| Evening before | Days | Headache next day | Rate |
+| --- | --- | --- | --- |
+| Red wine | 10 | 5 | 50% |
+| No red wine | 50 | 7 | 14% |
+
+A headache followed wine evenings at more than three times the rate of other evenings, which makes wine worth testing: skip it for a few weeks and keep logging. Now run the same split for coffee, which you drink every morning: 60 of 60 days, 12 headaches, a 20% rate with nothing to compare it to. Coffee shows up before every attack and still tells you nothing. With counts this small, a single good or bad week can move the rates a lot, so treat any result as a lead, not an answer.
 
 ## What should you bring to your doctor?
 

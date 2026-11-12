@@ -6,7 +6,7 @@ Web page: https://jackwallner.com/ios/headaches/how-to-keep-a-headache-diary.htm
 
 ## How to Keep a Headache Diary: What to Log and What to Skip
 
-By Jack Wallner · Last updated October 28, 2026
+By Jack Wallner · Last updated November 12, 2026
 
 A useful headache diary records five things for every attack: the date, the start time and how long it lasted, how severe it was, any other symptoms, and what medication you took. Add sleep, meals, stress and weather only if you can do it quickly. The Migraine Trust advises keeping it simple, and the American Migraine Foundation says the longer you track, the more patterns show up.
 
@@ -88,7 +88,7 @@ The NHS says to call emergency services if a headache starts suddenly and is ext
 
 Yes. Migraine Headache Tracker is a free headache log for iPhone and Apple Watch with no account: one tap records a headache, the app fills in sleep, weather and barometric pressure, and your history exports as a CSV. Other trackers, such as Migraine Buddy and Pressure Pal, are also free to download with paid upgrades, and a paper diary with the five fields above works too.
 
-Related: [Migraine Trigger Tracking: How to Find Your Triggers With a Diary](https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html).
+Related: [Migraine Trigger Tracking: How to Find Your Triggers With a Diary](https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html) and [Barometric Pressure Headaches: Studies and Tracking](https://jackwallner.com/ios/headaches/barometric-pressure-headaches.html).
 
 ## Sources
 
