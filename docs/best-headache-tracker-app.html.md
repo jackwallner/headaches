@@ -6,11 +6,11 @@ Web page: https://jackwallner.com/ios/headaches/best-headache-tracker-app.html
 
 ## Best Headache Tracker App for iPhone
 
-By Jack Wallner · Last updated November 11, 2026
+By Jack Wallner · Last updated November 12, 2026
 
 **Best for a detailed attack diary with a doctor export: Migraine Buddy. Best for weather and pressure forecasts: Pressure Pal. Best for a migraine disability (MIDAS) score: MiG. Best for logging in one tap with weather, sleep and Watch context filled in: Migraine Headache Tracker Log.** Relief is a newer option built around forecasts and reminders. Pick by how much you want to type during an attack.
 
-**How we compared.** We read each app's App Store listing and pulled rating, rating count and update date on November 11, 2026. We also ran Pressure Pal, Relief and Migraine Buddy's first launch to note sign-up, setup and upgrade screens. We did not subscribe to anything. **Disclosure:** Jack Wallner makes Migraine Headache Tracker Log, so read its entry with that in mind.
+**How we compared.** We read each app's App Store listing and pulled rating, rating count and update date on November 12, 2026. We also ran Pressure Pal, Relief and Migraine Buddy's first launch to note sign-up, setup and upgrade screens. We did not subscribe to anything. **Disclosure:** Jack Wallner makes Migraine Headache Tracker Log, so read its entry with that in mind.
 
 General information, not medical advice. A headache log records what happened. It does not diagnose or treat anything, so talk to a clinician about your symptoms.
 
@@ -20,13 +20,13 @@ Migraine Buddy is the category leader for detailed records, MiG adds a MIDAS sco
 
 | App | Best for | Price model | Apple Watch | iPad | Account | Rating (count) | Last updated |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Migraine Buddy](https://apps.apple.com/us/app/id975074413) | Detailed attack diary and doctor exports | Free + subscription | Not listed | Yes | Sign-up screen on first launch | 4.8 (42,441) | Nov 11, 2026 |
-| [Migraine Tracker & Diary: MiG](https://apps.apple.com/us/app/id6446125528) | MIDAS score and a structured diary | Free + subscription | Not listed | Not listed | Not stated | 4.81 (3,062) | Oct 27, 2026 |
-| [Migraine Tracker: Pressure Pal](https://apps.apple.com/us/app/id6463206739) | Barometric pressure forecast and chart | Free + subscription | Yes | Not listed | None in our test | 4.75 (855) | Oct 30, 2026 |
+| [Migraine Buddy](https://apps.apple.com/us/app/id975074413) | Detailed attack diary and doctor exports | Free + subscription | Not listed | Yes | Sign-up screen on first launch | 4.8 (42,450) | Nov 11, 2026 |
+| [Migraine Tracker & Diary: MiG](https://apps.apple.com/us/app/id6446125528) | MIDAS score and a structured diary | Free + subscription | Not listed | Not listed | Not stated | 4.81 (3,063) | Oct 27, 2026 |
+| [Migraine Tracker: Pressure Pal](https://apps.apple.com/us/app/id6463206739) | Barometric pressure forecast and chart | Free + subscription | Yes | Not listed | None in our test | 4.75 (856) | Oct 30, 2026 |
 | [Relief - Migraine Tracker](https://apps.apple.com/us/app/id6744931427) | Forecasts and reminders | Free + subscription | Yes | Not listed | None in our test | 4.55 (271) | Oct 24, 2026 |
 | [Migraine Headache Tracker Log](https://apps.apple.com/us/app/id6762074561?pt=128748779&ct=jw-headaches-best-headache-tracker-app&mt=8) | One-tap logging with automatic context | Free + subscription or lifetime | Yes | Not listed | None | 4.67 (3) | Nov 1, 2026 |
 
-Ratings and update dates are from each app's App Store listing as of November 11, 2026. Apple Watch and iPad show the devices each listing names; "Not listed" means the listing does not name them. Price models describe the structure only, because prices vary by region and change.
+Ratings and update dates are from each app's App Store listing as of November 12, 2026. Apple Watch and iPad show the devices each listing names; "Not listed" means the listing does not name them. Price models describe the structure only, because prices vary by region and change.
 
 ## What is each headache tracker app best at?
 
@@ -34,7 +34,7 @@ Migraine Buddy keeps the most complete record but needs an account, MiG is the o
 
 ### Migraine Buddy
 
-The category leader by rating count. Its listing describes attack records with triggers, symptoms and medications, diary and structured exports for doctors, automatic sleep recording, a 7-day weather forecast and an in-app community. Some features, such as attack duration and coaching, are marked Premium. In our test it opened on a full-screen sign-up and login page with no guest option, so expect to make an account before you log anything.
+The category leader by rating count. Its listing describes attack records with triggers, symptoms and medications, diary and structured exports for doctors, automatic sleep recording, a 7-day weather forecast and an in-app community. Some features, such as attack duration and programs, are marked Premium. In our test it opened on a full-screen sign-up and login page with no guest option, so expect to make an account before you log anything.
 
 ### Migraine Tracker & Diary: MiG
 
@@ -46,7 +46,7 @@ Pressure Pal puts each logged attack on a pressure curve, with a 24-hour chart, 
 
 ### Relief - Migraine Tracker
 
-Relief logs intensity, duration, symptoms, medications, weather and sleep, adds custom reminders, and describes AI-assisted pattern detection. It is the newest of the group. In our test an 11-question setup and a plan screen came before the app showed a forecast, so check what is available free before you go through it.
+Relief logs intensity, duration, symptoms, medications, weather and sleep, adds custom reminders, and describes AI-assisted pattern detection. It first appeared on the App Store in 2025. In our test an 11-question setup and a plan screen came before the app showed a forecast, so check what is available free before you go through it.
 
 ### Migraine Headache Tracker Log
 
@@ -86,7 +86,7 @@ Jack Wallner makes Migraine Headache Tracker Log. Competitor entries use their p
 
 ### Is Migraine Buddy worth it?
 
-It is worth trying if you want the most complete attack record. It has by far the most ratings in this group (4.8 from 42,441 as of November 11, 2026), logs triggers, symptoms and medications, and makes exports for doctors. It is free to download, some features such as attack duration and coaching are marked Premium, and in our test it asked for an account before you could log anything.
+It is worth trying if you want the most complete attack record. It has by far the most ratings in this group (4.8 from 42,450 as of November 12, 2026), logs triggers, symptoms and medications, and makes exports for doctors. It is free to download, some features such as attack duration and programs are marked Premium, and in our test it asked for an account before you could log anything.
 
 Related: [Migraine Trigger Tracking: How to Find Your Triggers With a Diary](https://jackwallner.com/ios/headaches/migraine-trigger-tracking.html).
 
