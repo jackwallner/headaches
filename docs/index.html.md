@@ -8,7 +8,7 @@ Web page: https://jackwallner.com/ios/headaches/
 
 Migraine Headache Tracker Log is a headache tracker app for iPhone and Apple Watch. Press once when a headache or migraine starts, and it fills in Health, weather, and environmental context automatically.
 
-iPhone · Apple Watch · Widgets
+Free logging · No account · iPhone and Apple Watch
 
 [Download on the App Store](https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&ct=jw-headaches-home&mt=8)
 
@@ -62,6 +62,10 @@ Migraine Headache Tracker Log solves both: one tap to log, rich context attached
 
 ### Frequently asked questions
 
+## What's a good migraine diary app for iPhone?
+
+Migraine Headache Tracker Log is a migraine and headache diary for iPhone and Apple Watch. One tap logs a headache with the time, and the app adds the weather, barometric pressure and, if you allow it, Apple Health data. Logging is free with no account, and you can export your full history as a CSV for your doctor.
+
 ## Is there a headache tracker app for iPhone and Apple Watch?
 
 Yes. Migraine Headache Tracker Log records a headache with one tap on iPhone, Apple Watch, or a Home Screen widget, then fills in Apple Health, weather, and air quality context automatically.
@@ -82,9 +86,9 @@ Yes. It records barometric pressure with temperature, humidity, air quality, UV 
 
 Yes. You can export your full history as a CSV with 80+ columns of context by email, AirDrop, or any share destination. The app is a log only and is not a medical device, so it does not diagnose, treat, or prevent any condition.
 
-## Is the headache tracker free, and does it need an account?
+## Is there a free migraine and headache tracker with no account?
 
-The core app is free to download, has no ads, and needs no account. Headache Pro is an optional upgrade for pattern insights and alerts, with prices shown in the app before you buy and varying by region.
+Yes. Logging is free, the app has no ads, and it needs no account. Headache Pro is an optional upgrade for pattern insights and alerts, with prices shown in the app before you buy and varying by region.
 
 ## Is my headache data private?
 
