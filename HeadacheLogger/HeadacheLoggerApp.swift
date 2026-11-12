@@ -189,6 +189,7 @@ private struct HeadacheLoggerRootContent: View {
                         case .proIntro:
                             ProIntroSheet(onDismiss: { hasSeenProIntro = true })
                                 .environmentObject(storeService)
+                                .padFormSheet()
                         case .trialOffer:
                             TrialOfferSheet(
                                 offerLabel: trialOfferLabel,
@@ -212,6 +213,7 @@ private struct HeadacheLoggerRootContent: View {
                                     activeSheet = nil
                                 }
                             )
+                            .padFormSheet()
                             .presentationDetents([.fraction(0.85), .large])
                             .presentationDragIndicator(.visible)
                             .interactiveDismissDisabled(trialPurchaseInFlight)

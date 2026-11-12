@@ -569,7 +569,7 @@ struct InsightDetailView: View {
             .padding(.top, 16)
             .padding(.bottom, 32)
         }
-        .clearsFloatingTabBar(backdrop: Color(.systemBackground))
+        .clearsFloatingTabBar(backdrop: Color.padPageOr(.systemBackground))
         .navigationTitle(insight.title)
         .navigationBarTitleDisplayMode(.inline)
     }

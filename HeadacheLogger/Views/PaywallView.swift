@@ -46,6 +46,8 @@ struct PaywallView: View {
                 closeButton
             }
         }
+        .padReadableColumn(maxWidth: 560, maxHeight: 860)
+        .padFormSheet()
         .onChange(of: store.isProUnlocked, initial: true) { _, isPro in
             if isPro { dismiss() }
         }

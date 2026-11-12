@@ -26,7 +26,7 @@ struct RootTabView: View {
     private var split: UnfoldedSplit? {
         UnfoldedSplit.make(
             width: paneGeometry.width,
-            isRegularWidth: horizontalSizeClass == .regular,
+            isRegularWidth: UnfoldedSplit.isRegularPhone(horizontalSizeClass),
             fold: paneGeometry.fold
         )
     }
@@ -74,6 +74,7 @@ struct RootTabView: View {
             NavigationStack {
                 HomeView()
             }
+            .padReadableColumn()
             .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(0)
             .tabItem {
@@ -84,6 +85,7 @@ struct RootTabView: View {
                 NavigationStack {
                     HistoryView(selectedYear: $historyYear)
                 }
+                .padReadableColumn()
                 .environment(\.horizontalSizeClass, paneSizeClass)
                 .tag(1)
                 .tabItem {
@@ -94,6 +96,7 @@ struct RootTabView: View {
             NavigationStack {
                 InsightsView()
             }
+            .padReadableColumn()
             .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(2)
             .tabItem {
@@ -103,6 +106,7 @@ struct RootTabView: View {
             NavigationStack {
                 SettingsView()
             }
+            .padReadableColumn()
             .leadingPaneTab(sizeClass: paneSizeClass, isSplit: split != nil)
             .tag(3)
             .tabItem {

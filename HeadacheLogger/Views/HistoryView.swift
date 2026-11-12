@@ -168,6 +168,7 @@ struct HistoryView: View {
                     },
                     onCancel: { showImportIntro = false }
                 )
+                .padFormSheet()
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
@@ -191,6 +192,7 @@ struct HistoryView: View {
                         }
                     }
                 }
+                .padFormSheet()
             }
     }
 
@@ -209,6 +211,7 @@ struct HistoryView: View {
         case .edit(let targetID):
             if let event = events.first(where: { $0.id == targetID }) {
                 EditEventSheet(event: event)
+                    .padFormSheet()
             }
         }
     }

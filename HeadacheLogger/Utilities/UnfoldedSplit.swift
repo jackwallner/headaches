@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Pane frames for the unfolded iPhone Duo: One Tap and the other tabs on the
 /// leading side of the fold, History on the trailing side, so nothing straddles
@@ -8,6 +9,13 @@ struct UnfoldedSplit: Equatable, Sendable {
     var primaryWidth: CGFloat
     var secondaryX: CGFloat
     var secondaryWidth: CGFloat
+
+    /// The Duo split is for the unfolded iPhone Duo. An iPad is regular width too
+    /// but gets its own readable-column layout (see `padReadableColumn`).
+    @MainActor
+    static func isRegularPhone(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
+        sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone
+    }
 
     /// Narrowest pane that still fits the compact One Tap and History layouts.
     static let minimumPaneWidth: CGFloat = 360
@@ -245,7 +253,7 @@ struct UnfoldedLeadingPane<Trailing: View>: ViewModifier {
     let trailing: Trailing
 
     private var split: UnfoldedSplit? {
-        UnfoldedSplit.make(width: geometry.width, isRegularWidth: horizontalSizeClass == .regular, fold: geometry.fold)
+        UnfoldedSplit.make(width: geometry.width, isRegularWidth: UnfoldedSplit.isRegularPhone(horizontalSizeClass), fold: geometry.fold)
     }
 
     func body(content: Content) -> some View {

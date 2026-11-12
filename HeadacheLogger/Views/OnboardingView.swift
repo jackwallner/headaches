@@ -37,6 +37,7 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .padReadableColumn(maxWidth: 560, maxHeight: 720)
             .navigationTitle("Welcome")
             .navigationBarTitleDisplayMode(.inline)
         }

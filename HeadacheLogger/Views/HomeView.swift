@@ -172,6 +172,7 @@ struct HomeView: View {
             }
             .padding(20)
         }
+        .scrollClipDisabled()
         .background(Color(.systemGroupedBackground))
         .clearsFloatingTabBar()
         .navigationTitle(HeadacheBrand.name)
@@ -231,6 +232,7 @@ struct HomeView: View {
             NotificationCenter.default.post(name: .headachePositiveMomentForReview, object: nil)
         }) { target in
             SeverityNotesSheet(eventID: target.id)
+                .padFormSheet()
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
