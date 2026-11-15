@@ -63,6 +63,8 @@ final class ReleaseJourneysUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["latestEventCard"].waitForExistence(timeout: 20), "log never saved")
         // The Undo bar appears once capture ends; checkpoint after, so the card is settled.
         XCTAssertTrue(app.descendants(matching: .any)["undoSnackbar"].waitForExistence(timeout: 30), "capture never finished")
+        // The cards under the bar finish their one-shot redraw after the capture ends.
+        Thread.sleep(forTimeInterval: 2.5)
         QA.checkpoint(app, "core-logged")
 
         showHistory(app)
