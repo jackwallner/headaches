@@ -115,6 +115,11 @@ final class ReleaseJourneysUITests: XCTestCase {
                 QA.swipe(scroll.exists ? scroll : app, .down)
             }
             if title.waitForNonExistence(timeout: 3) { break }
+            // iPad form sheet: tapping the dimmed area outside the card dismisses it.
+            if title.exists, UIDevice.current.userInterfaceIdiom == .pad {
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.5)).tap()
+                if title.waitForNonExistence(timeout: 3) { break }
+            }
         }
         XCTAssertFalse(title.exists, "paywall never closed")
         XCTAssertTrue(pro.waitForExistence(timeout: 15), "paywall never closed")
