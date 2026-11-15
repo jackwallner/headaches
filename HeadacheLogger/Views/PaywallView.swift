@@ -253,7 +253,7 @@ struct PaywallView: View {
             Button(action: startRestore) {
                 Text(isRestoring ? "Restoring…" : "Restore Purchases")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(AppTheme.secondaryText)
+                    .foregroundStyle(.primary)
                     .frame(minWidth: 44, minHeight: 44)
                     .contentShape(Rectangle())
             }

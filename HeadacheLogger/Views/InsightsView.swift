@@ -107,7 +107,7 @@ struct InsightsView: View {
                     Text("Get ahead of triggers")
                         .keepsWholeAboveTabBar()
                 } footer: {
-                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.")
+                    Text("Proactive Alerts use the same forecast signals shown here to give you a 12 to 24 hour heads-up before risky weather.")
                         .font(.footnote)
                         .keepsWholeAboveTabBar()
                 }
@@ -498,7 +498,7 @@ private struct ProactiveAlertsCard: View {
                                 .font(.caption2.bold())
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(brandColor.opacity(0.15), in: Capsule())
+                                .background(brandColor.opacity(0.08), in: Capsule())
                                 .foregroundStyle(brandColor)
                         }
                     }

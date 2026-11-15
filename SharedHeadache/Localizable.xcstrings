@@ -49858,13 +49858,13 @@
         }
       }
     },
-    "Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather.": {
+    "Proactive Alerts use the same forecast signals shown here to give you a 12 to 24 hour heads-up before risky weather.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Proactive Alerts use the same forecast signals shown here to give you a 12–24 hour heads-up before risky weather."
+            "value": "Proactive Alerts use the same forecast signals shown here to give you a 12 to 24 hour heads-up before risky weather."
           }
         },
         "de": {

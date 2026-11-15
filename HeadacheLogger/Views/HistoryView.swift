@@ -262,7 +262,7 @@ struct HistoryView: View {
                         .listRowSeparator(.hidden)
                 }
 
-                Section("Entries") {
+                Section {
                     ForEach(filteredEvents, id: \.id) { event in
                         DetailedEventRow(event: event, useCelsius: useCelsius) {
                             activeSheet = .edit(event.id)
@@ -272,6 +272,11 @@ struct HistoryView: View {
                         .listRowBackground(Color.clear)
                     }
                     .onDelete(perform: deleteEvents)
+                } header: {
+                    // Opaque: the pinned header's blur let rows show through it.
+                    Text("Entries")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.systemGroupedBackground))
                 }
                 .id("historyEntries")
             }
