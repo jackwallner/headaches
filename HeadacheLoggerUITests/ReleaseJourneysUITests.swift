@@ -256,11 +256,7 @@ final class ReleaseJourneysUITests: XCTestCase {
     /// A tab by its symbol identifier or its English or German label. The
     /// unfolded Duo draws the bar as a rail, so no `tabBars` query.
     private func tapTab(_ app: XCUIApplication, symbol: String, names: [String]) {
-        let tab = app.buttons.matching(NSPredicate(
-            format: "identifier == %@ OR label IN %@", symbol, names
-        )).firstMatch
-        XCTAssertTrue(tab.waitForExistence(timeout: 15), "\(names[0]) tab missing")
-        tab.tap()
+        QA.openTab(app, [symbol] + names, timeout: 15)
     }
 
     /// History is a tab on a phone and its own pane, with no tab, on the unfolded Duo.
