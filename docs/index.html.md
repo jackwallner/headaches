@@ -8,7 +8,7 @@ Web page: https://jackwallner.com/ios/headaches/
 
 Migraine Headache Tracker Log is a headache tracker app for iPhone and Apple Watch. Press once when a headache or migraine starts, and it fills in Health, weather, and environmental context automatically.
 
-Free logging · No account · iPhone and Apple Watch
+Free logging · No account · iPhone, Apple Watch and Android
 
 [Download on the App Store](https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&ct=jw-headaches-home&mt=8)
 
@@ -133,6 +133,6 @@ Yes. Everything is stored on your device, with no accounts, no analytics, and no
 
 ## Start logging
 
-Free on the App Store. No account required.
+Free on the App Store and Google Play. No account required.
 
 [Download on the App Store](https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&ct=jw-headaches-home&mt=8)

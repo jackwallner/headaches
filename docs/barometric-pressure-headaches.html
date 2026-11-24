@@ -40,7 +40,7 @@
         "url": "https://jackwallner.com/"
       },
       "datePublished": "2026-04-13",
-      "dateModified": "2026-11-12",
+      "dateModified": "2026-11-24",
       "mainEntityOfPage": "https://jackwallner.com/ios/headaches/barometric-pressure-headaches.html",
       "image": "https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg",
       "about": {
@@ -170,6 +170,14 @@ article th { font-weight: 600; background: #f5f5f7; }
 footer { text-align: center; padding: 20px 24px; font-size: 12px; color: #6e6e73; border-top: 1px solid rgba(0,0,0,0.06); }
 footer a { display: inline-block; padding: 6px 0; color: #6e6e73; text-decoration: none; margin: 0 10px; }
 @media (max-width: 768px) { article h1 { font-size: 28px; } article { padding: 40px 0 56px; } article .answer { font-size: 17px; } article table { font-size: 14px; } }
+.store-badges { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.store-badges.start { justify-content: flex-start; }
+.play-badge { display: inline-flex; transition: opacity 0.15s; }
+.play-badge:hover { opacity: 0.85; }
+.play-badge img { display: block; height: 46px; width: auto; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-actions .play-badge img { height: 36px; }
+@media (max-width: 480px) { .nav-actions .play-badge { display: none; } }
 </style>
 </head>
 <body>
@@ -179,14 +187,15 @@ footer a { display: inline-block; padding: 6px 0; color: #6e6e73; text-decoratio
                 <img src="icon_64.webp" alt="" width="32" height="32">
                 <span>Headache Tracker</span>
             </a>
-            <a class="nav-link" href="https://apps.apple.com/us/app/id6762074561?pt=128748779&amp;ct=jw-headaches-barometric-pressure-headaches&amp;mt=8">Download</a>
+            <div class="nav-actions"><a class="nav-link" href="https://apps.apple.com/us/app/id6762074561?pt=128748779&amp;ct=jw-headaches-barometric-pressure-headaches&amp;mt=8">Download</a>
+<a class="play-badge" href="https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger" rel="noopener"><img src="google-play-badge.webp" alt="Get it on Google Play" width="121" height="36"></a></div>
         </div>
     </nav>
 
     <article>
         <div class="container">
             <h1>Barometric Pressure Headaches: Studies and Tracking</h1>
-            <p class="meta">By Jack Wallner &middot; Last updated <time datetime="2026-11-12" data-updated>November 12, 2026</time></p>
+            <p class="meta">By Jack Wallner &middot; Last updated <time datetime="2026-11-24" data-updated>November 24, 2026</time></p>
             <p class="answer">A barometric pressure headache is a headache or migraine attack that seems to start around a change in air pressure, usually a drop as a storm or low-pressure system arrives. Diary studies link pressure falls of about 5 to 10 hPa with migraine in some people, but not everyone reacts. To check your own link, record the pressure and its direction each time a headache starts.</p>
 
             <div class="note">General information, not medical advice. The app is a log only and does not diagnose, treat or prevent any condition. A log is something to bring to a doctor, not a substitute for one.</div>
@@ -256,7 +265,8 @@ footer a { display: inline-block; padding: 6px 0; color: #6e6e73; text-decoratio
 
             <div class="cta-box">
                 <p>Free headache log for iPhone and Apple Watch that records barometric pressure with every entry. No account needed.</p>
-                <a class="btn" href="https://apps.apple.com/us/app/id6762074561?pt=128748779&amp;ct=jw-headaches-barometric-pressure-headaches&amp;mt=8">Download on the App Store</a>
+                <div class="store-badges"><a class="btn" href="https://apps.apple.com/us/app/id6762074561?pt=128748779&amp;ct=jw-headaches-barometric-pressure-headaches&amp;mt=8">Download on the App Store</a>
+<a class="play-badge" href="https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger" rel="noopener"><img src="google-play-badge.webp" alt="Get it on Google Play" width="155" height="46"></a></div>
             </div>
 
             <h2>Frequently asked questions</h2>

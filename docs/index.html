@@ -40,11 +40,11 @@
                 "alternateName": "Headache Tracker",
                 "description": "Migraine Headache Tracker Log is a headache tracker app for iPhone and Apple Watch. Tap once to log a headache or migraine and the app adds Apple Health, weather, barometric pressure, and air quality context automatically. You can export a CSV to share with your doctor. It is a log only and is not a medical device.",
                 "applicationCategory": "HealthApplication",
-                "operatingSystem": "iOS 17+, watchOS 10+",
+                "operatingSystem": "iOS 17+, watchOS 10+, Android 8.0+",
                 "url": "https://jackwallner.com/ios/headaches/",
-                "downloadUrl": "https://apps.apple.com/us/app/id6762074561",
-                "installUrl": "https://apps.apple.com/us/app/id6762074561",
-                "sameAs": "https://apps.apple.com/us/app/id6762074561",
+                "downloadUrl": ["https://apps.apple.com/us/app/id6762074561", "https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger"],
+                "installUrl": ["https://apps.apple.com/us/app/id6762074561", "https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger"],
+                "sameAs": ["https://apps.apple.com/us/app/id6762074561", "https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger"],
                 "screenshot": [
                     "https://jackwallner.github.io/headaches/assets/screenshot-iphone-log.jpg",
                     "https://jackwallner.github.io/headaches/assets/screenshot-iphone-history.jpg",
@@ -613,6 +613,14 @@
             letter-spacing: 0.5px;
         }
             summary > h2.faq-q { display: inline; margin: 0; font: inherit; letter-spacing: inherit; color: inherit; }
+.store-badges { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.store-badges.start { justify-content: flex-start; }
+.play-badge { display: inline-flex; transition: opacity 0.15s; }
+.play-badge:hover { opacity: 0.85; }
+.play-badge img { display: block; height: 46px; width: auto; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-actions .play-badge img { height: 36px; }
+@media (max-width: 480px) { .nav-actions .play-badge { display: none; } }
 </style>
 </head>
 <body>
@@ -623,15 +631,17 @@
                 <img src="icon_64.webp" alt="" width="32" height="32">
                 <span>Headache Tracker</span>
             </a>
-            <a class="nav-link" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download</a>
+            <div class="nav-actions"><a class="nav-link" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download</a>
+<a class="play-badge" href="https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger" rel="noopener"><img src="google-play-badge.webp" alt="Get it on Google Play" width="121" height="36"></a></div>
         </div>
     </nav>
 
     <section class="hero">
         <h1>Log it in <span>one tap</span></h1>
         <p class="tagline">Migraine Headache Tracker Log is a headache tracker app for iPhone and Apple Watch. Press once when a headache or migraine starts, and it fills in Health, weather, and environmental context automatically.</p>
-        <p class="platforms">Free logging &middot; No account &middot; iPhone and Apple Watch</p>
-        <a class="download-btn" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download on the App Store</a>
+        <p class="platforms">Free logging &middot; No account &middot; iPhone, Apple Watch and Android</p>
+        <div class="store-badges"><a class="download-btn" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download on the App Store</a>
+<a class="play-badge" href="https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger" rel="noopener"><img src="google-play-badge.webp" alt="Get it on Google Play" width="155" height="46"></a></div>
     </section>
 
     <section class="showcase">
@@ -767,8 +777,9 @@
 
     <section class="cta">
         <h2>Start logging</h2>
-        <p>Free on the App Store. No account required.</p>
-        <a class="download-btn" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download on the App Store</a>
+        <p>Free on the App Store and Google Play. No account required.</p>
+        <div class="store-badges"><a class="download-btn" href="https://apps.apple.com/us/app/migraine-headache-tracker-log/id6762074561?pt=128748779&amp;ct=jw-headaches-home&amp;mt=8">Download on the App Store</a>
+<a class="play-badge" href="https://play.google.com/store/apps/details?id=com.jackwallner.headachelogger" rel="noopener"><img src="google-play-badge.webp" alt="Get it on Google Play" width="155" height="46"></a></div>
     </section>
 
     <footer>
