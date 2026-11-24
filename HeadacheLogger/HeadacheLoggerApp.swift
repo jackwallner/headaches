@@ -172,10 +172,10 @@ private struct HeadacheLoggerRootContent: View {
 
     private var hasTrialOffer: Bool { directTrialPackage != nil }
 
-    /// The package the direct trial purchase buys. Keep this aligned with the
-    /// onboarding CTA so the same trial copy always opens the same Apple sheet.
+    /// The package the direct trial purchase buys (`trialOfferPackage`, yearly),
+    /// so the trial copy and the billed amount always match Apple's sheet.
     private var directTrialPackage: Package? {
-        guard let package = storeService.onboardingTrialPackage,
+        guard let package = storeService.trialOfferPackage,
               storeService.isEligibleForIntroOffer(package) else { return nil }
         return package
     }
@@ -993,6 +993,15 @@ struct TrialOfferSheet: View {
                     .buttonStyle(.plain)
                     .disabled(isPurchasing)
 
+                    // The billed amount is the most conspicuous pricing element on
+                    // the sheet (App Review 3.1.2(c) rejected Mahj 1.3.0 for letting
+                    // the trial outshine it). Cribbage and Mahj's approved fix.
+                    if directPurchase, let priceLabel {
+                        Text(priceLabel)
+                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                            .foregroundStyle(.primary)
+                            .accessibilityIdentifier("trialOfferBilledAmount")
+                    }
                     Text(billingDisclosure)
                         .font(.system(.caption2, design: .rounded))
                         .foregroundStyle(AppTheme.secondaryText)

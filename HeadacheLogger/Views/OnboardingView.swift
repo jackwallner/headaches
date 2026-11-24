@@ -6,16 +6,11 @@ struct OnboardingView: View {
     @EnvironmentObject private var store: StoreService
     @AppStorage(HeadacheStorageKey.hasCompletedOnboarding.rawValue, store: HeadacheAppGroup.userDefaults) private var hasCompletedOnboarding = false
     @AppStorage(HeadacheStorageKey.hasSeenProIntro.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenProIntro = false
-    @AppStorage(HeadacheStorageKey.hasSeenTrialOffer.rawValue, store: HeadacheAppGroup.userDefaults) private var hasSeenTrialOffer = false
 
     @State private var step = 0
     @State private var isWorking = false
-    @State private var isPurchasing = false
-    @State private var isRestoring = false
-    @State private var trialError: String?
-    @State private var showPaywallFallback = false
 
-    private static let totalSteps = 4
+    private static let totalSteps = 3
     private static let brandColor = AppTheme.brandText
 
     var body: some View {
@@ -31,7 +26,6 @@ struct OnboardingView: View {
                     case 0: welcomePage
                     case 1: healthPage
                     case 2: locationPage
-                    case 3: trialPage
                     default: welcomePage
                     }
                 }
@@ -41,44 +35,30 @@ struct OnboardingView: View {
             .navigationTitle("Welcome")
             .navigationBarTitleDisplayMode(.inline)
         }
-        // Prefetch products/offerings early so the trial step has live price and
-        // trial copy the moment it appears.
-        .task {
-            if store.currentOffering == nil {
-                await store.fetchProducts()
-            }
-        }
-        .fullScreenCover(isPresented: $showPaywallFallback, onDismiss: { finishOnboarding() }) {
-            PaywallView()
-                .environmentObject(store)
-                .task { store.trackPaywallImpression(id: "headache_onboarding_trial") }
-        }
     }
 
     /// Unified onboarding page. Every step routes through this so the primary
-    /// button lands at a pixel-identical frame (Rev A zero-shift CTA):
-    ///   - All variable content (soft exit, disclosure, error) is passed via
-    ///     `aboveButton` and sits ABOVE the primary, absorbed by the Spacer.
-    ///   - A fixed-height legal-footer slot is rendered BELOW the primary on EVERY
-    ///     step (real links on the trial step, invisible placeholder elsewhere) so
-    ///     the distance from the button to the screen bottom is byte-identical.
-    private func page<Icon: View, Content: View, Above: View>(
+    /// button lands at a pixel-identical frame and the thumb never moves.
+    ///
+    /// Onboarding ends at Location, as before 1.4.8. The trial is pitched after
+    /// the first logged headache (`TrialOfferSheet` in `HeadacheLoggerApp`): the
+    /// onboarding trial step that 1.4.8 added took Migraine from $2.27 to $0.00
+    /// per new customer (2026-11-24 change-impact read), so it is gone.
+    private func page<Icon: View, Content: View>(
         icon: Icon,
         title: String,
         @ViewBuilder body: () -> Content,
-        @ViewBuilder aboveButton: () -> Above = { EmptyView() },
         primaryLabel: String,
         busy: Bool,
-        showLegalFooter: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 20) {
             // Scrolls rather than truncates. A plain VStack hands its flexible Text
             // children whatever height is left over, and on a short container (iPad
             // Split View, a resized window, landscape) that is one line each, so
-            // every paragraph and bullet renders clipped mid-word. App Review hit
-            // exactly that on the trial step. The CTA block stays outside the
-            // ScrollView so the zero-shift button frame is unchanged.
+            // every paragraph renders clipped mid-word. App Review hit exactly
+            // that. The button stays outside the ScrollView so its frame is
+            // unchanged from step to step.
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     icon
@@ -90,35 +70,23 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .scrollBounceBehavior(.basedOnSize)
-            VStack(spacing: 12) {
-                aboveButton()
-
-                Button {
-                    action()
-                } label: {
-                    Group {
-                        if busy {
-                            ProgressView().tint(.white)
-                        } else {
-                            Text(primaryLabel)
-                        }
+            Button {
+                action()
+            } label: {
+                Group {
+                    if busy {
+                        ProgressView().tint(.white)
+                    } else {
+                        Text(primaryLabel)
                     }
-                    // Inside the label, so the button is the same width on every step.
-                    .frame(maxWidth: .infinity)
                 }
-                .disabled(busy)
-                .buttonStyle(.borderedProminent)
-                .tint(AppTheme.brand)
-                .controlSize(.large)
-
-                // Fixed-height legal-footer slot on EVERY step. Reserving the space
-                // even when empty keeps the primary button's frame identical across
-                // the flow so the thumb never moves.
-                legalFooter
-                    .opacity(showLegalFooter ? 1 : 0)
-                    .allowsHitTesting(showLegalFooter)
-                    .accessibilityHidden(!showLegalFooter)
+                // Inside the label, so the button is the same width on every step.
+                .frame(maxWidth: .infinity)
             }
+            .disabled(busy)
+            .buttonStyle(.borderedProminent)
+            .tint(AppTheme.brand)
+            .controlSize(.large)
         }
         .padding(24)
     }
@@ -177,23 +145,6 @@ struct OnboardingView: View {
         )
     }
 
-    /// Terms / Privacy / Restore. Rendered on every onboarding step (invisible off
-    /// the trial step) so its height reserves the same space under the CTA.
-    private var legalFooter: some View {
-        HStack(spacing: 12) {
-            Link("Terms of Use", destination: PaywallLinks.standardEULA)
-            Text("·").foregroundStyle(AppTheme.secondaryText)
-            Link("Privacy Policy", destination: PaywallLinks.privacyPolicy)
-            Text("·").foregroundStyle(AppTheme.secondaryText)
-            Button(isRestoring ? "Restoring…" : "Restore") {
-                startRestore()
-            }
-            .disabled(isRestoring || isPurchasing)
-        }
-        .font(.caption2)
-        .foregroundStyle(AppTheme.secondaryText)
-    }
-
     private func enableHealthTapped() async {
         isWorking = true
         defer { isWorking = false }
@@ -210,159 +161,14 @@ struct OnboardingView: View {
         isWorking = true
         defer { isWorking = false }
         await EnvironmentService.shared.prepareLocationAuthorizationDuringOnboarding()
-        await MainActor.run { step = 3 }
-    }
-
-    // MARK: - Trial step
-
-    /// Fourth onboarding step: the same `page(...)` chrome as Health/Location
-    /// (progress bar now 4/4, "Welcome" nav title, pink-red primary). The primary
-    /// button is in the exact same frame as the prior Continues; all trial-only
-    /// content (soft "Get Started" exit, billing disclosure, error) sits ABOVE it,
-    /// and the real Terms/Privacy/Restore footer fills the reserved slot below.
-    /// Reads as the next onboarding step, not a paywall sheet.
-    private var trialPage: some View {
-        page(
-            icon: Image(systemName: "sparkles")
-                .font(.system(size: 56, weight: .bold))
-                .foregroundStyle(Self.brandColor),
-            title: "Get ahead of your headaches",
-            body: {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Headache Pro turns your logs into a heads-up so you can plan around risky days.")
-                        .font(.body)
-                        .foregroundStyle(AppTheme.secondaryText)
-                        .fixedSize(horizontal: false, vertical: true)
-                    trialBullet(icon: "chart.bar.xaxis", text: "Spot your personal patterns across sleep, timing, and weather")
-                    trialBullet(icon: "barometer", text: "Pressure and air-quality heads-up 12-24h before risky weather")
-                    trialBullet(icon: "lock.shield", text: "All processing stays on your device")
-                }
-            },
-            aboveButton: { trialAboveButton },
-            primaryLabel: store.onboardingTrialPackage != nil ? store.onboardingCTALabel : "Start 7-day free trial",
-            busy: isPurchasing,
-            showLegalFooter: true,
-            action: { startTrialPurchase() }
-        )
-        .onAppear(perform: handleTrialStepAppear)
-    }
-
-    private func trialBullet(icon: String, text: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.body.weight(.semibold))
-                .foregroundStyle(Self.brandColor)
-                .frame(width: 24)
-            Text(text)
-                .font(.body)
-                .foregroundStyle(AppTheme.secondaryText)
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
-        }
-    }
-
-    /// Trial-only content that sits ABOVE the primary CTA (absorbed by the Spacer
-    /// so it never shifts the button): soft free exit, billing disclosure, error.
-    @ViewBuilder
-    private var trialAboveButton: some View {
-        VStack(spacing: 12) {
-            // Soft free exit sits ABOVE the primary so the trial button lands in the
-            // exact spot the user has been tapping "Continue". Rev A: labeled
-            // "Get Started" (StatScout soft-exit label), visually secondary.
-            Button("Get Started") {
-                ConversionDiagnostics.record(.freeVersionChosen)
-                store.syncConversionAttributes()
-                finishOnboarding()
-            }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(AppTheme.secondaryText)
-            .disabled(isPurchasing)
-
-            // No disclosure until the package (and its real price) loads — never a
-            // placeholder price (Apple 3.1.2).
-            if let disclosure = store.onboardingCTADisclosureText {
-                Text(disclosure)
-                    .font(.caption2)
-                    .foregroundStyle(AppTheme.secondaryText)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            if let trialError {
-                Text(trialError)
-                    .font(.caption)
-                    .foregroundStyle(AppTheme.red)
-                    .multilineTextAlignment(.center)
-                    .accessibilityIdentifier("onboardingTrialError")
-            }
-        }
-    }
-
-    /// Stamp the mid-app trial offer as seen so it doesn't double-pitch right
-    /// after onboarding, and report the impression.
-    private func handleTrialStepAppear() {
-        hasSeenTrialOffer = true
-        ConversionDiagnostics.record(.trialOfferReached)
-        store.trackPaywallImpression(id: "headache_onboarding_trial", oncePerSession: true)
-    }
-
-    /// One-tap conversion: buy `onboardingTrialPackage` (monthly) in place, trial when
-    /// eligible. Products failing to load falls back to the full PaywallView rather
-    /// than a dead button; a successful purchase or the emergency paywall both finish
-    /// onboarding.
-    private func startTrialPurchase() {
-        guard let package = store.onboardingTrialPackage else {
-            showPaywallFallback = true
-            return
-        }
-        trialError = nil
-        isPurchasing = true
-        ConversionDiagnostics.record(.trialCTATapped)
-        Task { @MainActor in
-            defer {
-                isPurchasing = false
-                store.syncConversionAttributes()
-            }
-            do {
-                switch try await store.purchase(package) {
-                case .purchased, .pending:
-                    ConversionDiagnostics.record(.purchaseSucceeded)
-                    finishOnboarding()
-                case .cancelled:
-                    ConversionDiagnostics.record(.purchaseCancelled)
-                    // Dismissing Apple's sheet is a choice, not a failure. Rendering a
-                    // red error on it makes a working screen look broken, which is the
-                    // state App Review captured. Stay silent and leave both the trial
-                    // CTA and the Get Started exit in place.
-                    trialError = nil
-                }
-            } catch {
-                ConversionDiagnostics.record(.purchaseFailed)
-                trialError = store.lastError ?? "Couldn't start your trial. Please try again."
-            }
-        }
-    }
-
-    /// Mirrors the paywall: a restored purchase finishes onboarding, anything else says why.
-    private func startRestore() {
-        trialError = nil
-        isRestoring = true
-        Task { @MainActor in
-            defer { isRestoring = false }
-            await store.restorePurchases()
-            if store.isProUnlocked {
-                finishOnboarding()
-            } else {
-                trialError = store.lastError ?? "No previous Headache Pro purchase was found on this Apple ID."
-            }
-        }
+        await MainActor.run { finishOnboarding() }
     }
 
     private func finishOnboarding() {
         hasCompletedOnboarding = true
         // The "Headache Pro is here" intro is a catch-up for users who finished onboarding
-        // before Pro shipped. Net-new users learn about Pro through the trial/milestone
-        // paths, so mark the intro seen here or it presents right after onboarding.
+        // before Pro shipped. Net-new users learn about Pro through the first-log trial
+        // sheet, so mark the intro seen here or it presents right after onboarding.
         hasSeenProIntro = true
         Task { await initializeDailyRecords() }
     }
