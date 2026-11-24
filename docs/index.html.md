@@ -42,7 +42,23 @@ One-tap logging on Apple Watch with Health and weather context. Events queue and
 
 ### Home screen shortcut
 
-A small widget for instant logging. The app enriches the entry with full context when you next open it.
+A small widget for instant logging. The app enriches the entry with full context when you next open it. Log headache is also an action in the Shortcuts app.
+
+### Patterns in your own entries
+
+With Headache Pro, once you have 5 logs you get charts with a plain-language explanation for each pattern, from more than 20 checks such as time of day, weekday, sleep, pressure change and air quality.
+
+### Today's risk and alerts
+
+With Headache Pro, a heads-up combines the next 24 hours of forecast pressure and air quality with last night's sleep, and optional alerts follow thresholds you set. They describe your logged data and the forecast, and they do not predict a headache.
+
+### Doctor PDF
+
+With Headache Pro, a one-page report of the last 90 days: headache count, days affected, severity mix, a calendar heatmap and your top patterns.
+
+### Backup and restore
+
+Import a CSV exported from the app to restore a backup or merge entries from another device, and skip or overwrite duplicates. Free.
 
 ## Is Migraine Headache Tracker Log private?
 
@@ -102,7 +118,7 @@ Yes. Everything is stored on your device, with no accounts, no analytics, and no
 | Health Data | Sleep, HRV, activity, mindful minutes, heart rate, etc. |
 | Weather | Open-Meteo API (pressure, temp, humidity, pollen) |
 | Air Quality | Open-Meteo air quality API at time of entry |
-| Pro | Optional yearly, monthly, or lifetime IAP for patterns, alerts, and imports |
+| Pro | Optional yearly, monthly, or lifetime IAP for patterns, risk, alerts, and the Doctor PDF |
 | Export | 80+ column CSV with all signals joined by timestamp |
 
 ### What Mattered
@@ -113,7 +129,7 @@ Yes. Everything is stored on your device, with no accounts, no analytics, and no
 
 **CSV export for doctors.** The export is a raw CSV with every column labeled, so doctors and researchers can import it directly.
 
-**Watch app for discrete logging.** In a meeting when a headache starts? Log it from your wrist. No phone pull-out, no obvious app usage. The complication shows today's count at a glance.
+**Watch app for discrete logging.** In a meeting when a headache starts? Log it from your wrist. No phone pull-out, no obvious app usage.
 
 ## Start logging
 

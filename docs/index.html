@@ -34,7 +34,7 @@
         "@graph": [
             {
                 "@type": "MobileApplication",
-                "dateModified": "2026-11-12",
+                "dateModified": "2026-11-24",
                 "@id": "https://jackwallner.com/ios/headaches/#app",
                 "name": "Migraine Headache Tracker Log",
                 "alternateName": "Headache Tracker",
@@ -55,7 +55,8 @@
                     "Automatic Apple Health context such as sleep, heart rate, and HRV",
                     "Weather snapshot with barometric pressure, humidity, air quality, UV index, and pollen",
                     "Optional severity rating and notes",
-                    "CSV export with 80+ columns to share with your doctor",
+                    "CSV export with 80+ columns to share with your doctor, and CSV import to restore a backup",
+        "Optional Headache Pro: patterns, today's risk, forecast alerts and a Doctor PDF",
                     "No ads, no account, data stays on your device"
                 ],
                 "offers": {
@@ -683,7 +684,23 @@
             </div>
             <div class="feature-card">
                 <h3>Home screen shortcut</h3>
-                <p>A small widget for instant logging. The app enriches the entry with full context when you next open it.</p>
+                <p>A small widget for instant logging. The app enriches the entry with full context when you next open it. Log headache is also an action in the Shortcuts app.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Patterns in your own entries</h3>
+                <p>With Headache Pro, once you have 5 logs you get charts with a plain-language explanation for each pattern, from more than 20 checks such as time of day, weekday, sleep, pressure change and air quality.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Today's risk and alerts</h3>
+                <p>With Headache Pro, a heads-up combines the next 24 hours of forecast pressure and air quality with last night's sleep, and optional alerts follow thresholds you set. They describe your logged data and the forecast, and they do not predict a headache.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Doctor PDF</h3>
+                <p>With Headache Pro, a one-page report of the last 90 days: headache count, days affected, severity mix, a calendar heatmap and your top patterns.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Backup and restore</h3>
+                <p>Import a CSV exported from the app to restore a backup or merge entries from another device, and skip or overwrite duplicates. Free.</p>
             </div>
         </div>
     </section>
@@ -732,7 +749,7 @@
                         <tr><td>Health Data</td><td>Sleep, HRV, activity, mindful minutes, heart rate, etc.</td></tr>
                         <tr><td>Weather</td><td>Open-Meteo API (pressure, temp, humidity, pollen)</td></tr>
                         <tr><td>Air Quality</td><td>Open-Meteo air quality API at time of entry</td></tr>
-                        <tr><td>Pro</td><td>Optional yearly, monthly, or lifetime IAP for patterns, alerts, and imports</td></tr>
+                        <tr><td>Pro</td><td>Optional yearly, monthly, or lifetime IAP for patterns, risk, alerts, and the Doctor PDF</td></tr>
                         <tr><td>Export</td><td>80+ column CSV with all signals joined by timestamp</td></tr>
                     </table>
                 </div>
@@ -742,7 +759,7 @@
                     <p><strong>One-tap logging.</strong> The default flow: open app, tap severity, done. Optional notes if you want. The app captures the timestamp and starts fetching context immediately in the background. No loading spinner blocking the UI.</p>
                     <p><strong>Context without clutter.</strong> Every headache entry stores 80+ columns you didn't have to type: weather pressure changes, air quality index, sleep duration from last night, HRV trend from the past week.</p>
                     <p><strong>CSV export for doctors.</strong> The export is a raw CSV with every column labeled, so doctors and researchers can import it directly.</p>
-                    <p><strong>Watch app for discrete logging.</strong> In a meeting when a headache starts? Log it from your wrist. No phone pull-out, no obvious app usage. The complication shows today's count at a glance.</p>
+                    <p><strong>Watch app for discrete logging.</strong> In a meeting when a headache starts? Log it from your wrist. No phone pull-out, no obvious app usage.</p>
                 </div>
             </div>
         </div>
@@ -761,7 +778,7 @@
             <a href="migraine-trigger-tracking.html">Migraine Trigger Tracking</a>
             <a href="how-to-keep-a-headache-diary.html">How to Keep a Headache Diary</a>
         </div>
-        <div class="divider">&copy; 2026 Jack Wallner · Last updated <time datetime="2026-11-12" data-updated>November 12, 2026</time></div>
+        <div class="divider">&copy; 2026 Jack Wallner · Last updated <time datetime="2026-11-24" data-updated>November 24, 2026</time></div>
         <div>
             <a href="support.html">Support</a>
             <a href="privacy-policy.html">Privacy</a>
